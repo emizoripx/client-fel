@@ -11,5 +11,7 @@
 
 ## API's
 
-- GET TOKENS `/api/v1/clientfel/getToken`;
+- GET TOKENS `/api/v1/clientfel/getToken/` by default gets ID from company logged in
+
 - REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials`
+    - json : `{ "client_id" : "300001", "client_secret" : "PDAYQ59drtn4wSOxIz9gYfbBNrXx4ibkneKCtk5A", "account_id" : "1" }` account_id represents, company_id 

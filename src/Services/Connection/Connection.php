@@ -19,7 +19,7 @@ class Connection extends BaseConnection
     {
         try {
             $response = $this->client->request('POST', '/oauth/token', ['json' => $data]);
-            \Log::debug("ingresa a este lugar");
+            
             
             return $this->parse_response($response);
 
