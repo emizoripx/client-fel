@@ -16,5 +16,12 @@
 
             "EmizorIpx\\ClientFel\\":"src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "EmizorIpx\\ClientFel\\ClientFelServiceProvider"
+            ]
+        }
     }
 }
