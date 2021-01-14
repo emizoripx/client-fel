@@ -1,0 +1,27 @@
+{
+    "name": "emizoripx/clientfel",
+    "description": "Connection to FEL to make invoices for Bolivia",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Cuellar",
+            "email": "mcuellar@ipxserver.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload":{
+        "psr-4":{
+
+            "EmizorIpx\\ClientFel\\":"src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "EmizorIpx\\ClientFel\\ClientFelServiceProvider"
+            ]
+        }
+    }
+}
