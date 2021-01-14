@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 use EmizorIpx\ClientFel\Http\Requests\StoreCredentialsRequest;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -51,16 +52,15 @@ class ConnectionController extends Controller
 
     public function getToken()
     {
-
-        $company = auth()->user()->company();
-        
         $companyId = 1;
-        
-        if(!$company) {
-
-            $companyId = $company->id;
+        if (auth()) {
+            if (auth()->user()) {
+                if (auth()->user()->company()) {
+                    $companyId = $company->id;     
+                }
+            }
         }
-
+    
         $felClienttoken = FelClientToken::whereAccountId($companyId)->first();
 
         $token = $felClienttoken->getAccessToken();
