@@ -2,12 +2,11 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use Illuminate\Database\Eloquent\Model;
 
 class FelClientToken extends Model
 {
-    use HasFactory;
 
     protected $guarded =[];
 
@@ -49,5 +48,40 @@ class FelClientToken extends Model
     public function setExpiresIn($value)
     {
         $this->expires_in = $value;
+    }
+
+    public static function createOrUpdate($data)
+    {
+        $credential = self::where('account_id', $data['account_id'])->first();
+
+        if ( empty($credential) ){
+            // create
+            return self::create($data);
+        } else {
+            //update
+            $credential->update($data);
+            return self::find($data['account_id']);
+        }
+    }
+
+    public static function getTokenByAccount($companyId) 
+    {
+
+        if (empty($companyId)) {
+            throw new ClientFelException('Id de cuenta inválido');
+        }
+
+        $registered_token = self::where('account_id', $companyId)->first();
+
+        if (empty($registered_token) ){
+            throw new ClientFelException('No tiene credenciales registradas');
+        }
+        
+        if ( $registered_token->getAccessToken() == null ) {
+
+            throw new ClientFelException('No tiene registrado un access token');
+        }
+
+        return $registered_token->getAccessToken();
     }
 }

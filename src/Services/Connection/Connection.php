@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Services\Connection;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 
 use EmizorIpx\ClientFel\Services\BaseConnection;
+use Illuminate\Support\Facades\Log;
 
 class Connection extends BaseConnection 
 {
@@ -25,12 +26,14 @@ class Connection extends BaseConnection
 
         } catch (\Exception $ex) {
 
-            \Log::error($ex->getMessage());
+            Log::error($ex->getMessage());
             
             throw new ClientFelException("Error en la conexion authenticacion");
 
         }
         
     }
+
+
 
 }

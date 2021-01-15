@@ -11,7 +11,10 @@
 
 ## API's
 
-- GET TOKENS `/api/v1/clientfel/getToken/` by default gets ID from company logged in
+- GET TOKENS `/api/v1/clientfel/getToken/` by default gets ID from company logged in by user
 
-- REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials`
+- REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials` additionally it updates the register if account_id is already registered
     - json : `{ "client_id" : "300001", "client_secret" : "PDAYQ59drtn4wSOxIz9gYfbBNrXx4ibkneKCtk5A", "account_id" : "1" }` account_id represents, company_id 
+
+- HOMOLOGATE PRODUCTS `/api/v1/clientfel/homologateProduct`
+    - json : `{ "codigo_producto" : 12, "codigo_producto_sin": 83141 }` codigo_product_sin must exists in SIN list products

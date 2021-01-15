@@ -41,7 +41,7 @@ class ConnectionController extends Controller
 
         $input['grant_type'] = "client_credentials";
 
-        $credentials = FelClientToken::create($input);
+        $credentials = FelClientToken::createOrUpdate($input);
         
         return response()->json([
             "success" =>true,
@@ -53,14 +53,8 @@ class ConnectionController extends Controller
     public function getToken()
     {
         $companyId = 1;
-        if (auth()) {
-            if (auth()->user()) {
-                if (auth()->user()->company()) {
-                    $companyId = $company->id;     
-                }
-            }
-        }
-    
+        // $companyId = auth()->user()->company()->id
+       
         $felClienttoken = FelClientToken::whereAccountId($companyId)->first();
 
         $token = $felClienttoken->getAccessToken();
