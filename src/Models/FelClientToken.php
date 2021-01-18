@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Models;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class FelClientToken extends Model
 {
@@ -83,5 +84,11 @@ class FelClientToken extends Model
         }
 
         return $registered_token->getAccessToken();
+    }
+
+    public function account()
+    {
+        return $this->hasone(Config::get('clientfel.entity_table_class'));
+
     }
 }

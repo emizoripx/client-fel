@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function homologate(Request $request)
     {
 
-        $input = $request->only(['codigo_producto', 'codigo_producto_sin']);
+        $input = $request->only(['codigo_producto', 'codigo_producto_sin', 'codigo_unidad', 'nombre_unidad']);
 
         if ($input['codigo_producto'] && $input['codigo_producto'] == "") {
             $error[] = "codigo_producto is required";
@@ -26,6 +26,14 @@ class ProductController extends Controller
 
         if ($input['codigo_producto_sin'] && $input['codigo_producto_sin'] == "") {
             $error[] = "codigo_producto_sin is required";
+        }
+
+        if ($input['codigo_unidad'] && $input['codigo_unidad'] == "") {
+            $error[] = "codigo_unidad is required";
+        }
+
+        if ($input['nombre_unidad'] && $input['nombre_unidad'] == "") {
+            $error[] = "nombre_unidad is required";
         }
 
         if (!empty($error)) {

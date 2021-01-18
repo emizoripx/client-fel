@@ -21,7 +21,7 @@ class ConnectionController extends Controller
     public function registerCredentials(Request $request)
     {
 
-        $input = $request->only(['client_id', 'client_secret', 'account_id']);
+        $input = $request->only(['client_id', 'client_secret']);
 
         if ($input['client_id'] && $input['client_id'] == "") {
             $error[] = "client_id is required";
@@ -30,17 +30,14 @@ class ConnectionController extends Controller
         if ($input['client_secret'] && $input['client_secret'] == "") {
             $error[] = "client_secret is required";
         }
-        if ($input['account_id'] && $input['account_id'] == "") {
-            $error[] = "account_id is required";
-        }
-
+    
         if( !empty($error) ) {
 
             return response()->json(['success' => false, "msg" => $error]);
         }
 
         $input['grant_type'] = "client_credentials";
-
+        $input['account_id'] = auth()->user()->company()->id;
         $credentials = FelClientToken::createOrUpdate($input);
         
         return response()->json([

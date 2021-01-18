@@ -28,7 +28,7 @@ class Connection extends BaseConnection
 
             Log::error($ex->getMessage());
             
-            throw new ClientFelException("Error en la conexion authenticacion");
+            throw new ClientFelException("Error en la autenticación");
 
         }
         

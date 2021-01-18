@@ -3,6 +3,8 @@
 namespace EmizorIpx\ClientFel;
 
 use EmizorIpx\ClientFel\Http\Middleware\NeedsToken;
+use EmizorIpx\ClientFel\Services\Invoices\Invoices;
+
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
