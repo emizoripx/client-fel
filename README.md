@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.0.3
+# CLIENT FEL PACKAGE v1.1.1
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -15,6 +15,10 @@
 
 - REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials` additionally it updates the register if account_id is already registered
     - json : `{ "client_id" : "300001", "client_secret" : "PDAYQ59drtn4wSOxIz9gYfbBNrXx4ibkneKCtk5A"}` 
+    after register is executed getToken
 
 - HOMOLOGATE PRODUCTS `/api/v1/clientfel/homologateProduct`
     - json : `{ "codigo_producto" : 12, "codigo_producto_sin": 83141, "codigo_unidad" : 1, "nombre_unidad" : "unidad" }` codigo_product_sin must exists in SIN list products
+
+## Some Notes
+- Invoices are created using branch_number = 0 , and compra-venta as a type of document
