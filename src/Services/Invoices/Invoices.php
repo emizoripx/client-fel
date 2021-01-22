@@ -72,7 +72,7 @@ class Invoices extends BaseConnection
             throw new ClientFelException("El type_document es necesario");
         }
 
-        if (empty($this->branch_number)) {
+        if ($this->branch_number < 0) {
             throw new ClientFelException("El branch_number es necesario");
         }
 
@@ -155,8 +155,9 @@ class Invoices extends BaseConnection
     
         $response = validator($this->data, $rules, $messages);
         
-        if (!empty($response->errors()) ){
-            return $response->errors();
+        if (sizeof($response->errors()) > 0 ){
+            
+            throw new ClientFelException(json_encode($response->errors())) ;
         }
 
 

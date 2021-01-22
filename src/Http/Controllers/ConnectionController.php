@@ -1,20 +1,22 @@
 <?php
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
-use EmizorIpx\ClientFel\Http\Requests\StoreCredentialsRequest;
+use App\Http\Controllers\BaseController;
+use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 
-class ConnectionController extends Controller
+class ConnectionController extends BaseController
 {
 
     protected $connection;
 
     public function __construct(Connection $connection)
     {
+        parent::__construct();
         $this->connection = $connection;
     }
  
@@ -39,11 +41,40 @@ class ConnectionController extends Controller
         $input['grant_type'] = "client_credentials";
         $input['account_id'] = auth()->user()->company()->id;
         $credentials = FelClientToken::createOrUpdate($input);
+
+        try{
+
+            $data = [
+                "grant_type" => "client_credentials",
+                "client_id" => $credentials->getClientId(),
+                "client_secret" => $credentials->getClientSecret()
+            ];
+
+            \Log::debug("data : " . json_encode($data));
+            $response = $this->connection->authenticate($data);
+    
+            $credentials->setTokenType($response['token_type']);
+            $credentials->setExpiresIn($response['expires_in']);
+            $credentials->setAccessToken($response['access_token']);
+            $credentials->save();
+
+            \Log::debug("credentials : " . json_encode($credentials));
+            return response()->json([
+                "success" =>true,
+                "credentials" => $credentials
+            ]);
+
+        } catch( ClientFelException $ex) {
+
+            Log::error("Error en : " . json_encode($ex->getMessage()));
+
+            return response()->json([
+                "success" =>false,
+                "credentials" => []
+            ]);
+        }
         
-        return response()->json([
-            "success" =>true,
-            "credentials" => $credentials
-        ]);
+      
     }
 
 

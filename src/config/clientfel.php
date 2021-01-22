@@ -12,8 +12,26 @@ return [
      * 
      * Model table where is principal account entity instance class
      * 
-     * 'entity_table' => \App\Models\Account::class 
+     * 'entity_table_account' => \App\Models\Account::class 
      */
-    'entity_table_class' => ""
+    'entity_table_account' => "",
+
+    /**
+     * 
+     * Model where is saved products 
+     * 
+     * 'entity_table_product' => \App\Products::class
+     * 
+     */
+    'entity_table_product' => "",
+
+    /**
+     * 
+     * Model where is saved products 
+     * 
+     * 'entity_table_invoice' => \App\Invoice::class
+     * 
+     */
+    'entity_table_invoice' => "",
 
 ];
