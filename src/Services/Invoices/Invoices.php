@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Services\Invoices;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\BaseConnection;
+use Facade\FlareClient\Http\Client;
 use Illuminate\Support\Facades\Log;
 
 class Invoices extends BaseConnection
@@ -15,6 +16,8 @@ class Invoices extends BaseConnection
     protected $type_document;
 
     protected $branch_number;
+
+    protected $response;
 
     public function __construct()
     {
@@ -41,8 +44,17 @@ class Invoices extends BaseConnection
         $this->branch_number = $branch_number;
     }
 
+    public function getResponse()
+    {
+        return $this->response;
+    }
 
-    public function send()
+    public function setResponse($response)
+    {
+        $this->response = $response;
+    }
+
+    public function sendToFel()
     {
 
         $this->checkParameters();
@@ -52,7 +64,7 @@ class Invoices extends BaseConnection
         try {
 
             $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
-
+            $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);
         } catch (\Exception $ex) {
 
@@ -163,11 +175,20 @@ class Invoices extends BaseConnection
 
     }
 
-    public function get($cuf)
+    public function setCuf($cuf) 
     {
+        $this->cuf = $cuf;
+    }
+
+    public function getInvoiceByCuf()
+    {
+        if ( empty($this->cuf) ) {
+            throw new ClientFelException("Es necesario el cuf para obtener los detalles de la factura");
+        }
+
         try {
 
-            $response = $this->client->request('GET', "/api/v1/facturas/$cuf", ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
 
             return $this->parse_response($response);
         } catch (\Exception $ex) {

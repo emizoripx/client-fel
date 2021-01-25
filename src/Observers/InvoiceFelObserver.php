@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Observers;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
+use EmizorIpx\ClientFel\Models\FelInvoice;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,16 @@ class InvoiceFelObserver
             
             $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
 
-            $invoice_service->send();
+            $invoice_service->sendToFel();
+
+
+            $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+
+            $response = $invoice_service->getInvoiceByCuf();
+
+            \Log::debug("response invoice => " . json_encode($response));
+
+            FelInvoice::create($response);
 
             return true;
 
