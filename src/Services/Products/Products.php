@@ -58,14 +58,6 @@ class Products extends BaseConnection
 
         $input['codigoProducto'] = $input['codigo_producto'];
 
-        if ( !is_numeric($input['codigo_producto']) ) {
-        
-            $hashids = new Hashids();
-            
-            $input['codigoProducto'] = $hashids->decode($input['codigo_producto']);    
-
-        }
-
         $input['codigoProductoSIN'] = $input['codigo_producto_sin'];
 
 
