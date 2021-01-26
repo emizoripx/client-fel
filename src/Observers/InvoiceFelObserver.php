@@ -88,11 +88,11 @@ class InvoiceFelObserver
 
             $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
-            $response = $invoice_service->getInvoiceByCuf();
+            $input = $invoice_service->getInvoiceByCuf();
 
-            \Log::debug("response invoice => " . json_encode($response));
+            \Log::debug("response invoice => " . json_encode($input));
 
-            FelInvoice::create($response);
+            FelInvoice::create($input);
 
             return true;
 
