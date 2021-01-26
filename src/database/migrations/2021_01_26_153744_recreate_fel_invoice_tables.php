@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClientfelTables extends Migration
+class RecreateFelInvoiceTables extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,6 @@ class CreateClientfelTables extends Migration
     public function up()
     {
 
-        
         Schema::dropIfExists('fel_invoice_details');
         Schema::dropIfExists('fel_invoices');
 
@@ -58,7 +57,6 @@ class CreateClientfelTables extends Migration
             
             $table->timestamps();
         });
-
     }
 
     /**
@@ -68,7 +66,6 @@ class CreateClientfelTables extends Migration
      */
     public function down()
     {
-   
-   
+        //
     }
 }
