@@ -188,7 +188,7 @@ class Invoices extends BaseConnection
 
         try {
 
-            $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
 
             return $this->parse_response($response);
         } catch (\Exception $ex) {
