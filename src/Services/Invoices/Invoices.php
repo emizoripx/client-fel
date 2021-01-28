@@ -215,6 +215,8 @@ class Invoices extends BaseConnection
     
         $line_items = $model->line_items;
 
+        $total = 0;
+
         foreach($line_items as $detail) {
             
             $new = new stdClass;
@@ -233,6 +235,8 @@ class Invoices extends BaseConnection
             $new->unidadMedida = $detail->custom_value2;
             $details[] = (array)$new;
 
+            $total += $new->subtotal;
+
         }
 
         $dateISOFormatted = substr( Carbon::parse($model->date)->format('Y-m-d\TH:i:s.u'), 0, -3);
@@ -249,15 +253,15 @@ class Invoices extends BaseConnection
             "codigoCliente" => $client->id."",
             "codigoMetodoPago" => $model->custom_value3,
             "numeroTarjeta" => null,
-            "montoTotal" => $model->amount,
+            "montoTotal" => $total,
             "codigoMoneda" => 1,
-            "montoTotalMoneda" => $model->amount,
+            "montoTotalMoneda" => $total,
             "usuario" => $user->first_name . " " . $user->last_name,
             "emailCliente" => null,
             "telefonoCliente" => $client->phone,
             "extras" => null,
             "codigoLeyenda" => $model->custom_value1,
-            "montoTotalSujetoIva" => $model->amount,
+            "montoTotalSujetoIva" => $total,
             "tipoCambio" => 1 ,
             "detalles" => $details      
         ];
