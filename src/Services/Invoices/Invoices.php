@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Services\Invoices;
 
+use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\BaseConnection;
 use Exception;
@@ -234,11 +235,13 @@ class Invoices extends BaseConnection
 
         }
 
+        $dateISOFormatted = substr( Carbon::parse($model->date)->format('Y-m-d\TH:i:s.u'), 0, -3);
+
         $data = [
 
             "numeroFactura" => $model->number,
             "codigoPuntoVenta" => 1,
-            "fechaEmision" => $model->date,
+            "fechaEmision" => $dateISOFormatted,
             "nombreRazonSocial" => $client->name,
             "codigoTipoDocumentoIdentidad" => $client->custom_value1,
             "numeroDocumento" => $client->id_number,

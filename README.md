@@ -1,9 +1,9 @@
-# CLIENT FEL PACKAGE v1.2.1  (invoiceninja version 5.0.39)
+# CLIENT FEL PACKAGE v1.2.2  (invoiceninja version 5.0.39)
 
 ## Client for consuming services in FEL, for invoicing
 
 
-## Fresh installion
+## Fresh installation
 
 #### STEP 1
 -   `php artisan migrate` for creating new tables of package
