@@ -36,7 +36,7 @@ trait InvoiceFelTrait
             $input = $invoice_service->getInvoiceByCuf();
 
             Log::debug("response invoice => " . json_encode($input));
-            
+            $input['id_origin'] = $this->id;
             FelInvoice::create($input);
 
             return true;

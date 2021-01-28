@@ -4,8 +4,11 @@ namespace EmizorIpx\ClientFel\Services\Invoices;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\BaseConnection;
+use Exception;
 use Facade\FlareClient\Http\Client;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class Invoices extends BaseConnection
 {
@@ -197,5 +200,74 @@ class Invoices extends BaseConnection
 
             throw new ClientFelException("Error en la homologacion del producto: " . $ex->getMessage());
         }
+    }
+
+    public function buildData($model) {
+
+        try{
+
+        Log::debug("check model: " . json_encode($model));
+        
+        $client = $model->client;
+
+        $user = $model->user;
+    
+        $line_items = $model->line_items;
+
+        foreach($line_items as $detail) {
+            
+            $new = new stdClass;
+
+            $hashid = new Hashids(config('ninja.hash_salt'),10);
+
+            $new->codigoProducto =  $hashid->decode($detail->product_id)[0] .""; // this values was added only frontend Be careful
+            $new->descripcion = $detail->notes;
+            $new->precioUnitario = $detail->cost;
+            $new->subTotal = $detail->quantity * $detail->cost;
+            $new->cantidad = $detail->quantity;
+            $new->numeroSerie =null;
+            if ($detail->discount > 0)
+                $new->montoDescuento =$detail->discount;
+            $new->numeroImei =null;
+            $new->unidadMedida = $detail->custom_value2;
+            $details[] = (array)$new;
+
+        }
+
+        $data = [
+
+            "numeroFactura" => $model->number,
+            "codigoPuntoVenta" => 1,
+            "fechaEmision" => $model->date,
+            "nombreRazonSocial" => $client->name,
+            "codigoTipoDocumentoIdentidad" => $client->custom_value1,
+            "numeroDocumento" => $client->id_number,
+            "complemento" => null,
+            "codigoCliente" => $client->id."",
+            "codigoMetodoPago" => $model->custom_value3,
+            "numeroTarjeta" => null,
+            "montoTotal" => $model->amount,
+            "codigoMoneda" => 1,
+            "montoTotalMoneda" => $model->amount,
+            "usuario" => $user->first_name . " " . $user->last_name,
+            "emailCliente" => null,
+            "telefonoCliente" => $client->phone,
+            "extras" => null,
+            "codigoLeyenda" => $model->custom_value1,
+            "montoTotalSujetoIva" => $model->amount,
+            "tipoCambio" => 1 ,
+            "detalles" => $details      
+        ];
+
+        Log::debug(" build invoice to send: .... " . json_encode($data));
+        $this->setData($data);
+
+        } catch(Exception $ex) {
+            
+            Log::error($ex->getMessage());
+
+            throw new ClientFelException("Ocurrio un problema al construir los datos para enviar a FEL");
+        }
+        
     }
 }
