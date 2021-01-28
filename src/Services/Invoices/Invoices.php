@@ -235,7 +235,7 @@ class Invoices extends BaseConnection
             $new->unidadMedida = $detail->custom_value2;
             $details[] = (array)$new;
 
-            $total += $new->subtotal;
+            $total += $new->subTotal;
 
         }
 
