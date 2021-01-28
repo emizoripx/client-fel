@@ -14,11 +14,11 @@ class ProductFelObserver
         $access_token = FelClientToken::getTokenByAccount($model->company_id);
    
         try {
-
+            \Log::debug("model producto : " . json_encode($model));
             $service = new Products($access_token);
             
             $service->setData([
-                'codigo_producto' => $model->product_key, 
+                'codigo_producto' => $model->id, 
                 'codigo_producto_sin' => $model->custom_value1,
                 'codigo_unidad' => $model->custom_value2,
                 'nombre_unidad' => $model->custom_value3
