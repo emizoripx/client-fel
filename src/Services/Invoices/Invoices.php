@@ -239,7 +239,7 @@ class Invoices extends BaseConnection
 
         }
 
-        $dateISOFormatted = substr( Carbon::parse($model->date)->format('Y-m-d\TH:i:s.u'), 0, -3);
+        $dateISOFormatted = substr( Carbon::parse(Carbon::now())->format('Y-m-d\TH:i:s.u'), 0, -3);
 
         $data = [
 
