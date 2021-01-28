@@ -30,10 +30,7 @@ class ClientFelServiceProvider extends ServiceProvider
 
         $product = $this->app->make((Config::get('clientfel.entity_table_product')));
         $product::observe(new ProductFelObserver);
-            
-        $invoice = $this->app->make(Config::get('clientfel.entity_table_invoice'));
-        $invoice::observe(new InvoiceFelObserver);
-    }
+     }
 
     public function register()
     {
