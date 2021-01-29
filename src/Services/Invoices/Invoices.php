@@ -207,7 +207,7 @@ class Invoices extends BaseConnection
 
         try{
 
-        Log::debug("check model: " . json_encode($model));
+        // Log::debug("check model: " . json_encode($model));
         
         $client = $model->client;
 
@@ -216,7 +216,7 @@ class Invoices extends BaseConnection
         $line_items = $model->line_items;
 
         $total = 0;
-
+            Log::debug("lines model => " . json_encode($line_items));
         foreach($line_items as $detail) {
             
             $new = new stdClass;

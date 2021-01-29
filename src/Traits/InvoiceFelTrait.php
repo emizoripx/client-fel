@@ -36,11 +36,12 @@ trait InvoiceFelTrait
 
             $input = $invoice_service->getInvoiceByCuf();
 
-            Log::debug("response invoice => " . json_encode($input));
-
+            
             $hashid = new Hashids (config('ninja.hash_salt'),10);
             
             $input['id_origin'] = $hashid->decode($this->hashed_id)[0] . "";
+
+            Log::debug("response invoice with origin => " . json_encode($input));
 
             FelInvoice::create($input);
 
