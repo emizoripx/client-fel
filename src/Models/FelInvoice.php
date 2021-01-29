@@ -38,7 +38,8 @@ class FelInvoice extends Model {
         'errores',
         'montoTotalSujetoIva',
         'tipoCambio',
-        'detalle'
+        'detalle',
+        'id_origin'
     ];
 
     protected $casts = [
