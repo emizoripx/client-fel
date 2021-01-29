@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoice;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\Log;
 
 trait InvoiceFelTrait
@@ -36,7 +37,11 @@ trait InvoiceFelTrait
             $input = $invoice_service->getInvoiceByCuf();
 
             Log::debug("response invoice => " . json_encode($input));
-            $input['id_origin'] = $this->id;
+
+            $hashid = new Hashids (config('ninja.hash_salt'),10);
+            
+            $input['id_origin'] = $hashid->decode($this->hashed_id)[0] . "";
+
             FelInvoice::create($input);
 
             return true;
