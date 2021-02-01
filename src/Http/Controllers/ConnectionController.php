@@ -80,8 +80,8 @@ class ConnectionController extends BaseController
 
     public function getToken()
     {
-        $companyId = 1;
-        // $companyId = auth()->user()->company()->id
+        
+        $companyId = auth()->user()->company()->id;
        
         $felClienttoken = FelClientToken::whereAccountId($companyId)->first();
 
