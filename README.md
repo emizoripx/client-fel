@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.2.7  (invoiceninja version 5.0.39)
+# CLIENT FEL PACKAGE v1.3.0  (invoiceninja version 5.0.56)
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -54,8 +54,18 @@
     after register is executed getToken
 
 // This is not available for now, homologate endpoint now is done inside creation of product
-- HOMOLOGATE PRODUCTS `/api/v1/clientfel/homologateProduct`
-    - json : `{ "codigo_producto" : 12, "codigo_producto_sin": 83141, "codigo_unidad" : 1, "nombre_unidad" : "unidad" }` codigo_product_sin must exists in SIN list products
+- HOMOLOGATE PRODUCTS 
+    - [POST]`/api/v1/clientfel/homologateProduct`
+        - json : `{ "codigo_producto" : 12, "codigo_producto_sin": 83141, "codigo_unidad" : 1, "nombre_unidad" : "unidad" }` codigo_product_sin must exists in SIN list products
 
+- GET PARAMETRICS
+    - [GET] `/api/v1/clientfel/parametricas/motivo-anulacion`
+    - [GET] `/api/v1/clientfel/parametricas/paises`
+    - [GET] `/api/v1/clientfel/parametricas/tipos-documento-de-identidad`
+    - [GET] `/api/v1/clientfel/parametricas/metodos_de_pago`
+    - [GET] `/api/v1/clientfel/parametricas/monedas`
+    - [GET] `/api/v1/clientfel/parametricas/unidades`
+    - [GET] `/api/v1/clientfel/parametricas/actividades`
+    - [GET] `/api/v1/clientfel/parametricas/leyendas`
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document

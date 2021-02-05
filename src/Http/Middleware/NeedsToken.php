@@ -38,6 +38,7 @@ class NeedsToken
         }
 
         $request_array['access_token'] = $access_token;
+        $request_array['company_id'] = $companyId;
         $request->replace($request_array);
 
         return $next($request);
