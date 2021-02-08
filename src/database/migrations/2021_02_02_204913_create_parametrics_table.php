@@ -78,7 +78,7 @@ class CreateParametricsTable extends Migration
         // Leyendas de factura
         Schema::create('fel_captions', function (Blueprint $table) {
             $table->increments('id');
-            $table->increments('codigo');
+            $table->string('codigo');
             $table->string('descripcion');
             $table->unsignedInteger('company_id');
             $table->timestamps();
