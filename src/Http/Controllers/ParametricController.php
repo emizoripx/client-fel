@@ -5,8 +5,7 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelParametric;
-use EmizorIpx\ClientFel\Services\Parametric;
-use EmizorIpx\ClientFel\Utils\TypeParametrics;
+use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use Illuminate\Http\Request;
 
 class ParametricController extends BaseController
@@ -14,7 +13,7 @@ class ParametricController extends BaseController
 
     public function index(Request $request, $type)
     {
-
+        
         $success = false;
         try {
 
@@ -24,9 +23,10 @@ class ParametricController extends BaseController
                 $parametricService = new Parametric($request->access_token);
                 $parametricService->get($type);
 
-                $response = FelParametric::create($type, $parametricService->getResponse(), $request->company_id);
+                FelParametric::create($type, $parametricService->getResponse(), $request->company_id);
+                
                 $success = true;
-
+                $response = FelParametric::index($type, $request->company_id);
             }
 
             return response()->json([

@@ -8,10 +8,9 @@ class Parametrics {
     public static function routes() {
 
         
-        Route::group([ 'middleware' => ['needs_access_token'], 'namespace' => "\EmizorIpx\ClientFel\Http\Controllers" , "prefix" => "clientfel/parametricas"] , function() {
+        Route::group([ 'middleware' => ['needs_access_token'], 'namespace' => "\EmizorIpx\ClientFel\Http\Controllers" , "prefix" => "clientfel/"] , function() {
             
-            Route::get('{}', 'ParametricController@index');
-
+            Route::get('parametricas/{unidades}', 'ParametricController@index');
         });
     }
 

@@ -11,6 +11,7 @@ use EmizorIpx\ClientFel\Models\Parametric\RevocationReason;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 
+
 class FelParametric
 {
 
@@ -18,34 +19,47 @@ class FelParametric
 
     public static function create($type, $data, $company_id = null)
     {
-
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
-                $data["company_id"] = $company_id;
-                return FelActivity::create($data);
+                $data_ = array();
+                foreach($data as $d) { 
+                    $d["company_id"] = $company_id;
+                    $d["codigo"] = $d['codigo'];
+                    $d["descripcion"] = $d['descripcion'];
+                    $data_[] = $d;
+                }
+                return FelActivity::insert($data_);
                 break;
             case TypeParametrics::LEYENDAS:
-                $data["company_id"] = $company_id;
-                return FelCaption::create($data);
+                $data_ = array();
+                foreach($data as $d) { 
+                    $d["company_id"] = $company_id;
+                    $d["codigo"] = $d['codigoActividad'];
+                    $d["descripcion"] = $d['descripcion'];
+                    unset($d['codigoActividad']);
+                    $data_[] = $d;
+                }
+                
+                return FelCaption::insert($data_);
                 break;
             case TypeParametrics::MONEDAS:
-                return Currency::create($data);
+                return Currency::insert($data);
                 break;
 
             case TypeParametrics::METODOS_DE_PAGO:
-                return PaymentMethod::create($data);
+                return PaymentMethod::insert($data);
                 break;
             case TypeParametrics::PAISES:
-                return Country::create($data);
+                return Country::insert($data);
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
-                return IdentityDocumentType::create($data);
+                return IdentityDocumentType::insert($data);
                 break;
             case TypeParametrics::MOTIVO_ANULACION:
-                return RevocationReason::create($data);
+                return RevocationReason::insert($data);
                 break;
             case TypeParametrics::UNIDADES:
-                return Unit::create($data);
+                return Unit::insert($data);
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -57,10 +71,10 @@ class FelParametric
     {
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
-                return FelActivity::whereCompanyId($company_id)->all();
+                return FelActivity::whereCompanyId($company_id)->get();
                 break;
             case TypeParametrics::LEYENDAS:
-                return FelCaption::whereCompanyId($company_id)->all();
+                return FelCaption::whereCompanyId($company_id)->get();
                 break;
             case TypeParametrics::MONEDAS:
                 return Currency::all();
