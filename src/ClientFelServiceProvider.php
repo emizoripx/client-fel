@@ -28,8 +28,9 @@ class ClientFelServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('needs_access_token', NeedsToken::class);
 
-        $product = $this->app->make((Config::get('clientfel.entity_table_product')));
-        $product::observe(new ProductFelObserver);
+        // TODO: make this work, not working by now
+        // $product = $this->app->make((Config::get('clientfel.entity_table_product')));
+        // $product::observe(new ProductFelObserver);
      }
 
     public function register()
