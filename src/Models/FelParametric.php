@@ -99,4 +99,51 @@ class FelParametric
                 break;
         }
     }
+
+    public static function existsParametric($type, $company_id){
+        switch ($type) {
+            case TypeParametrics::ACTIVIDADES:
+                return FelActivity::where('company_id',$company_id)->exists();
+                break;
+            
+            case TypeParametrics::LEYENDAS:
+                return FelCaption::whereCompanyId($company_id)->exists();
+                break;
+            
+            case TypeParametrics::MONEDAS:
+                $currencies = Currency::first();
+                return is_null($currencies);
+
+                break;
+            
+            case TypeParametrics::METODOS_DE_PAGO:
+                $payment = PaymentMethod::first();
+                return is_null($payment);
+                break;
+            
+            case TypeParametrics::PAISES:
+                $country  = Country::first();
+                return is_null($country);
+                break;
+            
+            case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
+                $identityDocument = IdentityDocumentType::first();
+                return is_null($identityDocument);
+                break;
+            
+            case TypeParametrics::MOTIVO_ANULACION:
+                $revocationReason = RevocationReason::first();
+                return is_null($revocationReason);
+                break;
+            
+            case TypeParametrics::UNIDADES:
+                $units = Unit::first();
+                return is_null($units);
+                break;
+            
+            default:
+                throw new ClientFelException("No existe el tipo de parametrica");
+                break;
+        }
+    }
 }
