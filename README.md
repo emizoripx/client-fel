@@ -124,4 +124,4 @@
             }
     ```
 ## Some Notes
-- Invoices are created using branch_number = 0 , and compra-venta as a type of document
+- Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
