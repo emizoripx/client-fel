@@ -12,4 +12,19 @@ class TypeParametrics {
     const UNIDADES="unidades";
     const ACTIVIDADES="actividades";
     const LEYENDAS="leyendas";
+
+
+    public static function getAll()
+    {
+        return [
+            SELF::MOTIVO_ANULACION,
+            SELF::PAISES,
+            SELF::TIPOS_DOCUMENTO_IDENTIDAD,
+            SELF::METODOS_DE_PAGO,
+            SELF::MONEDAS,
+            SELF::UNIDADES,
+            SELF::ACTIVIDADES,
+            SELF::LEYENDAS
+        ];
+    }
 }

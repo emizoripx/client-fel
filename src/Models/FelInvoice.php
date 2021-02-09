@@ -39,7 +39,8 @@ class FelInvoice extends Model {
         'montoTotalSujetoIva',
         'tipoCambio',
         'detalle',
-        'id_origin'
+        'id_origin',
+        'company_id'
     ];
 
     protected $casts = [
@@ -55,4 +56,8 @@ class FelInvoice extends Model {
         'errores' => 'json',
         'detalle' => 'json'
     ];
+
+    public static function getByCompanyId($company_id) {
+        return self::where('company_id', $company_id)->get();
+    }
 }
