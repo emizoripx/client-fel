@@ -70,7 +70,7 @@
 
 
 ## FEL data appended
-- Data will be appeneded in data response from file `App\Http\Controllers\BaseController;`
+- Data will be appended in data response from file `App\Http\Controllers\BaseController;`
    ```php
 
     <?php
