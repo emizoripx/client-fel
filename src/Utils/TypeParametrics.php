@@ -12,6 +12,7 @@ class TypeParametrics {
     const UNIDADES="unidades";
     const ACTIVIDADES="actividades";
     const LEYENDAS="leyendas";
+    const PRODUCTOS_SIN="productos-sin";
 
 
     public static function getAll()
@@ -24,7 +25,8 @@ class TypeParametrics {
             SELF::MONEDAS,
             SELF::UNIDADES,
             SELF::ACTIVIDADES,
-            SELF::LEYENDAS
+            SELF::LEYENDAS,
+            SELF::PRODUCTOS_SIN
         ];
     }
 }

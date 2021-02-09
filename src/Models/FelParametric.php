@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Models\Parametric\Currency;
 use EmizorIpx\ClientFel\Models\Parametric\IdentityDocumentType;
 use EmizorIpx\ClientFel\Models\Parametric\PaymentMethod;
+use EmizorIpx\ClientFel\Models\Parametric\SINProduct;
 use EmizorIpx\ClientFel\Models\Parametric\RevocationReason;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
@@ -61,6 +62,9 @@ class FelParametric
             case TypeParametrics::UNIDADES:
                 return Unit::insert($data);
                 break;
+            case TypeParametrics::PRODUCTOS_SIN:
+                return SINProduct::insert($data);
+                break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
@@ -94,6 +98,9 @@ class FelParametric
             case TypeParametrics::UNIDADES:
                 return Unit::all();
                 break;
+            case TypeParametrics::PRODUCTOS_SIN:
+                return SINProduct::all();
+                break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
@@ -103,11 +110,13 @@ class FelParametric
     public static function existsParametric($type, $company_id){
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
-                return FelActivity::where('company_id',$company_id)->exists();
+                $activity = FelActivity::where('company_id',$company_id)->first();
+                return is_null($activity);
                 break;
             
             case TypeParametrics::LEYENDAS:
-                return FelCaption::whereCompanyId($company_id)->exists();
+                $caption = FelCaption::whereCompanyId($company_id)->first();
+                return is_null($caption);
                 break;
             
             case TypeParametrics::MONEDAS:
@@ -139,6 +148,10 @@ class FelParametric
             case TypeParametrics::UNIDADES:
                 $units = Unit::first();
                 return is_null($units);
+                break;
+            case TypeParametrics::PRODUCTOS_SIN:
+                $products = SINProduct::first();
+                return is_null($products);
                 break;
             
             default:

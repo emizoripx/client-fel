@@ -65,46 +65,13 @@ class ConnectionController extends BaseController
 
             $parametricService = new Parametric($credentials->access_token);
             
-            if( !FelParametric::existsParametric(TypeParametrics::ACTIVIDADES, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::ACTIVIDADES);
-                $response = FelParametric::create(TypeParametrics::ACTIVIDADES, $parametricService->getResponse(), $input['account_id']);
-            }
-            
-            if( !FelParametric::existsParametric(TypeParametrics::LEYENDAS, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::LEYENDAS);
-                $response = FelParametric::create(TypeParametrics::LEYENDAS, $parametricService->getResponse(), $input['account_id']);
-            }
-            
-            
-            if( FelParametric::existsParametric(TypeParametrics::MONEDAS, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::MONEDAS);
-                $response = FelParametric::create(TypeParametrics::MONEDAS, $parametricService->getResponse(), $input['account_id']);
-            }
-            
-            if( FelParametric::existsParametric(TypeParametrics::METODOS_DE_PAGO, $input['account_id']) ){
+            $types = TypeParametrics::getAll();
 
-                $parametricService->get(TypeParametrics::METODOS_DE_PAGO);
-                $response = FelParametric::create(TypeParametrics::METODOS_DE_PAGO, $parametricService->getResponse(), $input['account_id']);
-            }
-
-            if( FelParametric::existsParametric(TypeParametrics::PAISES, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::PAISES);
-                $response = FelParametric::create(TypeParametrics::PAISES, $parametricService->getResponse(), $input['account_id']);
-            }
-
-            if( FelParametric::existsParametric(TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD);
-                $response = FelParametric::create(TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD, $parametricService->getResponse(), $input['account_id']);
-            }
-
-            if( FelParametric::existsParametric(TypeParametrics::MOTIVO_ANULACION, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::MOTIVO_ANULACION);
-                $response = FelParametric::create(TypeParametrics::MOTIVO_ANULACION, $parametricService->getResponse(), $input['account_id']);
-            }
-
-            if( FelParametric::existsParametric(TypeParametrics::UNIDADES, $input['account_id']) ){
-                $parametricService->get(TypeParametrics::UNIDADES);
-                $response = FelParametric::create(TypeParametrics::UNIDADES, $parametricService->getResponse(), $input['account_id']);
+            foreach($types as $type){
+                if( FelParametric::existsParametric($type, $input['account_id']) ){
+                    $parametricService->get($type);
+                    $response = FelParametric::create($type, $parametricService->getResponse(), $input['account_id']);
+                }
             }
 
             return response()->json([
