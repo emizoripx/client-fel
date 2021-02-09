@@ -4,10 +4,10 @@ namespace EmizorIpx\ClientFel\Utils;
 
 class TypeParametrics {
 
-    const MOTIVO_ANULACION="motivo-anulacion";
+    const MOTIVO_ANULACION="motivos-anulacion";
     const PAISES="paises";
     const TIPOS_DOCUMENTO_IDENTIDAD="tipos-documento-de-identidad";
-    const METODOS_DE_PAGO="metodos_de_pago";
+    const METODOS_DE_PAGO="metodos-de-pago";
     const MONEDAS="monedas";
     const UNIDADES="unidades";
     const ACTIVIDADES="actividades";
