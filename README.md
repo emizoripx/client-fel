@@ -70,7 +70,8 @@
 
 
 ## FEL data appended
-- Data will be appeneded in data response from file `App\Http\Controllers\BaseController;`
+- Data will be appeneded in data response from file `App\Http\Controllers\BaseController;` 
+    it is necessary to include as an query argument `include_fel_data` with value=true
    ```php
 
     <?php
