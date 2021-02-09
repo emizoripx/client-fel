@@ -67,5 +67,60 @@
     - [GET] `/api/v1/clientfel/parametricas/unidades`
     - [GET] `/api/v1/clientfel/parametricas/actividades`
     - [GET] `/api/v1/clientfel/parametricas/leyendas`
+
+
+## FEL data appended
+- Data will be appeneded in data response from file `App\Http\Controllers\BaseController;`
+   ```php
+
+    <?php
+        
+        namespace App\Http\Controllers;
+        use EmizorIpx\ClientFel\Utils\Presenter;
+        protected function response($response)
+        {
+                $index = request()->input('index') ?: $this->forced_index;
+
+                if ($index == 'none') {
+                    ...
+                } else {
+                    ...
+                        $response = Presenter::appendFelData($response, auth()->user()->getCompany()->id);
+                    
+                    ...
+                }
+                ...
+
+                return ...
+            }
+
+
+   ```
+-   This Appended contains this structure:
+
+    ```json
+
+            {
+                "data": [],
+                "fel_data": {
+                    "invoices": [],
+                    "products":[],
+                    "clients":[],
+                    "parametrics":
+                    {
+                        "motivo-anulacion": [],
+                        "paises": [],
+                        "tipos-documento-de-identidad": [],
+                        "metodos_de_pago": [],
+                        "monedas": [],
+                        "unidades":[],
+                        "actividades":[],
+                        "leyendas":[],
+                    }
+                    
+                },
+                "meta": {}
+            }
+    ```
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document
