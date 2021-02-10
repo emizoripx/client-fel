@@ -29,8 +29,7 @@ class ConnectionController extends Controller
         try{
 
             $cred = $this->credential_repo
-                ->setClientId($input['client_id'])
-                ->setClientSecret($input['client_secret'])
+                ->setCredentials($input['client_id'],$input['client_secret'])
                 ->setCompanyId(auth()->user()->company()->id)
                 ->register()
                 ->syncParametrics();
