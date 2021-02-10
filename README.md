@@ -53,8 +53,8 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
         //     'email'             => new NewUniqueUserRule(),
         //     'privacy_policy'    => 'required',
         //     'terms_of_service'  => 'required',
-            'client_id'         => 'required',
-            'client_secret'     => 'required'
+            'client_id'         => 'string|max:100',
+            'client_secret'     => 'string|max:100'
         // ];
     // }
 
