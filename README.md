@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.4.4  (invoiceninja version 5.0.56)
+# CLIENT FEL PACKAGE v1.4.5  (invoiceninja version 5.0.56)
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -25,7 +25,7 @@
 
     namespace App\Repositories;
     
-    class BaseRepository{
+    //class BaseRepository{
     ...
     
     # insert here the method that send to fel
@@ -34,7 +34,80 @@
 
     # before return
 
-        return $model->fresh();
+        // return $model->fresh();
+```
+
+#### STEP 3
+go to `App\Http\Requests\Account\CreateAccountRequest` and add the following code:
+
+```php
+
+    // public function rules()
+    // {
+        // return [
+        //     //'email' => 'required|string|email|max:100',
+        //     'first_name'        => 'string|max:100',
+        //     'last_name'         =>  'string:max:100',
+        //     'password'          => 'required|string|min:6',
+        //     'email'             => 'bail|required|email:rfc,dns',
+        //     'email'             => new NewUniqueUserRule(),
+        //     'privacy_policy'    => 'required',
+        //     'terms_of_service'  => 'required',
+            'client_id'         => 'required',
+            'client_secret'     => 'required'
+        // ];
+    // }
+
+```
+
+#### STEP 4
+- go to `App\Http\Controllers\AccountController` and add the following code with all references
+    this will after register new account will sync new parametrics and get Token
+
+```php
+    use EmizorIpx\ClientFel\Repository\CredentialRepository;
+    
+    ...
+    
+     protected $credentialRepository;
+
+    // public function __construct(
+        CredentialRepository $credentialRepository
+     //   ) {
+    //     parent::__construct();
+
+
+        // The next line injects de credential repository
+
+        $this->credential_repo = $credentialRepository;
+        
+    // }
+
+
+        ...
+
+
+    // public function store(CreateAccountRequest $request)
+    // {
+    //     $account = CreateAccount::dispatchNow($request->all());
+
+    //     if (! ($account instanceof Account)) {
+    //         return $account;
+    //     }
+
+    //     $ct = CompanyUser::whereUserId(auth()->user()->id);
+
+    //     config(['ninja.company_id' => $ct->first()->company->id]);
+
+        $this->credential_repo
+            ->setCredentials($request->client_id,$request->client_secret)
+            ->setCompanyId($ct->first()->company->id)
+            ->register()
+            ->syncParametrics();
+
+       // return $this->listResponse($ct);
+    //}
+
 ```
 
 ## Update library

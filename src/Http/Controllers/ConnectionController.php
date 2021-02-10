@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class ConnectionController extends Controller
 {
 
-    protected $credential_repo;
+    protected $credentialrepo;
 
     protected $connection;
 
@@ -28,7 +28,7 @@ class ConnectionController extends Controller
 
         try{
 
-            $cred = $this->credential_repo
+            $this->credentialrepo
                 ->setCredentials($input['client_id'],$input['client_secret'])
                 ->setCompanyId(auth()->user()->company()->id)
                 ->register()

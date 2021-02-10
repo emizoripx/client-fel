@@ -35,9 +35,13 @@ class CredentialRepository
     {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
+
+        return $this;
     }
     public function setCompanyId($companyId) {
         $this->company_id = $companyId;
+
+        return $this;
     }
 
     public function hasCredentials()
@@ -73,6 +77,8 @@ class CredentialRepository
         $this->authenticate();
 
         $this->updateCredentials();
+
+        return $this;
        
     }
 
@@ -88,6 +94,8 @@ class CredentialRepository
             "client_id" => $this->client_id,
             "client_secret" => $this->client_secret
         ]);
+
+        return $this;
     }
 
     public function updateCredentials()
@@ -97,6 +105,8 @@ class CredentialRepository
         $this->credential->setExpiresIn($this->authenticate_response['expires_in']);
         $this->credential->setAccessToken($this->authenticate_response['access_token']);
         $this->credential->save();
+
+        return $this;
 
     }
 
@@ -113,6 +123,7 @@ class CredentialRepository
                 FelParametric::create($type, $parametricService->getResponse(), $this->company_id);
             }
         }
+        return $this;
 
     }
 
