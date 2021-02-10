@@ -17,7 +17,7 @@ class CreateSinProductsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('codigo');
             $table->unsignedInteger('codigoActividad');
-            $table->string('decripcion', 1000);
+            $table->string('descripcion', 1000);
             $table->timestamps();
         });
     }
