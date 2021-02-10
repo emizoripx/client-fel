@@ -1,82 +1,43 @@
 <?php
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
-use EmizorIpx\ClientFel\Models\FelParametric;
+use EmizorIpx\ClientFel\Repository\CredentialRepository;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
-use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
-use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 
-class ConnectionController extends BaseController
+class ConnectionController extends Controller
 {
+
+    protected $credential_repo;
 
     protected $connection;
 
-    public function __construct(Connection $connection)
+    public function __construct(CredentialRepository $credential_repo, Connection $connection)
     {
-        parent::__construct();
+        $this->credentialrepo = $credential_repo;
         $this->connection = $connection;
     }
  
     public function registerCredentials(Request $request)
     {
-
         $input = $request->only(['client_id', 'client_secret']);
-
-        if ($input['client_id'] && $input['client_id'] == "") {
-            $error[] = "client_id is required";
-        }
-
-        if ($input['client_secret'] && $input['client_secret'] == "") {
-            $error[] = "client_secret is required";
-        }
-    
-        if( !empty($error) ) {
-
-            return response()->json(['success' => false, "msg" => $error]);
-        }
-
-        $input['grant_type'] = "client_credentials";
-        $input['account_id'] = auth()->user()->company()->id;
-        $credentials = FelClientToken::createOrUpdate($input);
 
         try{
 
-            $data = [
-                "grant_type" => "client_credentials",
-                "client_id" => $credentials->getClientId(),
-                "client_secret" => $credentials->getClientSecret()
-            ];
-
-            \Log::debug("data : " . json_encode($data));
-            $response = $this->connection->authenticate($data);
-    
-            $credentials->setTokenType($response['token_type']);
-            $credentials->setExpiresIn($response['expires_in']);
-            $credentials->setAccessToken($response['access_token']);
-            $credentials->save();
-
-            Log::debug("credentials : " . json_encode($credentials));
-
-            $parametricService = new Parametric($credentials->access_token);
-            
-            $types = TypeParametrics::getAll();
-
-            foreach($types as $type){
-                if( FelParametric::existsParametric($type, $input['account_id']) ){
-                    $parametricService->get($type);
-                    $response = FelParametric::create($type, $parametricService->getResponse(), $input['account_id']);
-                }
-            }
+            $cred = $this->credential_repo
+                ->setClientId($input['client_id'])
+                ->setClientSecret($input['client_secret'])
+                ->setCompanyId(auth()->user()->company()->id)
+                ->register()
+                ->syncParametrics();
 
             return response()->json([
                 "success" =>true,
-                "credentials" => $credentials
+                "credentials" => $cred->getCredential()
             ]);
 
         } catch( ClientFelException $ex) {
@@ -85,7 +46,8 @@ class ConnectionController extends BaseController
 
             return response()->json([
                 "success" =>false,
-                "credentials" => []
+                "credentials" => [],
+                "msg" => $ex->getMessage()
             ]);
         }
         
