@@ -63,7 +63,16 @@ class FelParametric
                 return Unit::insert($data);
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
-                return SINProduct::insert($data);
+
+                $data_ = array();
+                foreach($data as $d) { 
+                    $d["company_id"] = $company_id;
+                    $d["codigo"] = $d['codigo'];
+                    $d["codigoActividad"] = $d['codigoActividad'];
+                    $d["descripcion"] = $d['descripcion'];
+                    $data_[] = $d;
+                }
+                return SINProduct::insert($data_);
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -99,7 +108,7 @@ class FelParametric
                 return Unit::all();
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
-                return SINProduct::all();
+                return SINProduct::whereCompanyId($company_id)->get();
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -150,7 +159,7 @@ class FelParametric
                 return is_null($units);
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
-                $products = SINProduct::first();
+                $products = SINProduct::whereCompanyId($company_id)->first();
                 return is_null($products);
                 break;
             
