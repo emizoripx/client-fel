@@ -72,7 +72,7 @@ class FelParametric
                     $d["descripcion"] = $d['descripcion'];
                     $data_[] = $d;
                 }
-                return SINProduct::insert($data);
+                return SINProduct::insert($data_);
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
