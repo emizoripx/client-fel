@@ -5,6 +5,7 @@ use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelInvoice;
 use EmizorIpx\ClientFel\Models\FelParametric;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
+use stdClass;
 
 class Presenter {
 
@@ -14,14 +15,14 @@ class Presenter {
     {
         $types = TypeParametrics::getAll();
 
-        $prametrics = array();
+        $parametrics = new stdClass;
 
         foreach ( $types as $type) {
             //TODO: cached tables 
-            $prametrics[][$type] = FelParametric::index($type, $company_id);
+            $parametrics->{$type} = FelParametric::index($type, $company_id);
         }
 
-        $data["fel_data"]["parametrics"] = $prametrics;
+        $data["fel_data"]["parametrics"] = $parametrics;
         
         $data["fel_data"]["invoices"] = FelInvoice::getByCompanyId($company_id);
 
