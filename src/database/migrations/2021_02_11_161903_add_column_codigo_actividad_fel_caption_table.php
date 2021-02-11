@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddColumnCodigoActividadFelCaptionTable extends Migration
@@ -13,6 +14,7 @@ class AddColumnCodigoActividadFelCaptionTable extends Migration
      */
     public function up()
     {
+        DB::statement("truncate fel_captions");
         Schema::table('fel_captions', function(Blueprint $table) {
             $table->unsignedInteger('codigoActividad');
         });
