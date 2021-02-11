@@ -17,7 +17,7 @@ class ChangeTypeColumnTable extends Migration
 
         DB::statement("truncate fel_captions");
         // Leyendas de factura
-        Schema::create('fel_captions', function (Blueprint $table) {
+        Schema::table('fel_captions', function (Blueprint $table) {
             $table->unsignedInteger('codigo')->change();
         });
     }
