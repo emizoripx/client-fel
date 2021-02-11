@@ -15,15 +15,12 @@ class Presenter {
     {
         $types = TypeParametrics::getAll();
 
-        $parametrics = new stdClass;
-
         foreach ( $types as $type) {
             //TODO: cached tables 
-            $parametrics->{$type} = FelParametric::index($type, $company_id);
+
+            $data['fel_data'][$type] = FelParametric::index($type, $company_id);
         }
 
-        $data["fel_data"]["parametrics"] = $parametrics;
-        
         $data["fel_data"]["invoices"] = FelInvoice::getByCompanyId($company_id);
 
         $data["fel_data"]["products"] = FelSyncProduct::getByCompanyId($company_id);
