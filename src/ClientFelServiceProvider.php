@@ -23,14 +23,13 @@ class ClientFelServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__."/config/clientfel.php" => config_path('clientfel.php')
         ]);
+        $this->mergeConfigFrom(__DIR__.'/config/clientfel.php', 'clientfel');
 
         $router = $this->app->make(Router::class);
 
         $router->aliasMiddleware('needs_access_token', NeedsToken::class);
-
-        // TODO: make this work, not working by now
-        // $product = $this->app->make((Config::get('clientfel.entity_table_product')));
-        // $product::observe(new ProductFelObserver);
+        $product = $this->app->make((Config::get('clientfel.entity_table_product')));
+        $product::observe(new ProductFelObserver);
      }
 
     public function register()
