@@ -35,9 +35,9 @@ class FelParametric
                 $data_ = array();
                 foreach($data as $d) { 
                     $d["company_id"] = $company_id;
-                    $d["codigo"] = $d['codigoActividad'];
+                    $d["codigo"] = $d['codigo'];
+                    $d["codigoActividad"] = $d['codigoActividad'];
                     $d["descripcion"] = $d['descripcion'];
-                    unset($d['codigoActividad']);
                     $data_[] = $d;
                 }
                 
