@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Http\Middleware\NeedsToken;
 use EmizorIpx\ClientFel\Observers\InvoiceFelObserver;
 use EmizorIpx\ClientFel\Observers\InvoiceFelService;
 use EmizorIpx\ClientFel\Observers\ProductFelObserver;
+use EmizorIpx\ClientFel\Repository\ClientRepository;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,11 @@ class ClientFelServiceProvider extends ServiceProvider
         $router->aliasMiddleware('needs_access_token', NeedsToken::class);
         $product = $this->app->make((Config::get('clientfel.entity_table_product')));
         $product::observe(new ProductFelObserver);
+
+        $this->app->bind('clientfel', function($app) {
+            return new ClientRepository();
+        });
+
      }
 
     public function register()

@@ -21,7 +21,10 @@
         "laravel": {
             "providers": [
                 "EmizorIpx\\ClientFel\\ClientFelServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "ClientFel": "EmizorIpx\\ClientFel\\Facades\\ClientFel"
+            }
         }
     }
 }
