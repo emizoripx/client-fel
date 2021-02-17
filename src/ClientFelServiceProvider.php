@@ -19,7 +19,7 @@ class ClientFelServiceProvider extends ServiceProvider
     public function boot()
     {
         # ROUTES
-        $this->loadRoutesFrom(__DIR__ . "/routes/bitacora.php");
+        $this->loadRoutesFrom(__DIR__ . "/routes/Bitacora.php");
         
         # MIGRATIONS
         $this->loadMigrationsFrom(__DIR__ . "/database/migrations");
