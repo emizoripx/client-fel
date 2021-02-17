@@ -28,6 +28,6 @@ class BitacoraType
                 break;
         }
 
-        return "<span class='badge badge-$color'>$type</badge>";
+        return "<span class='badge badge-$color'>$type</span>";
     }
 }
