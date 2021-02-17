@@ -12,6 +12,9 @@
     "minimum-stability": "dev",
     "require": {},
     "autoload":{
+        "files": [
+            "src/Utils/helpers.php"
+        ],
         "psr-4":{
 
             "EmizorIpx\\ClientFel\\":"src/"

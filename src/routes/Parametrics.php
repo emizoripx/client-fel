@@ -12,6 +12,7 @@ class Parametrics {
             
             Route::get('parametricas/{unidades}', 'ParametricController@index');
         });
+
     }
 
 }

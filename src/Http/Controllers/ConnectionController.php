@@ -3,7 +3,7 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
-use EmizorIpx\ClientFel\Repository\CredentialRepository;
+use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -16,7 +16,7 @@ class ConnectionController extends Controller
 
     protected $connection;
 
-    public function __construct(CredentialRepository $credential_repo, Connection $connection)
+    public function __construct(FelCredentialRepository $credential_repo, Connection $connection)
     {
         $this->credentialrepo = $credential_repo;
         $this->connection = $connection;

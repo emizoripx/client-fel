@@ -6,32 +6,33 @@ return [
      * API_URL is the service ip and port if necessary
      * 
      */
-    'api_url' => 'http://127.0.0.1',
+    'api_url' => env('API_URL_FEL', 'http://localhost:9080'),
 
     /**
      * 
-     * Model table where is principal account entity instance class
-     * 
-     * 'entity_table_account' => \App\Models\Account::class 
-     */
-    'entity_table_account' => "",
-
-    /**
-     * 
-     * Model where is saved products 
-     * 
-     * 'entity_table_product' => \App\Products::class
+     * Model table where is principal company entity instance class
      * 
      */
-    'entity_table_product' => "",
+    'entity_table_company' => \App\Models\Company::class,
 
     /**
      * 
      * Model where is saved products 
      * 
-     * 'entity_table_invoice' => \App\Invoice::class
+     */
+    'entity_table_product' => \App\Models\Product::class,
+    /**
+     * 
+     * Model where is saved clients 
      * 
      */
-    'entity_table_invoice' => "",
+    'entity_table_client' => \App\Models\Client::class,
+
+    /**
+     * 
+     * Model where is saved invoices 
+     * 
+     */
+    'entity_table_invoice' => \App\Models\Invoice::class,
 
 ];

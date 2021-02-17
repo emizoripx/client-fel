@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.4.6  (invoiceninja version 5.0.56)
+# CLIENT FEL PACKAGE v1.5.0  (invoiceninja version 5.0.56)
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -65,14 +65,14 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
     this will after register new account will sync new parametrics and get Token
 
 ```php
-    use EmizorIpx\ClientFel\Repository\CredentialRepository;
+    use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
     
     ...
     
      protected $credentialRepository;
 
     // public function __construct(
-        CredentialRepository $credentialRepository
+        FelCredentialRepository $credentialRepository
      //   ) {
     //     parent::__construct();
 
@@ -141,6 +141,8 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
     - [GET] `/api/v1/clientfel/parametricas/actividades`
     - [GET] `/api/v1/clientfel/parametricas/leyendas`
     - [GET] `/api/v1/clientfel/parametricas/productos-sin`
+- CHECK FOR ERRORES DESDE LA WEB
+    - [HOST]`/bitacora`
 
 
 ## FEL data appended

@@ -9,7 +9,7 @@ use EmizorIpx\ClientFel\Services\Connection\Connection;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 
-class CredentialRepository
+class FelCredentialRepository
 {
 
     private $client_id;
