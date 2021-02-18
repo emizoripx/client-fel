@@ -54,9 +54,12 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
                 "updated_at" => Carbon::now()
             ];
 
-                FelSyncProduct::where('id_origin',$model->id)
-                                ->first()
-                                ->update( $input );
+                $product = FelSyncProduct::where('id_origin',$model->id)->first();
+                
+                if (!is_null($product)) {
+
+                    $product->update( $input );
+                }
 
         } catch (Exception $ex) {
             bitacora_error("FelProductRepository:update", $ex->getMessage());
@@ -69,9 +72,13 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
 
         try {
 
-            FelSyncProduct::where('id_origin', $model->id)
-                            ->first()
-                            ->delete();
+            $product = FelSyncProduct::where('id_origin', $model->id)->first();
+
+            if (!is_null($product)) {
+
+                $product->delete();
+            }
+                            
 
         } catch (Exception $ex) {
             bitacora_error("FelProductRepository:delete", $ex->getMessage());
