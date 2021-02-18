@@ -46,7 +46,12 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         "document_number" => $model->id_number
       ];
 
-      FelClient::where("id_origin", $model->id)->first()->update($input);
+      $client = FelClient::where("id_origin", $model->id)->first();
+      
+      if (! is_null($client) ) {
+        $client->update($input);
+      }
+
     } catch (Exception $ex) {
       bitacora_error("FelClientRepository:update", $ex->getMessage());
     }
@@ -57,8 +62,12 @@ class FelClientRepository extends BaseRepository implements RepoInterface
     bitacora_info("FelClientRepository:delete", "");
 
     try {
+        $client = FelClient::where("id_origin", $model->id)->first();
 
-      FelClient::where("id_origin", $model->id)->first()->delete();
+        if (!is_null($client)) {
+          $client->delete();
+        }
+
     } catch (Exception $ex) {
       bitacora_error("FelClientRepository:delete", $ex->getMessage());
     }
