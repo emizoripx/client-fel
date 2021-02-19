@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.6.0  (invoiceninja version 5.0.56)
+# CLIENT FEL PACKAGE v1.6.1  (invoiceninja version 5.0.56)
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -18,6 +18,7 @@
 
     Credentials::routes();
 ```
+- got to `app/Models/Invoices.php` and add `use InvoiceFelTrait;` 
 - got to `app/Repositories/BaseRepository.php`
 ```php
     <?php
@@ -202,6 +203,6 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
             }
     ```
 
-- got to `app/Models/Invoices.php` and add `use InvoiceParametersTrait;` 
+
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
