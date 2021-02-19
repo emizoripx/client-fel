@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.5.0  (invoiceninja version 5.0.56)
+# CLIENT FEL PACKAGE v1.6.0  (invoiceninja version 5.0.56)
 
 ## Client for consuming services in FEL, for invoicing
 
@@ -18,7 +18,6 @@
 
     Credentials::routes();
 ```
-- got to `app/Models/Invoices.php` and add `use InvoiceFelTrait;` 
 - got to `app/Repositories/BaseRepository.php`
 ```php
     <?php
@@ -141,10 +140,13 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
     - [GET] `/api/v1/clientfel/parametricas/actividades`
     - [GET] `/api/v1/clientfel/parametricas/leyendas`
     - [GET] `/api/v1/clientfel/parametricas/productos-sin`
+- EMIT INVOICE
+    - [POST] `/api/v1/clientfel/invoices`    
+        json_body : {"id_origin": "xYRdG7dDzO"}  , este campo es el id de la tabla invoice
+        respuesta : {"success": true}
+
 - CHECK FOR ERRORES DESDE LA WEB
     - [HOST]`/bitacora`
-
-
 ## FEL data appended
 - Data will be appeneded in data response from file `App\Http\Controllers\BaseController;` 
     it is necessary to include as an query argument `include_fel_data` with value=true
@@ -199,5 +201,7 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                 "meta": {}
             }
     ```
+
+- got to `app/Models/Invoices.php` and add `use InvoiceParametersTrait;` 
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector

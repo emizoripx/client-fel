@@ -16,7 +16,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  
 ### Fixed
  
-## [v1.4.4] - 2021-02-10
+## [v1.6.0] - 2021-02-19
+  
+### Added
+- Observables inserted , update create , delete for invoice, products, and clients
+- endpoint create for emit invoice
+- append in a trait invoice, cuf, for real invoice invoiceninja
+- created bitacora
+
+### Changed
+- removed trait for direct change in invoice
+### Fixed
+ 
+
+ ## [v1.4.4] - 2021-02-10
   
 ### Added
 - credentials now have sync of parameters in endpoint api,
@@ -25,3 +38,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
  
+

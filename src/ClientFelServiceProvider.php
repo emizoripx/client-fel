@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Observers\FelInvoiceObserver;
 use EmizorIpx\ClientFel\Observers\FelProductObserver;
 use EmizorIpx\ClientFel\Repository\ClientFelRepository;
 use EmizorIpx\ClientFel\Repository\FelClientRepository;
+use EmizorIpx\ClientFel\Repository\FelInvoiceRequestRepository;
 use EmizorIpx\ClientFel\Repository\FelProductRepository;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
@@ -51,10 +52,13 @@ class ClientFelServiceProvider extends ServiceProvider
         $client = $this->app->make(Config::get('clientfel.entity_table_client'));
         $client::observe(new FelClientObserver(new FelClientRepository));
 
+        $invoice = $this->app->make(Config::get('clientfel.entity_table_invoice'));
+        $invoice::observe(new FelInvoiceObserver(new FelInvoiceRequestRepository));
+
     }
     
     public function register()
     {
-   
+        
     }
 }

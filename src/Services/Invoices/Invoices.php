@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Services\Invoices;
 
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
+use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Services\BaseConnection;
 use Exception;
 use Facade\FlareClient\Http\Client;
@@ -66,7 +67,7 @@ class Invoices extends BaseConnection
         $this->validateData();
 
         try {
-
+            \Log::debug(json_encode($this->data));
             $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);
@@ -203,71 +204,11 @@ class Invoices extends BaseConnection
         }
     }
 
-    public function buildData($model) {
+    public function buildData(FelInvoiceRequest $model) {
 
         try{
 
-        // Log::debug("check model: " . json_encode($model));
-        
-        $client = $model->client;
-
-        $user = $model->user;
-    
-        $line_items = $model->line_items;
-
-        $total = 0;
-            Log::debug("lines model => " . json_encode($line_items));
-        foreach($line_items as $detail) {
-            
-            $new = new stdClass;
-
-            $hashid = new Hashids(config('ninja.hash_salt'),10);
-
-            $new->codigoProducto =  $hashid->decode($detail->product_id)[0] .""; // this values was added only frontend Be careful
-            $new->descripcion = $detail->notes;
-            $new->precioUnitario = $detail->cost;
-            $new->subTotal = $detail->quantity * $detail->cost;
-            $new->cantidad = $detail->quantity;
-            $new->numeroSerie =null;
-            if ($detail->discount > 0)
-                $new->montoDescuento =$detail->discount;
-            $new->numeroImei =null;
-            $new->unidadMedida = $detail->custom_value2;
-            $details[] = (array)$new;
-
-            $total += $new->subTotal;
-
-        }
-
-        $dateISOFormatted = substr( Carbon::parse(Carbon::now())->format('Y-m-d\TH:i:s.u'), 0, -3);
-
-        $data = [
-
-            "numeroFactura" => $model->number,
-            "codigoPuntoVenta" => 1,
-            "fechaEmision" => $dateISOFormatted,
-            "nombreRazonSocial" => $client->name,
-            "codigoTipoDocumentoIdentidad" => $client->custom_value1,
-            "numeroDocumento" => $client->id_number,
-            "complemento" => null,
-            "codigoCliente" => $client->id."",
-            "codigoMetodoPago" => $model->custom_value3,
-            "numeroTarjeta" => null,
-            "montoTotal" => $total,
-            "codigoMoneda" => 1,
-            "montoTotalMoneda" => $total,
-            "usuario" => $user->first_name . " " . $user->last_name,
-            "emailCliente" => null,
-            "telefonoCliente" => $client->phone,
-            "extras" => null,
-            "codigoLeyenda" => $model->custom_value1,
-            "montoTotalSujetoIva" => $total,
-            "tipoCambio" => 1 ,
-            "detalles" => $details      
-        ];
-
-        Log::debug(" build invoice to send: .... " . json_encode($data));
-        $this->setData($data);
+            $this->setData($model->toArray());
 
         } catch(Exception $ex) {
             
