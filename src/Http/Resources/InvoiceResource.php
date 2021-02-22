@@ -21,6 +21,7 @@ class InvoiceResource extends JsonResource
             "id_origin" => $this->id_origin,
             "codigoMetodoPago" =>(int) $this->codigoMetodoPago,
             "codigoLeyenda" => (int) $this->codigoLeyenda,
+            "codigoActividad" => (int) $this->codigoActividad,
             "numeroFactura" => (int) $this->numeroFactura,
             "fechaEmision" => $this->fechaEmision,
             "nombreRazonSocial" => $this->nombreRazonSocial,

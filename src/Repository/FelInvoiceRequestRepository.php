@@ -121,6 +121,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             #fel fata
             "codigoMetodoPago" => $this->fel_data_parsed['payment_method_id'],
             "codigoLeyenda" => $this->fel_data_parsed['caption_id'],
+            "codigoActividad" => $this->fel_data_parsed['activity_id'],
 
             #automatico
             "numeroFactura" => $model->number ?? 0,
