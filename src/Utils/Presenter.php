@@ -1,6 +1,7 @@
 <?php
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Http\Resources\InvoiceResource;
 use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelInvoice;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
@@ -25,7 +26,7 @@ class Presenter {
 
         $data["fel_data"]["parametrics"] = $parametrics;
         
-        $data["fel_data"]["invoices"] = FelInvoiceRequest::getByCompanyId($company_id);
+        $data["fel_data"]["invoices"] = InvoiceResource::collection( FelInvoiceRequest::getByCompanyId($company_id) );
 
         $data["fel_data"]["products"] = FelSyncProduct::getByCompanyId($company_id);
 
