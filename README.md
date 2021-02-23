@@ -135,6 +135,14 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
 - REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials` additionally it updates the register if account_id is already registered
     - json : `{ "client_id" : "300001", "client_secret" : "PDAYQ59drtn4wSOxIz9gYfbBNrXx4ibkneKCtk5A"}` 
     after register is executed getToken
+- REGISTER SETTINGS `/api/v1/clientfel/settings` 
+    - json : `{
+    "setting": {
+        "activity_id": 474000,
+        "caption_id": 45,
+        "payment_method_id": 1
+    }
+}` 
 
 // This is not available for now, homologate endpoint now is done inside creation of product
 - HOMOLOGATE PRODUCTS 
