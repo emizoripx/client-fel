@@ -56,10 +56,8 @@ class ConnectionController extends Controller
 
     public function getToken()
     {
-        
-        $companyId = auth()->user()->company()->id;
        
-        $felClienttoken = FelClientToken::whereAccountId($companyId)->first();
+        $felClienttoken = FelClientToken::whereAccountId(request()->company_id)->first();
 
         $token = $felClienttoken->getAccessToken();
         if ( !empty($token)) {

@@ -200,7 +200,7 @@ class Invoices extends BaseConnection
 
             Log::error($ex->getMessage());
 
-            throw new ClientFelException("Error en la homologacion del producto: " . $ex->getMessage());
+            throw new ClientFelException("Error al obtener detalles de la factura: " . $ex->getMessage());
         }
     }
 

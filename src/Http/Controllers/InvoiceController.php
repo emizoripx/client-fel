@@ -6,9 +6,7 @@ use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
-use EmizorIpx\ClientFel\Models\FelParametric;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
-use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use Illuminate\Http\Request;
 
