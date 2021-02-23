@@ -23,8 +23,16 @@ class NeedsToken
         $request_array = $request->all();
         $access_token = null;
         try {
-            
-            $companyId = auth()->user()->company()->id;
+                
+             if ($request->header('X-API-COMPANY-KEY')) {
+
+                $company = app(config('clientfel.entity_table_company'));
+                $company = $company::where('company_key', request()->header('X-API-COMPANY-KEY'))->firstOrFail();
+                $companyId = $company->id;
+
+            } else {
+                $companyId = auth()->user()->company()->id;
+            }
 
             $access_token = FelClientToken::getTokenByAccount($companyId);
 
