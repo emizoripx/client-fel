@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Repository;
 
+use App\Models\Product;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
@@ -9,6 +10,8 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
 use Exception;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class FelInvoiceRequestRepository extends BaseRepository implements RepoInterface
@@ -91,7 +94,10 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
             $id_origin = $hashid->decode($detail->product_id)[0];
         
+            Log::debug($id_origin);
+            
             $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->first();
+            Log::debug([$product_sync]);
             
             $new = new stdClass;
             $new->codigoProducto =  $product_sync->codigo_producto . ""; // this values was added only frontend Be careful
@@ -154,5 +160,28 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         ];
 
         return $input;
+    }
+
+    public static function completeDataRequest($data){
+        
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+        $line_items = [];
+
+        foreach($data['line_items'] as $item){
+            $product_id_decode = $hashid->decode($item['product_id']);
+            $product = DB::table('products')->where('id', $product_id_decode)->first();
+            
+            $item_array = array_merge($item, [
+                'product_key' => $product->product_key,
+                'notes' => $product->notes
+            ]);
+            
+            array_push($line_items, $item_array);
+            
+        }
+        $data['line_items'] = $line_items;
+            
+        return $data;
     }
 }
