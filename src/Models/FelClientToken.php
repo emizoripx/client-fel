@@ -11,6 +11,10 @@ class FelClientToken extends Model
 
     protected $guarded =[];
 
+    protected $casts = [
+        'settingd' => 'array'
+    ];
+
     public function getAccessToken() 
     {
         return $this->access_token;
@@ -49,6 +53,10 @@ class FelClientToken extends Model
     public function setExpiresIn($value)
     {
         $this->expires_in = $value;
+    }
+
+    public function getSettings(){
+        return $this->settings;
     }
 
     public static function createOrUpdate($data)

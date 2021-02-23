@@ -5,6 +5,7 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -66,6 +67,7 @@ class ConnectionController extends Controller
             return [
                 'token_type' => $felClienttoken->getTokenType(),
                 'expires_in' => $felClienttoken->getExpiresIn(),
+                'settings' => $felClienttoken->getSettings(),
                 'access_token' => $token
             ];
         }
@@ -106,6 +108,36 @@ class ConnectionController extends Controller
         } catch (\Exception $e) {
             \Log::error($e);
             throw $e;
+        }
+    }
+
+    public function updateSettings(Request $request){
+        $settingsData = $request->get('setting');
+        Log::debug($settingsData);
+
+        try {
+            $felClient = FelClientToken::where('account_id', $request->company_id)->first();
+        
+            if(!$felClient){
+                return response()->json([
+                    "success" =>false,
+                    "msg" => "credential not found"
+                ]);
+            }
+
+            $felClient->settings = $settingsData;
+
+            $felClient->save();
+
+            return response()->json([
+                "success" =>true
+            ]);
+
+        } catch (Exception $ex) {
+            return response()->json([
+                "success" =>false,
+                "msg" => $ex->getMessage()
+            ]);
         }
     }
 }

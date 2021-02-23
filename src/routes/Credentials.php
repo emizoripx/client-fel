@@ -15,6 +15,7 @@ class Credentials {
             
             Route::group(['middleware' => ['needs_access_token']] , function() {
                 Route::post('homologateProduct', 'ProductController@homologate');
+                Route::post('settings', 'ConnectionController@updateSettings');
             });
             
         });

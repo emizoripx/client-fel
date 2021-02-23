@@ -121,6 +121,16 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
 ## API's
 
 - GET TOKENS `/api/v1/clientfel/getToken/` by default gets ID from company logged in by user
+    
+    ```json
+
+            {
+                "token_type": "",
+                "expires_in": "",
+                "settings": "",
+                "access_token": ""
+            }
+    ```
 
 - REGISTER CREDENTIALS `/api/v1/clientfel/registerCredentials` additionally it updates the register if account_id is already registered
     - json : `{ "client_id" : "300001", "client_secret" : "PDAYQ59drtn4wSOxIz9gYfbBNrXx4ibkneKCtk5A"}` 
