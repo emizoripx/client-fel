@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Repository;
 use App\Models\Product;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelClient;
+use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
@@ -162,7 +163,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         return $input;
     }
 
-    public static function completeDataRequest($data){
+    public static function completeDataRequest($data, $company_id){
         
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
@@ -181,7 +182,10 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             
         }
         $data['line_items'] = $line_items;
-            
-        return $data;
+        $settings = FelClientToken::where('account_id', $company_id)->first()->settings;
+        
+        return array_merge($data, [
+            'fel_data' =>  json_encode(['invoice' => json_decode( $settings)])
+            ]);
     }
 }
