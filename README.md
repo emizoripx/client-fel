@@ -203,6 +203,76 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
             }
     ```
 
+## Added rule to check Product
+ - Added a rule to validate if the product exists in the validation file `App\Http\Requests\Shop\StoreShopInvoiceRequest;`
+
+    ```php
+
+        <?php
+            
+            namespace App\Http\Requests\Shop;
+            ...
+            use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\CheckProduct;
+            ...
+            class StoreShopInvoiceRequest extends Request{
+    
+                public function rules()
+                {
+                    ...
+
+                    $rules['invitations.*.client_contact_id'] = 'distinct';
+                    ....
+
+                    $rules['line_items.*.product_id'] = [
+                        'required',
+                        'string',
+                        new CheckProduct()
+                    ];
+
+                    ...
+
+                    return $rules;
+                }
+
+                ...
+            }
+    ```
+
+
+## Insert additional data in request Shop Invoices
+
+- Added method to insert required data in shop invoice request in `App\Http\Controllers\Shop\InvoiceController`
+
+    ```php
+
+            <?php
+                
+                namespace App\Http\Controllers\Shop;
+                ...
+                use EmizorIpx\ClientFel\Repository\FelInvoiceRequestRepository;
+                ...
+                class InvoiceController extends BaseController{
+        
+                    ...
+
+                    public function store(StoreShopInvoiceRequest $request)
+                    {
+                        ...
+
+                        $client = Client::find($request->input('client_id'));
+
+                        ...
+                        #Add
+                        $inputData = FelInvoiceRequestRepository::completeDataRequest($request->all());
+
+                        $invoice = $this->invoice_repo->save($inputData, InvoiceFactory::create($company->id, $company->owner()->id));
+
+                        ...
+
+                        return $this->itemResponse($invoice);
+                    }
+                }
+    ```
 
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
