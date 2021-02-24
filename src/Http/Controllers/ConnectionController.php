@@ -63,10 +63,9 @@ class ConnectionController extends Controller
         $token = $felClienttoken->getAccessToken();
         if ( !empty($token)) {
             return [
-                'token_type' => $felClienttoken->getTokenType(),
-                'expires_in' => $felClienttoken->getExpiresIn(),
                 'settings' => $felClienttoken->getSettings(),
-                'access_token' => $token
+                'client_id' => $felClienttoken->getClientId(),
+                'client_secret' => $felClienttoken->getClientSecret(),
             ];
         }
         
@@ -76,9 +75,9 @@ class ConnectionController extends Controller
         } else {
             //TODO: thrown an exception that does not is registed client id or client secret
             return [
-                'token_type' => null,
-                'expires_in' => null,
-                'access_token' => null
+                'settings' => null,
+                'client_id' => null,
+                'client_secret' => null
             ];
         }
         
@@ -98,9 +97,9 @@ class ConnectionController extends Controller
             $felClienttoken->save();
 
             return [
-                'token_type' => $response['token_type'],
-                'expires_in' => $response['expires_in'],
-                'access_token' => $response['access_token']
+                'settings' => $felClienttoken->getSettings(),
+                'client_id' => $felClienttoken->getClientId(),
+                'client_secret' => $felClienttoken->getClientSecret()
             ];
 
         } catch (\Exception $e) {
@@ -123,7 +122,7 @@ class ConnectionController extends Controller
                 ]);
             }
 
-            $felClient->settings = $settingsData;
+            $felClient->settings = json_encode($settingsData);
 
             $felClient->save();
 

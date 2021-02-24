@@ -338,9 +338,32 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                             return $this->itemResponse($invoice);
                         }
                     }
+    ```
 
-        ```
 
+## Added middleware CheckSettings
+- A middleware was added to verify the parametric settings in route shop 
+
+    ```php
+
+                <?php
+
+                    use Illuminate\Support\Facades\Route;
+
+                    Route::group(['middleware' => ['company_key_db', 'locale'], 'prefix' => 'api/v1'], function () {
+                        
+                        ...
+                        
+                        Route::middleware(['check_settings'])->group(function () {
+                            Route::post('shop/invoices', 'Shop\InvoiceController@store');
+                            
+                        });
+
+                        ...
+
+                    });
+
+    ```
 
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector

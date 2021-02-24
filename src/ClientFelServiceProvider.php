@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel;
 
+use EmizorIpx\ClientFel\Http\Middleware\CheckSettings;
 use EmizorIpx\ClientFel\Http\Middleware\NeedsToken;
 use EmizorIpx\ClientFel\Observers\FelClientObserver;
 use EmizorIpx\ClientFel\Observers\FelInvoiceObserver;
@@ -42,6 +43,7 @@ class ClientFelServiceProvider extends ServiceProvider
         $router = $this->app->make(Router::class);
 
         $router->aliasMiddleware('needs_access_token', NeedsToken::class);
+        $router->aliasMiddleware('check_settings', CheckSettings::class);
 
 
         # OBSERVERS
