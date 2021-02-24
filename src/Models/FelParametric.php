@@ -27,6 +27,7 @@ class FelParametric
                     $d["company_id"] = $company_id;
                     $d["codigo"] = $d['codigo'];
                     $d["descripcion"] = $d['descripcion'];
+                    $d["tipoActividad"] = $d['tipoActividad'];
                     $data_[] = $d;
                 }
                 return FelActivity::insert($data_);
