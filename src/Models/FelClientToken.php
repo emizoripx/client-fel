@@ -12,7 +12,7 @@ class FelClientToken extends Model
     protected $guarded =[];
 
     protected $casts = [
-        'settingd' => 'array'
+        'settings' => 'string'
     ];
 
     public function getAccessToken() 

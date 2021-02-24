@@ -13,7 +13,6 @@ class BaseRepository
 
     protected function parseFelData($fel_data)
     {
-
         try {
 
 

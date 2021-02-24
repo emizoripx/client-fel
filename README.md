@@ -282,8 +282,8 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                         ...
                         #Add
                         $inputData = FelInvoiceRequestRepository::completeDataRequest($request->all());
-
-                        $invoice = $this->invoice_repo->save($inputData, InvoiceFactory::create($company->id, $company->owner()->id));
+                        $request->replace($inputData);
+                        $invoice = $this->invoice_repo->save($request->all(), InvoiceFactory::create($company->id, $company->owner()->id));
 
                         ...
 
@@ -291,6 +291,56 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                     }
                 }
     ```
+
+## Trait to emit invoice
+- Added trait to emit invoice in `App\Models\Invoice`
+    ```php
+
+        <?php
+            namespace App\Models;
+
+            ...
+            use EmizorIpx\ClientFel\Traits\InvoiceFelEmitTrait;
+            ...
+
+            class Invoice extends BaseModel
+            {
+                ...
+                use InvoiceFelEmitTrait; 
+                ...
+                
+            }
+
+
+    ```
+
+- Added function to emit invoice in `App\Http\Controllers\Shop\InvoiceController`
+
+    ```php
+
+                <?php
+                    
+
+                    namespace App\Http\Controllers\Shop;
+
+                    class InvoiceController extends BaseController
+                    {
+                        
+                        public function store(StoreShopInvoiceRequest $request)
+                        {
+                            ...
+
+                            $invoice = $invoice->service()->triggeredActions($request)->save();
+
+                            $invoice->emit();
+
+                            ...
+                            return $this->itemResponse($invoice);
+                        }
+                    }
+
+        ```
+
 
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
