@@ -69,7 +69,8 @@ class FelClientToken extends Model
         } else {
             //update
             $credential->update($data);
-            return self::find($data['account_id']);
+
+            return self::whereAccountId($data['account_id'])->first();
         }
     }
 
