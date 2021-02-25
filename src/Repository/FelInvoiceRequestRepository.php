@@ -155,7 +155,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             "montoTotalMoneda" => $total,
             "montoTotalSujetoIva" => $total,
 
-            "usuario" => $user->first_name . " " . $user->last_name,
+            "usuario" => ($user->first_name . " " . $user->last_name) == "" ?? "Usuario Genérico",
 
             "detalles" => json_encode($details)
         ];
