@@ -83,6 +83,12 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         $client = FelClient::where('id_origin', $model->client_id)->first();
         
+        if(request()->has('name')){
+            $client->business_name = request('name');
+            $client->document_number = request('id_number');
+            $client->type_document_id = request('type_document_id');
+        }
+
         $user = $model->user;
         
         $line_items = $model->line_items;

@@ -221,7 +221,7 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
             }
     ```
 
-## Added rule to check Product
+## Added rule to check Product and Client Data
  - Added a rule to validate if the product exists in the validation file `App\Http\Requests\Shop\StoreShopInvoiceRequest;`
 
     ```php
@@ -230,7 +230,7 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
             
             namespace App\Http\Requests\Shop;
             ...
-            use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\CheckProduct;
+            use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\InvoiceRules;
             ...
             class StoreShopInvoiceRequest extends Request{
     
@@ -238,16 +238,32 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                 {
                     ...
 
-                    $rules['invitations.*.client_contact_id'] = 'distinct';
-                    ....
+                    $rules = array_merge($rules, InvoiceRules::additionalInvoiceRules());
 
-                    $rules['line_items.*.product_id'] = [
-                        'required',
-                        'string',
-                        new CheckProduct()
-                    ];
+                    return $rules;
+                }
 
+                ...
+            }
+    ```
+## Added rule to validate Client Data
+ - Added a rule to validate client data in the validation file `App\Http\Requests\Shop\StoreShopClientRequest;`
+
+    ```php
+
+        <?php
+            
+            namespace App\Http\Requests\Shop;
+            ...
+            use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\ClientRules;
+            ...
+            class StoreShopClientRequest extends Request{
+    
+                public function rules()
+                {
                     ...
+
+                    $rules = array_merge($rules, ClientRules::additionalClientRules());
 
                     return $rules;
                 }
@@ -281,9 +297,40 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
 
                         ...
                         #Add
-                        $inputData = FelInvoiceRequestRepository::completeDataRequest($request->all());
+                        $inputData = FelInvoiceRequestRepository::completeDataRequest($request->all(), $company->id);
                         $request->replace($inputData);
                         $invoice = $this->invoice_repo->save($request->all(), InvoiceFactory::create($company->id, $company->owner()->id));
+
+                        ...
+
+                        return $this->itemResponse($invoice);
+                    }
+                }
+    ```
+## Insert additional data in request Shop Client
+
+- Added method to insert required data in shop client request in `App\Http\Controllers\Shop\ClientController`
+
+    ```php
+
+            <?php
+                
+                namespace App\Http\Controllers\Shop;
+                ...
+                use EmizorIpx\ClientFel\Repository\FelClientRepository;
+                ...
+                class ClientController extends BaseController{
+        
+                    ...
+
+                    public function store(StoreShopClientRequest $request)
+                    {
+
+                        ...
+                        #Add
+                        $inputData = FelClientRepository::completeDataRequest($request->all());
+                        $request->replace($inputData);
+                        $invoice = $this->invoice_repo->save($request->all(), ClientFactory::create($company->id, $company->owner()->id));
 
                         ...
 

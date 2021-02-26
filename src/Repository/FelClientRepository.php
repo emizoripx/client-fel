@@ -79,4 +79,13 @@ class FelClientRepository extends BaseRepository implements RepoInterface
       bitacora_error("FelClientRepository:delete", $ex->getMessage());
     }
   }
+
+
+  public static function completeDataRequest($data){
+    return array_merge($data, [
+      'fel_data' => json_encode([
+        'client' => ['type_document_id' => $data['type_document_id']]
+      ])
+    ]);
+  }
 }
