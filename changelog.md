@@ -21,11 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added rules to validate Client Data in api Shop Client and Shop Invoices
 - Added method to insert fel_data in the request the api Shop Clients
-- append in a trait invoice, cuf, for real invoice invoiceninja
-- created bitacora
-
 ### Changed
-- removed trait for direct change in invoice
+- 
 ### Fixed
 ## [v1.6.0] - 2021-02-19
   
