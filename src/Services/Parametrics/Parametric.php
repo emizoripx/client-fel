@@ -25,9 +25,10 @@ class Parametric extends BaseConnection
     
             $response = $this->client->request('GET', '/api/v1/parametricas/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
 
-            $this->setResponse($this->parse_response($response));
+            
+             $this->setResponse($this->parse_response($response));
 
-            return $this->parse_response($response);
+            return $this->response;
         } catch (\Exception $ex) {
 
             Log::error($ex->getMessage());
