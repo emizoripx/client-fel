@@ -28,7 +28,9 @@ class InvoiceRules {
                 'required',
                 'string',
                 new CheckProduct()
-            ]
+            ],
+            'line_items.*.cost' => "required|numeric|gt:0",
+            'line_items.*.quantity' => "required|integer|gt:0"
         ]);
     }
 }
