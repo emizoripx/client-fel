@@ -4,7 +4,10 @@ namespace EmizorIpx\ClientFel\Services\Parametrics;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\BaseConnection;
+use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use Illuminate\Support\Facades\Log;
+
+use function PHPSTORM_META\type;
 
 class Parametric extends BaseConnection
 {
@@ -22,8 +25,14 @@ class Parametric extends BaseConnection
     public function get($type)
     {
         try {
-    
-            $response = $this->client->request('GET', '/api/v1/parametricas/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+
+            if($type == TypeParametrics::TIPOS_DOCUMENTO_SECTOR){
+                $response = $this->client->request('GET', '/api/v1/company/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            } 
+            else{
+                
+                $response = $this->client->request('GET', '/api/v1/parametricas/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            }
 
             
              $this->setResponse($this->parse_response($response));
