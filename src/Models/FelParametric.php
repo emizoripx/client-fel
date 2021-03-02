@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Models\Parametric\IdentityDocumentType;
 use EmizorIpx\ClientFel\Models\Parametric\PaymentMethod;
 use EmizorIpx\ClientFel\Models\Parametric\SINProduct;
 use EmizorIpx\ClientFel\Models\Parametric\RevocationReason;
+use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 
@@ -75,6 +76,18 @@ class FelParametric
                 }
                 return SINProduct::insert($data_);
                 break;
+            case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
+
+                $data_ = array();
+                foreach($data as $d) { 
+                    $d["company_id"] = $company_id;
+                    $d["codigoSucursal"] = $d['codigoSucursal'];
+                    $d["documentoSector"] = $d['documentoSector'];
+                    $d["tipoFactura"] = $d['tipoFactura'];
+                    $data_[] = $d;
+                }
+                return SectorDocumentTypes::insert($data_);
+                break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
@@ -110,6 +123,9 @@ class FelParametric
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
                 return SINProduct::whereCompanyId($company_id)->get();
+                break;
+            case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
+                return SectorDocumentTypes::whereCompanyId($company_id)->get();
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -162,6 +178,10 @@ class FelParametric
             case TypeParametrics::PRODUCTOS_SIN:
                 $products = SINProduct::whereCompanyId($company_id)->first();
                 return is_null($products);
+                break;
+            case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
+                $sector_documents = SectorDocumentTypes::whereCompanyId($company_id)->first();
+                return is_null($sector_documents);
                 break;
             
             default:
