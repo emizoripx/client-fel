@@ -26,19 +26,8 @@ trait InvoiceFelEmitTrait{
         try {
 
 
-            $invoice_service = new Invoices;
+            $felInvoiceRequest->sendInvoiceToFel($access_token);
 
-            $invoice_service->setAccessToken($access_token);
-
-            $invoice_service->setBranchNumber(0);
-
-            $invoice_service->buildData($felInvoiceRequest);
-
-            $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
-
-            $invoice_service->sendToFel();
-
-            $felInvoiceRequest->saveCuf($invoice_service->getResponse()['cuf']);
 
             $success = true;
             

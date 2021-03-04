@@ -2,9 +2,15 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
+use EmizorIpx\ClientFel\Exceptions\ClientFelException;
+use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
+use EmizorIpx\ClientFel\Utils\TypeDocuments;
+use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
+use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class FelInvoiceRequest extends Model
 {
@@ -41,5 +47,34 @@ class FelInvoiceRequest extends Model
     public static function getByCompanyId($company_id)
     {
         return self::where('company_id', $company_id)->get();
+    }
+
+    public function sendInvoiceToFel($access_token){
+
+        try {
+
+            $prepagoBagService = new AccountPrepagoBagService();
+
+            
+            $prepagoBagService->controlPrepagoBag($this->company_id);
+            
+        } catch (PrepagoBagsException $ex) {
+            Log::debug('Fel Error');
+            throw new ClientFelException($ex->getMessage());
+        }
+        
+        $invoice_service = new Invoices;
+
+        $invoice_service->setAccessToken($access_token);
+
+        $invoice_service->setBranchNumber(0);
+
+        $invoice_service->buildData($this);
+
+        $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
+
+        $invoice_service->sendToFel();
+
+        $this->saveCuf($invoice_service->getResponse()['cuf']);
     }
 }

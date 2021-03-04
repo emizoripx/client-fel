@@ -29,20 +29,7 @@ class InvoiceController extends BaseController
             $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
 
             
-            
-            $invoice_service = new Invoices;
-
-            $invoice_service->setAccessToken($access_token);
-
-            $invoice_service->setBranchNumber(0);
-
-            $invoice_service->buildData($felInvoiceRequest);
-
-            $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
-
-            $invoice_service->sendToFel();
-
-            $felInvoiceRequest->saveCuf($invoice_service->getResponse()['cuf']);
+            $felInvoiceRequest->sendInvoiceToFel($access_token);
             
             $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
