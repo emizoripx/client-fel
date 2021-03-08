@@ -49,6 +49,11 @@ class FelInvoiceRequest extends Model
         return self::where('company_id', $company_id)->get();
     }
 
+    public function saveState($value){
+        $this->estado = $value;
+        $this->save();
+    }
+
     public function sendInvoiceToFel($access_token){
 
         try {
@@ -75,6 +80,14 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->sendToFel();
 
+        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        
+        $invoice = $invoice_service->getInvoiceByCuf();
+        
+        $this->saveState($invoice['estado']);
+
         $this->saveCuf($invoice_service->getResponse()['cuf']);
+
+
     }
 }
