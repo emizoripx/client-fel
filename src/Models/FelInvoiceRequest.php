@@ -32,7 +32,7 @@ class FelInvoiceRequest extends Model
     public function saveCuf($value) 
     {
         $this->cuf = $value;
-        $this->save();
+        return $this;
     }
 
     public static function findByIdOrigin($id_origin)
@@ -51,7 +51,17 @@ class FelInvoiceRequest extends Model
 
     public function saveState($value){
         $this->estado = $value;
-        $this->save();
+        return $this;
+    }
+
+    public function saveStatusCode($value){
+        $this->codigoEstado = $value;
+        return $this;
+    }
+
+    public function saveSINErrors($value){
+        $this->errores = $value;
+        return $this;
     }
 
     public function sendInvoiceToFel($access_token){
@@ -84,10 +94,6 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByCuf();
         
-        $this->saveState($invoice['estado']);
-
-        $this->saveCuf($invoice_service->getResponse()['cuf']);
-
-
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->save();
     }
 }
