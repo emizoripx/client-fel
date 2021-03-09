@@ -111,12 +111,12 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = $detail->quantity * $detail->cost;
+            $new->subTotal = $detail->line_total;
             $new->cantidad = $detail->quantity;
             $new->numeroSerie = null;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = $detail->discount;
+                $new->montoDescuento = ($detail->cost * $detail->quantity) - $detail->line_total;
 
             $new->numeroImei = null;
 
