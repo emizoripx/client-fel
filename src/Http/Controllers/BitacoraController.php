@@ -11,7 +11,7 @@ class BitacoraController extends BaseController
 
     public function index(Request $request)
     {
-        $logs = BitacoraLog::simplePaginate(15);
+        $logs = BitacoraLog::orderBy("id","desc")->simplePaginate(30);
 
         return view('clientfel::bitacora', compact('logs') );
         
