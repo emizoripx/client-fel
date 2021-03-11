@@ -163,7 +163,8 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
             "usuario" => ($user->first_name . " " . $user->last_name) == "" ?? "Usuario Genérico",
 
-            "detalles" => json_encode($details)
+            "detalles" => json_encode($details),
+            "account_id" => isset(request()->company->account_id ) ? request()->company->account_id : auth()->user()->getCompany()->account_id
         ];
 
         return $input;

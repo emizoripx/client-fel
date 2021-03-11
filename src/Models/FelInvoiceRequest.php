@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
+use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
@@ -63,6 +64,16 @@ class FelInvoiceRequest extends Model
         $this->errores = $value;
         return $this;
     }
+    
+    /**
+     * Get the prepagoAccount that owns the FelInvoiceRequest
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function prepagoAccount()
+    {
+        return $this->belongsTo(AccountPrepagoBags::class, 'account_id', 'account_id');
+    }
 
     public function sendInvoiceToFel($access_token){
 
@@ -95,5 +106,10 @@ class FelInvoiceRequest extends Model
         $invoice = $invoice_service->getInvoiceByCuf();
         
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->save();
+
+        Log::debug('Restar numero de Facturas');
+        Log::debug($this->prepagoAccount);
+
+        $this->prepagoAccount->reduceNumberInvoice()->save();
     }
 }

@@ -3,8 +3,10 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use App\Models\Company;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Utils\Log;
+use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Illuminate\Http\Request;
 
 class WebhookController extends BaseController
@@ -20,6 +22,11 @@ class WebhookController extends BaseController
         $invoice = FelInvoiceRequest::where('cuf', $data['cuf'])->first();
 
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
+
+        $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
+        if(in_array($data['state'], $stateInvalid)){
+            $invoice->prepagoAccount->addNumberInvoice()->save();
+        }
 
         
     }
