@@ -28,6 +28,12 @@ class InvoiceController extends BaseController
 
             $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
 
+            if(!$felInvoiceRequest){
+                return response()->json([
+                    "success" => false,
+                    "msg" => "Factura no encontrada para emitir"
+                ]);
+            }
             
             $felInvoiceRequest->sendInvoiceToFel($access_token);
             

@@ -123,7 +123,10 @@ class FelInvoiceRequest extends Model
         Log::debug($this);
         Log::debug('Restar numero de Facturas');
         Log::debug($this->prepagoAccount());
-
-        $this->prepagoAccount()->reduceNumberInvoice()->save();
+        
+        $account = $this->prepagoAccount();
+        if(!$account->checkIsPostpago()){
+            $account->reduceNumberInvoice()->save();
+        }
     }
 }
