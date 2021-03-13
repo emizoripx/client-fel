@@ -15,11 +15,13 @@ class FelClientObserver
     }
     public function created($model) 
     {
+        \Log::debug('Ingrea a created client');
         $this->repo->create(request()->input('fel_data'), $model);
     }
 
-    public function updated($model)
+    public function saved($model)
     {
+        \Log::debug('Ingrea a updated client');
         $this->repo->create(request()->input('fel_data'), $model);
     }
 
