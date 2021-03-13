@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
+use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
@@ -41,9 +42,10 @@ class FelInvoiceRequest extends Model
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
         $id_origin_decode = $hashid->decode($id_origin)[0];
-        
+        \Log::debug('id origin '.$id_origin_decode);
         return self::whereIdOrigin($id_origin_decode)->first();
     }
+
 
     public static function getByCompanyId($company_id)
     {
@@ -52,6 +54,11 @@ class FelInvoiceRequest extends Model
 
     public function saveState($value){
         $this->estado = $value;
+        return $this;
+    }
+
+    public function saveEmisionDate(){
+        $this->fechaEmision = substr(Carbon::now()->format('Y-m-d\TH:i:s.u'), 0, -3);
         return $this;
     }
 
@@ -66,13 +73,17 @@ class FelInvoiceRequest extends Model
     }
     
     /**
-     * Get the prepagoAccount that owns the FelInvoiceRequest
+     * Get the prepagoAccount instance
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 
      */
     public function prepagoAccount()
     {
-        return $this->belongsTo(AccountPrepagoBags::class, 'account_id', 'account_id');
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+        $company_id_decode = $hashid->decode($this->company_id)[0];
+        $accountDetails = AccountPrepagoBags::where('company_id', $company_id_decode)->first();
+        return $accountDetails;
     }
 
     public function sendInvoiceToFel($access_token){
@@ -105,11 +116,14 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByCuf();
         
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->save();
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
 
+        // $this->setCompanyId();
+        Log::debug('RETORNO MODELO');
+        Log::debug($this);
         Log::debug('Restar numero de Facturas');
-        Log::debug($this->prepagoAccount);
+        Log::debug($this->prepagoAccount());
 
-        $this->prepagoAccount->reduceNumberInvoice()->save();
+        $this->prepagoAccount()->reduceNumberInvoice()->save();
     }
 }

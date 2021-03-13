@@ -25,7 +25,7 @@ class WebhookController extends BaseController
 
         $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
         if(in_array($data['state'], $stateInvalid)){
-            $invoice->prepagoAccount->addNumberInvoice()->save();
+            $invoice->prepagoAccount()->addNumberInvoice()->save();
         }
 
         
