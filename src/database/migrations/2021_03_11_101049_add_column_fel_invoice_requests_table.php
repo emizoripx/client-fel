@@ -17,6 +17,7 @@ class AddColumnFelInvoiceRequestsTable extends Migration
             $table->integer('account_id')->nullable();
 
             $table->index('account_id');
+            $table->string('host', 500)->nullable();
         });
     }
 
@@ -30,6 +31,7 @@ class AddColumnFelInvoiceRequestsTable extends Migration
         Schema::table('fel_invoice_requests', function (Blueprint $table) {
             $table->dropIndex('account_id');
             $table->dropColumn('account_id');
+            $table->dropColumn('host');
         });
     }
 }
