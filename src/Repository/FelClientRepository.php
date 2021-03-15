@@ -52,7 +52,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
       $input = [
         "type_document_id" => $this->fel_data_parsed['type_document_id'],
         "business_name" => $model->name,
-        "document_number" => $model->vat_number
+        "document_number" => $model->id_number,
       ];
 
       $client = FelClient::where("id_origin", $model->id)->first();
