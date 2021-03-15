@@ -6,7 +6,9 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
+use Exception;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Log;
 
 trait InvoiceFelEmitTrait{
 
@@ -35,7 +37,7 @@ trait InvoiceFelEmitTrait{
 
         } catch (ClientFelException $ex) {
             bitacora_error("ShopEmit", "Error emit invoice ". $ex->getMessage());
-            
+            throw new Exception($ex->getMessage());
         }
     }
 } 
