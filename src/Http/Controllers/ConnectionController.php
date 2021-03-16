@@ -17,10 +17,9 @@ class ConnectionController extends Controller
 
     protected $connection;
 
-    public function __construct(FelCredentialRepository $credential_repo, Connection $connection)
+    public function __construct(FelCredentialRepository $credential_repo)
     {
         $this->credentialrepo = $credential_repo;
-        $this->connection = $connection;
     }
  
     public function registerCredentials(Request $request)
@@ -88,7 +87,7 @@ class ConnectionController extends Controller
         ];
 
         try {
-
+            $this->connection = new Connection($felClienttoken->getHost());
             $response = $this->connection->authenticate($data);
 
             $felClienttoken->setTokenType($response['token_type']);

@@ -92,12 +92,16 @@ class FelClientToken extends Model
             throw new ClientFelException('No tiene registrado un access token');
         }
 
-        return $registered_token->getAccessToken();
+        return $registered_token;
     }
 
     public function account()
     {
         return $this->hasone(Config::get('clientfel.entity_table_class'));
 
+    }
+
+    public function getHost(){
+        return $this->host;
     }
 }

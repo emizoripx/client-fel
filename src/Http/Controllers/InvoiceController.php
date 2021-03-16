@@ -22,7 +22,7 @@ class InvoiceController extends BaseController
         
         $success = false;
 
-        $access_token = FelClientToken::getTokenByAccount($request->company_id);
+        // $access_token = FelClientToken::getTokenByAccount($request->company_id);
 
         try {
 
@@ -35,7 +35,7 @@ class InvoiceController extends BaseController
                 ]);
             }
             
-            $felInvoiceRequest->sendInvoiceToFel($access_token);
+            $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
             
             $hashid = new Hashids(config('ninja.hash_salt'), 10);
 

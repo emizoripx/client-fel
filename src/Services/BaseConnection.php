@@ -5,9 +5,11 @@ use GuzzleHttp\Client;
 
 class BaseConnection {
 
-    public function __construct()
+    public function __construct($host)
     {
-        $data['base_uri'] = config('clientfel.api_url');
+        \Log::debug('BaseConnection');
+        \Log::debug($host);
+        $data['base_uri'] = $host;
         $data['headers']['Accept'] = 'application/json';
         $data['headers']['Content-Type'] = 'application/json';
 

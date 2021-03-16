@@ -21,7 +21,7 @@ class NeedsToken
     {
 
         $request_array = $request->all();
-        $access_token = null;
+        $client_token = null;
         try {
                 
              if ($request->header('X-API-COMPANY-KEY')) {
@@ -34,7 +34,7 @@ class NeedsToken
                 $companyId = auth()->user()->company()->id;
             }
 
-            $access_token = FelClientToken::getTokenByAccount($companyId);
+            $client_token = FelClientToken::getTokenByAccount($companyId);
 
         } catch (ClientFelException $ex) {
             $error = [
@@ -45,7 +45,8 @@ class NeedsToken
             return response()->json($error, 403);
         }
 
-        $request_array['access_token'] = $access_token;
+        $request_array['access_token'] = $client_token->getAccessToken();
+        $request_array['host'] = $client_token->getHost();
         $request_array['company_id'] = $companyId;
         $request->replace($request_array);
 

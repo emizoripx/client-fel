@@ -15,10 +15,10 @@ class Products extends BaseConnection
 
     protected $response;
 
-    public function __construct($accessToken)
+    public function __construct($accessToken, $host)
     {
         $this->accessToken = $accessToken;
-        parent::__construct();
+        parent::__construct($host);
     }
 
     public function setResponse($response) 

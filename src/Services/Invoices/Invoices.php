@@ -24,15 +24,18 @@ class Invoices extends BaseConnection
 
     protected $response;
 
-    public function __construct()
+    protected $host;
+
+    public function __construct($host)
     {
-        parent::__construct();
+        parent::__construct($host);
     }
 
     public function setAccessToken($access_token)
     {
         $this->access_token = $access_token;
     }
+
 
     public function setData($data)
     {
@@ -68,6 +71,7 @@ class Invoices extends BaseConnection
 
         try {
             \Log::debug(json_encode($this->data));
+            \Log::debug(json_encode($this->client));
             $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);

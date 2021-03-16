@@ -19,13 +19,15 @@ class FelCredentialRepository
     protected $connection;
     private $authenticate_response;
     protected $credential;
+    protected $host;
 
-    public function __construct(Connection $connection)
+    public function __construct()
     {
-        $this->connection = $connection;
+        
         $this->client_id = "client_id";
         $this->client_secret = "secret";
         $this->company_id = 0;
+        $this->host = 'host';
         $this->authenticate_response = array();
         $this->credential = new FelClientToken();
     }
@@ -40,6 +42,12 @@ class FelCredentialRepository
     }
     public function setCompanyId($companyId) {
         $this->company_id = $companyId;
+
+        return $this;
+    }
+
+    public function setHost($host) {
+        $this->host = $host;
 
         return $this;
     }
@@ -71,7 +79,8 @@ class FelCredentialRepository
             "grant_type"     => "client_credentials",
             "account_id"     => $this->company_id,
             "client_id"      => $this->client_id,
-            "client_secret"  => $this->client_secret
+            "client_secret"  => $this->client_secret,
+            "host"           => $this->host
         ]);
 
         $this->authenticate();
@@ -89,6 +98,7 @@ class FelCredentialRepository
 
     public function authenticate()
     {
+        $this->connection = new Connection($this->credential->getHost());
         $this->authenticate_response = $this->connection->authenticate([
             "grant_type" => "client_credentials",
             "client_id" => $this->client_id,
@@ -112,7 +122,7 @@ class FelCredentialRepository
 
     public function syncParametrics()
     {
-        $parametricService = new Parametric($this->credential->access_token);
+        $parametricService = new Parametric($this->credential->access_token, $this->credential->host);
 
         $types = TypeParametrics::getAll();
 

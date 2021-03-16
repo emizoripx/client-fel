@@ -4,9 +4,10 @@ namespace EmizorIpx\ClientFel\Traits;
 
 trait InvoiceFelHtml {
 
-    public function getHtmlUrl()
+    public function getHtmlUrl($host)
     {
-        $url = config('clientfel.api_url') . "/factura-html/" . $this->cuf;
+        \Log::debug("url:  " . $host);
+        $url = $host . "/factura-html/" . $this->cuf;
         \Log::debug("url:  " . $url);
 
         return $url;

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
+use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 class FelInvoiceRequest extends Model
 {
     use DecodeHashIds;
+    use GetCredentialsTrait;
     protected $table = "fel_invoice_requests";
 
     protected $guarded = [];
@@ -25,6 +27,9 @@ class FelInvoiceRequest extends Model
     protected $cast =[
         'detalles' => 'array'
     ];
+
+    protected $access_token;
+    protected $host;
 
     public function getDetallesAttribute()
     {
@@ -86,7 +91,7 @@ class FelInvoiceRequest extends Model
         return $accountDetails;
     }
 
-    public function sendInvoiceToFel($access_token){
+    public function sendInvoiceToFel(){
 
         try {
 
@@ -100,9 +105,14 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         
-        $invoice_service = new Invoices;
+        Log::debug('Credentials');
+        Log::debug($this->access_token);
+        Log::debug($this->host);
+        
+        $invoice_service = new Invoices($this->host);
 
-        $invoice_service->setAccessToken($access_token);
+        $invoice_service->setAccessToken($this->access_token);
+
 
         $invoice_service->setBranchNumber(0);
 

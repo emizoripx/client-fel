@@ -16,10 +16,10 @@ class Parametric extends BaseConnection
 
     protected $accessToken;
 
-    public function __construct($accessToken)
+    public function __construct($accessToken, $host)
     {
         $this->accessToken = $accessToken;
-        parent::__construct();
+        parent::__construct($host);
     }
 
     public function get($type)

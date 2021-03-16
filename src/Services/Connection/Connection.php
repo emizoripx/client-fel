@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 class Connection extends BaseConnection 
 {
 
-    public function __construct()
+    public function __construct($host)
     {
-        parent::__construct();
+        parent::__construct($host);
     }
 
     

@@ -23,12 +23,12 @@ trait InvoiceFelEmitTrait{
         
         $company_id = $hashid->decode($felInvoiceRequest->company_id);
 
-        $access_token = FelClientToken::getTokenByAccount($company_id);
+        // $access_token = FelClientToken::getTokenByAccount($company_id);
 
         try {
 
 
-            $felInvoiceRequest->sendInvoiceToFel($access_token);
+            $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
 
             $success = true;
