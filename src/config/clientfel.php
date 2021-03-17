@@ -34,5 +34,23 @@ return [
      * 
      */
     'entity_table_invoice' => \App\Models\Invoice::class,
+    /**
+     * 
+     * CLIENT_ID for new account to make an invoice 
+     * 
+     */
+    'client_id_demo' => env('CLIENT_ID'),
+    /**
+     * 
+     * CLIENT SECRET for new accoun to make an invoice 
+     * 
+     */
+    'client_secret_demo' => env('CLIENT_SECRET'),
+    /**
+     * 
+     * Host in version DEMO, to make invoices free
+     * 
+     */
+    'host_demo' => env('HOST'),
 
 ];
