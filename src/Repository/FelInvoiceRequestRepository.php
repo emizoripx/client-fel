@@ -148,7 +148,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             "complemento" => null,
             "codigoCliente" => $client->id_origin . "",
             "emailCliente" => null,
-            "telefonoCliente" => $model->client->phone ?? "",
+            "telefonoCliente" => $model->client->phone,
 
 
             "codigoPuntoVenta" => 0,
