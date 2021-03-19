@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
+use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
@@ -19,6 +20,8 @@ class FelInvoiceRequest extends Model
 {
     use DecodeHashIds;
     use GetCredentialsTrait;
+    use GetInvoiceStateTrait;
+
     protected $table = "fel_invoice_requests";
 
     protected $guarded = [];
@@ -58,7 +61,7 @@ class FelInvoiceRequest extends Model
     }
 
     public function saveState($value){
-        $this->estado = $value;
+        $this->estado = $this->getInvoiceState($value);
         return $this;
     }
 
