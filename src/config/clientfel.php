@@ -52,5 +52,11 @@ return [
      * 
      */
     'host_demo' => env('HOST'),
+    /**
+     * 
+     * Host in version PRODUCTION, to make invoices FOR REAL
+     * 
+     */
+    'host_production' => env('PRODUCTION_HOST'),
 
 ];
