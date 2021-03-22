@@ -222,4 +222,24 @@ class Invoices extends BaseConnection
         }
         
     }
+
+    public function setRevocationReasonCode($code){
+        $this->revocationReasonCode = $code;
+    }
+
+    public function revocateInvoice(){
+        if(empty($this->cuf)){
+            throw new ClientFelException("Es necesario el cuf para anular la factura");
+        }
+        \Log::debug('Motivo de Anulacion '. $this->revocationReasonCode);
+        try {
+            $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/anular?codigoMotivoAnulacion=$this->revocationReasonCode", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            
+            return $this->parse_response($response);
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+
+            throw new ClientFelException("Error al anular la factura ". $ex->getMessage());
+        }
+    }
 }
