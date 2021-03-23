@@ -10,6 +10,7 @@ use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
+use Exception;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
 
@@ -54,6 +55,32 @@ class InvoiceController extends BaseController
             return response()->json([
                 "success" => false,
                 "msg" => $ex->getMessage()
+            ]);
+        }
+    }
+
+    public function revocate(Request $request){
+        try{
+            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
+
+            if(!$felInvoiceRequest){
+                throw new ClientFelException("Factura no encontrada");
+            }
+
+            if(!is_null($felInvoiceRequest->getRevocationReasonCode())){
+                throw new ClientFelException("La Factura ya fue anulada");
+            }
+
+            $felInvoiceRequest->setAccessToken()->sendRevocateInvoiceToFel($request->input('codigo_motivo_anulacion'));
+
+            return response()->json([
+                'success' => true
+            ]);
+
+        } catch(ClientFelException $ex){
+            return response()->json([
+                'success' => false,
+                'msg' => $ex->getMessage()
             ]);
         }
     }

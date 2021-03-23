@@ -7,7 +7,7 @@ trait InvoiceParametersTrait {
 
     public function fel_invoice()
     {
-        return $this->hasOne(FelInvoiceRequest::class,'id_origin');
+        return $this->hasOne(FelInvoiceRequest::class,'id_origin')->withTrashed();
     }
 
     public function getCufAttribute()

@@ -8,6 +8,8 @@ use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Services\BaseConnection;
 use Exception;
 use Facade\FlareClient\Http\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Message;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Log;
 use stdClass;
@@ -233,13 +235,16 @@ class Invoices extends BaseConnection
         }
         \Log::debug('Motivo de Anulacion '. $this->revocationReasonCode);
         try {
+
             $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/anular?codigoMotivoAnulacion=$this->revocationReasonCode", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             
             return $this->parse_response($response);
-        } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
 
-            throw new ClientFelException("Error al anular la factura ". $ex->getMessage());
+        } catch (RequestException $ex) {
+            Log::error("Log Service");
+            Log::error([json_decode($ex->getResponse()->getBody())]);
+
+            throw new Exception( $ex->getResponse()->getBody());
         }
     }
 }
