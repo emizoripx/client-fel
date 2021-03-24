@@ -19,7 +19,10 @@ class WebhookController extends BaseController
         
         $data = $request->all();
         
-        $invoice = FelInvoiceRequest::where('cuf', $data['cuf'])->first();
+        $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
+
+        \Log::debug('Webhook Model');
+        \Log::debug($invoice);
 
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
 

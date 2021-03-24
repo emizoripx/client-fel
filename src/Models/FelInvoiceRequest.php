@@ -14,6 +14,7 @@ use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 class FelInvoiceRequest extends Model
@@ -21,6 +22,8 @@ class FelInvoiceRequest extends Model
     use DecodeHashIds;
     use GetCredentialsTrait;
     use GetInvoiceStateTrait;
+
+    use SoftDeletes;
 
     protected $table = "fel_invoice_requests";
 
@@ -57,7 +60,7 @@ class FelInvoiceRequest extends Model
 
     public static function getByCompanyId($company_id)
     {
-        return self::where('company_id', $company_id)->get();
+        return self::withTrashed()->where('company_id', $company_id)->get();
     }
 
     public function saveState($value){
@@ -78,6 +81,13 @@ class FelInvoiceRequest extends Model
     public function saveSINErrors($value){
         $this->errores = $value;
         return $this;
+    }
+    public function saveRevocationReasonCode($value){
+        $this->revocation_reason_code = $value;
+        return $this;
+    }
+    public function getRevocationReasonCode(){
+        return $this->revocation_reason_code;
     }
     
     /**
@@ -141,5 +151,20 @@ class FelInvoiceRequest extends Model
         if(!$account->checkIsPostpago()){
             $account->reduceNumberInvoice()->save();
         }
+    }
+
+
+    public function sendRevocateInvoiceToFel($codigoMotivoAnulacion){
+        $invoice_service = new Invoices($this->host);
+
+        $invoice_service->setAccessToken($this->access_token);
+        $invoice_service->setCuf($this->cuf);
+        $invoice_service->setRevocationReasonCode($codigoMotivoAnulacion);
+
+        $invoice_service->revocateInvoice();
+
+        $invoice = $invoice_service->getInvoicebyCuf();
+
+        $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
     }
 }
