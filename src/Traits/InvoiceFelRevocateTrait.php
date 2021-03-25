@@ -19,7 +19,7 @@ trait InvoiceFelRevocateTrait{
                 return;
             }
 
-            if(!is_null($felInvoiceRequest->getRevocationReasonCode())){
+            if(!is_null($felInvoiceRequest->getDeletedAt())){
                 throw new ClientFelException(json_encode(["errors"=>["La Factura ya fue anulada"]]));
             }
             
@@ -38,6 +38,37 @@ trait InvoiceFelRevocateTrait{
             
         } catch (ClientFelException $ex) {
             bitacora_error("FelInvoiceRequestRevocate", "Error al anular Factura ". $ex->getMessage());
+
+            throw new Exception($ex->getMessage());
+        }
+    }
+
+
+    public function reversionRevocate(){
+        $success = false;
+
+        $felInvoiceRequest = $this->fel_invoice;
+
+        try {
+
+            if(is_null($felInvoiceRequest->getDeletedAt())){
+                throw new ClientFelException(json_encode(["errors" => ["La factura no fue anulada"]]));
+            }
+            
+            if(is_null($felInvoiceRequest->cuf)){
+                $felInvoiceRequest->restoreInvoice();
+                return;
+            }
+
+
+            $felInvoiceRequest->setAccessToken()->sendReversionRevocateInvoiceToFel();
+
+            $success = true;
+
+            bitacora_info("FelInvoiceRequest:ReversionRevocate", $success);
+
+        } catch (ClientFelException $ex) {
+            bitacora_error("FelInvoiceRequest:ReversionRevocate", "Error al desanular Factura ".$ex->getMessage());
 
             throw new Exception($ex->getMessage());
         }

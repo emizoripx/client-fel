@@ -5,12 +5,15 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use App\Models\Company;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
+use EmizorIpx\ClientFel\Traits\InvoiceValidateStateTrait;
+use EmizorIpx\ClientFel\Utils\InvoiceStates;
 use EmizorIpx\ClientFel\Utils\Log;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Illuminate\Http\Request;
 
 class WebhookController extends BaseController
 {
+    use InvoiceValidateStateTrait;
 
     public function callback(Request $request)
     {
@@ -25,6 +28,8 @@ class WebhookController extends BaseController
         \Log::debug($invoice);
 
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
+
+        $this->validateStateCode($data['status_code'], $invoice);
 
         if(!$invoice->prepagoAccount()->checkIsPostpago()){
             $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];

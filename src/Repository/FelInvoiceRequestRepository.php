@@ -61,7 +61,8 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         try {
 
-            $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->first();
+            $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->whereNull('cuf')->first();
+
 
             if (!is_null($invoice_request)) {
                 $invoice_request->delete();
@@ -151,7 +152,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             "telefonoCliente" => $model->client->phone,
 
 
-            "codigoPuntoVenta" => 0,
+            "codigoPuntoVenta" => 7,
             "numeroTarjeta" => null,
             "codigoMoneda" => 1,
             "extras" => null,
