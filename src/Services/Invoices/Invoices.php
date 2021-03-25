@@ -247,4 +247,23 @@ class Invoices extends BaseConnection
             throw new Exception( $ex->getResponse()->getBody());
         }
     }
+
+    public function reversionRevocateInvoice(){
+
+        if(empty($this->cuf)){
+            throw new ClientFelException("Es necesario el cuf para revertir anulación la factura");
+        }
+
+        try {
+            $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/revertir-anulacion", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+
+            return $this->parse_response($response);
+        } catch (RequestException $ex) {
+
+            Log::error("Log Service reversion");
+            Log::error([json_decode($ex->getResponse()->getBody())]);
+            
+            throw new Exception($ex->getResponse()->getBody());
+        }
+    }
 }

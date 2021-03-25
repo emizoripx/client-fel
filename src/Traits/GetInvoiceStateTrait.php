@@ -34,7 +34,7 @@ trait GetInvoiceStateTrait{
                 return "ANULACION ENVIADA";
                 break;
             case InvoiceStates::INVOICE_REVOCATION_STATE_SENT_TO_SIN_INVALID:
-                return "ERROR EN LA RECEPCION DE ANULACION";
+                return "ANULACION RECHAZADA";
                 break;
             case InvoiceStates::INVOICE_REVOCATION_STATE_SIN_INVALID:
                 return "ANULACION INVALIDA";
@@ -45,9 +45,27 @@ trait GetInvoiceStateTrait{
             case InvoiceStates::INVOICE_REVOCATION_STATE_INTERNAL_ERROR:
                 return "ERROR INTERNO";
                 break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_QUEUE_PENDING:
+                return "RESTAURACION EN ESPERA";
+                break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_SIN_VALID:
+                return "VALIDO";
+                break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_SENT_TO_SIN_INVALID:
+                return "RESTAURACION RECHAZADA";
+                break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_SENT_TO_SIN:
+                return "RESTAURACION ENVIADA";
+                break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_SIN_INVALID:
+                return "RESTAURACION INVALIDA";
+                break;
+            case InvoiceStates::INVOICE_REVERSION_STATE_INTERNAL_ERROR:
+                return "ERROR INTERNO";
+                break;
             
             default:
-                throw new ClientFelException("ESTADO DESCONOCIDO");
+                return "ESTADO DESCONOCIDO";
                 break;
         }
     }

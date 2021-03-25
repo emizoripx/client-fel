@@ -89,6 +89,13 @@ class FelInvoiceRequest extends Model
     public function getRevocationReasonCode(){
         return $this->revocation_reason_code;
     }
+    public function getDeletedAt(){
+        return $this->deleted_at;
+    }
+    public function restoreInvoice(){
+        $this->restore();
+        return $this;
+    }
     
     /**
      * Get the prepagoAccount instance
@@ -166,5 +173,18 @@ class FelInvoiceRequest extends Model
         $invoice = $invoice_service->getInvoicebyCuf();
 
         $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
+    }
+
+    public function sendReversionRevocateInvoiceToFel(){
+        $invoice_service = new Invoices($this->host);
+
+        $invoice_service->setAccessToken($this->access_token);
+        $invoice_service->setCuf($this->cuf);
+
+        $invoice_service->reversionRevocateInvoice();
+
+        $invoice = $invoice_service->getInvoiceByCuf();
+
+        $this->saveState($invoice['estado'])->save();
     }
 }
