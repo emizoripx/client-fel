@@ -26,4 +26,8 @@ class FelProductObserver
     {
         $this->repo->delete($model);
     }
+    public function restored($model)
+    {
+        $this->repo->restore($model);
+    }
 }
