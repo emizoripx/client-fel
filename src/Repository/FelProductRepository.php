@@ -84,6 +84,24 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             bitacora_error("FelProductRepository:delete", $ex->getMessage());
         }
     }
+    public function restore($model)
+    {
+        bitacora_info("FelProductRepository:restore", "");
+
+        try {
+
+            $product = FelSyncProduct::withTrashed()->where('id_origin', $model->id)->first();
+
+            if (!is_null($product)) {
+
+                $product->restore();
+            }
+                            
+
+        } catch (Exception $ex) {
+            bitacora_error("FelProductRepository:restore", $ex->getMessage());
+        }
+    }
 
 
 }
