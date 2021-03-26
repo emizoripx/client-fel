@@ -82,6 +82,7 @@ class FelParametric
                 foreach($data as $d) { 
                     $d["company_id"] = $company_id;
                     $d["codigoSucursal"] = $d['codigoSucursal'];
+                    $d["codigo"] = $d['codigoDocumentSector'];
                     $d["documentoSector"] = $d['documentoSector'];
                     $d["tipoFactura"] = $d['tipoFactura'];
                     $data_[] = $d;
