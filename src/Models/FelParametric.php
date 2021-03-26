@@ -85,6 +85,8 @@ class FelParametric
                     $d["codigo"] = $d['codigoDocumentSector'];
                     $d["documentoSector"] = $d['documentoSector'];
                     $d["tipoFactura"] = $d['tipoFactura'];
+
+                    unset($d['codigoDocumentSector']);
                     $data_[] = $d;
                 }
                 return SectorDocumentTypes::insert($data_);
