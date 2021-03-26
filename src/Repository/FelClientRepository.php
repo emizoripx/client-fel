@@ -88,4 +88,23 @@ class FelClientRepository extends BaseRepository implements RepoInterface
       ])
     ]);
   }
+
+  public function restore($model)
+    {
+        bitacora_info("FelClientRepository:restore", "");
+
+        try {
+
+            $product = FelClient::withTrashed()->where('id_origin', $model->id)->first();
+
+            if (!is_null($product)) {
+
+                $product->restore();
+            }
+                            
+
+        } catch (Exception $ex) {
+            bitacora_error("FelClientRepository:restore", $ex->getMessage());
+        }
+    }
 }
