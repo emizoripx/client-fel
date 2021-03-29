@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
+use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use Exception;
@@ -47,11 +48,16 @@ class InvoiceController extends BaseController
 
             $success = true;
 
+            fel_register_historial($felInvoiceRequest);
+
             return response()->json([
                 "success" => $success
             ]);
 
         } catch (ClientFelException $ex) {
+            
+            fel_register_historial($felInvoiceRequest, $ex->getMessage());
+
             return response()->json([
                 "success" => false,
                 "msg" => $ex->getMessage()
