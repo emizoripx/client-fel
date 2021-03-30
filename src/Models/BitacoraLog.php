@@ -16,16 +16,16 @@ class BitacoraLog extends Model {
     const INFO='INFO';
     const REQUEST='REQUEST';
 
-    protected static function boot()
-    {
-        parent::boot();
-        static::created(function ($query) {
-            // remove unused qr payment register 
-            \DB::table('fel_bitacora_logs')
-            ->whereRaw(" updated_at < now() - interval 7 DAY")
-            ->delete();
-        });
-    }
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::created(function ($query) {
+    //         // remove unused qr payment register 
+    //         \DB::table('fel_bitacora_logs')
+    //         ->whereRaw(" updated_at < now() - interval 7 DAY")
+    //         ->delete();
+    //     });
+    // }
     public static function getConstants()
     {
         $class = new \ReflectionClass(get_called_class());
