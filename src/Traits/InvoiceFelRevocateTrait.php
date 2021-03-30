@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
+use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use Exception;
 
 trait InvoiceFelRevocateTrait{
@@ -35,9 +36,13 @@ trait InvoiceFelRevocateTrait{
             $success = true;
 
             bitacora_info("FelInvoiceRequestRevocate", $success);
+
+            fel_register_historial($felInvoiceRequest);
             
         } catch (ClientFelException $ex) {
             bitacora_error("FelInvoiceRequestRevocate", "Error al anular Factura ". $ex->getMessage());
+
+            fel_register_historial($felInvoiceRequest, $ex->getMessage());
 
             throw new Exception($ex->getMessage());
         }
@@ -67,8 +72,12 @@ trait InvoiceFelRevocateTrait{
 
             bitacora_info("FelInvoiceRequest:ReversionRevocate", $success);
 
+            fel_register_historial($felInvoiceRequest);
+
         } catch (ClientFelException $ex) {
             bitacora_error("FelInvoiceRequest:ReversionRevocate", "Error al desanular Factura ".$ex->getMessage());
+
+            fel_register_historial($felInvoiceRequest, $ex->getMessage());
 
             throw new Exception($ex->getMessage());
         }
