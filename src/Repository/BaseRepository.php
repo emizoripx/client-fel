@@ -21,7 +21,8 @@ class BaseRepository
             if (property_exists($fel_data_decoded, 'client')) {
 
                 $this->fel_data_parsed = [
-                    "type_document_id" => $fel_data_decoded->client->type_document_id
+                    "type_document_id" => $fel_data_decoded->client->type_document_id,
+                    "complement" => $fel_data_decoded->client->complement ?? null
                 ];
             }
 
