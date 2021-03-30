@@ -58,5 +58,11 @@ return [
      * 
      */
     'host_production' => env('PRODUCTION_HOST'),
+    /**
+     * 
+     * POS Code
+     * 
+     */
+    'pos_code' => env('POS_CODE', 1),
 
 ];

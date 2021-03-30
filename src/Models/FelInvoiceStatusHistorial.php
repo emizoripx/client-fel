@@ -23,12 +23,12 @@ class FelInvoiceStatusHistorial extends Model
         \Log::debug($data);
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $input = [
-            'fel_invoice_id' => $data->id,
-            'cuf' => $data->cuf,
+            'fel_invoice_id' => $data->id ?? null,
+            'cuf' => $data->cuf ?? null,
             'estado' => $data->estado ?? null,
             'codigo_estado' => $data->codigoEstado ?? null,
             'codigo_recepcion' => $codigoRecepcion,
-            'company_id' => $hashid->decode($data->company_id)[0],
+            'company_id' => isset($data->company_id) ? $hashid->decode($data->company_id)[0] : null,
             'errors' => $errors,
             'codigo_motivo_anulacion' => $data->revocation_reason_code ?? null,
             'created_at' => Carbon::now()

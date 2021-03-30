@@ -90,4 +90,31 @@ class InvoiceController extends BaseController
             ]);
         }
     }
+
+    public function updateEmitedInvoice(Request $request){
+        try {
+            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
+
+            if(!$felInvoiceRequest){
+                throw new Exception(json_encode(["errors" => ["La factura no fue encontrada"]]));
+            }
+
+            $felInvoiceRequest->setAccessToken()->sendUpdateInvoiceToFel();
+
+            fel_register_historial($felInvoiceRequest);
+
+            return response()->json([
+                'success' => true
+            ]);
+
+        } catch (Exception $ex) {
+            \Log::debug('Errors');
+            fel_register_historial(isset($felInvoiceRequest) ? $felInvoiceRequest : null, json_decode($ex->getMessage()));
+
+            return response()->json([
+                'success' => false,
+                'msg' => json_decode($ex->getMessage())
+            ]);
+        }
+    }
 }
