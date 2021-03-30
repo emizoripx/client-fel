@@ -28,7 +28,8 @@ class FelClientRepository extends BaseRepository implements RepoInterface
           "type_document_id" => $this->fel_data_parsed['type_document_id'],
           "id_origin" => $model->id,
           "business_name" => $model->name,
-          "document_number" => $model->id_number,
+          "document_number" => $model->id_number ,
+          "complement" => $this->fel_data_parsed['complement'],
           "company_id" => $model->company_id
         ];
 
@@ -53,6 +54,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         "type_document_id" => $this->fel_data_parsed['type_document_id'],
         "business_name" => $model->name,
         "document_number" => $model->id_number,
+        "complement" => $this->fel_data_parsed['complement'],
       ];
 
       $client = FelClient::where("id_origin", $model->id)->first();
@@ -95,11 +97,11 @@ class FelClientRepository extends BaseRepository implements RepoInterface
 
         try {
 
-            $product = FelClient::withTrashed()->where('id_origin', $model->id)->first();
+            $client = FelClient::withTrashed()->where('id_origin', $model->id)->first();
 
-            if (!is_null($product)) {
+            if (!is_null($client)) {
 
-                $product->restore();
+                $client->restore();
             }
                             
 

@@ -146,13 +146,13 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             "nombreRazonSocial" => $client->business_name,
             "codigoTipoDocumentoIdentidad" => $client->type_document_id,
             "numeroDocumento" => $client->document_number,
-            "complemento" => null,
+            "complemento" => $client->complement ?? null,
             "codigoCliente" => $client->id_origin . "",
             "emailCliente" => null,
             "telefonoCliente" => $model->client->phone,
 
 
-            "codigoPuntoVenta" => 7,
+            "codigoPuntoVenta" => config('clientfel.pos_code'),
             "numeroTarjeta" => null,
             "codigoMoneda" => 1,
             "extras" => null,
