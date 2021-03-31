@@ -16,7 +16,7 @@ trait InvoiceFelRevocateTrait{
             \Log::debug('Model');
             \Log::debug($felInvoiceRequest);
 
-            if(is_null($felInvoiceRequest->cuf)){
+            if(is_null($felInvoiceRequest) || is_null($felInvoiceRequest->cuf)){
                 return;
             }
 
