@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
 use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
+use EmizorIpx\ClientFel\Traits\InvoiceUpdateDateTrait;
 use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
@@ -22,6 +23,7 @@ class FelInvoiceRequest extends Model
     use DecodeHashIds;
     use GetCredentialsTrait;
     use GetInvoiceStateTrait;
+    use InvoiceUpdateDateTrait;
 
     use SoftDeletes;
 

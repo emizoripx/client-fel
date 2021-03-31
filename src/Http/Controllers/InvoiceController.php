@@ -38,6 +38,8 @@ class InvoiceController extends BaseController
             }
             
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
+
+            $felInvoiceRequest->invoiceDateUpdatedAt();
             
             $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
@@ -100,6 +102,8 @@ class InvoiceController extends BaseController
             }
 
             $felInvoiceRequest->setAccessToken()->sendUpdateInvoiceToFel();
+
+            $felInvoiceRequest->invoiceDateUpdatedAt();
 
             fel_register_historial($felInvoiceRequest);
 

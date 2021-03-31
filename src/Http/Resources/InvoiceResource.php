@@ -40,7 +40,10 @@ class InvoiceResource extends JsonResource
             "usuario" => $this->usuario,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
-            "cuf" => $this->cuf
+            "cuf" => $this->cuf,
+            "sin_status" => $this->estado,
+            "codigoEstado" => $this->codigoEstado,
+            "sin_errors" => $this->errores
         ];
     }
 }

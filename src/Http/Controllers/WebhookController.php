@@ -31,6 +31,7 @@ class WebhookController extends BaseController
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
 
         $this->validateStateCode($data['status_code'], $invoice);
+        $invoice->invoiceDateUpdatedAt();
 
         fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
 
