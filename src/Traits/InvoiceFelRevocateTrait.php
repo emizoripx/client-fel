@@ -33,6 +33,8 @@ trait InvoiceFelRevocateTrait{
 
             $felInvoiceRequest->setAccessToken()->sendRevocateInvoiceToFel($codigoMotivoAnulacion);
 
+            $felInvoiceRequest->invoiceDateUpdatedAt();
+
             $success = true;
 
             bitacora_info("FelInvoiceRequestRevocate", $success);
@@ -67,6 +69,8 @@ trait InvoiceFelRevocateTrait{
 
 
             $felInvoiceRequest->setAccessToken()->sendReversionRevocateInvoiceToFel();
+
+            $felInvoiceRequest->invoiceDateUpdatedAt();
 
             $success = true;
 
