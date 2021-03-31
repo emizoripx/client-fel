@@ -266,4 +266,21 @@ class Invoices extends BaseConnection
             throw new Exception($ex->getResponse()->getBody());
         }
     }
+
+    public function updateInvoice(){
+        if(empty($this->cuf)){
+            throw new ClientFelException(json_encode(["errors" => ["Es necesario el CUF para actualizar la Factura"]]));
+        }
+
+        $this->checkParameters();
+
+        try {
+            
+            $response = $this->client->request('PUT', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document/update/$this->cuf", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $this->setResponse($this->parse_response($response));
+            return $this->parse_response($response);
+        } catch (RequestException $ex) {
+            throw new ClientFelException($ex->getResponse()->getBody());
+        }
+    }
 }

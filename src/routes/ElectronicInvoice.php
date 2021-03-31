@@ -13,6 +13,7 @@ class ElectronicInvoice
         Route::group(['middleware' => ['needs_access_token'], 'namespace' => "\EmizorIpx\ClientFel\Http\Controllers", "prefix" => "clientfel/"], function () {
 
             Route::post('invoices', 'InvoiceController@emit');
+            Route::put('invoices', 'InvoiceController@updateEmitedInvoice');
         });
     }
 }

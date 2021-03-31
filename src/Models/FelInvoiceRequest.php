@@ -187,4 +187,24 @@ class FelInvoiceRequest extends Model
 
         $this->saveState($invoice['estado'])->save();
     }
+
+    public function sendUpdateInvoiceToFel(){
+        $invoice_service = new Invoices($this->host);
+
+        $invoice_service->setAccessToken($this->access_token);
+        $invoice_service->setCuf($this->cuf);
+        $invoice_service->setBranchNumber(0);
+
+        $invoice_service->buildData($this);
+        $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
+
+        $invoice_service->updateInvoice();
+
+        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+
+        $invoice = $invoice_service->getInvoiceByCuf();
+
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
+
+    }
 }
