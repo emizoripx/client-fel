@@ -14,7 +14,8 @@ class ClientRules {
                 'required',
                 'integer',
                 Rule::in([1,2,3,4,5])
-            ]
+            ],
+            'complement' => 'nullable|string'
         ];
     }
 }
