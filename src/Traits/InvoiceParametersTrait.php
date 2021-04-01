@@ -30,7 +30,7 @@ trait InvoiceParametersTrait {
     {
         
         if ( empty($this->fel_invoice) ) 
-            return "";
+            return null;
         
         return $this->fel_invoice->codigoEstado;
     }
