@@ -86,7 +86,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
   public static function completeDataRequest($data){
     return array_merge($data, [
       'fel_data' => json_encode([
-        'client' => ['type_document_id' => $data['type_document_id']]
+        'client' => ['type_document_id' => $data['type_document_id'], 'complement' => $data['complement']]
       ])
     ]);
   }
