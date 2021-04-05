@@ -81,7 +81,7 @@ class Invoices extends BaseConnection
 
             Log::error($ex->getMessage());
 
-            throw new ClientFelException("Error en la creación de la factura: " . $ex->getMessage());
+            throw new ClientFelException("Error en la creación de la factura: " . $ex->getResponse()->getBody());
         }
     }
 
