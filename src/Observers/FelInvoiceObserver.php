@@ -17,13 +17,15 @@ class FelInvoiceObserver
     public function created($model)
     {
         \Log::debug("ingresa a create fel" );
-        $this->repo->create(request()->input('fel_data'), $model);
+        \Log::debug(request()->input('felData'));
+        $this->repo->create(request()->input('felData'), $model);
     }
 
     public function updated($model)
     {
         \Log::debug("ingresa a update fel con " . $model->updated_at);
-        $this->repo->update(request()->input('fel_data'), $model);
+        \Log::debug(request()->input('felData'));
+        $this->repo->update(request()->input('felData'), $model);
     }
 
     public function deleted($model)

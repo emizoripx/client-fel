@@ -17,6 +17,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
 
         try {
 
+            $this->setEntity('product');
             $this->parseFelData($fel_data);
 
             $input = [
@@ -44,6 +45,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
 
         try {
 
+            $this->setEntity('product');
             $this->parseFelData($fel_data);
         
             $input = [
