@@ -22,6 +22,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
 
       try {
 
+        $this->setEntity('client');
         $this->parseFelData($fel_data);
 
         $input = [
@@ -48,6 +49,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
 
     try {
 
+      $this->setEntity('client');
       $this->parseFelData($fel_data);
 
       $input = [

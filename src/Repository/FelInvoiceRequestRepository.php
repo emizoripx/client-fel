@@ -40,7 +40,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         bitacora_info("FelInvoiceRequestRepository:update", json_encode($fel_data));
 
         try {
-            if (request()->has('fel_data')) {
+            if (request()->has('felData')) {
 
                 $input = $this->processInput($fel_data, $model);
                 $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->first();
@@ -75,6 +75,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
     public function processInput( $fel_data, $model)
     {
+        $this->setEntity('invoice');
         $this->parseFelData($fel_data);
 
         if (is_null($model)) {

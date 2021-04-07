@@ -14,12 +14,16 @@ class FelProductObserver
     }
     public function created($model)
     {
-        $this->repo->create(request()->input('fel_data'), $model);
+        \Log::debug('Ingrea a created product');
+        \Log::debug(request()->input('felData'));
+        $this->repo->create(request()->input('felData'), $model);
     }
 
     public function updated($model)
     {
-        $this->repo->update(request()->input('fel_data'), $model);
+        \Log::debug('Ingrea a created product');
+        \Log::debug(request()->input('felData'));
+        $this->repo->update(request()->input('felData'), $model);
     }
 
     public function deleted($model)
