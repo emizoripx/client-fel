@@ -2,18 +2,15 @@
 
 namespace EmizorIpx\ClientFel\Repository;
 
-use App\Models\Product;
-use Carbon\Carbon;
+use EmizorIpx\ClientFel\Builders\FelInvoiceBuilder;
 use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
-use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
+use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Exception;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use stdClass;
 
 class FelInvoiceRequestRepository extends BaseRepository implements RepoInterface
 {
@@ -25,9 +22,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         
         try {
            
-            $input = $this->processInput($fel_data, $model);
-        
-            FelInvoiceRequest::create($input);
+            $this->processInput($fel_data, $model);
           
         } catch (Exception $ex) {
             bitacora_error("FelInvoiceRequestRepository:create", "File: " . $ex->getFile() . " Line: " . $ex->getLine() . "Message: " . $ex->getMessage());
@@ -42,13 +37,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         try {
             if (request()->has('felData')) {
 
-                $input = $this->processInput($fel_data, $model);
-                $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->first();
-                    
-                if (! is_null($invoice_request) ) {
-                    $invoice_request->update($input);
-                }
-                
+                $this->processInput($fel_data, $model, true);
             }
 
         } catch (Exception $ex) {
@@ -73,7 +62,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         }
     }
 
-    public function processInput( $fel_data, $model)
+    public function processInput( $fel_data, $model, $update = false)
     {
         $this->setEntity('invoice');
         $this->parseFelData($fel_data);
@@ -82,93 +71,35 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             bitacora_error("FelInvoiceRepository:PROCESS model","MODEL INVOICE IS NULL");
         }
 
-
         $client = FelClient::where('id_origin', $model->client_id)->first();
-        
-        if(request()->has('name')){
+
+        if (request()->has('name')) {
             $client->business_name = request('name');
             $client->document_number = request('id_number');
             $client->type_document_id = request('type_document_id');
         }
-
-        $user = $model->user;
         
-        $line_items = $model->line_items;
-        
-        $total = 0;
-
-        $hashid = new Hashids(config('ninja.hash_salt'), 10);
-
-        foreach ($line_items as $detail) {
-
-            $id_origin = $hashid->decode($detail->product_id)[0];
-        
-            Log::debug($id_origin);
-            
-            $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->first();
-            Log::debug([$product_sync]);
-            
-            $new = new stdClass;
-            $new->codigoProducto =  $product_sync->codigo_producto . ""; // this values was added only frontend Be careful
-            $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
-            $new->descripcion = $detail->notes;
-            $new->precioUnitario = $detail->cost;
-            $new->subTotal = $detail->line_total;
-            $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
-
-            if ($detail->discount > 0)
-                $new->montoDescuento = ($detail->cost * $detail->quantity) - $detail->line_total;
-
-            $new->numeroImei = null;
-
-            $new->unidadMedida = $product_sync->codigo_unidad;
-
-            $details[] = $new;
-
-            $total += $new->subTotal;
-        }
-
-
-        $input = [
-            "id_origin" => $model->id,
-            "company_id" => $model->company_id,
-            #fel fata
-            "codigoMetodoPago" => $this->fel_data_parsed['payment_method_id'],
-            "codigoLeyenda" => $this->fel_data_parsed['caption_id'],
-            "codigoActividad" => $this->fel_data_parsed['activity_id'],
-
-            #automatico
-            "numeroFactura" => $model->number ?? 0,
-
-            # it is generated in FEL
-            "fechaEmision" => substr( Carbon::parse(Carbon::now())->format('Y-m-d\TH:i:s.u'), 0, -3),
-
-            "nombreRazonSocial" => $client->business_name,
-            "codigoTipoDocumentoIdentidad" => $client->type_document_id,
-            "numeroDocumento" => $client->document_number,
-            "complemento" => $client->complement ?? null,
-            "codigoCliente" => $client->id_origin . "",
-            "emailCliente" => null,
-            "telefonoCliente" => $model->client->phone,
-
-
-            "codigoPuntoVenta" => config('clientfel.pos_code'),
-            "numeroTarjeta" => null,
-            "codigoMoneda" => 1,
-            "extras" => null,
-            "tipoCambio" => 1,
-
-            "montoTotal" => $total,
-            "montoTotalMoneda" => $total,
-            "montoTotalSujetoIva" => $total,
-
-            "usuario" => ($user->first_name . " " . $user->last_name) == "" ?? "Usuario Genérico",
-
-            "detalles" => json_encode($details)
+        $source_data = [
+            'model' => $model,
+            'fel_data_parsed' => $this->fel_data_parsed,
+            'client' => $client,
+            'user' => $model->user,
+            'update' => $update
         ];
+        
+        // this an instance of generic builder
+        $builder = new FelInvoiceBuilder;
+        
+        // this part should have the number of type document sector, for example: 1 : FACTURA COMPRA-VENTA
+        $code = $this->fel_data_parsed['type_document_sector_id'];
 
-        return $input;
+        
+        // get instance builder by typde document sector, as default should result in CompraVentaBuilder
+        $instance = TypeDocumentSector::getInstanceByCode($code);
+        
+        //process input if saved or update 
+        $builder->make(new $instance($source_data));
+
     }
 
     public static function completeDataRequest($data, $company_id){
