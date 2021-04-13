@@ -33,9 +33,9 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             $this->input,
             $this->getDetailsAndTotals()
         );
-        \Log::debug("data filling with : " .json_encode($input));
+        
         $this->fel_invoice->fill($input);
-        \Log::debug("FEL INVOICE FILLING : " . json_encode($this->fel_invoice));
+        
         return $this->fel_invoice;
     }
 

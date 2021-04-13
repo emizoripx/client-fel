@@ -43,9 +43,28 @@ class BaseRepository
                         "payment_method_id" => $fel_data['codigoMetodoPago'],
                         "tipo_cambio" => !empty($fel_data['tipoCambio']) ? $fel_data['tipoCambio'] : 1,
                         "codigo_moneda" => !empty($fel_data['codigoMoneda']) ? $fel_data['codigoMoneda'] : 1,
-                        'type_document_sector_id' => !empty($fel_data['typeDocumentSectorId']) ? $fel_data['typeDocumentSectorId'] : 1,
+                        'type_document_sector_id' => !empty($fel_data['sector_document_type_id']) ? $fel_data['sector_document_type_id'] : 1,
                         'numero_tarjeta' => !empty($fel_data['numeroTarjeta']) ? $fel_data['numeroTarjeta']: null,
-                        'extras' => !empty($fel_data['extras']) ? $fel_data['extras'] : null
+                        'extras' => !empty($fel_data['extras']) ? $fel_data['extras'] : null,
+                        "direccionComprador" => !empty($fel_data["direccionComprador"]) ?  $fel_data["direccionComprador"] : "",
+                        "ruex" => !empty($fel_data["ruex"]) ?  $fel_data["ruex"] : "",
+                        "nim" => !empty($fel_data["nim"]) ?  $fel_data["nim"] : "",
+                        "concentradoGranel" => !empty($fel_data["concentradoGranel"]) ?  $fel_data["concentradoGranel"] : "",
+                        "origen" => !empty($fel_data["origen"]) ?  $fel_data["origen"] : "",
+                        "puertoTransito" => !empty($fel_data["puertoTransito"]) ?  $fel_data["puertoTransito"] : "",
+                        "puertoDestino" => !empty($fel_data["puertoDestino"]) ?  $fel_data["puertoDestino"] : "",
+                        "paisDestino" => !empty($fel_data["paisDestino"]) ?  $fel_data["paisDestino"] : "",
+                        "incoterm" => !empty($fel_data["incoterm"]) ?  $fel_data["incoterm"] : "",
+                        "tipoCambioANB" => !empty($fel_data["tipoCambioANB"]) ?  $fel_data["tipoCambioANB"] : "",
+                        "numeroLote" => !empty($fel_data["numeroLote"]) ?  $fel_data["numeroLote"] : "",
+                        "kilosNetosHumedos" => !empty($fel_data["kilosNetosHumedos"]) ?  $fel_data["kilosNetosHumedos"] : "",
+                        "humedadPorcentaje" => !empty($fel_data["humedadPorcentaje"]) ?  $fel_data["humedadPorcentaje"] : "",
+                        "humedadValor" => !empty($fel_data["humedadValor"]) ?  $fel_data["humedadValor"] : "",
+                        "mermaPorcentaje" => !empty($fel_data["mermaPorcentaje"]) ?  $fel_data["mermaPorcentaje"] : "",
+                        "mermaValor" => !empty($fel_data["mermaValor"]) ?  $fel_data["mermaValor"] : "",
+                        "kilosNetosSecos" => !empty($fel_data["kilosNetosSecos"]) ?  $fel_data["kilosNetosSecos"] : "",
+                        "gastosRealizacion" => !empty($fel_data["gastosRealizacion"]) ?  $fel_data["gastosRealizacion"] : "",
+                        "otrosDatos" => !empty($fel_data["otrosDatos"]) ?  $fel_data["otrosDatos"] : []
                     ];
                     break;
                 
