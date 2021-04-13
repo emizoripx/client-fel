@@ -122,9 +122,13 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         }
         $data['line_items'] = $line_items;
         $settings = FelClientToken::where('account_id', $company_id)->first()->settings;
-        
+        $settings_change = json_decode( $settings); 
         return array_merge($data, [
-            'fel_data' =>  json_encode(['invoice' => json_decode( $settings)])
+            'felData' => [
+                "codigoActividad" => $settings_change->activity_id,
+                "codigoLeyenda" => $settings_change->caption_id,
+                "codigoMetodoPago" => $settings_change->payment_method_id
+            ]
             ]);
     }
 }
