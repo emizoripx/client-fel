@@ -21,7 +21,7 @@ class FelProductObserver
 
     public function updated($model)
     {
-        \Log::debug('Ingrea a created product');
+        \Log::debug('Ingrea a updated product');
         \Log::debug(request()->input('felData'));
         $this->repo->update(request()->input('felData'), $model);
     }
