@@ -50,6 +50,17 @@ class FelInvoiceRequest extends Model
         $this->cuf = $value;
         return $this;
     }
+    public function saveUrlSin($value) 
+    {
+        $this->urlSin = $value;
+        return $this;
+    }
+    public function getUrlSin() 
+    {
+        $url = config('clientfel.host_sin').$this->urlSin;
+        \Log::debug("Url Sin: ".$url);
+        return $url;
+    }
 
     public static function findByIdOrigin($id_origin)
     {
@@ -149,7 +160,7 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByCuf();
         
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->save();
 
         // $this->setCompanyId();
         Log::debug('RETORNO MODELO');
