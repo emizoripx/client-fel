@@ -4,7 +4,6 @@ namespace EmizorIpx\ClientFel\Models;
 
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
-use EmizorIpx\ClientFel\Models\TypeDocumentSector\FelInvoiceCompraVenta;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
@@ -220,11 +219,5 @@ class FelInvoiceRequest extends Model
 
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
 
-    }
-
-    public function modifyByTypeDocumentSector($elements)
-    {
-        $design = new FelInvoiceCompraVenta($elements);
-        return  $design->transformElements();
     }
 }
