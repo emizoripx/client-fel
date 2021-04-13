@@ -64,5 +64,11 @@ return [
      * 
      */
     'pos_code' => env('POS_CODE', 1),
+    /**
+     * 
+     * Host SIN
+     * 
+     */
+    'host_sin' => env('ENV_SIN', 'https://pilotosiat.impuestos.gob.bo')
 
 ];
