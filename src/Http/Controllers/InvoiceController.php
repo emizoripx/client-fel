@@ -36,6 +36,9 @@ class InvoiceController extends BaseController
                     "msg" => "Factura no encontrada para emitir"
                 ]);
             }
+            if($felInvoiceRequest->codigoEstado == 690){
+                throw new ClientFelException('La factura ya fue emitida');
+            }
             
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
@@ -99,6 +102,9 @@ class InvoiceController extends BaseController
 
             if(!$felInvoiceRequest){
                 throw new Exception(json_encode(["errors" => ["La factura no fue encontrada"]]));
+            }
+            if($felInvoiceRequest->codigoEstado == 690){
+                throw new ClientFelException('La factura ya fue emitida');
             }
 
             $felInvoiceRequest->setAccessToken()->sendUpdateInvoiceToFel();

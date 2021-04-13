@@ -27,6 +27,10 @@ trait InvoiceFelEmitTrait{
 
         try {
 
+            if($felInvoiceRequest->codigoEstado == 690){
+                \Log::debug("Factura ya emitida");
+                throw new ClientFelException('La factura ya fue emitida');
+            }
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
