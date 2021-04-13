@@ -1,0 +1,56 @@
+<?php
+namespace EmizorIpx\ClientFel\Builders;
+
+use Carbon\Carbon;
+
+class BaseFelInvoiceBuilder {
+
+    protected $source_data;
+
+    protected $input = array();
+
+    public function __construct($source_data)
+    {
+        $this->source_data = $source_data;    
+        $this->setStaticInput();
+    }
+
+    public function setStaticInput() : void
+    {
+
+
+        $model = $this->source_data['model'];
+        $fel_data_parsed = $this->source_data['fel_data_parsed'];
+        $user = $this->source_data['user'];
+        $client = $this->source_data['client'];
+
+
+        $this->input = array_merge($this->input ,[
+            "id_origin" => $model->id,
+            "company_id" => $model->company_id,
+            #fel fata
+            "codigoMetodoPago" => $fel_data_parsed['payment_method_id'],
+            "numeroTarjeta" => $fel_data_parsed['numero_tarjeta'],
+            "codigoLeyenda" => $fel_data_parsed['caption_id'],
+            "codigoActividad" => $fel_data_parsed['activity_id'],
+            #automatico
+            "numeroFactura" => $model->number ?? 0,
+            # it is generated in FEL
+            "fechaEmision" => substr(Carbon::parse(Carbon::now())->format('Y-m-d\TH:i:s.u'), 0, -3),
+            "codigoPuntoVenta" => config('clientfel.pos_code'),
+            "usuario" => trim($user->first_name . " " . $user->last_name) != "" ? trim($user->first_name . " " . $user->last_name) : "Usuario Genérico",
+            "extras" => $fel_data_parsed['extras'],
+            "codigoMoneda" => $fel_data_parsed['codigo_moneda'],
+            //clientdata
+            "nombreRazonSocial" => $client->business_name,
+            "codigoTipoDocumentoIdentidad" => $client->type_document_id,
+            "numeroDocumento" => $client->document_number,
+            "complemento" => $client->complement ?? null,
+            "codigoCliente" => $client->id_origin . "",
+            "emailCliente" => null,
+            "telefonoCliente" => $model->client->phone
+        ]);
+        
+    }
+
+}
