@@ -21,9 +21,6 @@ class BaseRepository
     {
         try {
 
-
-            // $fel_data_decoded = json_decode($fel_data);
-
             switch ($this->entity) {
                 case 'client':
                     $this->fel_data_parsed = [
@@ -43,38 +40,17 @@ class BaseRepository
                     $this->fel_data_parsed = [
                         "activity_id" => $fel_data['codigoActividad'],
                         "caption_id" => $fel_data['codigoLeyenda'],
-                        "payment_method_id" => $fel_data['codigoMetodoPago']
+                        "payment_method_id" => $fel_data['codigoMetodoPago'],
+                        "tipo_cambio" => !empty($fel_data['tipoCambio']) ? $fel_data['tipoCambio'] : 1,
+                        "codigo_moneda" => !empty($fel_data['codigoMoneda']) ? $fel_data['codigoMoneda'] : 1,
+                        'type_document_sector_id' => !empty($fel_data['typeDocumentSectorId']) ? $fel_data['typeDocumentSectorId'] : 1,
+                        'numero_tarjeta' => !empty($fel_data['numeroTarjeta']) ? $fel_data['numeroTarjeta']: null,
+                        'extras' => !empty($fel_data['extras']) ? $fel_data['extras'] : null
                     ];
                     break;
                 
             }
 
-            // if (property_exists($fel_data_decoded, 'client')) {
-
-            //     $this->fel_data_parsed = [
-            //         "type_document_id" => $fel_data_decoded->client->type_document_id,
-            //         "complement" => $fel_data_decoded->client->complement ?? null
-            //     ];
-            // }
-
-            // if (property_exists($fel_data_decoded, 'product')) {
-
-            //     $this->fel_data_parsed = [
-            //         "unit_id"           => $fel_data_decoded->product->unit_id,
-            //         "unit_name"         => $fel_data_decoded->product->unit_name,
-            //         "activity_id"       => $fel_data_decoded->product->activity_id,
-            //         "product_sin_id"    => $fel_data_decoded->product->product_sin_id
-            //     ];
-            // }
-
-            // if (property_exists($fel_data_decoded, 'invoice')) {
-
-            //     $this->fel_data_parsed = [
-            //         "activity_id" => $fel_data_decoded->invoice->activity_id,
-            //         "caption_id" => $fel_data_decoded->invoice->caption_id,
-            //         "payment_method_id" => $fel_data_decoded->invoice->payment_method_id
-            //     ];
-            // }
         } catch (Throwable $ex) {
             
             bitacora_error("BaseRepository", $ex->getMessage());
