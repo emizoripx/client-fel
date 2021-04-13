@@ -60,12 +60,12 @@ class InvoiceResource extends JsonResource
             "mermaPorcentaje" => $this->mermaPorcentaje,
             "kilosNetosSecos" => $this->kilosNetosSecos,
             "gastosRealizacion" => $this->gastosRealizacion,
-            "partidaArancelaria" => $this->otrosDatos->partidaArancelaria,
-            "monedaTransaccional" => $this->otrosDatos->monedaTransaccional,
-            "fleteInternoUSD" => $this->otrosDatos->fleteInternoUSD,
-            "valorFobFrontera" => $this->otrosDatos->valorFobFrontera,
-            "valorPlata" => $this->otrosDatos->valorPlata,
-            "valorFobFronteraBs" => $this->otrosDatos->valorFobFronteraBs,
+            "partidaArancelaria" => $this->otrosDatos->partidaArancelaria ?? null,
+            "monedaTransaccional" => (int)$this->otrosDatos->monedaTransaccional ?? null,
+            "fleteInternoUSD" => $this->otrosDatos->fleteInternoUSD ?? null,
+            "valorFobFrontera" => $this->otrosDatos->valorFobFrontera ?? null,
+            "valorPlata" => $this->otrosDatos->valorPlata ?? null,
+            "valorFobFronteraBs" => $this->otrosDatos->valorFobFronteraBs ?? null,
         ];
     }
 }
