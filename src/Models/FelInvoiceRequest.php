@@ -32,8 +32,9 @@ class FelInvoiceRequest extends Model
     protected $guarded = [];
 
 
-    protected $cast =[
-        'detalles' => 'array'
+    protected $casts =[
+        'detalles' => 'array',
+        'otrosDatos' => 'array'
     ];
 
     protected $access_token;
