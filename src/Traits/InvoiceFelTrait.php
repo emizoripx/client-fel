@@ -6,7 +6,6 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoice;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
-use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Log;
 
@@ -27,8 +26,6 @@ trait InvoiceFelTrait
             $invoice_service->setBranchNumber(0);
             
             $invoice_service->buildData($this);
-
-            $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
 
             $invoice_service->sendToFel();
 

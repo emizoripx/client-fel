@@ -2,23 +2,23 @@
 
 namespace EmizorIpx\ClientFel\Services\Invoices;
 
-use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Services\BaseConnection;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\TypeDocumentResource;
+use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Exception;
-use Facade\FlareClient\Http\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Message;
-use Hashids\Hashids;
 use Illuminate\Support\Facades\Log;
-use stdClass;
+use Throwable;
 
 class Invoices extends BaseConnection
 {
     protected $access_token;
 
     protected $data;
+
+    protected $data_model;
 
     protected $type_document;
 
@@ -27,6 +27,8 @@ class Invoices extends BaseConnection
     protected $response;
 
     protected $host;
+
+    protected $prepared_data;
 
     public function __construct($host)
     {
@@ -44,9 +46,14 @@ class Invoices extends BaseConnection
         $this->data  = $data;
     }
 
-    public function setTypeDocument($type_document)
+    public function setDataModel($data)
     {
-        $this->type_document = $type_document;
+        $this->data_model  = $data;
+    }
+
+    public function setTypeDocument()
+    {
+        $this->type_document = TypeDocumentSector::getFelDocumentNameByCode($this->data['type_document_sector_id']);
     }
 
     public function setBranchNumber($branch_number)
@@ -71,10 +78,14 @@ class Invoices extends BaseConnection
 
         $this->validateData();
 
+        $this->setTypeDocument();
+
+        $this->prepareData();
+
         try {
-            \Log::debug(json_encode($this->data));
-            \Log::debug(json_encode($this->client));
-            $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            
+            
+            $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->prepared_data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);
         } catch (\Exception $ex) {
@@ -89,10 +100,6 @@ class Invoices extends BaseConnection
     {
         if (empty($this->access_token)) {
             throw new ClientFelException("El access token es necesario");
-        }
-
-        if (empty($this->type_document)) {
-            throw new ClientFelException("El type_document es necesario");
         }
 
         if ($this->branch_number < 0) {
@@ -215,6 +222,7 @@ class Invoices extends BaseConnection
         try{
 
             $this->setData($model->toArray());
+            $this->setDataModel($model);
 
         } catch(Exception $ex) {
             
@@ -273,14 +281,25 @@ class Invoices extends BaseConnection
         }
 
         $this->checkParameters();
-
+        $this->setTypeDocument();
+        $this->prepareData();
         try {
             
-            $response = $this->client->request('PUT', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document/update/$this->cuf", ["json" => $this->data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $response = $this->client->request('PUT', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document/update/$this->cuf", ["json" => $this->prepared_data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);
         } catch (RequestException $ex) {
             throw new ClientFelException($ex->getResponse()->getBody());
+        }
+    }
+
+    public function prepareData()
+    {
+        
+        try{
+            $this->prepared_data =  new TypeDocumentResource($this->data_model);
+        }catch(Throwable $th) {
+            \Log::error($th);
         }
     }
 }

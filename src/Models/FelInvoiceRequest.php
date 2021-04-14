@@ -9,7 +9,6 @@ use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
 use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
 use EmizorIpx\ClientFel\Traits\InvoiceUpdateDateTrait;
-use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
@@ -152,8 +151,6 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->buildData($this);
 
-        $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
-
         $invoice_service->sendToFel();
 
         $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
@@ -210,7 +207,6 @@ class FelInvoiceRequest extends Model
         $invoice_service->setBranchNumber(0);
 
         $invoice_service->buildData($this);
-        $invoice_service->setTypeDocument(TypeDocuments::COMPRA_VENTA);
 
         $invoice_service->updateInvoice();
 

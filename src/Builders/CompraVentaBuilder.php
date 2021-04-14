@@ -71,8 +71,6 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             if ($detail->discount > 0)
                 $new->montoDescuento = ($detail->cost * $detail->quantity) - $detail->line_total;
 
-            $new->numeroImei = null;
-
             $new->unidadMedida = $product_sync->codigo_unidad;
 
             $details[] = $new;

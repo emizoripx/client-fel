@@ -3,12 +3,8 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
-use EmizorIpx\ClientFel\Models\FelClientToken;
-use EmizorIpx\ClientFel\Services\Invoices\Invoices;
-use EmizorIpx\ClientFel\Utils\TypeDocuments;
 use Exception;
 use Hashids\Hashids;
-use Illuminate\Support\Facades\Log;
 
 trait InvoiceFelEmitTrait{
 
@@ -22,8 +18,6 @@ trait InvoiceFelEmitTrait{
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         
         $company_id = $hashid->decode($felInvoiceRequest->company_id);
-
-        // $access_token = FelClientToken::getTokenByAccount($company_id);
 
         try {
 
