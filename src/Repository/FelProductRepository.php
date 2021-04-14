@@ -23,7 +23,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             $input = [
                 "company_id" => $model->company_id,
                 "id_origin" => $model->id,
-                "codigo_producto" => $model->id,
+                "codigo_producto" => $model->product_key,
                 "codigo_producto_sin" => $this->fel_data_parsed['product_sin_id'],
                 "codigo_actividad_economica" => $this->fel_data_parsed['activity_id'],
                 "codigo_unidad" => $this->fel_data_parsed['unit_id'],
