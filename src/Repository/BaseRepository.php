@@ -64,7 +64,12 @@ class BaseRepository
                         "mermaValor" => !empty($fel_data["mermaValor"]) ?  $fel_data["mermaValor"] : "",
                         "kilosNetosSecos" => !empty($fel_data["kilosNetosSecos"]) ?  $fel_data["kilosNetosSecos"] : "",
                         "gastosRealizacion" => !empty($fel_data["gastosRealizacion"]) ?  $fel_data["gastosRealizacion"] : "",
-                        "otrosDatos" => !empty($fel_data["otrosDatos"]) ?  $fel_data["otrosDatos"] : []
+                        "valorFobFrontera" => !empty($fel_data['valorFobFrontera']) ? $fel_data['valorFobFrontera'] : "",
+                        "fleteInternoUSD" => !empty($fel_data['fleteInterno']) ? $fel_data['fleteInterno'] : "",
+                        "valorPlata" => !empty($fel_data['valorPlata']) ? $fel_data['valorPlata'] : "",
+                        "valorFobFronteraBs" => !empty($fel_data['valorFobFronteraBs']) ? $fel_data['valorFobFronteraBs'] : "",
+                        "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
+                        "partidaArancelaria" => !empty($fel_data['partidaArancelaria']) ? $fel_data['partidaArancelaria'] : ""
                     ];
                     break;
                 

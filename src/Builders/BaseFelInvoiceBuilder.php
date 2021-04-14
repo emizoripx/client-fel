@@ -28,6 +28,7 @@ class BaseFelInvoiceBuilder {
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
+            "type_document_sector_id" => $fel_data_parsed['type_document_sector_id'],
             #fel fata
             "codigoMetodoPago" => $fel_data_parsed['payment_method_id'],
             "numeroTarjeta" => $fel_data_parsed['numero_tarjeta'],

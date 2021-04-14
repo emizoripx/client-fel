@@ -86,17 +86,21 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             'user' => $model->user,
             'update' => $update
         ];
+        \Log::debug("SOURCE DATA : " .json_encode([
+            'fel_data_parsed' => $this->fel_data_parsed,
+            'update' => $update
+        ]));
         
         // this an instance of generic builder
         $builder = new FelInvoiceBuilder;
         
         // this part should have the number of type document sector, for example: 1 : FACTURA COMPRA-VENTA
-        $code = $this->fel_data_parsed['type_document_sector_id'];
+        $code =  $this->fel_data_parsed['type_document_sector_id'];
 
         
         // get instance builder by typde document sector, as default should result in CompraVentaBuilder
         $instance = TypeDocumentSector::getInstanceByCode($code);
-        
+        \Log::debug("INSTANCE : " . $instance);
         //process input if saved or update 
         $builder->make(new $instance($source_data));
 
