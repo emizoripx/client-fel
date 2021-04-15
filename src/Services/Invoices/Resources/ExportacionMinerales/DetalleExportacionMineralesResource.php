@@ -17,6 +17,7 @@ class DetalleExportacionMineralesResource extends JsonResource
      
         return [
             "descripcionLeyes" => $this->resource['descripcionLeyes'],
+            "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "codigoNandina" => $this->resource['codigoNandina'],
             "codigoProducto" => $this->resource['codigoProducto'],
             "descripcion" => $this->resource['descripcion'],
