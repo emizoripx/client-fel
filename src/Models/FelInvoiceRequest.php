@@ -58,7 +58,7 @@ class FelInvoiceRequest extends Model
     {
         $url = $this->urlSin ?? "qr no valido";
         
-        return $url;
+        return config('clientfel.host_sin').$url;
     }
 
     public static function findByIdOrigin($id_origin)
