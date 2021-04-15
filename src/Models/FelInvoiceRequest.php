@@ -56,7 +56,7 @@ class FelInvoiceRequest extends Model
     }
     public function getUrlSin() 
     {
-        $url = $this->urlSin;
+        $url = $this->urlSin ?? "qr no valido";
         
         return $url;
     }
