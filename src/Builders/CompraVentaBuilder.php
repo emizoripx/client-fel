@@ -83,7 +83,7 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             "montoTotal" => $total,
             "montoTotalMoneda" => $total,
             "montoTotalSujetoIva" => $total,
-            "detalles" => json_encode($details)
+            "detalles" => $details
         ];
     }
 

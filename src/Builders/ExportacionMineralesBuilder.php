@@ -71,14 +71,14 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
 
         return [
-            "otrosDatos" => json_encode([
+            "otrosDatos" => [
                 "valorFobFrontera" => $this->source_data['fel_data_parsed']['valorFobFrontera'],
                 "fleteInternoUSD" => $this->source_data['fel_data_parsed']['fleteInternoUSD'],
                 "valorPlata" => $this->source_data['fel_data_parsed']['valorPlata'],
                 "valorFobFronteraBs" => $this->source_data['fel_data_parsed']['valorFobFronteraBs'],
                 "monedaTransaccional" => $this->source_data['fel_data_parsed']['codigo_moneda'],
                 "partidaArancelaria" => $this->source_data['fel_data_parsed']['partidaArancelaria']
-            ])
+            ]
         ];
     }
 
@@ -133,7 +133,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             "gastosRealizacion" => $this->source_data['fel_data_parsed']['gastosRealizacion'],
             "montoTotalMoneda" => $this->source_data['fel_data_parsed']['valorFobFrontera'],
             "montoTotalSujetoIva" => 0,
-            "detalles" => json_encode($details)
+            "detalles" => $details
         ];
     }
     public function getFelInvoice(): FelInvoiceRequest

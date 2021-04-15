@@ -56,8 +56,8 @@ class FelInvoiceRequest extends Model
     }
     public function getUrlSin() 
     {
-        $url = config('clientfel.host_sin').$this->urlSin;
-        \Log::debug("Url Sin: ".$url);
+        $url = $this->urlSin;
+        
         return $url;
     }
 

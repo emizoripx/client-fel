@@ -61,8 +61,8 @@ trait HtmlDesignTrait{
             $data['$fel.gastos_realizacion'] = ['value' => $this->fel_invoice->gastosRealizacion, 'label' => 'Gastos Realización'];
             $data['$fel.valor_FOBFrontera'] = ['value' => $this->fel_invoice->otrosDatos['valorFobFrontera'], 'label' => 'Valor FOB Frontera'];
             $data['$fel.valor_FOBFronteraBs'] = ['value' => $this->fel_invoice->otrosDatos['valorFobFronteraBs'], 'label' => 'Valor FOB Frontera'];
-            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord($this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares'), 'label' => 'Valor FOB Frontera Literal'];
-            $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord($this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
             
             
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
@@ -73,7 +73,7 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. $this->fel_invoice->otrosDatos['fleteInternoUSD'] .'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord($this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dolares').' </td>
+                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dolares').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
@@ -82,7 +82,7 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. $this->fel_invoice->otrosDatos['valorPlata'] .'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord($this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dolares').' </td>
+                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dolares').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.partida_arancelaria'] = ['value' => isset($this->fel_invoice->otrosDatos['partidaArancelaria']) ? 
@@ -91,7 +91,7 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. $this->fel_invoice->otrosDatos['partidaArancelaria'] .'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord($this->fel_invoice->otrosDatos['partidaArancelaria'], 2, 'Dolares').' </td>
+                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['partidaArancelaria'], 2, 'Dolares').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
         return $data;
