@@ -57,8 +57,8 @@ class FelInvoiceRequest extends Model
     public function getUrlSin() 
     {
         $url = $this->urlSin ?? "qr no valido";
-        
-        return config('clientfel.host_sin').$url;
+        // returns a complete url, no needed of any env(), FEL is config to return completed
+        return $url;
     }
 
     public static function findByIdOrigin($id_origin)
@@ -66,7 +66,7 @@ class FelInvoiceRequest extends Model
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
         $id_origin_decode = $hashid->decode($id_origin)[0];
-        \Log::debug('id origin '.$id_origin_decode);
+        
         return self::whereIdOrigin($id_origin_decode)->first();
     }
 
