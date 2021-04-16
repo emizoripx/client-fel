@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Traits;
 
+use EmizorIpx\ClientFel\Http\Resources\ProductResource;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 
 trait ProductParametersTrait{
@@ -14,6 +15,6 @@ trait ProductParametersTrait{
     public function includeFelData(){
         $product = $this->fel_product;
 
-        return is_null($product) ? null : $product;
+        return is_null($product) ? null : new ProductResource($product);
     }
 }

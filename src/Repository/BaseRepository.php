@@ -33,7 +33,8 @@ class BaseRepository
                         "unit_id"           => $fel_data['codigo_unidad'],
                         "unit_name"         => $fel_data['nombre_unidad'],
                         "activity_id"       => $fel_data['codigo_actividad_economica'],
-                        "product_sin_id"    => $fel_data['codigo_producto_sin']
+                        "product_sin_id"    => $fel_data['codigo_producto_sin'],
+                        "codigo_nandina" => !empty($fel_data['codigoNandina']) ? $fel_data['codigoNandina'] : "",
                     ];
                     break;
                 case 'invoice':
@@ -69,7 +70,7 @@ class BaseRepository
                         "valorPlata" => !empty($fel_data['valorPlata']) ? $fel_data['valorPlata'] : "",
                         "valorFobFronteraBs" => !empty($fel_data['valorFobFronteraBs']) ? $fel_data['valorFobFronteraBs'] : "",
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
-                        "partidaArancelaria" => !empty($fel_data['partidaArancelaria']) ? $fel_data['partidaArancelaria'] : ""
+                        "partidaArancelaria" => !empty($fel_data['partidaArancelaria']) ? $fel_data['partidaArancelaria'] : "",
                     ];
                     break;
                 
