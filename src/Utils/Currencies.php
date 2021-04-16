@@ -19,5 +19,18 @@ class Currencies{
         }
         
     }
+    public static function getDescriptionCurrency($code){
+
+        switch ($code) {
+            case self::DOLAR:
+                return 'Dólares Americanos';
+                break;
+            case self::BOLIVIANO:
+                return 'Bolivianos';
+                break;
+            
+        }
+        
+    }
 
 }

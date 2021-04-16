@@ -62,7 +62,7 @@ trait HtmlDesignTrait{
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
             $data['$fel.valor_FOBFrontera'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFrontera'],2,',','.') , 'label' => 'Valor FOB Frontera'];
             $data['$fel.valor_FOBFronteraBs'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'],2,',','.'), 'label' => 'Valor FOB Frontera'];
-            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares Americanos'), 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
             
             
@@ -74,7 +74,7 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'] ,2,',','.').'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dolares').' </td>
+                                                <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dólares Americanos').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
@@ -83,18 +83,18 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. number_format((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2,',','.').'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dolares').' </td>
+                                                <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
-            $data['$fel.partida_arancelaria'] = ['value' => isset($this->fel_invoice->otrosDatos['partidaArancelaria']) ? 
-                                            '<tr>
-                                                <th class="left-align" colspan="5">PARTIDA ARANCELARIA</th>
-                                                <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['partidaArancelaria'],2,',','.') .'</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="b-solid" colspan="6">SON '.$this->getToWord((float)$this->fel_invoice->otrosDatos['partidaArancelaria'], 2, 'Dolares').' </td>
-                                            </tr>' : '', 
-                                            'label' => 'Valor FOB Frontera Literal'];
+            // $data['$fel.partida_arancelaria'] = ['value' => isset($this->fel_invoice->otrosDatos['partidaArancelaria']) ? 
+            //                                 '<tr>
+            //                                     <th class="left-align" colspan="5">PARTIDA ARANCELARIA</th>
+            //                                     <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['partidaArancelaria'],2,',','.') .'</td>
+            //                                 </tr>
+            //                                 <tr>
+            //                                     <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['partidaArancelaria'], 2, 'Dólares Americanos').' </td>
+            //                                 </tr>' : '', 
+            //                                 'label' => 'Valor FOB Frontera Literal'];
         return $data;
         
     }
