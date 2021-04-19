@@ -47,7 +47,7 @@ class BaseFelInvoiceBuilder {
             "codigoTipoDocumentoIdentidad" => $client->type_document_id,
             "numeroDocumento" => $client->document_number,
             "complemento" => $client->complement ?? null,
-            "codigoCliente" => $client->id_origin . "",
+            "codigoCliente" => $model->client->number,
             "emailCliente" => null,
             "telefonoCliente" => $model->client->phone
         ]);

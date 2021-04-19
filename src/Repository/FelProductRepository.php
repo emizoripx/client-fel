@@ -29,6 +29,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
                 "codigo_actividad_economica" => $this->fel_data_parsed['activity_id'],
                 "codigo_unidad" => $this->fel_data_parsed['unit_id'],
                 "nombre_unidad" => $this->fel_data_parsed['unit_name'],
+                "codigo_nandina" => $this->fel_data_parsed['codigo_nandina'],
                 "created_at" => Carbon::now()
             ];
 
