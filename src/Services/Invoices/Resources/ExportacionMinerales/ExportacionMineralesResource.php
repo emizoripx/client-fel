@@ -49,6 +49,7 @@ class ExportacionMineralesResource extends JsonResource
             "codigoLeyenda" => $this->codigoLeyenda,
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
+            "otrosDatos"=>json_encode($this->otrosDatos),
             'detalles' => DetalleExportacionMineralesResource::collection(collect($this->detalles))
             
         ];
