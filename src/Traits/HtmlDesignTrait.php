@@ -17,21 +17,65 @@ trait HtmlDesignTrait{
 
         $rows_table = '';
         
-        foreach($felInvoice->detalles as $line){
             
-            $rows_table = $rows_table. '
+            $rows_table .= '
             <tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.$line['codigoProducto'].' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.$line['descripcionLeyes'].' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.$line['codigoNandina'] .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$line['cantidad'],5,',','.').' '.Unit::getUnitDescription($line['unidadMedida']).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$line['precioUnitario'],5,',','.').'  '. Currencies::getShortCode($felInvoice->codigoMoneda).'/'.Unit::getUnitDescription($line['unidadMedida']).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'.number_format((float)$line['subTotal'],5,',','.').' '. Currencies::getShortCode($felInvoice->codigoMoneda).'</td>
-
-            </tr>';
-        }
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">HUMEDAD </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center">'.number_format((float)$felInvoice->humedadPorcentaje,2,',','.').' % </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->humedadValor,2,',','.').' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoProducto']) ? ($felInvoice->detalles[0]['codigoProducto']) : '') .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['descripcionLeyes']) ? $felInvoice->detalles[0]['descripcionLeyes'] : null) .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoNandina']) ? $felInvoice->detalles[0]['codigoNandina'] : null) .'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['cantidad']) ? number_format((float)$felInvoice->detalles[0]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['precioUnitario']) ? number_format((float)$felInvoice->detalles[0]['precioUnitario'] ?? 0,5,',','.').'  '. Currencies::getShortCode($felInvoice->codigoMoneda).'/'.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null ).'</td>
+                
+            </tr>
+            <tr>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">MERMA </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center">'.number_format((float)$felInvoice->mermaPorcentaje,2,',','.').' % </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->mermaValor,2,',','.').' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoProducto']) ? ($felInvoice->detalles[1]['codigoProducto']) : '') .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['descripcionLeyes']) ? $felInvoice->detalles[1]['descripcionLeyes'] : null) .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoNandina']) ? $felInvoice->detalles[1]['codigoNandina'] : null) .'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['cantidad']) ? number_format((float)$felInvoice->detalles[1]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['precioUnitario']) ? number_format((float)$felInvoice->detalles[1]['precioUnitario'] ?? 0,5,',','.').'  '. Currencies::getShortCode($felInvoice->codigoMoneda).'/'.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null ).'</td>
+                
+            </tr>
+            <tr>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">KILOS NETOS SECOS </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center"> </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.').' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoProducto']) ? ($felInvoice->detalles[2]['codigoProducto']) : '') .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['descripcionLeyes']) ? $felInvoice->detalles[2]['descripcionLeyes'] : null) .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoNandina']) ? $felInvoice->detalles[2]['codigoNandina'] : null) .'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['cantidad']) ? number_format((float)$felInvoice->detalles[2]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.  (isset($felInvoice->detalles[2]['precioUnitario']) ? number_format((float)$felInvoice->detalles[2]['precioUnitario'] ?? 0,5,',','.').'  '. Currencies::getShortCode($felInvoice->codigoMoneda).'/'.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null ).'</td>
+                
+            </tr>
+            ';
 
         return $rows_table;
+    }
+
+    public function MakeSubtotalsRows(){
+        $rows = (isset($this->fel_invoice->detalles[0]['descripcion']) ? 
+        '<tr>
+            <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[0]['descripcion']).'</th>
+            <td class="b-solid right-align">'.  number_format((float)$this->fel_invoice->detalles[0]['subTotal'] ,2,',','.').'</td>
+        </tr>' : '')
+        
+        .(isset($this->fel_invoice->detalles[1]['descripcion']) ? '
+        <tr>
+            <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[1]['descripcion']).'</th>
+            <td class="b-solid right-align">'.  number_format((float)$this->fel_invoice->detalles[1]['subTotal'] ,2,',','.').'</td>
+        </tr>' : '')
+        . (isset($this->fel_invoice->detalles[2]['descripcion']) ? '
+        <tr>
+            <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[2]['descripcion']).'</th>
+            <td class="b-solid right-align">'.  number_format((float)$this->fel_invoice->detalles[2]['subTotal'] ,2,',','.').'</td>
+        </tr>' : ''
+        );
+        return $rows;
     }
 
     public function appendFieldExportacionMinerales($data){
@@ -64,37 +108,30 @@ trait HtmlDesignTrait{
             $data['$fel.valor_FOBFronteraBs'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'],2,',','.'), 'label' => 'Valor FOB Frontera'];
             $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares Americanos'), 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.partida_arancelaria'] = ['value' => $this->fel_invoice->otrosDatos['partidaArancelaria'], 'label' => 'Partida Arancelaria'];
             
             
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
             
             $data['$fel.fleteInternoUSD'] = ['value' => !empty($this->fel_invoice->otrosDatos['fleteInternoUSD']) ? 
                                             '<tr>
-                                                <th class="left-align" colspan="5">FLETE INTERNO USD</th>
+                                                <th class="left-align" colspan="7">FLETE INTERNO USD</th>
                                                 <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'] ,2,',','.').'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dólares Americanos').' </td>
+                                                <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dólares Americanos').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
                                             '<tr>
-                                                <th class="left-align" colspan="5">VALOR PLATA</th>
+                                                <th class="left-align" colspan="7">VALOR PLANTA</th>
                                                 <td class="b-solid right-align">'. number_format((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2,',','.').'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
+                                                <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
-            // $data['$fel.partida_arancelaria'] = ['value' => isset($this->fel_invoice->otrosDatos['partidaArancelaria']) ? 
-            //                                 '<tr>
-            //                                     <th class="left-align" colspan="5">PARTIDA ARANCELARIA</th>
-            //                                     <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['partidaArancelaria'],2,',','.') .'</td>
-            //                                 </tr>
-            //                                 <tr>
-            //                                     <td class="b-solid" colspan="6">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['partidaArancelaria'], 2, 'Dólares Americanos').' </td>
-            //                                 </tr>' : '', 
-            //                                 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
         return $data;
         
     }
