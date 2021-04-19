@@ -101,31 +101,31 @@ class FelParametric
     {
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
-                return FelActivity::whereCompanyId($company_id)->get();
+                return FelActivity::whereCompanyId($company_id)->orderBy('descripcion')->get();
                 break;
             case TypeParametrics::LEYENDAS:
-                return FelCaption::whereCompanyId($company_id)->get();
+                return FelCaption::whereCompanyId($company_id)->orderBy('descripcion')->get();
                 break;
             case TypeParametrics::MONEDAS:
-                return Currency::all();
+                return Currency::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
-                return PaymentMethod::all();
+                return PaymentMethod::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::PAISES:
-                return Country::all();
+                return Country::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
-                return IdentityDocumentType::all();
+                return IdentityDocumentType::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::MOTIVO_ANULACION:
-                return RevocationReason::all();
+                return RevocationReason::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::UNIDADES:
-                return Unit::all();
+                return Unit::orderBy('descripcion')->get();
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
-                return SINProduct::whereCompanyId($company_id)->get();
+                return SINProduct::whereCompanyId($company_id)->orderBy('descripcion')->get();
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
                 return SectorDocumentTypes::whereCompanyId($company_id)->get();
