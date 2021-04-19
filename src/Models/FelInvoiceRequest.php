@@ -110,6 +110,15 @@ class FelInvoiceRequest extends Model
         return $this;
     }
     
+    public function saveEmisionType(array $value)
+    {
+        $this->emission_type = 'Fuera de línea';
+
+        if ($value['codigo']==1){
+            $this->emission_type = 'En línea';
+        }
+        return $this;
+    }
     /**
      * Get the prepagoAccount instance
      *
@@ -157,7 +166,7 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByCuf();
         
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->save();
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->saveEmisionType($invoice['tipoEmision'])->save();
 
         // $this->setCompanyId();
         Log::debug('RETORNO MODELO');
