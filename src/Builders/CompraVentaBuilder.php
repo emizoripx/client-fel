@@ -64,12 +64,12 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = $detail->line_total;
+            $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
             $new->numeroSerie = null;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = ($detail->cost * $detail->quantity) - $detail->line_total;
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
