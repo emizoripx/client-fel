@@ -111,7 +111,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->numeroSerie = null;
 
 
-            $new->descripcionLeyes = !empty($detail->leyes) ? $detail->leyes : "";
+            $new->descripcionLeyes = !empty($detail->leyes) ? $detail->leyes."" : "";
             $new->codigoNandina = !empty($product_sync->codigo_nandina) ? $product_sync->codigo_nandina : "";
             
 
