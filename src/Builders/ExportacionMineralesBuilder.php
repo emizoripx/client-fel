@@ -100,7 +100,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = $detail->line_total;
+            $new->subTotal = round((float)$detail->line_total,5);
 
             $new->cantidad = $detail->quantity;
             $new->cantidadExtraccion = $detail->quantity;
@@ -111,13 +111,13 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->numeroSerie = null;
 
 
-            $new->descripcionLeyes = !empty($detail->descripcionLeyes) ? $detail->descripcionLeyes : "33.3%";
-            $new->codigoNandina = !empty($product_sync->nandina) ? $product_sync->nandina : "123456";
+            $new->descripcionLeyes = !empty($detail->descripcionLeyes) ? $detail->descripcionLeyes : "";
+            $new->codigoNandina = !empty($product_sync->nandina) ? $product_sync->nandina : "";
             
 
 
             if ($detail->discount > 0)
-                $new->montoDescuento = ($detail->cost * $detail->quantity) - $detail->line_total;
+                $new->montoDescuento = round(($detail->cost * $detail->quantity) - $detail->line_total,5);
 
 
             $details[] = $new;
