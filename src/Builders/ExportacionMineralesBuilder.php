@@ -20,7 +20,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
 
     public function prepare(): FelInvoiceRequest
     {
-        \Log::debug('PREPARE SECTION.........');
+        
         if ($this->source_data['update'])
             $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->whereNull('cuf')->firstOrFail();
         else
@@ -36,8 +36,8 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $this->input,
             [
                 "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
-                "ruex" => $this->source_data['fel_data_parsed']["ruex"],
-                "nim" => $this->source_data['fel_data_parsed']["nim"],
+                "ruex" => $this->source_data['company']->ruex,
+                "nim" => $this->source_data['company']->nim,
                 "concentradoGranel" => $this->source_data['fel_data_parsed']["concentradoGranel"],
                 "origen" => $this->source_data['fel_data_parsed']["origen"],
                 "puertoTransito" => $this->source_data['fel_data_parsed']["puertoTransito"],
@@ -57,9 +57,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $this->getOtrosDatos(),
             $this->getDetailsAndTotals()
         );
-        \Log::debug("PROCESS INPUT");
-        \Log::debug("INPUT FILLED : " .json_encode($input));
-            \Log::debug("AFTER PROCESS FILLED");
+   
         $this->fel_invoice->fill($input);
         }catch (Exception $ex) {
             \Log::info($ex->getMessage());
