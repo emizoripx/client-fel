@@ -60,7 +60,6 @@ class InvoiceResource extends JsonResource
             "mermaPorcentaje" => $this->mermaPorcentaje,
             "kilosNetosSecos" => $this->kilosNetosSecos,
             "gastosRealizacion" => $this->gastosRealizacion,
-            "partidaArancelaria" => $this->otrosDatos->partidaArancelaria ?? null,
             "monedaTransaccional" => $this->otrosDatos->monedaTransaccional ?? null,
             "fleteInternoUSD" => $this->otrosDatos->fleteInternoUSD ?? null,
             "valorFobFrontera" => $this->otrosDatos->valorFobFrontera ?? null,

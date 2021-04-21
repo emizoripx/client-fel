@@ -74,8 +74,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "fleteInternoUSD" => $this->source_data['fel_data_parsed']['fleteInternoUSD'],
                 "valorPlata" => $this->source_data['fel_data_parsed']['valorPlata'],
                 "valorFobFronteraBs" => $this->source_data['fel_data_parsed']['valorFobFronteraBs'],
-                "monedaTransaccional" => $this->source_data['fel_data_parsed']['codigo_moneda'],
-                "partidaArancelaria" => $this->source_data['fel_data_parsed']['partidaArancelaria']
+                "monedaTransaccional" => $this->source_data['fel_data_parsed']['codigo_moneda']
             ]
         ];
     }
