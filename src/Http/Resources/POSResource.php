@@ -3,13 +3,12 @@
 namespace EmizorIpx\ClientFel\Http\Resources;
 
 use App\Utils\Traits\MakesHash;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class BranchResource extends ResourceCollection
+class POSResource extends JsonResource
 {
 
     use MakesHash;
-
     /**
      * Transform the resource into an array.
      *
@@ -19,10 +18,11 @@ class BranchResource extends ResourceCollection
     public function toArray($request)
     {
         return [
-            "id" => $this->encodePrimaryKey((int)$this->resource['id']),
-            "codigo" => (int)$this->resource['codigo'],
+            "id" => $this->encodePrimaryKey($this->resource['id']),
+            "codigo" => $this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
-            "pos" => POSResource::collection($this->resource['fel_pos'])
+            "branch_id" => $this->resource['branch_id'],
+            "company_id" => $this->resource['company_id']
         ];
     }
 }
