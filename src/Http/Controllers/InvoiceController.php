@@ -3,12 +3,9 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Jobs\Util\UnlinkFile;
-use App\Models\Invoice;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use Exception;
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 
 class InvoiceController extends BaseController
@@ -19,8 +16,6 @@ class InvoiceController extends BaseController
 
         
         $success = false;
-
-        // $access_token = FelClientToken::getTokenByAccount($request->company_id);
 
         try {
 
@@ -40,12 +35,8 @@ class InvoiceController extends BaseController
 
             $felInvoiceRequest->invoiceDateUpdatedAt();
             
-            $hashid = new Hashids(config('ninja.hash_salt'), 10);
+            $felInvoiceRequest->deletePdf();
 
-            $id_origin_decode = $hashid->decode($felInvoiceRequest->id_origin)[0];
-
-            $invoice = Invoice::find($id_origin_decode);
-            UnlinkFile::dispatchNow(config('filesystems.default'), $invoice->client->invoice_filepath() . $invoice->number . '.pdf');
 
             $success = true;
 
@@ -106,6 +97,8 @@ class InvoiceController extends BaseController
             $felInvoiceRequest->setAccessToken()->sendUpdateInvoiceToFel();
 
             $felInvoiceRequest->invoiceDateUpdatedAt();
+
+            $felInvoiceRequest->deletePdf();
 
             fel_register_historial($felInvoiceRequest);
 
