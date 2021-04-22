@@ -173,7 +173,7 @@ class FelCredentialRepository
                 FelPOS::create([
                     'codigo' => $p['codigo'],
                     'descripcion' => $p['descripcion'],
-                    'codigoSucursal' => $branch->id,
+                    'branch_id' => $branch->id,
                     'company_id' => $branch->company_id
                 ]);
             }

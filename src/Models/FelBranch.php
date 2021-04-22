@@ -19,7 +19,7 @@ class FelBranch extends Model
 
 
     public function fel_pos(){
-        return $this->hasMany(FelPOS::class, 'codigoSucursal', 'id');
+        return $this->hasMany(FelPOS::class, 'branch_id', 'id');
     }
 
 }

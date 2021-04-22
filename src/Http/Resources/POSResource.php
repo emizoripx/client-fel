@@ -21,7 +21,7 @@ class POSResource extends JsonResource
             "id" => $this->encodePrimaryKey($this->resource['id']),
             "codigo" => $this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
-            "codigo_sucursal" => $this->resource['codigoSucursal'],
+            "branch_id" => $this->resource['branch_id'],
             "company_id" => $this->resource['company_id']
         ];
     }
