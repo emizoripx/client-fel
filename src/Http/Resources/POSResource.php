@@ -18,7 +18,7 @@ class POSResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->encodePrimaryKey($this->resource['id']),
+            "id" => $this->resource['id'],
             "codigo" => $this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
             "branch_id" => $this->resource['branch_id'],
