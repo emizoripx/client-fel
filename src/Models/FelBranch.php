@@ -18,8 +18,8 @@ class FelBranch extends Model
     }
 
 
-    // public function fel_pos(){
-    //     return $this->hasMany();
-    // }
+    public function fel_pos(){
+        return $this->hasMany(FelPOS::class, 'codigoSucursal', 'id');
+    }
 
 }

@@ -6,9 +6,11 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelParametric;
+use EmizorIpx\ClientFel\Models\FelPOS;
 use EmizorIpx\ClientFel\Services\Branches\Branches;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
+use EmizorIpx\ClientFel\Services\Pos\Pos;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 
 class FelCredentialRepository
@@ -147,15 +149,36 @@ class FelCredentialRepository
         foreach($branches as $branch){
             if(FelBranch::existsBranch($this->company_id, $branch['codigoSucursal'])){
 
-                FelBranch::create([
+                $branch = FelBranch::create([
                     'codigo' => $branch['codigoSucursal'],
                     'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
                     'company_id' => $this->company_id
                 ]);
+
+                $this->getPOS($branch);
             }
         }
 
         return $this;
+    }
+
+    public function getPOS($branch){
+
+        $posService = new Pos($this->credential->access_token, $this->credential->getHost());
+
+        $pos = $posService->setBranch($branch->codigo)->getPOS();
+
+        foreach($pos as $p){
+            if(FelPOS::existsPOS($branch->company_id, $branch->codigo, $p['codigo'])){
+                FelPOS::create([
+                    'codigo' => $p['codigo'],
+                    'descripcion' => $p['descripcion'],
+                    'codigoSucursal' => $branch->id,
+                    'company_id' => $branch->company_id
+                ]);
+            }
+        }
+
     }
 
     
