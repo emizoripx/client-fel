@@ -19,7 +19,7 @@ class BranchResource extends ResourceCollection
     public function toArray($request)
     {
         return [
-            "id" => $this->encodePrimaryKey((int)$this->resource['id']),
+            "id" => (int)$this->resource['id'],
             "codigo" => (int)$this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
             "pos" => POSResource::collection($this->resource['fel_pos'])
