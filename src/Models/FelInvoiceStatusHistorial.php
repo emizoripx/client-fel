@@ -19,8 +19,7 @@ class FelInvoiceStatusHistorial extends Model
     ];
 
     public static function registerHistorialInvoice($data, $errors = null, $codigoRecepcion = null){
-        \Log::debug('Historial Data');
-        \Log::debug($data);
+   
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $input = [
             'fel_invoice_id' => $data->id ?? null,

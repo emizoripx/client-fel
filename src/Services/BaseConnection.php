@@ -7,8 +7,7 @@ class BaseConnection {
 
     public function __construct($host)
     {
-        \Log::debug('BaseConnection');
-        \Log::debug($host);
+        \Log::debug("HOST: $host");
         $data['base_uri'] = $host;
         $data['headers']['Accept'] = 'application/json';
         $data['headers']['Content-Type'] = 'application/json';

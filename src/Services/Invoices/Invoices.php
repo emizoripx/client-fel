@@ -84,10 +84,11 @@ class Invoices extends BaseConnection
 
         try {
             
-            
+            \Log::debug("Send to : " . "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document" );
             $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->prepared_data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
-            $this->setResponse($this->parse_response($response));
-            return $this->parse_response($response);
+            $parsed_response = $this->parse_response($response);
+            $this->setResponse($parsed_response);
+            return $parsed_response;
         } catch (\Exception $ex) {
 
             Log::error($ex->getMessage());
@@ -205,7 +206,7 @@ class Invoices extends BaseConnection
         }
 
         try {
-
+            \Log::debug("Send to : " ."/api/v1/facturas/$this->cuf" );
             $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
 
             return $this->parse_response($response);
@@ -241,9 +242,9 @@ class Invoices extends BaseConnection
         if(empty($this->cuf)){
             throw new ClientFelException("Es necesario el cuf para anular la factura");
         }
-        \Log::debug('Motivo de Anulacion '. $this->revocationReasonCode);
+        
         try {
-
+            \Log::debug("Send to : " ."/api/v1/facturas/$this->cuf/anular?codigoMotivoAnulacion=$this->revocationReasonCode");
             $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/anular?codigoMotivoAnulacion=$this->revocationReasonCode", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             
             return $this->parse_response($response);
@@ -263,6 +264,7 @@ class Invoices extends BaseConnection
         }
 
         try {
+            \Log::debug("Send to : " ."/api/v1/facturas/$this->cuf/revertir-anulacion");
             $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/revertir-anulacion", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
 
             return $this->parse_response($response);
