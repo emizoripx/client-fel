@@ -21,11 +21,10 @@ class BitacoraController extends BaseController
 
     public function updateTokens()
     {
-        $felClienttokens = FelClientToken::whereHost("http://sinfel.emizor.com")->get();
+        $felClienttokens = FelClientToken::where("host",'like',"%sinfel.emizor.com")->get();
 
 
         foreach ($felClienttokens as $felClienttoken) {
-            # code...
             $connection = new Connection($felClienttoken->getHost());
             $response = $connection->authenticate($data);
             
