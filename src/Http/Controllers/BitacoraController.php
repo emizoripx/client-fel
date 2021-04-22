@@ -26,6 +26,16 @@ class BitacoraController extends BaseController
 
         foreach ($felClienttokens as $felClienttoken) {
             $connection = new Connection($felClienttoken->getHost());
+        
+            $clientId = $felClienttoken->getClientId();
+            $clientSecret = $felClienttoken->getClientSecret();
+        
+
+            $data = [
+                "grant_type" => "client_credentials",
+                "client_id" => $clientId,
+                "client_secret" => $clientSecret
+            ];
             $response = $connection->authenticate($data);
             
             $felClienttoken->setTokenType($response['token_type']);
