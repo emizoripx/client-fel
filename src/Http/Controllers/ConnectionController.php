@@ -32,7 +32,8 @@ class ConnectionController extends Controller
                 ->setCredentials($input['client_id'],$input['client_secret'])
                 ->setCompanyId(auth()->user()->company()->id)
                 ->register()
-                ->syncParametrics();
+                ->syncParametrics()
+                ->getBranches();
 
             return response()->json([
                 "success" =>true,

@@ -3,8 +3,10 @@
 namespace EmizorIpx\ClientFel\Repository;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
+use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelParametric;
+use EmizorIpx\ClientFel\Services\Branches\Branches;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
@@ -137,6 +139,24 @@ class FelCredentialRepository
 
     }
 
+    public function getBranches(){
+        $branchService = new Branches($this->credential->access_token, $this->credential->getHost());
+
+        $branches = $branchService->getBranches();
+
+        foreach($branches as $branch){
+            if(FelBranch::existsBranch($this->company_id, $branch['codigoSucursal'])){
+
+                FelBranch::create([
+                    'codigo' => $branch['codigoSucursal'],
+                    'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
+                    'company_id' => $this->company_id
+                ]);
+            }
+        }
+
+        return $this;
+    }
 
     
 }
