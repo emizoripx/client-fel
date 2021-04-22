@@ -14,13 +14,16 @@ trait GetCredentialsTrait {
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
         $company_id_decode = $hashid->decode($this->company_id)[0];
-        Log::debug('Obtenniendo los credenciales.....');
+        
         return FelClientToken::where('account_id', $company_id_decode)->firstOrFail();
     }
 
     public function setAccessToken(){
-        $this->access_token = $this->getCredentials()->getAccessToken();
-        $this->host = $this->getCredentials()->getHost();
+        Log::debug('Seteando credentials.....');
+        $credentials = $this->getCredentials();
+
+        $this->access_token = $credentials->getAccessToken();
+        $this->host = $credentials->getHost();
         return $this;
     }
 

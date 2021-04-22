@@ -3,39 +3,43 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
-use Exception;
-use Hashids\Hashids;
 
-trait InvoiceFelEmitTrait{
+trait InvoiceFelEmitTrait
+{
 
-    public function emit(){
-
-        $success = false;
+    public function emit( $should_emit = 'true')
+    {
+        
+        //if should invoice is not set, then not emit
+        if ($should_emit !== 'true')
+            return $this;
+        
         $felInvoiceRequest = $this->fel_invoice;
 
-
-        
-        $hashid = new Hashids(config('ninja.hash_salt'), 10);
-        
-        $company_id = $hashid->decode($felInvoiceRequest->company_id);
+        if (empty($this->fel_invoice)) {
+            bitacora_warning("EMIT INVOICE", "From Company:" . $this->company_id . ", Invoice #" . $this->numeroFactura . " does not exist yet in table FEL_INVOICE_REQUEST.");
+            return $this;
+        }
 
         try {
 
-            if($felInvoiceRequest->codigoEstado == 690){
-                \Log::debug("Factura ya emitida");
-                throw new ClientFelException('La factura ya fue emitida');
+            
+            if ($felInvoiceRequest->codigoEstado != null || $felInvoiceRequest->cuf != null){
+                return $this;
             }
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
+            $felInvoiceRequest->deletePdf();
 
-            $success = true;
-            
-            bitacora_info("Shop emit", $success);
+            bitacora_info("EMIT INVOICE", "From Company:" . $this->fel_invoice->company_id . ", Invoice #" . $this->fel_invoice->numeroFactura . " was emitted succesfully.");
 
+            return $this;
         } catch (ClientFelException $ex) {
-            bitacora_error("ShopEmit", "Error emit invoice ". $ex->getMessage());
-            throw new Exception($ex->getMessage());
+
+            bitacora_error("EMIT INVOICE", "From Company:" . $this->fel_invoice->company_id . ", Invoice #" . $this->fel_invoice->numeroFactura . " was NOT emitted." . "Error emit invoice " . $ex->getMessage());
+
+            return $this;
         }
     }
-} 
+}
