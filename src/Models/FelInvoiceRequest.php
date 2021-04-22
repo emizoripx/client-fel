@@ -147,10 +147,6 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         
-        Log::debug('Credentials');
-        Log::debug($this->access_token);
-        Log::debug($this->host);
-        
         $invoice_service = new Invoices($this->host);
 
         $invoice_service->setAccessToken($this->access_token);
@@ -168,11 +164,6 @@ class FelInvoiceRequest extends Model
         
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->saveEmisionType($invoice['tipoEmision'])->save();
 
-        // $this->setCompanyId();
-        Log::debug('RETORNO MODELO');
-        Log::debug($this);
-        Log::debug('Restar numero de Facturas');
-        Log::debug($this->prepagoAccount());
         
         $account = $this->prepagoAccount();
         if(!$account->checkIsPostpago()){
@@ -224,6 +215,21 @@ class FelInvoiceRequest extends Model
         $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
+
+    }
+
+    public function deletePdf()
+    {
+        $this->invoice_origin()->service()->deletePdf();
+    }
+
+    public function invoice_origin()
+    {
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+        $id_origin_decode = $hashid->decode($this->id_origin)[0];
+
+        return \App\Models\Invoice::find($id_origin_decode);
 
     }
 }
