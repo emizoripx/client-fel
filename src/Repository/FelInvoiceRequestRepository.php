@@ -69,6 +69,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         if (is_null($model)) {
             bitacora_error("FelInvoiceRepository:PROCESS model","MODEL INVOICE IS NULL");
+            return ;
         }
 
         $client = FelClient::where('id_origin', $model->client_id)->first();
