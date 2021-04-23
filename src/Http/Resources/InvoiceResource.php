@@ -66,7 +66,9 @@ class InvoiceResource extends JsonResource
             "valorPlata" => $this->otrosDatos->valorPlata ?? null,
             "valorFobFronteraBs" => $this->otrosDatos->valorFobFronteraBs ?? null,
             "sector_document_type_id" => $this->type_document_sector_id ?? null,
-            "emission_type" => $this->emission_type
+            "emission_type" => $this->emission_type,
+            "codigo_sucursal" => (int) $this->codigoSucursal,
+            "codigo_pos" => (int) $this->codigoPuntoVenta,
         ];
     }
 }
