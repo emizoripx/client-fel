@@ -38,6 +38,7 @@ class FelCredentialRepository
     public function setCredential(FelClientToken $felClientToken)
     {
         $this->credential = $felClientToken;
+        return $this;
     }
 
     public function setCredentials($client_id, $client_secret)
@@ -172,7 +173,7 @@ class FelCredentialRepository
         $pos = $posService->setBranch($branch->codigo)->getPOS();
 
         foreach($pos as $p){
-            if(FelPOS::existsPOS($branch->credential->account_id, $branch->codigo, $p['codigo'])){
+            if(FelPOS::existsPOS($branch->company_id, $branch->codigo, $p['codigo'])){
                 FelPOS::create([
                     'codigo' => $p['codigo'],
                     'descripcion' => $p['descripcion'],

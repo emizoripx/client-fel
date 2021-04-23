@@ -12,7 +12,7 @@ use EmizorIpx\ClientFel\Models\Parametric\RevocationReason;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
-
+use Carbon\Carbon;
 
 class FelParametric
 {
@@ -31,7 +31,7 @@ class FelParametric
                     $d["tipoActividad"] = $d['tipoActividad'];
                     $data_[] = $d;
                 }
-                return FelActivity::insert($data_);
+                return FelActivity::insert(static::addTimeStamp($data_));
                 break;
             case TypeParametrics::LEYENDAS:
                 $data_ = array();
@@ -43,26 +43,26 @@ class FelParametric
                     $data_[] = $d;
                 }
                 
-                return FelCaption::insert($data_);
+                return FelCaption::insert(static::addTimeStamp($data_));
                 break;
             case TypeParametrics::MONEDAS:
-                return Currency::insert($data);
+                return Currency::insert(static::addTimeStamp($data));
                 break;
 
             case TypeParametrics::METODOS_DE_PAGO:
-                return PaymentMethod::insert($data);
+                return PaymentMethod::insert(static::addTimeStamp($data));
                 break;
             case TypeParametrics::PAISES:
-                return Country::insert($data);
+                return Country::insert(static::addTimeStamp($data));
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
-                return IdentityDocumentType::insert($data);
+                return IdentityDocumentType::insert(static::addTimeStamp($data));
                 break;
             case TypeParametrics::MOTIVO_ANULACION:
-                return RevocationReason::insert($data);
+                return RevocationReason::insert(static::addTimeStamp($data));
                 break;
             case TypeParametrics::UNIDADES:
-                return Unit::insert($data);
+                return Unit::insert(static::addTimeStamp($data));
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
 
@@ -74,7 +74,7 @@ class FelParametric
                     $d["descripcion"] = $d['descripcion'];
                     $data_[] = $d;
                 }
-                return SINProduct::insert($data_);
+                return SINProduct::insert(static::addTimeStamp($data_));
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
 
@@ -89,7 +89,7 @@ class FelParametric
                     unset($d['codigoDocumentSector']);
                     $data_[] = $d;
                 }
-                return SectorDocumentTypes::insert($data_);
+                return SectorDocumentTypes::insert(static::addTimeStamp($data_));
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -97,43 +97,64 @@ class FelParametric
         }
     }
 
+    public static function addTimeStamp($data)
+    {
+        $data_added = [];
+
+        foreach($data as $d) {
+
+            $d["updated_at"] = Carbon::now()->toDateTimeString();
+            $d["created_at"] = Carbon::now()->toDateTimeString();
+            $data_added[] = $d;
+        }
+        \Log::debug($data_added);
+        return $data_added;
+    }
+
     public static function index($type, $company_id)
     {
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
-                return FelActivity::whereCompanyId($company_id)->orderBy('descripcion')->get();
+                $query = FelActivity::whereCompanyId($company_id)->orderBy('descripcion');
                 break;
             case TypeParametrics::LEYENDAS:
-                return FelCaption::whereCompanyId($company_id)->orderBy('descripcion')->get();
+                $query = FelCaption::whereCompanyId($company_id)->orderBy('descripcion');
                 break;
             case TypeParametrics::MONEDAS:
-                return Currency::orderBy('descripcion')->get();
+                $query = Currency::orderBy('descripcion');
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
-                return PaymentMethod::orderBy('descripcion')->get();
+                $query = PaymentMethod::orderBy('descripcion');
                 break;
             case TypeParametrics::PAISES:
-                return Country::orderBy('descripcion')->get();
+                $query = Country::orderBy('descripcion');
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
-                return IdentityDocumentType::orderBy('descripcion')->get();
+                $query = IdentityDocumentType::orderBy('descripcion');
                 break;
             case TypeParametrics::MOTIVO_ANULACION:
-                return RevocationReason::orderBy('descripcion')->get();
+                $query = RevocationReason::orderBy('descripcion');
                 break;
             case TypeParametrics::UNIDADES:
-                return Unit::orderBy('descripcion')->get();
+                $query = Unit::orderBy('descripcion');
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
-                return SINProduct::whereCompanyId($company_id)->orderBy('descripcion')->get();
+                $query = SINProduct::whereCompanyId($company_id)->orderBy('descripcion');
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
-                return SectorDocumentTypes::whereCompanyId($company_id)->get();
+                $query = SectorDocumentTypes::whereCompanyId($company_id);
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
         }
+
+        // TODO: add logic in frontend to cached parametrics and then uncomment
+        // if (request()->has('updated_at') && request()->input('updated_at') > 0) {
+        //     $query->where('updated_at', '>=', date('Y-m-d H:i:s', intval(request()->input('updated_at'))));
+        // }
+
+        return $query->get();
     }
 
     public static function existsParametric($type, $company_id){

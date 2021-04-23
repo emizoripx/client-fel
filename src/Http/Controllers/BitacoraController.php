@@ -59,7 +59,7 @@ class BitacoraController extends BaseController
 
     }
 
-    public function updateBranches()
+    public function updateMissingParametrics()
     {
         $felClienttokens = FelClientToken::where("host", 'like', "%sinfel.emizor.com")->get();
 
@@ -68,7 +68,7 @@ class BitacoraController extends BaseController
 
             try {
 
-                $this->credential_repo
+                $this->credentialrepo
                 ->setCredential($felClienttoken)
                 ->syncParametrics()
                 ->getBranches();
@@ -79,8 +79,8 @@ class BitacoraController extends BaseController
 
             }
             
-            dd("finish update branches");
-
+            
         }
+        dd("finish update branches");
     }
 }
