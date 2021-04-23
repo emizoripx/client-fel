@@ -81,7 +81,7 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,
-            "montoTotalMoneda" => $total,
+            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
             "montoTotalSujetoIva" => $total,
             "detalles" => $details
         ];
