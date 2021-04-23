@@ -3,8 +3,10 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\BitacoraLog;
 use EmizorIpx\ClientFel\Models\FelClientToken;
+use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
 use Illuminate\Http\Request;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use Exception;
@@ -12,6 +14,10 @@ use Exception;
 class BitacoraController extends BaseController
 {
 
+    public function __construct(FelCredentialRepository $credential_repo)
+    {
+        $this->credentialrepo = $credential_repo;
+    }
     public function index(Request $request)
     {
         $logs = BitacoraLog::orderBy("id","desc")->simplePaginate(30);
@@ -51,5 +57,30 @@ class BitacoraController extends BaseController
         }
         dd("done");
 
+    }
+
+    public function updateBranches()
+    {
+        $felClienttokens = FelClientToken::where("host", 'like', "%sinfel.emizor.com")->get();
+
+
+        foreach ($felClienttokens as $felClienttoken) {
+
+            try {
+
+                $this->credential_repo
+                ->setCredential($felClienttoken)
+                ->syncParametrics()
+                ->getBranches();
+
+            } catch (ClientFelException $ex) {
+            
+                \Log::debug("Problemas en la comunicación : " . $ex->getMessage());
+
+            }
+            
+            dd("finish update branches");
+
+        }
     }
 }
