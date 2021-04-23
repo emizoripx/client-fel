@@ -35,7 +35,10 @@ class FelCredentialRepository
         $this->authenticate_response = array();
         $this->credential = new FelClientToken();
     }
-
+    public function setCredential(FelClientToken $felClientToken)
+    {
+        $this->credential = $felClientToken;
+    }
 
     public function setCredentials($client_id, $client_secret)
     {
@@ -132,9 +135,9 @@ class FelCredentialRepository
 
         foreach ($types as $type) {
 
-            if (FelParametric::existsParametric($type, $this->company_id)) {
+            if (FelParametric::existsParametric($type, $this->credential->account_id)) {
                 $parametricService->get($type);
-                FelParametric::create($type, $parametricService->getResponse(), $this->company_id);
+                FelParametric::create($type, $parametricService->getResponse(), $this->credential->account_id);
             }
         }
         return $this;
@@ -147,12 +150,12 @@ class FelCredentialRepository
         $branches = $branchService->getBranches();
 
         foreach($branches as $branch){
-            if(FelBranch::existsBranch($this->company_id, $branch['codigoSucursal'])){
+            if(FelBranch::existsBranch($this->credential->account_id, $branch['codigoSucursal'])){
 
                 $branch = FelBranch::create([
                     'codigo' => $branch['codigoSucursal'],
                     'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
-                    'company_id' => $this->company_id
+                    'company_id' => $this->credential->account_id
                 ]);
 
                 $this->getPOS($branch);
@@ -169,7 +172,7 @@ class FelCredentialRepository
         $pos = $posService->setBranch($branch->codigo)->getPOS();
 
         foreach($pos as $p){
-            if(FelPOS::existsPOS($branch->company_id, $branch->codigo, $p['codigo'])){
+            if(FelPOS::existsPOS($branch->credential->account_id, $branch->codigo, $p['codigo'])){
                 FelPOS::create([
                     'codigo' => $p['codigo'],
                     'descripcion' => $p['descripcion'],
