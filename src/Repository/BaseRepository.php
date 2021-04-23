@@ -70,6 +70,8 @@ class BaseRepository
                         "valorPlata" => !empty($fel_data['valorPlata']) ? $fel_data['valorPlata'] : "",
                         "valorFobFronteraBs" => !empty($fel_data['valorFobFronteraBs']) ? $fel_data['valorFobFronteraBs'] : "",
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
+                        "codigoPuntoVenta" => !empty($fel_data['codigo_pos']) ? $fel_data['codigo_pos'] : "",
+                        "codigoSucursal" => !empty($fel_data['codigo_sucursal']) ? $fel_data['codigo_sucursal'] : 0,
                     ];
                     break;
                 

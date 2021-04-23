@@ -152,7 +152,7 @@ class FelInvoiceRequest extends Model
         $invoice_service->setAccessToken($this->access_token);
 
 
-        $invoice_service->setBranchNumber(0);
+        $invoice_service->setBranchNumber($this->codigoSucursal);
 
         $invoice_service->buildData($this);
 
@@ -204,7 +204,7 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->setAccessToken($this->access_token);
         $invoice_service->setCuf($this->cuf);
-        $invoice_service->setBranchNumber(0);
+        $invoice_service->setBranchNumber($this->codigoSucursal);
 
         $invoice_service->buildData($this);
 
