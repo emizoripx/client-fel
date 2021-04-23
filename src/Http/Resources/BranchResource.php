@@ -3,6 +3,8 @@
 namespace EmizorIpx\ClientFel\Http\Resources;
 
 use App\Utils\Traits\MakesHash;
+use EmizorIpx\ClientFel\Models\FelParametric;
+use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BranchResource extends ResourceCollection
@@ -22,7 +24,8 @@ class BranchResource extends ResourceCollection
             "id" => (int)$this->resource['id'],
             "codigo" => (int)$this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
-            "pos" => POSResource::collection($this->resource['fel_pos'])
+            "pos" => POSResource::collection($this->resource['fel_pos']),
+            "tipos-documento-sector" => DocumentSectorTypeResource::collection(FelParametric::index(TypeParametrics::TIPOS_DOCUMENTO_SECTOR, $this->resource['company_id']))
         ];
     }
 }

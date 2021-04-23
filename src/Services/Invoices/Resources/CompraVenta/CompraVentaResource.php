@@ -43,6 +43,7 @@ class CompraVentaResource extends JsonResource
             "codigoLeyenda" => $this->codigoLeyenda,
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
+            "codigoPuntoVenta" => $this->codigoPuntoVenta,
             'detalles' => DetalleCompraVentaResource::collection(collect($this->detalles))
         ];
     }
