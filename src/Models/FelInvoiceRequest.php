@@ -140,7 +140,7 @@ class FelInvoiceRequest extends Model
             $prepagoBagService = new AccountPrepagoBagService();
 
             
-            $prepagoBagService->controlPrepagoBag($this->company_id);
+            $prepagoBagService->controlPrepagoBag($this->company_id, $this->type_document_sector_id);
             
         } catch (PrepagoBagsException $ex) {
             Log::debug('Fel Error');
