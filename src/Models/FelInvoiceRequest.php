@@ -124,7 +124,7 @@ class FelInvoiceRequest extends Model
      *
      * 
      */
-    public function prepagoAccount()
+    public function felCompany()
     {
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
@@ -137,10 +137,11 @@ class FelInvoiceRequest extends Model
 
         try {
 
-            $prepagoBagService = new AccountPrepagoBagService();
+            // $prepagoBagService = new AccountPrepagoBagService();
 
+            $detailCompanyDocumentSector = $this->felCompany()->service()->controlPrepagoBag($this->type_document_sector_id);
             
-            $prepagoBagService->controlPrepagoBag($this->company_id, $this->type_document_sector_id);
+            // $prepagoBagService->controlPrepagoBag($this->prepagoAccount(), $this->type_document_sector_id);
             
         } catch (PrepagoBagsException $ex) {
             Log::debug('Fel Error');
@@ -165,9 +166,9 @@ class FelInvoiceRequest extends Model
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->saveEmisionType($invoice['tipoEmision'])->save();
 
         
-        $account = $this->prepagoAccount();
+        $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
-            $account->reduceNumberInvoice()->save();
+            $detailCompanyDocumentSector->reduceNumberInvoice()->save();
         }
     }
 
