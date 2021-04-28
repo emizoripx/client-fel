@@ -11,6 +11,8 @@ class FelClientToken extends Model
 
     protected $guarded =[];
 
+    protected $table = 'fel_company_tokens';
+
     protected $casts = [
         'settings' => 'string'
     ];

@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use EmizorIpx\ClientFel\Traits\InvoiceValidateStateTrait;
 use EmizorIpx\ClientFel\Utils\InvoiceStates;
 use EmizorIpx\ClientFel\Utils\Log;
+use EmizorIpx\PrepagoBags\Models\FelCompanyDocumentSector;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Illuminate\Http\Request;
 
@@ -35,10 +36,10 @@ class WebhookController extends BaseController
 
         fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
 
-        if(!$invoice->prepagoAccount()->checkIsPostpago()){
+        if(!$invoice->felCompany()->checkIsPostpago()){
             $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
             if(in_array($data['state'], $stateInvalid)){
-                $invoice->prepagoAccount()->addNumberInvoice()->save();
+                FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->addNumberInvoice()->save();
             }
 
         }
