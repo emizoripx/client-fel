@@ -59,57 +59,6 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
     // }
 
 ```
-
-#### STEP 4
-- go to `App\Http\Controllers\AccountController` and add the following code with all references
-    this will after register new account will sync new parametrics and get Token
-
-```php
-    use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
-    
-    ...
-    
-     protected $credentialRepository;
-
-    // public function __construct(
-        FelCredentialRepository $credentialRepository
-     //   ) {
-    //     parent::__construct();
-
-
-        // The next line injects de credential repository
-
-        $this->credential_repo = $credentialRepository;
-        
-    // }
-
-
-        ...
-
-
-    // public function store(CreateAccountRequest $request)
-    // {
-    //     $account = CreateAccount::dispatchNow($request->all());
-
-    //     if (! ($account instanceof Account)) {
-    //         return $account;
-    //     }
-
-    //     $ct = CompanyUser::whereUserId(auth()->user()->id);
-
-    //     config(['ninja.company_id' => $ct->first()->company->id]);
-
-        $this->credential_repo
-            ->setCredentials($request->client_id,$request->client_secret)
-            ->setCompanyId($ct->first()->company->id)
-            ->register()
-            ->syncParametrics();
-
-       // return $this->listResponse($ct);
-    //}
-
-```
-
 ## Update library
 
 - run 
@@ -411,11 +360,6 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
                     });
 
     ```
-
-## Some Notes
-- Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
-
-
 ## Usage of commands in artisan
 
 - `php artisan emizor:make-patch [name of file patch]` this command will generate a file that will be executed as migrations. This files will be stored in src\Patches
