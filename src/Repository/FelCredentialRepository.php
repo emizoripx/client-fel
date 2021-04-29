@@ -156,7 +156,11 @@ class FelCredentialRepository
                 $branch = FelBranch::create([
                     'codigo' => $branch['codigoSucursal'],
                     'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
-                    'company_id' => $this->credential->account_id
+                    'company_id' => $this->credential->account_id,
+                    'zona' => $branch['zona'],
+                    'pais' => $branch['pais'],
+                    'ciudad' => $branch['ciudad'],
+                    'municipio' => $branch['municipio']
                 ]);
 
                 $this->getPOS($branch);
