@@ -2,6 +2,8 @@
 
 namespace EmizorIpx\ClientFel;
 
+use EmizorIpx\ClientFel\Console\Commands\CreatePatchCommand;
+use EmizorIpx\ClientFel\Console\Commands\PatchCommand;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSettings;
 use EmizorIpx\ClientFel\Http\Middleware\NeedsToken;
 use EmizorIpx\ClientFel\Observers\FelClientObserver;
@@ -56,6 +58,16 @@ class ClientFelServiceProvider extends ServiceProvider
 
         $invoice = $this->app->make(Config::get('clientfel.entity_table_invoice'));
         $invoice::observe(new FelInvoiceObserver(new FelInvoiceRequestRepository));
+
+        // load commands
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CreatePatchCommand::class,
+                PatchCommand::class
+                
+            ]);
+        }
 
     }
     
