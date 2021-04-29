@@ -37,7 +37,7 @@ class CreatePatchCommand extends Command
      */
     public function handle()
     {
-        $date = \Carbon\Carbon::now()->format("Y_m_d_his");
+        $date = \Carbon\Carbon::now()->format("Y_m_d_His");
 
         $new_file = $date . "_" . $this->argument("name") . ".php";
 

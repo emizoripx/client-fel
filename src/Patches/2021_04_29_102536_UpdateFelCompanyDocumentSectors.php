@@ -20,11 +20,16 @@ class UpdateFelCompanyDocumentSectors
         foreach ($felCompanies as $company) {
             
             if(!$this->checkExists($company)){
-                FelCompanyDocumentSector::create([
-                    'company_id' => $company->company_id,
-                    'fel_doc_sector_id' => $company->document_sector_code,
-                    'fel_company_id' => $company->id
-                ]);
+                try {
+
+                    FelCompanyDocumentSector::create([
+                        'company_id' => $company->company_id,
+                        'fel_doc_sector_id' => $company->document_sector_code,
+                        'fel_company_id' => $company->id
+                        ]);
+                } catch (Exception $ex){
+                    echo "problems with these company ". $company->company_id ."\n";
+                }
             }
 
         }
