@@ -414,3 +414,12 @@ go to `App\Http\Requests\Account\CreateAccountRequest` and add the following cod
 
 ## Some Notes
 - Invoices are created using branch_number = 0 , and compra-venta as a type of document sector
+
+
+## Usage of commands in artisan
+
+- `php artisan emizor:make-patch [name of file patch]` this command will generate a file that will be executed as migrations. This files will be stored in src\Patches
+
+        Example: php artisan emizor:make-patch update_new_columns_fel_database
+
+- `php artisan emizor:patch` this command will executed all files in patches folder, and it will be executed once for file, because every time this command is executed it will be saved in database
