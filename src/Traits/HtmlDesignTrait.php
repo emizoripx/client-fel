@@ -137,6 +137,10 @@ trait HtmlDesignTrait{
 
     public function checkProperties($value){
         
+        if(is_null($this->fel_invoice)){
+            return;
+        }
+        
         if($value == '$fel.ruex' || $value == '$fel.nim'){
            return $this->fel_invoice->type_document_sector_id == 20 ? false : true; 
         }
