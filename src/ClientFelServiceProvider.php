@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel;
 
 use EmizorIpx\ClientFel\Console\Commands\CreatePatchCommand;
 use EmizorIpx\ClientFel\Console\Commands\PatchCommand;
+use EmizorIpx\ClientFel\Console\Commands\WarmCacheCommand;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSettings;
 use EmizorIpx\ClientFel\Http\Middleware\NeedsToken;
 use EmizorIpx\ClientFel\Observers\FelClientObserver;
@@ -64,7 +65,8 @@ class ClientFelServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreatePatchCommand::class,
-                PatchCommand::class
+                PatchCommand::class,
+                WarmCacheCommand::class
                 
             ]);
         }
