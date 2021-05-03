@@ -8,10 +8,12 @@ use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelParametric;
 use EmizorIpx\ClientFel\Models\FelPOS;
 use EmizorIpx\ClientFel\Services\Branches\Branches;
+use EmizorIpx\ClientFel\Services\Company\Company;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Services\Pos\Pos;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
+use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 
 class FelCredentialRepository
 {
@@ -186,6 +188,20 @@ class FelCredentialRepository
                 ]);
             }
         }
+
+    }
+
+    public function updateFelCompany(){
+
+        $companyService = new Company($this->credential->access_token, $this->credential->host);
+
+        $felCompany = $companyService->getCompany();
+
+        AccountPrepagoBags::where('company_id', $this->credential->account_id)->update([
+            'fel_company_id' => $felCompany['id']
+        ]);
+
+        return $this;
 
     }
 
