@@ -5,7 +5,7 @@ namespace EmizorIpx\ClientFel\Http\Resources;
 use App\Utils\Traits\MakesHash;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ClientResource extends JsonResource
 {
     use MakesHash;
 
@@ -18,15 +18,16 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "codigoNandina" => $this->codigo_nandina,
-            "codigo_actividad_economica" => (int) $this->codigo_actividad_economica,
-            "codigo_producto" => $this->codigo_producto,
-            "codigo_producto_sin" => (int)$this->codigo_producto_sin,
-            "codigo_unidad" => (int)$this->codigo_unidad,
-            "nombre_unidad" => $this->nombre_unidad,
+            "id" => $this->id,
             "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "company_id" => $this->company_id,
-            "id" => (int)$this->id,
+            "type_document_id" => $this->type_document_id,
+            "document_number" => $this->document_number,
+            "complement" => $this->complement,
+            "business_name" => $this->business_name,
+            "deleted_at" => $this->deleted_at,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
     }
 }

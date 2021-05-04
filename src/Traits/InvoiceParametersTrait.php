@@ -8,7 +8,7 @@ trait InvoiceParametersTrait {
 
     public function fel_invoice()
     {
-        return $this->hasOne(FelInvoiceRequest::class,'id_origin')->withTrashed();
+        return $this->hasOne(FelInvoiceRequest::class,'id_origin', 'id')->withTrashed();
     }
 
     public function includeFelData(){

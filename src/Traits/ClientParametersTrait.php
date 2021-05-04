@@ -8,7 +8,7 @@ trait ClientParametersTrait {
 
 
     public function fel_client(){
-        return $this->hasOne(FelClient::class, 'id_origin')->withTrashed();
+        return $this->hasOne(FelClient::class, 'id_origin', 'id')->withTrashed();
     }
 
     public function includeFelData(){
