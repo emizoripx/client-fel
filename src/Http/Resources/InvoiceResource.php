@@ -70,6 +70,8 @@ class InvoiceResource extends JsonResource
             "codigo_sucursal" => (int) $this->codigoSucursal,
             "codigo_pos" => (int) $this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
+            "liquidacionPreliminar" => (float) $this->liquidacion_preliminar,
+            "iva" => (float) $this->iva,
         ];
     }
 }

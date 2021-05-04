@@ -72,6 +72,11 @@ class BaseRepository
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
                         "codigoPuntoVenta" => !empty($fel_data['codigo_pos']) ? $fel_data['codigo_pos'] : "",
                         "codigoSucursal" => !empty($fel_data['codigo_sucursal']) ? $fel_data['codigo_sucursal'] : 0,
+                        // FACTURA VENTA MINERALES
+                        "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
+                        "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,
+                        "precioConcentradoBs" => !empty($fel_data['precioConcentradoBs']) ? $fel_data['precioConcentradoBs'] : 0,
+                        "precioConcentrado" => !empty($fel_data['precioConcentrado']) ? $fel_data['precioConcentrado'] : 0,
                     ];
                     break;
                 
