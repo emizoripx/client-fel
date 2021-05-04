@@ -71,6 +71,7 @@ class InvoiceResource extends JsonResource
             "emission_type" => $this->emission_type,
             "codigo_sucursal" => (int) $this->codigoSucursal,
             "codigo_pos" => (int) $this->codigoPuntoVenta,
+            "numeroTarjeta" => (int) $this->numeroTarjeta,
         ];
     }
 }
