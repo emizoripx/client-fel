@@ -9,7 +9,7 @@ trait ProductParametersTrait{
 
 
     public function fel_product(){
-        return $this->hasOne(FelSyncProduct::class, 'id_origin')->withTrashed();
+        return $this->hasOne(FelSyncProduct::class, 'id_origin', 'id')->withTrashed();
     }
 
     public function includeFelData(){

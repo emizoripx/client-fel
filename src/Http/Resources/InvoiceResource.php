@@ -2,10 +2,12 @@
 
 namespace EmizorIpx\ClientFel\Http\Resources;
 
+use App\Utils\Traits\MakesHash;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InvoiceResource extends JsonResource
 {
+    use MakesHash;
     /**
      * Transform the resource into an array.
      *
@@ -18,7 +20,7 @@ class InvoiceResource extends JsonResource
         return [
             "id" => (int) $this->id,
             "company_id" => $this->company_id,
-            "id_origin" => $this->id_origin,
+            "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "codigoMetodoPago" =>(int) $this->codigoMetodoPago,
             "codigoLeyenda" => (int) $this->codigoLeyenda,
             "codigoActividad" => (int) $this->codigoActividad,
