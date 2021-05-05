@@ -228,11 +228,11 @@ class FelInvoiceRequest extends Model
 
     public function invoice_origin()
     {
-        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        // $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
-        $id_origin_decode = $hashid->decode($this->id_origin)[0];
+        // $id_origin_decode = $hashid->decode($this->id_origin)[0];
 
-        return \App\Models\Invoice::find($id_origin_decode);
+        return \App\Models\Invoice::find($this->id_origin);
 
     }
 }
