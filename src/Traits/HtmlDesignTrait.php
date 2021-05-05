@@ -19,7 +19,7 @@ trait HtmlDesignTrait{
         $rows_table = '';
         
             
-            $rows_table .= '
+            $rows_table = $rows_table.'
             <tr>
                 <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">HUMEDAD </td>
                 <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center">'.number_format((float)$felInvoice->humedadPorcentaje,2,',','.').' % </td>
