@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Models\Parametric\Currency;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\Currencies;
+use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 
 trait HtmlDesignTrait{
 
@@ -146,6 +147,62 @@ trait HtmlDesignTrait{
         }
 
         return false;
+
+    }
+
+    public function appendFieldVentaMinerales( $data ){
+            $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA EXPORTACIÓN' : 'PREFACTURA EXPORTACIÓN', 'label' => 'Titulo'];
+            $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura con derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
+            $data['$fel.direccion_comprador'] = ['value' => $this->fel_invoice->direccionComprador, 'label' => 'Dirección Comprador'];
+            $data['$fel.concentrado_granel'] = ['value' => $this->fel_invoice->concentradoGranel, 'label' => 'Concentrado Granel'];
+            $data['$fel.puerto_transito'] = ['value' => $this->fel_invoice->puertoTransito, 'label' => 'Puerto Transito'];
+            $data['$fel.puerto_destino'] = ['value' => $this->fel_invoice->puertoDestino, 'label' => 'Puerto Destino'];
+            $data['$fel.origen'] = ['value' => $this->fel_invoice->origen, 'label' => 'Origen'];
+            $data['$fel.incoterm'] = ['value' => $this->fel_invoice->incoterm, 'label' => 'INCOTERM'];
+            $data['$fel.pais_destino'] = ['value' => Country::getDescriptionCountry($this->fel_invoice->paisDestino), 'label' => 'País Destino'];
+            $data['$fel.moneda_transaccion'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Moneda Transacción'];
+            $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
+            $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,5,',','.'), 'label' => 'Tipo Cambio Oficial'];
+            $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,5,',','.'), 'label' => 'Tipo Cambio ANB'];
+            $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
+            $data['$fel.kilos_netosHumedos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosHumedos,2,',','.'), 'label' => 'Kilos Netos Húmedos'];
+            $data['$fel.humedad_porcentaje'] = ['value' => (int) $this->fel_invoice->humedadPorcentaje, 'label' => 'Humedad Porcentaje'];
+            $data['$fel.humedad_valor'] = ['value' => number_format((float)$this->fel_invoice->humedadValor,2,',','.'), 'label' => 'Humedad Valor'];
+            $data['$fel.merma_porcentaje'] = ['value' => (int) $this->fel_invoice->mermaPorcentaje, 'label' => 'Merma Porcentaje'];
+            $data['$fel.merma_valor'] = ['value' => number_format((float)$this->fel_invoice->mermaValor,2,',','.'), 'label' => 'Merma Valor'];
+            $data['$fel.kilos_netosSecos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.'), 'label' => 'Kilos Netos Secos'];
+            $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
+            $data['$fel.iva'] = ['value' => number_format((float)$this->fel_invoice->iva,2,',','.') , 'label' => 'IVA'];
+            $data['$fel.liquidacion_preliminar'] = ['value' => number_format((float)$this->fel_invoice->liquidacion_preliminar,2,',','.') , 'label' => 'Liquidación Preliminar'];
+            $data['$fel.precio_concentrado'] = ['value' => number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.'), 'label' => 'Precio Concentrado'];
+            $data['$fel.precio_ConcentradoLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->montoTotalMoneda, 2, 'Dólares Americanos'), 'label' => 'Precion Concentrado Literal'];
+            $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
+            $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+            
+            $data['$fel.subtotal'] = ['value' => number_format((float)$this->fel_invoice->detalles[0]['subTotal'] ?? 0 + (float)$this->fel_invoice->detalles[1]['subTotal'] ?? 0 + (float)$this->fel_invoice->detalles[2]['subTotal'] ?? 0,2,',','.'), 'label' => 'Sub - Total'];
+
+            $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
+
+            return $data;
+    }
+
+
+    public function getDocumentHtmlDesign($document_code, $data){
+
+
+        switch ($document_code) {
+            case TypeDocumentSector::EXPORTACION_MINERALES:
+                return $this->appendFieldExportacionMinerales($data);
+                break;
+            case TypeDocumentSector::VENTA_INTERNA_MINERALES:
+                return $this->appendFieldVentaMinerales($data);
+                break;
+            
+            default:
+                return $data;
+                break;
+            
+        }
 
     }
 
