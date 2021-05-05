@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
@@ -33,6 +34,9 @@ class TypeDocumentSector
             case static::VENTA_INTERNA_MINERALES:
                 return VentaMineralesBuilder::class;
                 break;
+            case static::COMERCIAL_EXPORTACION:
+                return ComercialExportacionBuilder::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -52,6 +56,9 @@ class TypeDocumentSector
                 break;
             case static::VENTA_INTERNA_MINERALES:
                 return 'venta-interna-minerales';
+                break;
+            case static::COMERCIAL_EXPORTACION:
+                return 'comercial-exportacion';
                 break;
 
             default:
