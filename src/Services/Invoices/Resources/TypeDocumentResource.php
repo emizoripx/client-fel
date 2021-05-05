@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Services\Invoices\Resources;
 
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMinerales\VentaMineralesResource;
@@ -28,6 +29,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::VENTA_INTERNA_MINERALES:
                 return new VentaMineralesResource($this);
+                break;
+            case TypeDocumentSector::COMERCIAL_EXPORTACION:
+                return new ComercialExportacionResource($this);
                 break;
             default:
                 return new CompraVentaResource($this);

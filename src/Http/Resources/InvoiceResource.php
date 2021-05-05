@@ -72,8 +72,23 @@ class InvoiceResource extends JsonResource
             "codigo_sucursal" => (int) $this->codigoSucursal,
             "codigo_pos" => (int) $this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
-            "liquidacionPreliminar" => (float) $this->liquidacion_preliminar,
-            "iva" => (float) $this->iva,
+
+            // factura venta minerales
+            "liquidacionPreliminar" => (string) $this->liquidacion_preliminar,
+            "iva" => (string) $this->iva,
+            
+            // factura comercial exportacion
+            "lugarDestino" => $this->lugarDestino,
+            "incoterm_detalle" => $this->incoterm_detalle,
+            "gastoTransporteNacional" => $this->totalGastosNacionalesFob['gastoTransporte'],
+            "gastoSeguroNacional" => $this->totalGastosNacionalesFob['gastoSeguro'],
+            "gastoTransporteInternacional" => $this->totalGastosInternacionales['gastoTransporte'],
+            "gastoSeguroInternacional" => $this->totalGastosInternacionales['gastoSeguro'],
+            "totalGastosNacionalesFob" => $this->totalGastosNacionalesFob,
+            "totalGastosInternacionales" => $this->totalGastosInternacionales,
+            "numeroDescripcionPaquetesBultos" => $this->numeroDescripcionPaquetesBultos,
+            "informacionAdicional" => $this->informacionAdicional,
+
         ];
     }
 }

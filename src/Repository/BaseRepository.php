@@ -77,6 +77,22 @@ class BaseRepository
                         "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,
                         "precioConcentradoBs" => !empty($fel_data['precioConcentradoBs']) ? $fel_data['precioConcentradoBs'] : 0,
                         "precioConcentrado" => !empty($fel_data['precioConcentrado']) ? $fel_data['precioConcentrado'] : 0,
+
+                        // COMERCIA EXPORTACION
+                        "incorterm_detalle" => !empty($fel_data['incorterm_detalle']) ? $fel_data['incorterm_detalle'] : "",
+                        "lugarDestino" => !empty($fel_data['lugarDestino']) ? $fel_data['lugarDestino'] : "",
+                        "gastoTransporteNacional" => !empty($fel_data['gastoTransporteNacional']) ? $fel_data['gastoTransporteNacional'] : 0,
+                        "gastoSeguroNacional" => !empty($fel_data['gastoSeguroNacional']) ? $fel_data['gastoSeguroNacional'] : 0,
+                        "totalGastosNacionalesFob" => !empty($fel_data['totalGastosNacionalesFob']) ? $fel_data['totalGastosNacionalesFob'] : 0,
+                        "gastoTransporteInternacional" => !empty($fel_data['gastoTransporteInternacional']) ? $fel_data['gastoTransporteInternacional'] : 0,
+                        "gastoSeguroInternacional" => !empty($fel_data['gastoSeguroInternacional']) ? $fel_data['gastoSeguroInternacional'] : 0,
+
+                        "totalGastosInternacionales" => !empty($fel_data['totalGastosInternacionales']) ? $fel_data['totalGastosInternacionales'] : 0,
+
+                        "numeroDescripcionPaquetesBultos" => !empty($fel_data['numeroDescripcionPaquetesBultos']) ? $fel_data['numeroDescripcionPaquetesBultos'] : "",
+                        "informacionAdicional" => !empty($fel_data['informacionAdicional']) ? $fel_data['informacionAdicional'] : "",
+                        "montoGeneral" => !empty($fel_data['montoGeneral']) ? $fel_data['montoGeneral'] : 0,
+                        "montoGeneralBs" => !empty($fel_data['montoGeneralBs']) ? $fel_data['montoGeneralBs'] : 0,
                     ];
                     break;
                 

@@ -25,8 +25,6 @@ class FelInvoiceTransformer extends EntityTransformer{
 
     public function transform( FelInvoiceRequest $felInvoice ){
 
-        \Log::debug("FelInvoice");
-        \Log::debug($felInvoice);
 
         return [
             "id" => (int) $felInvoice->id,
