@@ -291,15 +291,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoTransporte : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->fel_invoice->costosGastosNacionales['gastoTransporte'] : 0) .'</td>
                     </tr>
                     <tr>
-                        <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                        <td>Gasto de Seguro</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->fel_invoice->costosGastosNacionales['gastoSeguro'] : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>SUBTOTAL FOB</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoTransporte + $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob : 0) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -312,15 +312,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoTransporte : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->costosGastosInternacionales['gastoTransporte'] : 0) .'</td>
                     </tr>
                     <tr>
-                        <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoSeguro : 0) .'</td>
+                        <td>Gasto de Seguro</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->costosGastosInternacionales['gastoSeguro'] : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>SUBTOTAL CIF</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoTransporte + $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales : 0) .'</td>
                     </tr>
                 </tbody>
             </table>

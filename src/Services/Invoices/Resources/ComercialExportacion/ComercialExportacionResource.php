@@ -22,7 +22,7 @@ class ComercialExportacionResource extends JsonResource
             "origen" => $this->origen,
             "puertoTransito" => $this->puertoTransito,
             "puertoDestino" => $this->puertoDestino,
-            "paisDestino" => $this->paisDestino,
+            "codigoPais" => $this->paisDestino,
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
@@ -44,14 +44,15 @@ class ComercialExportacionResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            'detalles' => DetalleCompraVentaResource::collection(collect($this->detalles)),
-
-            "incorterm_detalle" => (string) $this->incorterm_detalle,
-            "totalGastosNacionalesFob" => (string) $this->totalGastosNacionalesFob,
+            
+            "montoDetalle" => collect($this->detalles)->sum('subTotal'),
+            "incotermDetalle" =>  $this->incoterm_detalle,
+            "totalGastosNacionalesFob" =>  round((float)$this->totalGastosNacionalesFob,2),
             "totalGastosInternacionales" => round((float)$this->totalGastosInternacionales,2),
             "numeroDescripcionPaquetesBultos" => (string) $this->numeroDescripcionPaquetesBultos,
             "informacionAdicional" => (string) $this->informacionAdicional,
             "lugarDestino" => (string) $this->lugarDestino,
+            'detalles' => DetalleComercialExportacionResource::collection(collect($this->detalles)),
         ];
     }
 }
