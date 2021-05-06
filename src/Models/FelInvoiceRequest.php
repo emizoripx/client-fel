@@ -34,8 +34,8 @@ class FelInvoiceRequest extends Model
     protected $casts =[
         'detalles' => 'array',
         'otrosDatos' => 'array',
-        'costoGastosNacionales' => 'array',
-        'costoGastosInternacionales' => 'array',
+        'costosGastosNacionales' => 'array',
+        'costosGastosInternacionales' => 'array',
     ];
 
     protected $access_token;

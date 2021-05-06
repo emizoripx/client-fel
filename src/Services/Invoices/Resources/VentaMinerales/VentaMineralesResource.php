@@ -53,8 +53,8 @@ class VentaMineralesResource extends JsonResource
             "liquidacionPreliminar" => (float) $this->liquidacionPreliminar, // This amount can be negative
             "iva" => round($this->iva,2),
             "otrosDatos"=>json_encode($this->otrosDatos),
-            "montoTotalSujetoIva"=> round($this->montoTotalSujetoIva, 2),
-
+            "subTotal" => collect($this->detalles)->sum('subTotal'),
+            "montoTotalSujetoIva" => round($this->montoTotal, 2),
             'detalles' => DetalleVentaMineralesResource::collection(collect($this->detalles))
             
         ];
