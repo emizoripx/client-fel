@@ -58,6 +58,50 @@ trait HtmlDesignTrait{
         return $rows_table;
     }
 
+    public function makeRowsProductComercialExportacion(){
+
+        $rows_table = '';
+        $felInvoice = $this->fel_invoice;
+        $subtotal = 0;
+        $rows_table .= '<table id="product-table">
+                            <thead>
+                            <th width="15%">NANDINA</th>
+                            <th width="10%">CANTIDAD (Quantity)</th>
+                            <th width="30%">DESCRIPCION <br> (Description)</th>
+                            <th width="15%">UNIDAD MEDIDA (Unit of Measurement)</th>
+                            <th width="13%">PRECIO UNITARIO (Unit Value)</th>
+                            <th width="17%">SUBTOTAL</th>
+                            </thead><tbody>';
+        foreach($felInvoice->detalles as $detalle){
+            $rows_table .= '
+            <tr>
+                <td>'. $detalle['codigoNandina'] .'</td>
+                <td>'. $detalle['cantidad'] .'</td>
+                <td>'. $detalle['descripcion'] .'</td>
+                <td>'. Unit::getUnitDescription($detalle['unidadMedida']) .'</td>
+                <td class="right-align">'.number_format((float)$detalle['precioUnitario'],5,',','.').' </td>
+                <td class="right-align">'. $detalle['subTotal'] .'</td>
+            </tr>
+            ';
+            $subtotal += intval($detalle['subTotal']); 
+        }
+        $rows_table .= '
+        <tr>
+            <td colspan=5 style="text-align: right;"> <b> TOTAL DETALLE ('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).') <br> (Total Detail) </b></td>
+            <td> '. $subtotal.'</td>
+        </tr>
+        <tr>
+            <td colspan=5 style="text-align: right;"> INCOTERM y alcance del Total detalle de la transacción (INCOTERM and scope of the Total Transaction Details)</td>
+            <td> '. $felInvoice->incoterm_detalle .'</td>
+        </tr>
+
+        </tbody>
+        </table>';
+        
+        return $rows_table;
+
+    }
+
     public function MakeSubtotalsRows(){
         $rows = (isset($this->fel_invoice->detalles[0]['descripcion']) ? 
         '<tr>
@@ -151,7 +195,7 @@ trait HtmlDesignTrait{
     }
 
     public function appendFieldVentaMinerales( $data ){
-            $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA EXPORTACIÓN' : 'PREFACTURA EXPORTACIÓN', 'label' => 'Titulo'];
+            $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA VENTA INTERNA MINERALES' : 'PREFACTURA VENTA INTERNA MINERALES', 'label' => 'Titulo'];
             $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura con derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.direccion_comprador'] = ['value' => $this->fel_invoice->direccionComprador, 'label' => 'Dirección Comprador'];
             $data['$fel.concentrado_granel'] = ['value' => $this->fel_invoice->concentradoGranel, 'label' => 'Concentrado Granel'];
@@ -186,6 +230,146 @@ trait HtmlDesignTrait{
             return $data;
     }
 
+    public function makeClientDetail(){
+        $clientDetails = '
+            <table id="client-details">
+                <tbody>
+
+                    <tr>
+                        <th colspan=4 style="font-size:21px;">FACTURA COMERCIAL EXPORTACIÓN <br> (COMERCIAL INVOICE) </th>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;">Factura sin derecho a Crédito Fiscal</t>
+                    </tr>
+                    <tr>
+                        <td><b>Fecha (Date):</b></td>
+                        <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                        <td><b>NIT/CI/CEX:</b></td>
+                        <td>'. $this->client->id_number .'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Nombre/Razon Social (Name Buyer):</b></td>
+                        <td>'. $this->client->name .'</td>
+                        <td><b>Dirección Comprador (Address):</b></td>
+                        <td>'. $this->fel_invoice->direccionComprador .'</td>
+                    </tr>
+                    <tr>
+                        <td><b>INCOTERM:</b></td>
+                        <td>'. $this->fel_invoice->incoterm .'</td>
+                        <td><b>Puerto Destino (Destination Port):</b></td>
+                        <td>'. $this->fel_invoice->puertoDestino .'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Moneda de la Transacción Comercial (Comercial Transaction Currency):</b></td>
+                        <td>'. Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda) .'</td>
+                        <td><b>Tipo de Cambio (Exchange Date):</b></td>
+                        <td>'. number_format((float)$this->fel_invoice->tipoCambio,2,',','.') .'</td>
+                    </tr>
+                </tbody>
+            </table>
+        ';
+
+        return $clientDetails;
+    }
+
+    public function appendFieldComercialExportacion($data){
+
+            $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA COMERCIAL EXPORTACIÓN' : 'PREFACTURA COMERCIAL EXPORTACIÓN', 'label' => 'Titulo'];
+            $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura sin derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
+            $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
+            $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,5,',','.'), 'label' => 'Tipo Cambio Oficial'];
+            $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
+            $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
+            $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+            
+            $data['$fel.products_rows'] = [ 'value' => $this->makeRowsProductComercialExportacion(), 'label' => 'Detalles Productos' ];
+            $data['$fel.client_details'] = [ 'value' => $this->makeClientDetail(), 'label' => 'Detalles Cliente' ];
+            
+            $data['$fel.costos_GastosNacionales'] = [ 'value' => 
+            '<table id="gastos-nacionales">
+                <tbody>
+                    <tr>
+                        <td>Gasto Transporte</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoTransporte : 0) .'</td>
+                    </tr>
+                    <tr>
+                        <td>Gasto Transporte</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                    </tr>
+                    <tr>
+                        <td><b>SUBTOTAL FOB</b></td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob->GastoTransporte + $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            '
+            , 'label' => 'Detalles Productos' ];
+
+            $data['$fel.costos_GastosInternacionales'] = [ 'value' => 
+            '<table id="gastos-internacionales">
+                <tbody>
+                    <tr>
+                        <td>Gasto Transporte</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoTransporte : 0) .'</td>
+                    </tr>
+                    <tr>
+                        <td>Gasto Transporte</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoSeguro : 0) .'</td>
+                    </tr>
+                    <tr>
+                        <td><b>SUBTOTAL CIF</b></td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales->GastoTransporte + $this->fel_invoice->totalGastosNacionalesFob->GastoSeguro : 0) .'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            '
+            , 'label' => 'Detalles Productos' ];
+
+            $data['$fel.totales'] = [ 'value' => 
+            '<table id="totales">
+                <tbody>
+                    <tr>
+                        <td>Son: '.$this->getToWord($this->fel_invoice->montoTotalMoneda, 2, 'Dólares').'</td>
+                        <td style="text-align: right;"><b>Total General (Dolar)</b></td>
+                        <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.') .'</td>
+                    </tr>
+                    <tr>
+                        <td>Son: '.$this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos').'</td>
+                        <td style="text-align: right;"><b>Total General (Bolivianos)</b></td>
+                        <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotal,2,',','.') .'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            '
+            , 'label' => 'Detalles Productos' ];
+            $data['$fel.bultos'] = [ 'value' => 
+            '<table id="bultos">
+                <tbody>
+                    <tr>
+                        <td><b>Número y Descripción de Paquetes (Bultos) <br> (Number and Description of Boxes)</b></td>
+                    </tr>
+                    <tr>
+                        <td>'. $this->fel_invoice->numeroDescripcionPaquetesBultos.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Información Adicional <br> (Additional Information)</b></td>
+                    </tr>
+                    <tr>
+                        <td>'. $this->fel_invoice->informacionAdicional .'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            '
+            , 'label' => 'Detalles Productos' ];
+
+            return $data;
+
+    }
 
     public function getDocumentHtmlDesign($document_code, $data){
 
@@ -196,6 +380,9 @@ trait HtmlDesignTrait{
                 break;
             case TypeDocumentSector::VENTA_INTERNA_MINERALES:
                 return $this->appendFieldVentaMinerales($data);
+                break;
+            case TypeDocumentSector::COMERCIAL_EXPORTACION:
+                return $this->appendFieldComercialExportacion($data);
                 break;
             
             default:
