@@ -36,7 +36,10 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "totalGastosNacionalesFob" => $this->source_data['fel_data_parsed']['totalGastosNacionalesFob'],
                 "totalGastosInternacionales" => $this->source_data['fel_data_parsed']['totalGastosInternacionales'],
                 "numeroDescripcionPaquetesBultos" => $this->source_data['fel_data_parsed']['numeroDescripcionPaquetesBultos'],
-                "informacionAdicional" => $this->source_data['fel_data_parsed']['informacionAdicional']
+                "informacionAdicional" => $this->source_data['fel_data_parsed']['informacionAdicional'],
+
+                "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
+                "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
             ],
             $this->input,
             $this->getDetailsAndTotals(),
