@@ -31,14 +31,16 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
         $input = array_merge(
             [
-                "incorterm_detalle" => $this->source_data['fel_data_parsed']['incorterm_detalle'],
+                "incoterm_detalle" => $this->source_data['fel_data_parsed']['incoterm_detalle'],
+                "lugarDestino" => $this->source_data['fel_data_parsed']['lugarDestino'],
                 "totalGastosNacionalesFob" => $this->source_data['fel_data_parsed']['totalGastosNacionalesFob'],
                 "totalGastosInternacionales" => $this->source_data['fel_data_parsed']['totalGastosInternacionales'],
                 "numeroDescripcionPaquetesBultos" => $this->source_data['fel_data_parsed']['numeroDescripcionPaquetesBultos'],
                 "informacionAdicional" => $this->source_data['fel_data_parsed']['informacionAdicional']
             ],
             $this->input,
-            $this->getDetailsAndTotals()
+            $this->getDetailsAndTotals(),
+            $this->getOtrosDatos(),
         );
 
         $this->fel_invoice->fill($input);

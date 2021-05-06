@@ -79,7 +79,7 @@ class BaseRepository
                         "precioConcentrado" => !empty($fel_data['precioConcentrado']) ? $fel_data['precioConcentrado'] : 0,
 
                         // COMERCIA EXPORTACION
-                        "incorterm_detalle" => !empty($fel_data['incorterm_detalle']) ? $fel_data['incorterm_detalle'] : "",
+                        "incoterm_detalle" => !empty($fel_data['incotermDetalle']) ? $fel_data['incotermDetalle'] : "",
                         "lugarDestino" => !empty($fel_data['lugarDestino']) ? $fel_data['lugarDestino'] : "",
                         "gastoTransporteNacional" => !empty($fel_data['gastoTransporteNacional']) ? $fel_data['gastoTransporteNacional'] : 0,
                         "gastoSeguroNacional" => !empty($fel_data['gastoSeguroNacional']) ? $fel_data['gastoSeguroNacional'] : 0,
@@ -92,6 +92,7 @@ class BaseRepository
                         "numeroDescripcionPaquetesBultos" => !empty($fel_data['numeroDescripcionPaquetesBultos']) ? $fel_data['numeroDescripcionPaquetesBultos'] : "",
                         "informacionAdicional" => !empty($fel_data['informacionAdicional']) ? $fel_data['informacionAdicional'] : "",
                         "montoGeneral" => !empty($fel_data['montoGeneral']) ? $fel_data['montoGeneral'] : 0,
+                        "montoTotal" => !empty($fel_data['montoTotal']) ? $fel_data['montoTotal'] : 0,
                         "montoGeneralBs" => !empty($fel_data['montoGeneralBs']) ? $fel_data['montoGeneralBs'] : 0,
                     ];
                     break;
