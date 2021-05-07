@@ -5,6 +5,7 @@ use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
 use EmizorIpx\ClientFel\Services\Connection\Connection ;
+use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -63,7 +64,6 @@ class ConnectionController extends Controller
         $token = $felClienttoken->getAccessToken();
         if ( !empty($token)) {
             return [
-                'settings' => $felClienttoken->getSettings(),
                 'client_id' => $felClienttoken->getClientId(),
                 'client_secret' => $felClienttoken->getClientSecret(),
             ];
@@ -75,7 +75,6 @@ class ConnectionController extends Controller
         } else {
             //TODO: thrown an exception that does not is registed client id or client secret
             return [
-                'settings' => null,
                 'client_id' => null,
                 'client_secret' => null
             ];
@@ -97,7 +96,6 @@ class ConnectionController extends Controller
             $felClienttoken->save();
 
             return [
-                'settings' => $felClienttoken->getSettings(),
                 'client_id' => $felClienttoken->getClientId(),
                 'client_secret' => $felClienttoken->getClientSecret()
             ];
@@ -113,18 +111,18 @@ class ConnectionController extends Controller
         Log::debug($settingsData);
 
         try {
-            $felClient = FelClientToken::where('account_id', $request->company_id)->first();
+            $felCompany = AccountPrepagoBags::where('company_id', $request->company_id)->first();
         
-            if(!$felClient){
+            if(!$felCompany){
                 return response()->json([
                     "success" =>false,
                     "msg" => "credential not found"
                 ]);
             }
 
-            $felClient->settings = json_encode($settingsData);
+            $felCompany->settings = json_encode($settingsData);
 
-            $felClient->save();
+            $felCompany->save();
 
             return response()->json([
                 "success" =>true
