@@ -13,9 +13,6 @@ class FelClientToken extends Model
 
     protected $table = 'fel_company_tokens';
 
-    protected $casts = [
-        'settings' => 'string'
-    ];
 
     public function getAccessToken() 
     {

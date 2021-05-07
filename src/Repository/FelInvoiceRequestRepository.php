@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
+use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\DB;
@@ -123,7 +124,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             
         }
         $data['line_items'] = $line_items;
-        $settings = FelClientToken::where('account_id', $company_id)->first()->settings;
+        $settings = AccountPrepagoBags::where('company_id', $company_id)->first()->settings;
         $settings_change = json_decode( $settings); 
         return array_merge($data, [
             'felData' => [
