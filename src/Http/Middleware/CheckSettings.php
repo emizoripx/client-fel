@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use DB;
 use EmizorIpx\ClientFel\Models\FelClientToken;
+use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 
 class CheckSettings
 {
@@ -20,7 +21,7 @@ class CheckSettings
     {
         $company = DB::table('companies')->where('company_key', $request->header('X-API-COMPANY-KEY'))->first();
 
-        $clientfel = FelClientToken::where('account_id', $company->id)->first();
+        $clientfel = AccountPrepagoBags::where('company_id', $company->id)->first();
         
         \Log::debug("settings.....");
         
