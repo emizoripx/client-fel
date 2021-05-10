@@ -235,4 +235,33 @@ class FelInvoiceRequest extends Model
         return \App\Models\Invoice::find($this->id_origin);
 
     }
+
+    public function getCostosGastosNacionalesChangedAttribute()
+    {
+        return [
+            [
+                "campo" => "Gasto Transporte",
+                "valor" => $this->costosGastosNacionales['gastoTransporte']
+            ],
+            [
+                "campo" => "Gasto de Seguro",
+                "valor" => $this->costosGastosNacionales['gastoSeguro']
+            ]
+        ];
+
+    }
+    public function getCostosGastosInternacionalesChangedAttribute()
+    {
+        return [
+            [
+                "campo" => "Gasto Transporte",
+                "valor" => $this->costosGastosInternacionales['gastoTransporte']
+            ],
+            [
+                "campo" => "Gasto de Seguro",
+                "valor" => $this->costosGastosInternacionales['gastoSeguro']
+            ]
+        ];
+
+    }
 }
