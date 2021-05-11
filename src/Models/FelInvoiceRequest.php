@@ -121,6 +121,17 @@ class FelInvoiceRequest extends Model
         }
         return $this;
     }
+
+    public function saveInvoiceTypeId(array $value)
+    {
+        $this->type_invoice_id = 1;
+
+        if ( !empty($value) ) {
+            $this->type_invoice_id = $value['codigoTipoFactura'];
+        }
+
+        return $this;
+    }
     /**
      * Get the prepagoAccount instance
      *
@@ -165,7 +176,13 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByCuf();
         
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveUrlSin($invoice['urlSin'])->saveEmisionDate()->saveEmisionType($invoice['tipoEmision'])->save();
+        $this->saveState($invoice['estado'])
+             ->saveCuf($invoice_service->getResponse()['cuf'])
+             ->saveUrlSin($invoice['urlSin'])
+             ->saveEmisionDate()
+             ->saveEmisionType($invoice['tipoEmision'])
+             ->saveInvoiceTypeId($invoice['documentoSector'])
+             ->save();
 
         
         $account = $this->felCompany();
