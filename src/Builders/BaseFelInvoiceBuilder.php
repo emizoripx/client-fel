@@ -2,6 +2,7 @@
 namespace EmizorIpx\ClientFel\Builders;
 
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 
 class BaseFelInvoiceBuilder {
 
@@ -29,6 +30,7 @@ class BaseFelInvoiceBuilder {
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
             "type_document_sector_id" => $fel_data_parsed['type_document_sector_id'],
+            "type_invoice" => ucwords(strtolower(SectorDocumentTypes::getTypeInvoice($fel_data_parsed['type_document_sector_id']))),
             #fel fata
             "codigoMetodoPago" => $fel_data_parsed['payment_method_id'],
             "numeroTarjeta" => $fel_data_parsed['numero_tarjeta'],

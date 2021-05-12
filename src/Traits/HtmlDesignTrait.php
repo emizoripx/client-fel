@@ -127,7 +127,7 @@ trait HtmlDesignTrait{
 
 
             $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA EXPORTACIÓN' : 'PREFACTURA EXPORTACIÓN', 'label' => 'Titulo'];
-            $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura sin derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
+            $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.ruex'] = ['value' => $this->fel_invoice->ruex , 'label' => 'RUEX'];
             $data['$fel.nim'] = ['value' => $this->fel_invoice->nim , 'label' => 'NIM'];
             $data['$fel.direccion_comprador'] = ['value' => $this->fel_invoice->direccionComprador, 'label' => 'Dirección Comprador'];
@@ -196,7 +196,7 @@ trait HtmlDesignTrait{
 
     public function appendFieldVentaMinerales( $data ){
             $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA VENTA INTERNA MINERALES' : 'PREFACTURA VENTA INTERNA MINERALES', 'label' => 'Titulo'];
-            $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura con derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
+            $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.direccion_comprador'] = ['value' => $this->fel_invoice->direccionComprador, 'label' => 'Dirección Comprador'];
             $data['$fel.concentrado_granel'] = ['value' => $this->fel_invoice->concentradoGranel, 'label' => 'Concentrado Granel'];
             $data['$fel.puerto_transito'] = ['value' => $this->fel_invoice->puertoTransito, 'label' => 'Puerto Transito'];
@@ -276,7 +276,7 @@ trait HtmlDesignTrait{
     public function appendFieldComercialExportacion($data){
 
             $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA COMERCIAL EXPORTACIÓN' : 'PREFACTURA COMERCIAL EXPORTACIÓN', 'label' => 'Titulo'];
-            $data['$fel.invoice_type'] = ['value' => $this->cuf ? 'Factura sin derecho a Crédito Fiscal' : '', 'label' => 'Tipo de Factura'];
+            $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
             $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,5,',','.'), 'label' => 'Tipo Cambio Oficial'];
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
