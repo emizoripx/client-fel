@@ -94,6 +94,12 @@ class BaseRepository
                         "montoGeneral" => !empty($fel_data['montoGeneral']) ? $fel_data['montoGeneral'] : 0,
                         "montoTotal" => !empty($fel_data['montoTotal']) ? $fel_data['montoTotal'] : 0,
                         "montoGeneralBs" => !empty($fel_data['montoGeneralBs']) ? $fel_data['montoGeneralBs'] : 0,
+
+                        // NOTA-DEBITO-CREDITO
+
+                        "numeroAutorizacionCuf" => !empty($fel_data['numeroAutorizacionCuf']) ? $fel_data['numeroAutorizacionCuf'] : null,
+                        "montoDescuentoCreditoDebito" => !empty($fel_data['montoDescuentoCreditoDebito']) ? $fel_data['montoDescuentoCreditoDebito'] : null,
+                        "montoEfectivoCreditoDebito" => !empty($fel_data['montoEfectivoCreditoDebito']) ? $fel_data['montoEfectivoCreditoDebito'] : null,
                     ];
                     break;
                 

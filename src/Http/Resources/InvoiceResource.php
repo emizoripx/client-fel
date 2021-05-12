@@ -69,7 +69,7 @@ class InvoiceResource extends JsonResource
             "valorFobFronteraBs" => $this->otrosDatos->valorFobFronteraBs ?? null,
             "sector_document_type_id" => $this->type_document_sector_id ?? null,
             "emission_type" => $this->emission_type,
-            "type_invoice_id" => (int) $this->type_invoice_id,
+            "codigoTipoFactura" => (int) $this->type_invoice_id,
             "codigo_sucursal" => (int) $this->codigoSucursal,
             "codigo_pos" => (int) $this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
@@ -89,6 +89,12 @@ class InvoiceResource extends JsonResource
             "totalGastosInternacionales" => $this->totalGastosInternacionales,
             "numeroDescripcionPaquetesBultos" => $this->numeroDescripcionPaquetesBultos,
             "informacionAdicional" => $this->informacionAdicional,
+
+            // factura nota debito crédito
+            "numeroNota" => (int) $this->numero_factura,
+            "numeroAutorizacionCuf" => (string) $this->numeroAutorizacionCuf, // cuf invoice ref
+            "montoDescuentoCreditoDebito" => (string) $this->montoDescuentoCreditoDebito,
+            "montoEfectivoCreditoDebito" => (string) $this->montoEfectivoCreditoDebito,
 
         ];
     }

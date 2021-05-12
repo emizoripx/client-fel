@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
+use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 
@@ -20,6 +21,7 @@ class TypeDocumentSector
     const EXPORTACION_MINERALES = 20;
     const VENTA_INTERNA_MINERALES = 21;
     const TELECOMUNICACIONES = 21;
+    const DEBITO_CREDITO = 24;
 
     public static function getInstanceByCode($code):string
     {
@@ -36,6 +38,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION:
                 return ComercialExportacionBuilder::class;
+                break;
+            case static::DEBITO_CREDITO:
+                return CreditoDebitoBuilder::class;
                 break;
             
             default:
@@ -59,6 +64,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION:
                 return 'comercial-exportacion';
+                break;
+            case static::DEBITO_CREDITO:
+                return 'nota-debito-credito';
                 break;
 
             default:

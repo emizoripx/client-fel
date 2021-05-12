@@ -178,7 +178,9 @@ class FelInvoiceRequest extends Model
         
         $this->saveState($invoice['estado'])
              ->saveCuf($invoice_service->getResponse()['cuf'])
-             ->saveUrlSin($invoice['urlSin'])
+            //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
+             //  ->saveUrlSin($invoice['urlSin'])
+             ->saveUrlSin($invoice['urlSin']??"")
              ->saveEmisionDate()
              ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
