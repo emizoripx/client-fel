@@ -35,7 +35,6 @@ class AddColumnsDebitoCreditoFelInvoiceRequestsTable extends Migration
     {
         Schema::table('fel_invoice_requests', function (Blueprint $table) {
             $table->dropColumn("numeroFacturaOriginal");
-            $table->dropColumn("numeroAutorizacionCuf");
             $table->dropColumn("montoDescuentoCreditoDebito");
             $table->dropColumn("montoEfectivoCreditoDebito");
         });
