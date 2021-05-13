@@ -283,4 +283,7 @@ class FelInvoiceRequest extends Model
         ];
 
     }
+    public function getFacturaOrigin(){
+        return self::where('id', $this->factura_original_id)->first();
+    }
 }

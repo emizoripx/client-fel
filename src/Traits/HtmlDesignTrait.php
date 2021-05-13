@@ -3,8 +3,10 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use App\Utils\Number;
+use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Models\Parametric\Currency;
+use EmizorIpx\ClientFel\Models\Parametric\IdentityDocumentType;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\Currencies;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
@@ -236,20 +238,20 @@ trait HtmlDesignTrait{
                 <tbody>
 
                     <tr>
-                        <th colspan=4 style="font-size:21px;">FACTURA COMERCIAL EXPORTACIÓN <br> (COMERCIAL INVOICE) </th>
+                        <th colspan=4 style="font-size:36px;">FACTURA COMERCIAL EXPORTACIÓN <br> (COMERCIAL INVOICE) </th>
                     </tr>
                     
                     <tr>
-                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;">Factura sin derecho a Crédito Fiscal</t>
+                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;">Sin derecho a Crédito Fiscal</t>
                     </tr>
                     <tr>
                         <td><b>Fecha (Date):</b></td>
                         <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
-                        <td><b>NIT/CI/CEX:</b></td>
+                        <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</b></td>
                         <td>'. $this->client->id_number .'</td>
                     </tr>
                     <tr>
-                        <td><b>Nombre/Razon Social (Name Buyer):</b></td>
+                        <td><b>Nombre/Razón Social (Name Buyer):</b></td>
                         <td>'. $this->client->name .'</td>
                         <td><b>Dirección Comprador (Address):</b></td>
                         <td>'. $this->fel_invoice->direccionComprador .'</td>
@@ -371,6 +373,114 @@ trait HtmlDesignTrait{
 
     }
 
+    public function makeClientDetailCreditoDebito( $factura ){
+        $clientDetails = '<table id="client-details">
+                            <tbody>
+
+                                <tr>
+                                    <th colspan=4 style="font-size:38px; padding-bottom: 30px;"> NOTA CRÉDITO - DÉBITO</th>
+                                </tr>
+                                
+                                <tr>
+                                    <td><b>Fecha:</b></td>
+                                    <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                                    <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .'</td>
+                                    <td>'. $this->client->id_number .'</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Nombre/Razón Social:</b></td>
+                                    <td>'. $this->client->name .'</td>
+                                    <td><b>Fecha Factura:</b></td>
+                                    <td>'. date("d/m/Y H:i:s", strtotime($factura->fechaEmision))  .'</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Nº Factura:</b></td>
+                                    <td>'. $factura->numeroFactura .'</td>
+                                    <td><b>Nº Autorización/CUF:</b></td>
+                                    <td>'. $factura->cuf .'</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>';
+        return $clientDetails;
+    }
+
+    public function makeRowsProductFacturaOriginal( $detalles, $codigoMoneda ,$flag ){
+        
+        $subtotal = 0;
+        $rows_table = '<table id="product-table">
+                        <thead>
+                        <th width="15%">Código Producto</th>
+                        <th width="10%">Cantidad</th>
+                        <th width="30%">Descripción</th>
+                        <th width="20%">Precio Unitario</th>
+                        <th width="10%">Descuento</th>
+                        <th width="15%">Subtotal</th>
+                        </thead><tbody>';
+
+        foreach ($detalles as $detalle) {
+            $rows_table .= '
+                <tr>
+                    <td>'. $detalle['codigoProducto'] .'</td>
+                    <td style="text-align: right;">'. $detalle['cantidad'] .'</td>
+                    <td>'. $detalle['descripcion'] .'</td>
+                    <td style="text-align: right;">'. number_format((float)$detalle['precioUnitario'],2,',','.') .'</td>
+                    <td style="text-align: right;">'. (array_key_exists('descuento', $detalle) ? number_format((float)$detalle['descuento'],2,',','.') : '0,00' ) .' </td>
+                    <td class="right-align">'. number_format((float)$detalle['subTotal'],2,',','.') .'</td>
+                </tr>
+            ';
+            $subtotal += intval($detalle['subTotal']); 
+        }
+
+
+        if($flag){
+            $rows_table .= '
+                    <tr>
+                        <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border-bottom: 0px solid #e6e6e6;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
+                        <td colspan=2 style="text-align: right;"> <b> Monto Total Devuelto '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td> '. number_format((float) $this->fel_invoice->montoTotal,2,',','.') .'</td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan=2 style="text-align: right;"> <b>Monto Efectivo de Débito-Crédito</b></td>
+                        <td> '. number_format((float) $this->fel_invoice->montoEfectivoCreditoDebito,2,',','.') .'</td>
+                    </tr>
+                    
+                    </tbody>
+                    </table>';
+
+        } else{
+            $rows_table .= '
+                    <tr>
+                        <td colspan=5 style="text-align: right;"> <b> Monto Total Original '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td> '. $subtotal.'</td>
+                    </tr>
+                    
+                    </tbody>
+                    </table>';
+        }
+
+        return $rows_table;
+
+    }
+
+    public function appendFieldCreditoDebito( $data ){
+        $facturaOriginal = $this->fel_invoice->getFacturaOrigin();
+
+        $data['$fel.client_details'] = [ 'value' => $this->makeClientDetailCreditoDebito($facturaOriginal), 'label' => 'Detalles Cliente Debito' ];
+
+        $data['$fel.products_rows_original'] = [ 'value' => $this->makeRowsProductFacturaOriginal($facturaOriginal->detalles, $facturaOriginal->codigoMoneda ,false), 'label' => 'Detalles Productos' ];
+        $data['$fel.products_rows_devolucion'] = [ 'value' => $this->makeRowsProductFacturaOriginal($this->fel_invoice->detalles, $this->fel_invoice->codigoMoneda, true), 'label' => 'Detalles Productos' ];
+
+        $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
+        $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,5,',','.'), 'label' => 'Tipo Cambio Oficial'];
+        $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
+        $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+
+        return $data;
+
+    }
+
     public function getDocumentHtmlDesign($document_code, $data){
 
 
@@ -383,6 +493,9 @@ trait HtmlDesignTrait{
                 break;
             case TypeDocumentSector::COMERCIAL_EXPORTACION:
                 return $this->appendFieldComercialExportacion($data);
+                break;
+            case TypeDocumentSector::DEBITO_CREDITO:
+                return $this->appendFieldCreditoDebito($data);
                 break;
             
             default:
