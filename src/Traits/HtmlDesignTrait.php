@@ -81,16 +81,16 @@ trait HtmlDesignTrait{
                 <td>'. $detalle['cantidad'] .'</td>
                 <td>'. $detalle['descripcion'] .'</td>
                 <td>'. Unit::getUnitDescription($detalle['unidadMedida']) .'</td>
-                <td class="right-align">'.number_format((float)$detalle['precioUnitario'],5,',','.').' </td>
-                <td class="right-align">'. $detalle['subTotal'] .'</td>
+                <td class="right-align">'.number_format((float)$detalle['precioUnitario'],2,',','.').' </td>
+                <td class="right-align">'. number_format((float) $detalle['subTotal'],2,',','.') .'</td>
             </tr>
             ';
-            $subtotal += intval($detalle['subTotal']); 
+            $subtotal += floatval($detalle['subTotal']); 
         }
         $rows_table .= '
         <tr>
             <td colspan=5 style="text-align: right;"> <b> TOTAL DETALLE ('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).') <br> (Total Detail) </b></td>
-            <td> '. $subtotal.'</td>
+            <td> '. number_format((float) $subtotal,2,',','.').'</td>
         </tr>
         <tr>
             <td colspan=5 style="text-align: right;"> INCOTERM y alcance del Total detalle de la transacción (INCOTERM and scope of the Total Transaction Details)</td>
@@ -293,15 +293,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->fel_invoice->costosGastosNacionales['gastoTransporte'] : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ?  number_format((float)$this->fel_invoice->costosGastosNacionales['gastoTransporte'],2,',','.') : 0) .'</td>
                     </tr>
                     <tr>
                         <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->fel_invoice->costosGastosNacionales['gastoSeguro'] : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? number_format((float) $this->fel_invoice->costosGastosNacionales['gastoSeguro'],2,',','.') : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>SUBTOTAL FOB</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->fel_invoice->totalGastosNacionalesFob : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? number_format((float)$this->fel_invoice->totalGastosNacionalesFob,2,',','.') : 0) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -314,15 +314,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->costosGastosInternacionales['gastoTransporte'] : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->costosGastosInternacionales['gastoTransporte'],2,',','.') : 0) .'</td>
                     </tr>
                     <tr>
                         <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->costosGastosInternacionales['gastoSeguro'] : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->costosGastosInternacionales['gastoSeguro'],2,',','.') : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>SUBTOTAL CIF</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->fel_invoice->totalGastosInternacionales : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->totalGastosInternacionales,2,',','.') : 0) .'</td>
                     </tr>
                 </tbody>
             </table>

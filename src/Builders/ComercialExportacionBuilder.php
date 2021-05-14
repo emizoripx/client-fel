@@ -112,8 +112,8 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
-            "montoTotal" => $this->source_data['fel_data_parsed']['montoTotal'],
-            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'], 2),
+            "montoTotal" => $this->source_data['fel_data_parsed']['montoGeneralBs'],
+            "montoTotalMoneda" => $this->source_data['fel_data_parsed']['montoGeneral'],
             "montoTotalSujetoIva" => $this->source_data['fel_data_parsed']['montoTotal'],
             "detalles" => $details
         ];
