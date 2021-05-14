@@ -156,6 +156,9 @@ trait HtmlDesignTrait{
             $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares Americanos'), 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
             
+            $data['$monto_total'] = ['value' => number_format(collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Monto Total'];
+            $data['$total_literal'] = ['value' => 'SON: '. $this->getToWord(collect($this->fel_invoice->detalles)->sum('subTotal'), 2, Currencies::getDescriptionCurrency($this->fel_invoice->codigoMoneda)), 'label' => 'Total Literal'];
+            
             
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
             
@@ -168,15 +171,15 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dólares Americanos').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
-            $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
-                                            '<tr>
-                                                <th class="left-align" colspan="7">VALOR PLANTA</th>
-                                                <td class="b-solid right-align">'. number_format((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2,',','.').'</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
-                                            </tr>' : '', 
-                                            'label' => 'Valor FOB Frontera Literal'];
+            // $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
+            //                                 '<tr>
+            //                                     <th class="left-align" colspan="7">VALOR PLANTA</th>
+            //                                     <td class="b-solid right-align">'. number_format((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2,',','.').'</td>
+            //                                 </tr>
+            //                                 <tr>
+            //                                     <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
+            //                                 </tr>' : '', 
+            //                                 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
         return $data;
         
