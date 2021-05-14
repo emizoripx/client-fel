@@ -301,6 +301,8 @@ class Invoices extends BaseConnection
         
         try{
             $this->prepared_data =  new TypeDocumentResource($this->data_model);
+            \Log::debug("Data");
+            \Log::debug(json_encode($this->prepared_data));
         }catch(Throwable $th) {
             \Log::error($th);
         }

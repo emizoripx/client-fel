@@ -20,7 +20,7 @@ class DetalleCompraVentaResource extends JsonResource
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "cantidad" => $this->resource['cantidad'],
             "precioUnitario" => $this->resource['precioUnitario'],
-            "subTotal" => $this->resource['subTotal'],
+            "subTotal" => round($this->resource['subTotal'], 2),
             "unidadMedida" => $this->resource['unidadMedida'],
         ];
     }
