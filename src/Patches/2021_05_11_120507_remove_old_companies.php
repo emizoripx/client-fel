@@ -25,9 +25,7 @@ class RemoveOldCompanies
                 $companyService = new Company($company->access_token, $company->host);
 
                 $response = $companyService->getCompany();
-                \Log::debug("Response");
-                \Log::debug($response);
-
+       
                 if (is_null($response)) {
                     throw new Exception('');
                 }
