@@ -20,7 +20,7 @@ class TypeDocumentSector
     const HOTELES = 16;
     const EXPORTACION_MINERALES = 20;
     const VENTA_INTERNA_MINERALES = 21;
-    const TELECOMUNICACIONES = 21;
+    const TELECOMUNICACIONES = 22;
     const DEBITO_CREDITO = 24;
 
     public static function getInstanceByCode($code):string
@@ -116,6 +116,9 @@ class TypeDocumentSector
             
             case static::TELECOMUNICACIONES:
                 return 'FACTURA TELECOMUNICACIONES';
+                break;
+            case static::DEBITO_CREDITO:
+                return 'NOTA DÉBITO CRÉDITO';
                 break;
             
             
