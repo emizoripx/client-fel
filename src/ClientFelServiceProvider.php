@@ -17,6 +17,7 @@ use EmizorIpx\ClientFel\Repository\FelProductRepository;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use App\Models\RecurringInvoice;
 
 class ClientFelServiceProvider extends ServiceProvider
 {
@@ -59,6 +60,8 @@ class ClientFelServiceProvider extends ServiceProvider
 
         $invoice = $this->app->make(Config::get('clientfel.entity_table_invoice'));
         $invoice::observe(new FelInvoiceObserver(new FelInvoiceRequestRepository));
+
+        RecurringInvoice::observe(new FelInvoiceObserver(new FelInvoiceRequestRepository));
 
         // load commands
 
