@@ -456,7 +456,7 @@ trait HtmlDesignTrait{
             $rows_table .= '
                     <tr>
                         <td colspan=5 style="text-align: right;"> <b> Monto Total Original '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. $subtotal.'</td>
+                        <td> '. number_format((float)$subtotal,2,',','.') .'</td>
                     </tr>
                     
                     </tbody>
