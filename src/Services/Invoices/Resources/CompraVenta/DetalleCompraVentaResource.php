@@ -21,6 +21,7 @@ class DetalleCompraVentaResource extends JsonResource
             "cantidad" => $this->resource['cantidad'],
             "precioUnitario" => $this->resource['precioUnitario'],
             "subTotal" => round($this->resource['subTotal'], 2),
+            "montoDescuento" => !empty($this->resource['montoDescuento']) ? round($this->resource['montoDescuento'], 2) : null,
             "unidadMedida" => $this->resource['unidadMedida'],
         ];
     }
