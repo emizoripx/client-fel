@@ -22,7 +22,7 @@ class BranchResource extends ResourceCollection
     {
         return [
             "id" => (int)$this->resource['id'],
-            "codigo" => (int)$this->resource['codigo'],
+            "codigo" => $this->resource['codigo'],
             "descripcion" => $this->resource['descripcion'],
             "pos" => POSResource::collection($this->resource['fel_pos']),
             "tipos-documento-sector" => DocumentSectorTypeResource::collection(FelParametric::index(TypeParametrics::TIPOS_DOCUMENTO_SECTOR, $this->resource['company_id']))

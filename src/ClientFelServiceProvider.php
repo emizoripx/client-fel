@@ -18,6 +18,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use App\Models\RecurringInvoice;
+use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
 
 class ClientFelServiceProvider extends ServiceProvider
 {
@@ -69,7 +70,8 @@ class ClientFelServiceProvider extends ServiceProvider
             $this->commands([
                 CreatePatchCommand::class,
                 PatchCommand::class,
-                WarmCacheCommand::class
+                WarmCacheCommand::class,
+                UpdateTokens::class,
                 
             ]);
         }
