@@ -19,10 +19,10 @@ class ProductResource extends JsonResource
     {
         return [
             "codigoNandina" => $this->codigo_nandina,
-            "codigo_actividad_economica" => (int) $this->codigo_actividad_economica,
+            "codigo_actividad_economica" => (string) $this->codigo_actividad_economica,
             "codigo_producto" => $this->codigo_producto,
-            "codigo_producto_sin" => (int)$this->codigo_producto_sin,
-            "codigo_unidad" => (int)$this->codigo_unidad,
+            "codigo_producto_sin" => (string)$this->codigo_producto_sin,
+            "codigo_unidad" => (string)$this->codigo_unidad,
             "nombre_unidad" => $this->nombre_unidad,
             "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "company_id" => $this->company_id,
