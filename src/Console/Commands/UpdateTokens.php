@@ -55,7 +55,7 @@ class UpdateTokens extends Command
                 "client_secret" => $clientSecret
             ];
             try {
-                sleep(5);
+                sleep(3);
                 $response = $connection->authenticate($data);
 
                 $felClienttoken->setTokenType($response['token_type']);
