@@ -21,7 +21,7 @@ class ClientResource extends JsonResource
             "id" => $this->id,
             "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "company_id" => $this->company_id,
-            "type_document_id" => $this->type_document_id,
+            "type_document_id" => (string) $this->type_document_id,
             "document_number" => $this->document_number,
             "complement" => $this->complement,
             "business_name" => $this->business_name,
