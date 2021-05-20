@@ -55,7 +55,7 @@ class UpdateTokens extends Command
                 "client_secret" => $clientSecret
             ];
             try {
-
+                sleep(5);
                 $response = $connection->authenticate($data);
 
                 $felClienttoken->setTokenType($response['token_type']);
@@ -64,8 +64,9 @@ class UpdateTokens extends Command
                 $felClienttoken->save();
 
                 $this->info("Empresa # $felClienttoken->account_id  was updated token con client_id : " . $clientId . " client_secret : " . $clientSecret . " con host  " . $felClienttoken->getHost());
+                
             } catch (Exception $ex) {
-                $this->warn("NO SE PUEDE AUTENTICAR LA EMPRESA # " . $felClienttoken->account_id . " con client_id : " . $clientId . " client_secret : " . $clientSecret . " con host  " . $felClienttoken->getHost());
+                $this->warn("NO SE PUEDE AUTENTICAR LA EMPRESA # " . $felClienttoken->account_id . " con client_id : " . $clientId . " client_secret : " . $clientSecret . " con host  " . $felClienttoken->getHost() .' ERROR: '. $ex->getMessage());
             }
         });
     }
