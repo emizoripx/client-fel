@@ -22,4 +22,14 @@ trait InvoiceUpdateDateTrait{
         }
 
     }
+
+    public function invoiceDateUpdate(){
+        $invoice = Invoice::withTrashed()->where('id', $this->id_origin )->firstOrFail();
+
+        if(!is_null($invoice)){
+            // Carbon::createFromFormat('Y-m-d H:i:s.u', '2019-02-01 03:45:27.612584');
+            $invoice->date = date("Y-m-d", strtotime(Carbon::now()));
+            $invoice->save();
+        }
+    }
 }

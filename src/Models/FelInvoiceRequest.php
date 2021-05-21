@@ -186,6 +186,7 @@ class FelInvoiceRequest extends Model
              ->saveInvoiceTypeId($invoice['documentoSector'])
              ->save();
 
+        $this->invoiceDateUpdate();
         
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
