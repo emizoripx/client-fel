@@ -39,7 +39,7 @@ class FelBranch extends Model
 
         $branch = self::where('company_id', $companyIdDecoded)->where('codigo', $branch_code)->first();
 
-        return is_null($branch) ? '' : $branch->zona;
+        return is_null($branch) ? '' : 'Zona '. $branch->zona;
     }
 
 }
