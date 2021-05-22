@@ -132,6 +132,13 @@ class FelInvoiceRequest extends Model
 
         return $this;
     }
+
+    public function saveAddressInvoice($value){
+        
+        $this->direccion = $value;
+
+        return $this;
+    }
     /**
      * Get the prepagoAccount instance
      *
@@ -184,8 +191,10 @@ class FelInvoiceRequest extends Model
              ->saveEmisionDate()
              ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
+             ->saveAddressInvoice($invoice['direccion'])
              ->save();
 
+        $this->invoiceDateUpdate();
         
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
