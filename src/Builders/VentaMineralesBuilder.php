@@ -106,7 +106,7 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
 
 
             $new->descripcionLeyes = !empty($detail->leyes) ? $detail->leyes . "" : "";
-            $new->codigoNandina = !empty($product_sync->codigo_nandina) ? $product_sync->codigo_nandina : "";
+            $new->codigoNandina = $detail->codigoNandina;
 
 
 
