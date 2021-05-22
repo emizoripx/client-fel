@@ -22,6 +22,7 @@ class DetalleDebitoCreditoResource extends JsonResource
             "precioUnitario" => $this->resource['precioUnitario'],
             "subTotal" => $this->resource['subTotal'],
             "unidadMedida" => $this->resource['unidadMedida'],
+            "montoDescuento" => $this->resource['montoDescuento'],
         ];
     }
 }
