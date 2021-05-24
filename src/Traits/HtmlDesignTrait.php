@@ -10,6 +10,7 @@ use EmizorIpx\ClientFel\Models\Parametric\IdentityDocumentType;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\Currencies;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
+use EmizorIpx\PrepagoBags\Utils\ModalityInvoicing;
 
 trait HtmlDesignTrait{
 
@@ -245,7 +246,7 @@ trait HtmlDesignTrait{
                     </tr>
                     
                     <tr>
-                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;">Sin derecho a Crédito Fiscal</t>
+                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;"> <span style="font-size:12pt;"> <b>'. ModalityInvoicing::getModalityInvoicing($this->company->company_detail->modality_code) .'</b> </span> <br>('. $this->fel_invoice->type_invoice .')</t>
                     </tr>
                     <tr>
                         <td><b>Fecha (Date):</b></td>
