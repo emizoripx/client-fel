@@ -91,6 +91,23 @@ class FelParametric
                 }
                 return SectorDocumentTypes::insert(static::addTimeStamp($data_));
                 break;
+            case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
+
+                $data_ = array();
+                foreach($data as $d) { 
+                    $d["company_id"] = $company_id;
+                    $d["codigoActividad"] = $d['codigoActividad'];
+                    $d["actividad"] = $d['actividad'];
+                    $d["codigoDocumentoSector"] = $d['codigo'];
+                    $d["tipoDocumentoSector"] = $d['tipoDocumentoSector'];
+                    $d["documentoSector"] = $d['descripcion'];
+
+                    unset($d['codigo']);
+                    unset($d['descripcion']);
+                    $data_[] = $d;
+                }
+                return FelActivityDocumentSector::insert(static::addTimeStamp($data_));
+                break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
@@ -143,6 +160,9 @@ class FelParametric
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
                 $query = SectorDocumentTypes::whereCompanyId($company_id);
+                break;
+            case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
+                $query = FelActivityDocumentSector::whereCompanyId($company_id)->orderBy('actividad');
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -206,6 +226,10 @@ class FelParametric
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
                 $sector_documents = SectorDocumentTypes::whereCompanyId($company_id)->first();
                 return is_null($sector_documents);
+                break;
+            case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
+                $activity_sector_documents = FelActivityDocumentSector::whereCompanyId($company_id)->first();
+                return is_null($activity_sector_documents);
                 break;
             
             default:

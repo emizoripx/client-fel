@@ -83,8 +83,8 @@ class FelInvoiceRequest extends Model
         return $this;
     }
 
-    public function saveEmisionDate(){
-        $this->fechaEmision = substr(Carbon::now()->format('Y-m-d\TH:i:s.u'), 0, -3);
+    public function saveEmisionDate($fechaEmision){
+        $this->fechaEmision = $fechaEmision;
         return $this;
     }
 
@@ -188,7 +188,7 @@ class FelInvoiceRequest extends Model
             //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
              //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']??"")
-             ->saveEmisionDate()
+             ->saveEmisionDate($invoice['fechaEmision'])
              ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
              ->saveAddressInvoice($invoice['direccion'])

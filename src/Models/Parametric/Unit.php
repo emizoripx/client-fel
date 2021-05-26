@@ -11,6 +11,6 @@ class Unit extends Model
 
 
     public static function getUnitDescription($code){
-        return self::findOrFail($code)->descripcion;
+        return ucwords(strtolower(self::findOrFail($code)->descripcion));
     }
 }
