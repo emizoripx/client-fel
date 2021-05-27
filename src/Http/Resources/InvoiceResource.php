@@ -80,11 +80,11 @@ class InvoiceResource extends JsonResource
             
             // factura comercial exportacion
             "lugarDestino" => $this->lugarDestino,
-            "incoterm_detalle" => $this->incoterm_detalle,
-            "gastoTransporteNacional" => $this->totalGastosNacionalesFob['gastoTransporte'] ?? null,
-            "gastoSeguroNacional" => $this->totalGastosNacionalesFob['gastoSeguro'] ?? null,
-            "gastoTransporteInternacional" => $this->totalGastosInternacionales['gastoTransporte'] ?? null,
-            "gastoSeguroInternacional" => $this->totalGastosInternacionales['gastoSeguro'] ?? null,
+            "incotermDetalle" => $this->incoterm_detalle,
+            "gastoTransporteNacional" => $this->costosGastosNacionales['gastoTransporte'] ?? null,
+            "gastoSeguroNacional" => $this->costosGastosNacionales['gastoSeguro'] ?? null,
+            "gastoTransporteInternacional" => $this->costosGastosInternacionales['gastoTransporte'] ?? null,
+            "gastoSeguroInternacional" => $this->costosGastosInternacionales['gastoSeguro'] ?? null,
             "totalGastosNacionalesFob" => $this->totalGastosNacionalesFob,
             "totalGastosInternacionales" => $this->totalGastosInternacionales,
             "numeroDescripcionPaquetesBultos" => $this->numeroDescripcionPaquetesBultos,

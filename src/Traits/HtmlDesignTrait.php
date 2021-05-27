@@ -115,18 +115,18 @@ trait HtmlDesignTrait{
         $rows = (isset($this->fel_invoice->detalles[0]['descripcion']) ? 
         '<tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[0]['descripcion']).'</th>
-            <td class="b-solid right-align">'.  bcdiv($this->fel_invoice->detalles[0]['subTotal'] ,'1',2).'</td>
+            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[0]['subTotal'] ,'1',2),2,',','.') .'</td>
         </tr>' : '')
         
         .(isset($this->fel_invoice->detalles[1]['descripcion']) ? '
         <tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[1]['descripcion']).'</th>
-            <td class="b-solid right-align">'.  bcdiv($this->fel_invoice->detalles[1]['subTotal'] ,'1',2).'</td>
+            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[1]['subTotal'] ,'1',2),2,',','.') .'</td>
         </tr>' : '')
         . (isset($this->fel_invoice->detalles[2]['descripcion']) ? '
         <tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[2]['descripcion']).'</th>
-            <td class="b-solid right-align">'.  bcdiv($this->fel_invoice->detalles[2]['subTotal'] ,'1',2).'</td>
+            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[2]['subTotal'] ,'1',2),2,',','.') .'</td>
         </tr>' : ''
         );
 
@@ -149,7 +149,7 @@ trait HtmlDesignTrait{
             $data['$fel.incoterm'] = ['value' => $this->fel_invoice->incoterm, 'label' => 'INCOTERM'];
             $data['$fel.pais_destino'] = ['value' => Country::getDescriptionCountry($this->fel_invoice->paisDestino), 'label' => 'País Destino'];
             $data['$fel.moneda_transaccion'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Moneda Transacción'];
-            $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
+            $data['$fel.moneda_code'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
             $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
             $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
@@ -162,11 +162,11 @@ trait HtmlDesignTrait{
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
             $data['$fel.valor_FOBFrontera'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFrontera'],2,',','.') , 'label' => 'Valor FOB Frontera'];
             $data['$fel.valor_FOBFronteraBs'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'],2,',','.'), 'label' => 'Valor FOB Frontera'];
-            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, 'Dólares Americanos'), 'label' => 'Valor FOB Frontera Literal'];
-            $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, 'Bolivianos'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Valor FOB Frontera Literal'];
+            $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, '(Boliviano)'), 'label' => 'Valor FOB Frontera Literal'];
             
             $data['$monto_total'] = ['value' => number_format(collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Monto Total'];
-            $data['$total_literal'] = ['value' => 'SON: '. $this->getToWord(collect($this->fel_invoice->detalles)->sum('subTotal'), 2, Currencies::getDescriptionCurrency($this->fel_invoice->codigoMoneda)), 'label' => 'Total Literal'];
+            $data['$total_literal'] = ['value' => 'SON: '. $this->getToWord(collect($this->fel_invoice->detalles)->sum('subTotal'), 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Total Literal'];
             
             
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
@@ -177,7 +177,7 @@ trait HtmlDesignTrait{
                                                 <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'] ,2,',','.').'</td>
                                             </tr>
                                             <tr>
-                                                <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, 'Dólares Americanos').' </td>
+                                                <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')').' </td>
                                             </tr>' : '', 
                                             'label' => 'Valor FOB Frontera Literal'];
             // $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
@@ -219,7 +219,7 @@ trait HtmlDesignTrait{
             $data['$fel.incoterm'] = ['value' => $this->fel_invoice->incoterm, 'label' => 'INCOTERM'];
             $data['$fel.pais_destino'] = ['value' => Country::getDescriptionCountry($this->fel_invoice->paisDestino), 'label' => 'País Destino'];
             $data['$fel.moneda_transaccion'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Moneda Transacción'];
-            $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
+            $data['$fel.moneda_code'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
             $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
             $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
@@ -233,11 +233,11 @@ trait HtmlDesignTrait{
             $data['$fel.iva'] = ['value' => number_format((float)$this->fel_invoice->iva,2,',','.') , 'label' => 'IVA'];
             $data['$fel.liquidacion_preliminar'] = ['value' => number_format((float)$this->fel_invoice->liquidacion_preliminar,2,',','.') , 'label' => 'Liquidación Preliminar'];
             $data['$fel.precio_concentrado'] = ['value' => number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.'), 'label' => 'Precio Concentrado'];
-            $data['$fel.precio_ConcentradoLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->montoTotalMoneda, 2, 'Dólares Americanos'), 'label' => 'Precion Concentrado Literal'];
-            $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
+            $data['$fel.precio_ConcentradoLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->montoTotalMoneda, 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Precion Concentrado Literal'];
+            $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, '(Bolivianos)'), 'label' => 'Total Literal'];
             $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
             
-            $data['$fel.subtotal'] = ['value' => number_format((float)$this->fel_invoice->detalles[0]['subTotal'] ?? 0 + (float)$this->fel_invoice->detalles[1]['subTotal'] ?? 0 + (float)$this->fel_invoice->detalles[2]['subTotal'] ?? 0,2,',','.'), 'label' => 'Sub - Total'];
+            $data['$fel.subtotal'] = ['value' => number_format((float)collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Sub - Total'];
 
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
             $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
