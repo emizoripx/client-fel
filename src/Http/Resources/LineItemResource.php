@@ -41,6 +41,8 @@ class LineItemResource extends JsonResource
             "product_key" => !empty($this->product_key) ? (string) $this->product_key : "",
             "cost" => !empty($this->cost) ? (float) $this->cost : 0,
             "codigoNandina" => !empty($this->codigoNandina) ? (string) $this->codigoNandina : "",
+            "cantidadExtraccion" => !empty($this->cantidadExtraccion) ? $this->cantidadExtraccion : "",
+            "unidadMedidaExtraccion" => !empty($this->unidadMedidaExtraccion) ? $this->unidadMedidaExtraccion : "",
             
         ];
     }

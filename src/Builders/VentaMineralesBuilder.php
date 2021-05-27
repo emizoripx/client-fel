@@ -97,9 +97,9 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
             $new->subTotal = round((float)$detail->line_total, 5);
 
             $new->cantidad = $detail->quantity;
-            $new->cantidadExtraccion = $detail->quantity;
+            $new->cantidadExtraccion = $detail->cantidadExtraccion;
 
-            $new->unidadMedidaExtraccion = $product_sync->codigo_unidad;
+            $new->unidadMedidaExtraccion = $detail->unidadMedidaExtraccion;
             $new->unidadMedida = $product_sync->codigo_unidad;
 
             $new->numeroSerie = null;
