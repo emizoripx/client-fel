@@ -245,7 +245,7 @@ class FelInvoiceRequest extends Model
 
         $invoice = $invoice_service->getInvoiceByCuf();
 
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate()->save();
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->save();
 
     }
 

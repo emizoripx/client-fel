@@ -44,10 +44,10 @@ trait InvoiceFelEmitTrait
             // throw new Exception( $ex->getMessage() );
 
             $felInvoiceRequest->update([
-                'errores' => json_encode([
-                    'evento' => 'Emitir',
-                    'error' => $ex->getMessage()
-                ]),
+                'errores' => json_encode([[
+                    'code' => 666,
+                    'description' => $ex->getMessage()
+                ]]),
                 'estado' => $felInvoiceRequest->getInvoiceState(InvoiceStates::INVOICE_STATE_SIN_INVALID)
             ]);
 
