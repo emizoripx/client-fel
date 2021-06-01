@@ -45,7 +45,7 @@ class ComercialExportacionResource extends JsonResource
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
             
-            "montoDetalle" => collect($this->detalles)->sum('subTotal'),
+            "montoDetalle" => round(collect($this->detalles)->sum('subTotal'),2),
             "incotermDetalle" =>  $this->incoterm_detalle,
             "totalGastosNacionalesFob" =>  round((float)$this->totalGastosNacionalesFob,2),
             "totalGastosInternacionales" => round((float)$this->totalGastosInternacionales,2),
