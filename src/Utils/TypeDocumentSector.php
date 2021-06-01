@@ -14,15 +14,15 @@ class TypeDocumentSector
     const COMPRA_VENTA = 1;
     const ALQUILER_BIENES_INMUEBLES = 2;
     const COMERCIAL_EXPORTACION = 3;
-    const COMERCIAL_EXPORTACIÓN_LIBRE_CONSIGNACIÓN = 4;
+    const COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION = 4;
     const ZONA_FRANCA = 5;
     const SERVICIO_TURISTICO_HOSPEDAJE = 6;
-    const COMERCIALIZACIÓN_ALIMENTOS_SEGURIDAD  = 7;
+    const COMERCIALIZACION_ALIMENTOS_SEGURIDAD  = 7;
     const TASA_CERO = 8;
     const COMPRA_VENTA_MONEDA_EXTRANJERA  = 9;
     const DUTTY_FREE  = 10;
     const SECTORES_EDUCATIVOS = 11;
-    const COMERCIALIZACIÓN_HIDROCARBUROS = 12;
+    const COMERCIALIZACION_HIDROCARBUROS = 12;
     const SERVICIOS_BASICOS = 13;
     const PRODUCTOS_ALCANZADOS_ICE = 14;
     const ENTIDADES_FINANCIERAS = 15;
@@ -38,7 +38,7 @@ class TypeDocumentSector
     const PRODUCTOS_NACIONALES = 25;
     const PRODUCTOS_NACIONALES_ICE = 26;
     const REGIMEN_7RG = 27;
-    const COMERCIAL_EXPORTACIÓN_SERVICIOS = 28;
+    const COMERCIAL_EXPORTACION_SERVICIOS = 28;
 
     public static function getInstanceByCode($code):string
     {
@@ -105,7 +105,7 @@ class TypeDocumentSector
             case static::COMERCIAL_EXPORTACION:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN';
                 break;
-            case static::COMERCIAL_EXPORTACIÓN_LIBRE_CONSIGNACIÓN:
+            case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN EN LIBRE CONSIGNACIÓN';
                 break;
             case static::ZONA_FRANCA:
@@ -114,7 +114,7 @@ class TypeDocumentSector
             case static::SERVICIO_TURISTICO_HOSPEDAJE:
                 return 'FACTURA DE SERVICIO TURÍSTICO Y HOSPEDAJE';
                 break;
-            case static::COMERCIALIZACIÓN_ALIMENTOS_SEGURIDAD:
+            case static::COMERCIALIZACION_ALIMENTOS_SEGURIDAD:
                 return 'FACTURA DE COMERCIALIZACIÓN DE ALIMENTOS – SEGURIDAD';
                 break;
             
@@ -131,7 +131,7 @@ class TypeDocumentSector
             case static::SECTORES_EDUCATIVOS:
                 return 'FACTURA SECTORES EDUCATIVOS';
                 break;
-            case static::COMERCIALIZACIÓN_HIDROCARBUROS:
+            case static::COMERCIALIZACION_HIDROCARBUROS:
                 return 'FACTURA DE COMERCIALIZACIÓN DE HIDROCARBUROS';
                 break;
             
@@ -186,7 +186,7 @@ class TypeDocumentSector
             case static::REGIMEN_7RG:
                 return 'FACTURA REGIMEN 7RG';
                 break;
-            case static::COMERCIAL_EXPORTACIÓN_SERVICIOS:
+            case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN DE SERVICIOS';
                 break;
             
