@@ -16,11 +16,12 @@ trait InvoiceFelEmitTrait
         if ($should_emit !== 'true')
             return $this;
         
-        $felInvoiceRequest = $this->fel_invoice;
+        $felInvoiceRequest = $this->invoice->fel_invoice->fresh();
 
-        if (empty($this->fel_invoice)) {
-            bitacora_warning("EMIT INVOICE", "From Company:" . $this->company_id . ", Invoice #" . $this->numeroFactura . " does not exist yet in table FEL_INVOICE_REQUEST.");
-            throw new ClientFelException(" La Factura #" . $this->numeroFactura . " no cuenta con datos necesarios para emitirse.");
+
+        if (empty($this->invoice->fel_invoice)) {
+            bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->numeroFactura . " does not exist yet in table FEL_INVOICE_REQUEST.");
+            throw new ClientFelException(" La Factura #" . $this->invoice->numeroFactura . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
 
@@ -35,21 +36,13 @@ trait InvoiceFelEmitTrait
 
             $felInvoiceRequest->deletePdf();
 
-            bitacora_info("EMIT INVOICE", "From Company:" . $this->fel_invoice->company_id . ", Invoice #" . $this->fel_invoice->numeroFactura . " was emitted succesfully.");
+            bitacora_info("EMIT INVOICE", "From Company:" . $this->invoice->fel_invoice->company_id . ", Invoice #" . $this->invoice->fel_invoice->numeroFactura . " was emitted succesfully.");
 
             return $this;
         } catch (ClientFelException $ex) {
 
-            bitacora_error("EMIT INVOICE", "From Company:" . $this->fel_invoice->company_id . ", Invoice #" . $this->fel_invoice->numeroFactura . " was NOT emitted." . "Error emit invoice " . $ex->getMessage());
-            // throw new Exception( $ex->getMessage() );
-
-            $felInvoiceRequest->update([
-                'errores' => json_encode([[
-                    'code' => 666,
-                    'description' => $ex->getMessage()
-                ]]),
-                'estado' => $felInvoiceRequest->getInvoiceState(InvoiceStates::INVOICE_STATE_SIN_INVALID)
-            ]);
+            bitacora_error("EMIT INVOICE", "From Company:" . $this->invoice->fel_invoice->company_id . ", Invoice #" . $this->invoice->fel_invoice->numeroFactura . " was NOT emitted." . "Error emit invoice " . $ex->getMessage());
+            throw new ClientFelException( $ex->getMessage() );
 
             return $this;
         }
