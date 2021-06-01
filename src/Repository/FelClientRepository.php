@@ -26,10 +26,10 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         $this->parseFelData($fel_data);
 
         $input = [
-          "type_document_id" => $this->fel_data_parsed['type_document_id'],
+          "type_document_id" => $this->fel_data_parsed['type_document_id'] > "0" ? $this->fel_data_parsed['type_document_id'] : 5,
           "id_origin" => $model->id,
-          "business_name" => $model->name,
-          "document_number" => $model->id_number ,
+          "business_name" => $this->fel_data_parsed['business_name'] ?? "Sin Nombre",
+          "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
           "complement" => $this->fel_data_parsed['complement'],
           "company_id" => $model->company_id
         ];
@@ -53,9 +53,9 @@ class FelClientRepository extends BaseRepository implements RepoInterface
       $this->parseFelData($fel_data);
 
       $input = [
-        "type_document_id" => $this->fel_data_parsed['type_document_id'],
-        "business_name" => $model->name,
-        "document_number" => $model->id_number,
+        "type_document_id" => $this->fel_data_parsed['type_document_id'] > "0" ? $this->fel_data_parsed['type_document_id'] : 5,
+        "business_name" => $this->fel_data_parsed['business_name'] ?? "Sin Nombre",
+        "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
         "complement" => $this->fel_data_parsed['complement'],
       ];
 

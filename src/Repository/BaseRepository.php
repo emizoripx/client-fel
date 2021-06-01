@@ -25,6 +25,8 @@ class BaseRepository
                 case 'client':
                     $this->fel_data_parsed = [
                         "type_document_id" => $fel_data['type_document_id'],
+                        "document_number" => $fel_data['document_number'],
+                        "business_name" => $fel_data['business_name'],
                         "complement" => $fel_data['complement'] ?? null
                     ];
                     break;

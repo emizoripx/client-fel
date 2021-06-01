@@ -20,7 +20,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             $this->setEntity('product');
             $this->parseFelData($fel_data);
 
-            \Log::debug($model->product_key);
+            
             $input = [
                 "company_id" => $model->company_id,
                 "id_origin" => $model->id,
@@ -64,6 +64,8 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
                 if (!is_null($product)) {
 
                     $product->update( $input );
+                } else {
+                    $this->create($fel_data, $model);
                 }
 
         } catch (Exception $ex) {
