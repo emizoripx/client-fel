@@ -261,11 +261,11 @@ trait HtmlDesignTrait{
                         <td><b>Fecha (Date):</b></td>
                         <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
                         <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</b></td>
-                        <td>'. $this->client->id_number .'</td>
+                        <td>'. $this->fel_invoice->numeroDocumento .'</td>
                     </tr>
                     <tr>
                         <td><b>Nombre/Razón Social (Name Buyer):</b></td>
-                        <td>'. $this->client->name .'</td>
+                        <td>'. $this->fel_invoice->nombreRazonSocial .'</td>
                         <td><b>Dirección Comprador (Address):</b></td>
                         <td>'. $this->fel_invoice->direccionComprador .'</td>
                     </tr>
@@ -398,11 +398,11 @@ trait HtmlDesignTrait{
                                     <td><b>Fecha:</b></td>
                                     <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
                                     <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .'</td>
-                                    <td>'. $this->client->id_number .'</td>
+                                    <td>'. $factura->numeroDocumento .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
-                                    <td>'. $this->client->name .'</td>
+                                    <td>'. $factura->nombreRazonSocial .'</td>
                                     <td><b>Fecha Factura:</b></td>
                                     <td>'. date("d/m/Y H:i:s", strtotime($factura->fechaEmision))  .'</td>
                                 </tr>

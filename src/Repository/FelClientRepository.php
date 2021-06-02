@@ -89,6 +89,8 @@ class FelClientRepository extends BaseRepository implements RepoInterface
     return array_merge($data, [
       'felData' => [
         'type_document_id' => $data['type_document_id'], 
+        'document_number' => $data['id_number'],
+        'business_name' => $data['name'],
         'complement' => $data['complement'] ?? null
         ]
     ]);
