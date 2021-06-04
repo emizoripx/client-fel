@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
+
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
@@ -260,7 +261,7 @@ class FelInvoiceRequest extends Model
 
         // $id_origin_decode = $hashid->decode($this->id_origin)[0];
 
-        return \App\Models\Invoice::find($this->id_origin);
+        return \App\Models\Invoice::withTrashed()->find($this->id_origin);
 
     }
 

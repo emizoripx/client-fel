@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
+use EmizorIpx\ClientFel\Providers\ClientFelEventServiceProvider;
 
 class ClientFelServiceProvider extends ServiceProvider
 {
@@ -80,6 +81,6 @@ class ClientFelServiceProvider extends ServiceProvider
     
     public function register()
     {
-        
+        $this->app->register(ClientFelEventServiceProvider::class);
     }
 }
