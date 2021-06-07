@@ -3,6 +3,9 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use App\Utils\Ninja;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasEmited;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasEmitedUpdate;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use Exception;
@@ -41,6 +44,8 @@ class InvoiceController extends BaseController
             $success = true;
 
             fel_register_historial($felInvoiceRequest);
+
+            event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id) ));
 
             return response()->json([
                 "success" => $success
@@ -99,6 +104,8 @@ class InvoiceController extends BaseController
             $felInvoiceRequest->invoiceDateUpdatedAt();
 
             $felInvoiceRequest->deletePdf();
+
+            event(new InvoiceWasEmitedUpdate($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
 
             fel_register_historial($felInvoiceRequest);
 

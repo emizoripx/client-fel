@@ -2,6 +2,8 @@
 
 namespace EmizorIpx\ClientFel\Traits;
 
+use App\Utils\Ninja;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasEmited;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Utils\InvoiceStates;
 use Exception;
@@ -35,6 +37,8 @@ trait InvoiceFelEmitTrait
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
             $felInvoiceRequest->deletePdf();
+
+            event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
 
             bitacora_info("EMIT INVOICE", "From Company:" . $this->invoice->fel_invoice->company_id . ", Invoice #" . $this->invoice->fel_invoice->numeroFactura . " was emitted succesfully.");
 

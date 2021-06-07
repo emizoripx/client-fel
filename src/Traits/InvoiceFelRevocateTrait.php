@@ -2,6 +2,9 @@
 
 namespace EmizorIpx\ClientFel\Traits;
 
+use App\Utils\Ninja;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasReversionRevoked;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasRevoked;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use Exception;
@@ -39,6 +42,8 @@ trait InvoiceFelRevocateTrait{
 
             bitacora_info("FelInvoiceRequestRevocate", $success);
 
+            event(new InvoiceWasRevoked($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
+
             fel_register_historial($felInvoiceRequest);
             
         } catch (ClientFelException $ex) {
@@ -55,6 +60,8 @@ trait InvoiceFelRevocateTrait{
         $success = false;
 
         $felInvoiceRequest = $this->fel_invoice;
+
+        
 
         try {
 
@@ -74,7 +81,11 @@ trait InvoiceFelRevocateTrait{
 
             $success = true;
 
+
+            event(new InvoiceWasReversionRevoked($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
+
             bitacora_info("FelInvoiceRequest:ReversionRevocate", $success);
+
 
             fel_register_historial($felInvoiceRequest);
 
