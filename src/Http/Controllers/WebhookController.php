@@ -39,7 +39,7 @@ class WebhookController extends BaseController
         if(!$invoice->felCompany()->checkIsPostpago()){
             $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
             if(in_array($data['state'], $stateInvalid)){
-                FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->addNumberInvoice()->save();
+                FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->addNumberInvoice()->setCounter(-1)->save();
             }
 
         }
