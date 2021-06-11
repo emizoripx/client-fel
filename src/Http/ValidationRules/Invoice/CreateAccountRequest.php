@@ -8,7 +8,7 @@ class CreateAccountRequest {
 
     public static function additionalAccountRules(){
         return [
-            'phone_user'  => 'required',
+            'phone_user'  => 'string',
             'nit'  => 'string',
             'razon_social'  => 'string',
             'telefono'  => 'string',
