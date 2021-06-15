@@ -134,4 +134,18 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             ]
             ]);
     }
+    public static function completeDataInvoiceRecurringRequest($invoice)
+    {
+        
+        $fel_invoice = FelInvoiceRequest::whereIdOrigin($invoice->recurring_id)->first();
+
+        return [
+            'felData' => [
+                "codigoActividad" => $fel_invoice->codigoActividad,
+                "codigoLeyenda" => $fel_invoice->codigoLeyenda,
+                "codigoMetodoPago" => $fel_invoice->codigoMetodoPago
+            ]
+        ];
+
+    }
 }
