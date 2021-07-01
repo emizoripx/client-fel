@@ -11,6 +11,8 @@ use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\Currencies;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\PrepagoBags\Utils\ModalityInvoicing;
+use Exception;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 trait HtmlDesignTrait{
 
@@ -517,6 +519,33 @@ trait HtmlDesignTrait{
             
         }
 
+    }
+
+    public function getPaymentQR(){
+        $component = "";
+        if(!$this->fel_invoice->cuf){
+            try {
+                $qr = $this->generateQR();
+                \Log::debug("QR");
+
+                $logoQR = public_path().'/images/qr-simple.jpg';
+
+                \Log::debug("URL ". $logoQR);
+                $component = '
+                        <div id="box-qr">
+                            <div style="font-size: 22px; text-align:center; padding: 5px; color:#3a3939;"><strong>Escanea y paga</strong> desde tu celular</div>
+                            <img src="data:image/jpeg;base64,'.$qr->data->qrImage .'" alt="" title="" width="180" height="180" style="display: -webkit-inline-box; padding: 10px 10px; border: 1px solid gainsboro;" />
+                            <div style="display:flex; padding-top: 5px; justify-content: center; align-items: center; width:100%;">
+                                <span style="font-size:28px; font-weight: 600;">QR </span> &nbsp;&nbsp;
+                                <img src="'.$logoQR.'" height="45"/>
+                            </div>
+                        </div>';
+            } catch (Exception $ex) {
+                \Log::debug("Error to get QR ". $ex->getMessage());
+            }
+        }
+
+        return $component;
     }
 
 }
