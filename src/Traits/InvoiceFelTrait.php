@@ -29,9 +29,10 @@ trait InvoiceFelTrait
 
             $invoice_service->sendToFel();
 
-            $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+            // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+            $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
 
-            $input = $invoice_service->getInvoiceByCuf();
+            $input = $invoice_service->getInvoiceByAckTicket();
 
             
             $hashid = new Hashids (config('ninja.hash_salt'),10);

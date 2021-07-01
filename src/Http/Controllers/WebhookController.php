@@ -19,14 +19,17 @@ class WebhookController extends BaseController
 
     public function callback(Request $request)
     {
-        \Log::debug('Recibo');
+        \Log::debug('Recibo CALLBACK=*******************************************************');
         \Log::debug($request->all());
         
         $data = $request->all();
-        
-        $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
 
-        \Log::debug('Webhook Model');
+        if (isset($data['ack_ticket'])  )
+            $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
+        else
+            $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
+
+        \Log::debug('Webhook Model ===========================================================');
         \Log::debug($invoice);
 
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();

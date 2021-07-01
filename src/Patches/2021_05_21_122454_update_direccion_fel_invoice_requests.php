@@ -33,8 +33,9 @@ class UpdateDireccionFelInvoiceRequests
             try {
                 sleep(2);
                 $invoice_service->setCuf($felInvoice->cuf);
+                $invoice_service->setAckTicket($felInvoice->ack_ticket);
 
-                $invoice = $invoice_service->getInvoiceByCuf();
+                $invoice = $invoice_service->getInvoiceByAckTicket();
 
                 $felInvoice->update([
                     'direccion' => $invoice['direccion']
