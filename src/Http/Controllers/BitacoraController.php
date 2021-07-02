@@ -3,14 +3,12 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\BitacoraLog;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Repository\FelCredentialRepository;
 use Illuminate\Http\Request;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use Exception;
-
 class BitacoraController extends BaseController
 {
 
@@ -20,6 +18,7 @@ class BitacoraController extends BaseController
     }
     public function index(Request $request)
     {
+
         $logs = BitacoraLog::orderBy("id","desc")->simplePaginate(30);
 
         return view('clientfel::bitacora', compact('logs') );
