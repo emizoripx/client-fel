@@ -19,26 +19,33 @@ class WebhookController extends BaseController
 
     public function callback(Request $request)
     {
-        \Log::debug('Recibo CALLBACK=*******************************************************');
+        \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK *******************************************************');
         \Log::debug($request->all());
         
         $data = $request->all();
 
-        if (isset($data['ack_ticket'])  )
+        if (isset($data['ack_ticket'])  ){
+
+            \Log::debug(' WEBHOOK-CONTROLLER ack_ticket used');
             $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
-        else
+        } else{
+            \Log::debug(' WEBHOOK-CONTROLLER cuf used');
             $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
+        }
 
-        \Log::debug('Webhook Model ===========================================================');
-        \Log::debug($invoice);
+        if (empty($invoice)) {
+            \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
+        }
 
+        \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
         $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
-
+        \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
         $this->validateStateCode($data['status_code'], $invoice);
+        \Log::debug(' WEBHOOK-CONTROLLER validate invoice date update');
         $invoice->invoiceDateUpdatedAt();
-
+        \Log::debug(' WEBHOOK-CONTROLLER registering historial');
         fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
-
+        
         if(!$invoice->felCompany()->checkIsPostpago()){
             $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
             if(in_array($data['state'], $stateInvalid)){
@@ -46,7 +53,7 @@ class WebhookController extends BaseController
             }
 
         }
-
+        \Log::debug(' WEBHOOK-CONTROLLER FIN=======================================');
 
         
     }
