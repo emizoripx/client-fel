@@ -55,7 +55,7 @@ class FelInvoiceRequest extends Model
     public function saveAckTicket($value) 
     {
         $this->ack_ticket = $value;
-        return $this;
+        $this->save();
     }
     public function saveUrlSin($value) 
     {
@@ -185,6 +185,7 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->sendToFel();
 
+        $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
         // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
@@ -195,7 +196,6 @@ class FelInvoiceRequest extends Model
         \Log::debug("================================================================================");
         $this->saveState($invoice['estado'])
              ->saveCuf($invoice_service->getResponse()['cuf'])
-             ->saveAckTicket($invoice_service->getResponse()['ack_ticket'])
             //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
              //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']??"")
