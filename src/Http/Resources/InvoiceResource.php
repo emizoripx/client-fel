@@ -96,6 +96,8 @@ class InvoiceResource extends JsonResource
             "montoDescuentoCreditoDebito" => (string) $this->montoDescuentoCreditoDebito,
             "montoEfectivoCreditoDebito" => (string) $this->montoEfectivoCreditoDebito,
 
+            // nota crédito débito
+            "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
         ];
     }
 }
