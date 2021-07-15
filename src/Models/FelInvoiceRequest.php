@@ -3,8 +3,6 @@
 namespace EmizorIpx\ClientFel\Models;
 
 
-use Carbon\Carbon;
-use EmizorIpx\ClientFel\Database\Factories\FelInvoiceRequestFactory;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
@@ -13,7 +11,6 @@ use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
 use EmizorIpx\ClientFel\Traits\InvoiceUpdateDateTrait;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
-use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,7 +43,7 @@ class FelInvoiceRequest extends Model
     protected $host;
 
     protected static function newFactory(){
-        return FelInvoiceRequestFactory::new();
+        return \EmizorIpx\ClientFel\Database\Factories\FelInvoiceRequestFactory::new();
     }
 
     public function getDetallesAttribute()

@@ -1,7 +1,7 @@
 <?php 
 namespace EmizorIpx\ClientFel\Models;
 
-use EmizorIpx\ClientFel\Database\Factories\FelClientFactory;
+
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +23,7 @@ class FelClient extends Model {
     const NIT = 5;
 
     protected static function newFactory(){
-        return FelClientFactory::new();
+        return \EmizorIpx\ClientFel\Database\Factories\FelClientFactory::new();
     }
 
     public static function getByCompanyId($company_id) 
