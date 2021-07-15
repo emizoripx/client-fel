@@ -10,7 +10,6 @@ use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Utils\Traits\GeneratesCounter;
-use EmizorIpx\ClientFel\Database\Factories\InvoiceItemFactory;
 use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
@@ -152,7 +151,7 @@ class DataDummy extends Command
                         'client_id' => $clientData->id
                     ])->each( function ( $invoice ) use ( $company, $user, $clientData, $bar ){
 
-                        $invoice->line_items = InvoiceItemFactory::generate(random_int(1, 4), $company->id, $user->id);
+                        $invoice->line_items = \EmizorIpx\ClientFel\Database\Factories\InvoiceItemFactory::generate(random_int(1, 4), $company->id, $user->id);
                         
                         $invoice->number = $this->getNextInvoiceNumber($clientData, $invoice, $invoice->recurring_id);
                         $invoice->save();
@@ -188,7 +187,7 @@ class DataDummy extends Command
                             'montoTotalSujetoIva' => $invoice->amount,
                             'usuario' => 'Admin',
                             'type_document_sector_id' => 1,
-                            'detalles' => InvoiceItemFactory::makeDetalles($invoice->line_items, $company->id)
+                            'detalles' => \EmizorIpx\ClientFel\Database\Factories\InvoiceItemFactory::makeDetalles($invoice->line_items, $company->id)
                         ]);
 
                         $bar->advance();
