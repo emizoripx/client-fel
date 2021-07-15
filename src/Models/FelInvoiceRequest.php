@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Models;
 
 
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Database\Factories\FelInvoiceRequestFactory;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
@@ -17,6 +18,7 @@ use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FelInvoiceRequest extends Model
 {
@@ -26,6 +28,7 @@ class FelInvoiceRequest extends Model
     use InvoiceUpdateDateTrait;
 
     use SoftDeletes;
+    use HasFactory;
 
     protected $table = "fel_invoice_requests";
 
@@ -41,6 +44,10 @@ class FelInvoiceRequest extends Model
 
     protected $access_token;
     protected $host;
+
+    protected static function newFactory(){
+        return FelInvoiceRequestFactory::new();
+    }
 
     public function getDetallesAttribute()
     {
