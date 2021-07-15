@@ -30,7 +30,10 @@ class ClientFelServiceProvider extends ServiceProvider
     {
         # ROUTES
         $this->loadRoutesFrom(__DIR__ . "/routes/Bitacora.php");
-        
+
+        #FACTORIES
+        $this->loadFactoriesFrom(__DIR__ . '/database/factories');
+
         # MIGRATIONS
         $this->loadMigrationsFrom(__DIR__ . "/database/migrations");
 
