@@ -18,7 +18,7 @@
         "psr-4":{
 
             "EmizorIpx\\ClientFel\\":"src/",
-            "EmizorIpx\\ClientFel\\Database\\Factories\\": "database/Factories"
+            "EmizorIpx\\ClientFel\\Database\\Factories\\": "database/factories"
         }
     },
     "extra": {

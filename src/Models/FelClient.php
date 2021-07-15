@@ -23,7 +23,7 @@ class FelClient extends Model {
     const NIT = 5;
 
     protected static function newFactory(){
-        return \EmizorIpx\ClientFel\Database\Factories\FelClientFactory::new();
+        return \EmizorIpx\ClientFel\Database\factories\FelClientFactory::new();
     }
 
     public static function getByCompanyId($company_id) 

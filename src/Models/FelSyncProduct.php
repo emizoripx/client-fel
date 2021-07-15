@@ -18,7 +18,7 @@ class FelSyncProduct extends Model
     protected $guarded = [];
 
     protected static function newFactory(){
-        return \EmizorIpx\ClientFel\Database\Factories\FelSyncProductFactory::new();
+        return \EmizorIpx\ClientFel\Database\factories\FelSyncProductFactory::new();
     }
 
     public static function getByCompanyId($company_id) {

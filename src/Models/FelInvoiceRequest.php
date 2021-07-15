@@ -43,7 +43,7 @@ class FelInvoiceRequest extends Model
     protected $host;
 
     protected static function newFactory(){
-        return \EmizorIpx\ClientFel\Database\Factories\FelInvoiceRequestFactory::new();
+        return \EmizorIpx\ClientFel\Database\factories\FelInvoiceRequestFactory::new();
     }
 
     public function getDetallesAttribute()
