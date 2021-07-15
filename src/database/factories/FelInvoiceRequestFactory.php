@@ -1,6 +1,6 @@
 <?php
  
-namespace EmizorIpx\ClientFel\Database\Factories;
+
 
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use Illuminate\Database\Eloquent\Factories\Factory;

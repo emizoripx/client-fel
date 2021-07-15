@@ -1,7 +1,5 @@
 <?php
  
-namespace EmizorIpx\ClientFel\Database\Factories;
-
 use EmizorIpx\ClientFel\Models\FelClient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
