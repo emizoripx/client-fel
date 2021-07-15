@@ -1,7 +1,7 @@
 <?php
 namespace EmizorIpx\ClientFel\Models;
 
-use EmizorIpx\ClientFel\Database\factories\FelSyncProductFactory;
+use EmizorIpx\ClientFel\Database\Factories\FelSyncProductFactory;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 
 use Illuminate\Database\Eloquent\Model;
