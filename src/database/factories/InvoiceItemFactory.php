@@ -9,7 +9,7 @@
  * @license https://www.elastic.co/licensing/elastic-license
  */
 
-namespace EmizorIpx\ClientFel\Database\Factories;
+namespace EmizorIpx\ClientFel\Database\factories;
 
 use App\Models\Product;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;

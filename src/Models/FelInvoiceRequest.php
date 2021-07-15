@@ -4,7 +4,7 @@ namespace EmizorIpx\ClientFel\Models;
 
 
 use Carbon\Carbon;
-use EmizorIpx\ClientFel\Database\Factories\FelInvoiceRequestFactory;
+use EmizorIpx\ClientFel\Database\factories\FelInvoiceRequestFactory;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
