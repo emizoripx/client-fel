@@ -80,6 +80,17 @@ class FelInvoiceRequest extends Model
         return self::whereIdOrigin($id_origin_decode)->first();
     }
 
+    public function getFacturaOriginalIdHashedAttribute()
+    {
+        if ( is_null($this->factura_original_id)) 
+            return null;
+        
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+        return $hashid->encode($this->factura_original_id);
+        
+    }
+
 
     public static function getByCompanyId($company_id)
     {

@@ -26,7 +26,7 @@ class Presenter {
 
         $data["fel_data"]["parametrics"] = $parametrics;
         
-        $data["fel_data"]["invoices"] = InvoiceResource::collection( FelInvoiceRequest::getByCompanyId($company_id) );
+        // $data["fel_data"]["invoices"] = InvoiceResource::collection( FelInvoiceRequest::getByCompanyId($company_id) );
 
         // $data["fel_data"]["products"] = ProductResource::collection(FelSyncProduct::getByCompanyId($company_id));
 
