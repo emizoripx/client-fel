@@ -1,15 +1,18 @@
 <?php 
 namespace EmizorIpx\ClientFel\Models;
 
+use Database\Factories\FelClientFactory;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FelClient extends Model {
 
     use SoftDeletes;
     use DecodeHashIds;
+    use HasFactory;
     protected $table = 'fel_clients';
     protected $guarded =[];
 
@@ -18,6 +21,10 @@ class FelClient extends Model {
     const PAS = 3;
     const OD = 4;
     const NIT = 5;
+
+    protected static function newFactory(){
+        return FelClientFactory::new();
+    }
 
     public static function getByCompanyId($company_id) 
     {
