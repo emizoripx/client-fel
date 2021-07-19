@@ -1,7 +1,7 @@
 <?php
 namespace EmizorIpx\ClientFel\Models;
 
-
+use Database\Factories\FelSyncProductFactory;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +18,7 @@ class FelSyncProduct extends Model
     protected $guarded = [];
 
     protected static function newFactory(){
-        return \EmizorIpx\ClientFel\Database\factories\FelSyncProductFactory::new();
+        return FelSyncProductFactory::new();
     }
 
     public static function getByCompanyId($company_id) {
