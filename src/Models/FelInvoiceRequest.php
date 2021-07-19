@@ -2,7 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
-
+use Database\Factories\FelInvoiceRequestFactory;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
@@ -43,7 +43,7 @@ class FelInvoiceRequest extends Model
     protected $host;
 
     protected static function newFactory(){
-        return \EmizorIpx\ClientFel\Database\factories\FelInvoiceRequestFactory::new();
+        return FelInvoiceRequestFactory::new();
     }
 
     public function getDetallesAttribute()
