@@ -34,7 +34,23 @@ class WebhookBranch extends BaseController
                             "ciudad" => $data['city'],
                             "municipio" => $data['municipalidad']
                         ]);
+
                         \Log::debug("Branch created");
+                        // sync sector document type
+                        $fel_sector_document_types = \DB::table('fel_sector_document_types')->whereCompanyId($company_id)->whereCodigoSucursal(0)->get();
+
+                        foreach ($fel_sector_document_types as $fel_sector_document_type) {
+                            
+                            \DB::table('fel_sector_document_types')->insert([
+                                "company_id" => $fel_sector_document_type->company_id,
+                                "codigoSucursal" => $branch->codigo,
+                                "documentoSector" => $fel_sector_document_type->documentoSector,
+                                "tipoFactura" => $fel_sector_document_type->tipoFactura,
+                                "codigo" => $fel_sector_document_type->codigo,
+                            ]);
+                        }
+                        \Log::debug("fel_sector_document_types assigned");
+                       
                         \Log::debug("Company ID: " . $company->id . " Branch #" . $data["code"]);
                     }
                 } else {
