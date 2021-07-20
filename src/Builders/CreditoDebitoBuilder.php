@@ -35,7 +35,7 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
         $input = array_merge(
             $this->input,
             [
-                "factura_original_id" => $invoice_origin->id,
+                "factura_original_id" => $invoice_origin->id_origin,
                 "numeroFacturaOriginal" => $invoice_origin->numeroFactura,
                 "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
                 "montoDescuentoCreditoDebito" => $this->source_data['fel_data_parsed']["montoDescuentoCreditoDebito"],
