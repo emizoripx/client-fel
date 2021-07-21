@@ -223,7 +223,8 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->revocateInvoice();
 
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
     }
@@ -234,7 +235,8 @@ class FelInvoiceRequest extends Model
         $invoice_service->setAccessToken($this->access_token);
         $invoice_service->setCuf($this->cuf);
 
-        $invoice_service->reversionRevocateInvoice();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $invoice = $invoice_service->getInvoiceByAckTicket();
 
@@ -252,9 +254,10 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->updateInvoice();
 
-        // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->save();
 
