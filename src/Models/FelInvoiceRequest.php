@@ -54,8 +54,10 @@ class FelInvoiceRequest extends Model
     }
     public function saveAckTicket($value) 
     {
+        \Log::debug("Saving AckTicket......");
         $this->ack_ticket = $value;
         $this->save();
+        \Log::debug("Save AckTicket......");
     }
     public function saveUrlSin($value) 
     {
@@ -86,6 +88,14 @@ class FelInvoiceRequest extends Model
 
     public function saveState($value){
         $this->estado = $this->getInvoiceState($value);
+        return $this;
+    }
+    public function savePackageId($value){
+        $this->package_id = $value;
+        return $this;
+    }
+    public function saveIndexPackage($value){
+        $this->index_package = $value;
         return $this;
     }
 
@@ -192,7 +202,7 @@ class FelInvoiceRequest extends Model
         
         $invoice = $invoice_service->getInvoiceByAckTicket();
         \Log::debug("================================================================================");
-        \Log::debug([$invoice_service->getResponse()]);
+        // \Log::debug([$invoice_service->getResponse()]);
         \Log::debug("================================================================================");
         $this->saveState($invoice['estado'])
              ->saveCuf($invoice_service->getResponse()['cuf'])

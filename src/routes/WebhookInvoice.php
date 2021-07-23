@@ -13,6 +13,9 @@ class WebhookInvoice
         Route::group(['namespace' => "\EmizorIpx\ClientFel\Http\Controllers", "prefix" => "webhook/"], function () {
 
             Route::post('status-invoice', 'WebhookController@callback');
+
+
+            Route::post('status-package', 'PackageWebhookController@callback');
         });
     }
 }
