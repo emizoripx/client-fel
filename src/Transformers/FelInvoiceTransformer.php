@@ -80,6 +80,7 @@ class FelInvoiceTransformer extends EntityTransformer{
             "emission_type" => $felInvoice->emission_type,
             "codigo_sucursal" => $felInvoice->codigoSucursal,
             "codigo_pos" => $felInvoice->codigoPuntoVenta,
+            "idFacturaOriginal" => $felInvoice->factura_original_id_hashed,
         ];
 
     }
