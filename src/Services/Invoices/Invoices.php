@@ -30,6 +30,8 @@ class Invoices extends BaseConnection
 
     protected $prepared_data;
 
+    protected $ack_ticket;
+
     public function __construct($host)
     {
         parent::__construct($host);
