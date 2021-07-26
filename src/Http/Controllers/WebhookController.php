@@ -53,7 +53,7 @@ class WebhookController extends BaseController
     
             \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
 
-            $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->save();
+            $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->saveCuf($data['cuf'])->save();
 
             \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
 
