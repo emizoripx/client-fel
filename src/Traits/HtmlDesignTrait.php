@@ -526,7 +526,9 @@ trait HtmlDesignTrait{
         if(!$this->fel_invoice->cuf){
             try {
                 $qr = $this->generateQR();
-                \Log::debug("QR");
+                if (!$qr || !isset($qr->data))
+                    return "";
+                \Log::debug("QR cambiado");
 
                 $logoQR = public_path().'/images/qr-simple.jpg';
 

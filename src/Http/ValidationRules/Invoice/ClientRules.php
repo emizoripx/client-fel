@@ -9,7 +9,8 @@ class ClientRules {
     public static function additionalClientRules(){
         return [
             'name' => 'required|string',
-            'id_number' => 'required|string',
+            'id_number' => 'sometimes|string',
+            'document_number' => 'sometimes|string',
             'type_document_id' => [
                 'required',
                 'integer',
