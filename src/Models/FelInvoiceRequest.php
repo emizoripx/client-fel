@@ -265,7 +265,7 @@ class FelInvoiceRequest extends Model
         // $invoice = $invoice_service->getInvoiceByAckTicket();
         $invoice = $invoice_service->getInvoiceByCuf();
 
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
 
         $this->saveState($invoice['estado'])->save();
     }
