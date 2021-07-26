@@ -58,8 +58,10 @@ class FelInvoiceRequest extends Model
     }
     public function saveAckTicket($value) 
     {
+        \Log::debug("Saving AckTicket......");
         $this->ack_ticket = $value;
-        return $this;
+        $this->save();
+        \Log::debug("Save AckTicket......");
     }
     public function saveUrlSin($value) 
     {
@@ -101,6 +103,14 @@ class FelInvoiceRequest extends Model
 
     public function saveState($value){
         $this->estado = $this->getInvoiceState($value);
+        return $this;
+    }
+    public function savePackageId($value){
+        $this->package_id = $value;
+        return $this;
+    }
+    public function saveIndexPackage($value){
+        $this->index_package = $value;
         return $this;
     }
 
@@ -200,17 +210,17 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->sendToFel();
 
+        $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
         // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
         
         $invoice = $invoice_service->getInvoiceByAckTicket();
         \Log::debug("================================================================================");
-        \Log::debug([$invoice_service->getResponse()]);
+        // \Log::debug([$invoice_service->getResponse()]);
         \Log::debug("================================================================================");
         $this->saveState($invoice['estado'])
              ->saveCuf($invoice_service->getResponse()['cuf'])
-             ->saveAckTicket($invoice_service->getResponse()['ack_ticket'])
             //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
              //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']??"")
@@ -225,6 +235,8 @@ class FelInvoiceRequest extends Model
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
             $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
+        } else {
+            $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
         }
     }
 
@@ -238,7 +250,8 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->revocateInvoice();
 
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
     }
@@ -249,7 +262,8 @@ class FelInvoiceRequest extends Model
         $invoice_service->setAccessToken($this->access_token);
         $invoice_service->setCuf($this->cuf);
 
-        $invoice_service->reversionRevocateInvoice();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $invoice = $invoice_service->getInvoiceByAckTicket();
 
@@ -267,9 +281,10 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->updateInvoice();
 
-        // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->save();
 

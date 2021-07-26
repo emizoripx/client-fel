@@ -15,6 +15,9 @@ class WebhookInvoice
             Route::post('status-invoice', 'WebhookController@callback');
             
             Route::post('update-branch', 'WebhookBranch@updateBranch');
+
+
+            Route::post('status-package', 'PackageWebhookController@callback');
         });
     }
 }

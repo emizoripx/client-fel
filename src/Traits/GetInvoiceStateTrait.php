@@ -63,6 +63,9 @@ trait GetInvoiceStateTrait{
             case InvoiceStates::INVOICE_REVERSION_STATE_INTERNAL_ERROR:
                 return "ERROR INTERNO";
                 break;
+            case InvoiceStates::INVOICE_STATE_QUEUE_PENDING:
+                return "PENDIENTE";
+                break;
             
             default:
                 return "ESTADO DESCONOCIDO";
