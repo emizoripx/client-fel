@@ -66,6 +66,9 @@ trait GetInvoiceStateTrait{
             case InvoiceStates::INVOICE_STATE_QUEUE_PENDING:
                 return "PENDIENTE";
                 break;
+            case InvoiceStates::INVOICE_STATE_QUEUE_PENDING_CUF:
+                return "EN ESPERA";
+                break;
             
             default:
                 return "ESTADO DESCONOCIDO";

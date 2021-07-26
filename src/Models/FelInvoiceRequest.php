@@ -220,7 +220,7 @@ class FelInvoiceRequest extends Model
         // \Log::debug([$invoice_service->getResponse()]);
         \Log::debug("================================================================================");
         $this->saveState($invoice['estado'])
-             ->saveCuf($invoice_service->getResponse()['cuf'])
+            //  ->saveCuf($invoice_service->getResponse()['cuf'])
             //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
              //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']??"")
