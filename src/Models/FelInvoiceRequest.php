@@ -220,6 +220,8 @@ class FelInvoiceRequest extends Model
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
             $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
+        } else {
+            $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
         }
     }
 
