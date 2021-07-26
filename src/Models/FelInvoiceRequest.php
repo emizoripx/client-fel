@@ -262,6 +262,7 @@ class FelInvoiceRequest extends Model
         $invoice_service->setAccessToken($this->access_token);
         $invoice_service->setCuf($this->cuf);
 
+        $invoice_service->reversionRevocateInvoice();
         // $invoice = $invoice_service->getInvoiceByAckTicket();
         $invoice = $invoice_service->getInvoiceByCuf();
 
