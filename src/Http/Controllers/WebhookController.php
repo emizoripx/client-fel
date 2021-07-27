@@ -26,13 +26,15 @@ class WebhookController extends BaseController
 
         if(isset($data['package_id'])){
             \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
-            $felInvoice = FelInvoiceRequest::where('ack_ticket', $data['ack_ticket'])->first();
+            $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
 
             if (!empty($felInvoice)) 
                 $felInvoice->savePackageId($data['package_id'])
                 ->saveState($data['state'])
                 ->saveStatusCode($data['status_code'])
                 ->saveIndexPackage($data['index_package'])
+                ->saveCuf($data['cuf'])
+                ->saveEmisionType($data['emission_type'])
                 ->save();
             else
                 \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
@@ -53,7 +55,7 @@ class WebhookController extends BaseController
     
             \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
 
-            $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->saveCuf($data['cuf'])->save();
+            $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->saveEmisionType($data['emission_type'])->saveCuf($data['cuf'])->save();
 
             \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
 
