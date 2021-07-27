@@ -14,7 +14,7 @@ class AddCounterPostpagoToFelCompanyDocumentSectorsTable extends Migration
     public function up()
     {
         Schema::table('fel_company_document_sectors', function (Blueprint $table) {
-            $table->unsignedInteger('postpago_counter')->after('counter');
+            $table->unsignedInteger('postpago_counter')->after('counter')->default(0);
         });
     }
 
