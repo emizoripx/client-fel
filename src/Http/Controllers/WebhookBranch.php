@@ -13,7 +13,7 @@ class WebhookBranch extends BaseController
     {
 
         $data = $request->get('data');
-        $new_branch = $request->get('new_branch');
+        
         \Log::debug("Data");
         \Log::debug($data);
 
@@ -23,12 +23,12 @@ class WebhookBranch extends BaseController
         if ($companies) {
             foreach ($companies as $company) {
                 
-                $branch = FelBranch::where('codigo', $data['code'])->where('company_id', $company->id)->first();
+                $branch = FelBranch::where('codigo', $data['code'])->where('company_id', $company->company_id)->first();
                 if (empty($branch)) {
                         FelBranch::create([
                             "codigo" => $data['code'],
                             "descripcion" => $data['code'] == 0 ? "Casa Matriz" : "Sucursal " . $data["code"],
-                            "company_id" => $company->id,
+                            "company_id" => $company->company_id,
                             "zona" => $data['zone'],
                             "pais" => $data['country'],
                             "ciudad" => $data['city'],
@@ -38,7 +38,7 @@ class WebhookBranch extends BaseController
                         \Log::debug("Branch created");
 
                         // sync sector document type
-                        $fel_sector_document_types = \DB::table('fel_sector_document_types')->whereCompanyId($company->id)->where('codigoSucursal', 0)->get();
+                        $fel_sector_document_types = \DB::table('fel_sector_document_types')->whereCompanyId($company->company_id)->where('codigoSucursal', 0)->get();
                         foreach ($fel_sector_document_types as $fel_sector_document_type) {
                             
                             \DB::table('fel_sector_document_types')->insert([
@@ -51,14 +51,14 @@ class WebhookBranch extends BaseController
                         }
                         \Log::debug("fel_sector_document_types assigned");
                        
-                        \Log::debug("Company ID: " . $company->id . " Branch #" . $data["code"]);
+                        \Log::debug("Company ID: " . $company->company_id . " Branch #" . $data["code"]);
                 } else {
                     \Log::debug("Branch Updated");
 
                     if($branch){
                         $branch->codigo = $data['code'];
                         $branch->descripcion = $data['code'] == 0 ? "Casa Matriz" : "Sucursal " . $data["code"];
-                        $branch->company_id = $company->id;
+                        $branch->company_id = $company->company_id;
                         $branch->zona = $data['zone'];
                         $branch->pais = $data['country'];
                         $branch->ciudad = $data['city'];

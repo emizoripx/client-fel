@@ -147,9 +147,14 @@ class FelInvoiceRequest extends Model
     {
         $this->emission_type = 'Fuera de línea';
 
-        if ($value == 1){
-            $this->emission_type = 'En línea';
-        }
+        if (is_array($value))
+            if ($value['codigo'] == 1) {
+                $this->emission_type = 'En línea';
+            }
+        else
+            if ($value == 1){
+                $this->emission_type = 'En línea';
+            }
         return $this;
     }
 
@@ -225,6 +230,7 @@ class FelInvoiceRequest extends Model
              //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']??"")
              ->saveEmisionDate($invoice['fechaEmision'])
+             ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
              ->saveAddressInvoice($invoice['direccion'])
              ->save();
