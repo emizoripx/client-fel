@@ -53,19 +53,26 @@ class FelInvoiceRequest extends Model
 
     public function saveCuf($value) 
     {
-        $this->cuf = $value;
+        if(!is_null($value)){
+            
+            $this->cuf = $value;
+        }
         return $this;
     }
     public function saveAckTicket($value) 
     {
         \Log::debug("Saving AckTicket......");
-        $this->ack_ticket = $value;
-        $this->save();
+        if(! is_null($value)){
+            $this->ack_ticket = $value;
+            $this->save();
+        }
         \Log::debug("Save AckTicket......");
     }
     public function saveUrlSin($value) 
     {
-        $this->urlSin = $value;
+        if(!is_null($value)){
+            $this->urlSin = $value;
+        }
         return $this;
     }
     public function getUrlSin() 
@@ -102,7 +109,10 @@ class FelInvoiceRequest extends Model
     }
 
     public function saveState($value){
-        $this->estado = $this->getInvoiceState($value);
+        if(!is_null($value)){
+
+            $this->estado = $this->getInvoiceState($value);
+        }
         return $this;
     }
     public function savePackageId($value){
@@ -120,7 +130,10 @@ class FelInvoiceRequest extends Model
     }
 
     public function saveStatusCode($value){
-        $this->codigoEstado = $value;
+        if(!is_null($value)){
+
+            $this->codigoEstado = $value;
+        }
         return $this;
     }
 
@@ -145,16 +158,18 @@ class FelInvoiceRequest extends Model
     
     public function saveEmisionType( $value)
     {
-        $this->emission_type = 'Fuera de línea';
+        if(! is_null($value)){
+            $this->emission_type = 'Fuera de línea';
 
-        if (is_array($value))
-            if ($value['codigo'] == 1) {
-                $this->emission_type = 'En línea';
-            }
-        else
-            if ($value == 1){
-                $this->emission_type = 'En línea';
-            }
+            if (is_array($value))
+                if ($value['codigo'] == 1) {
+                    $this->emission_type = 'En línea';
+                }
+            else
+                if ($value == 1){
+                    $this->emission_type = 'En línea';
+                }
+        }
         return $this;
     }
 
@@ -171,7 +186,9 @@ class FelInvoiceRequest extends Model
 
     public function saveAddressInvoice($value){
         
-        $this->direccion = $value;
+        if( !is_null($value)){
+            $this->direccion = $value;
+        }
 
         return $this;
     }
@@ -228,11 +245,11 @@ class FelInvoiceRequest extends Model
             //  ->saveCuf($invoice_service->getResponse()['cuf'])
             //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
              //  ->saveUrlSin($invoice['urlSin'])
-             ->saveUrlSin($invoice['urlSin']??"")
+             ->saveUrlSin($invoice['urlSin']?? null)
              ->saveEmisionDate($invoice['fechaEmision'])
              ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
-             ->saveAddressInvoice($invoice['direccion'])
+            //  ->saveAddressInvoice($invoice['direccion'])
              ->save();
 
         $this->invoiceDateUpdate();
@@ -292,7 +309,7 @@ class FelInvoiceRequest extends Model
         // $invoice = $invoice_service->getInvoiceByAckTicket();
         $invoice = $invoice_service->getInvoiceByCuf();
 
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->save();
+        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->saveUrlSin($invoice['urlSin']?? null)->save();
 
     }
 

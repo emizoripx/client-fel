@@ -22,20 +22,36 @@ class WebhookController extends BaseController
         \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK *******************************************************');
         \Log::debug($request->all());
 
-        $data = $request->all();
+        $data = [
+            'package_id' => $request->input('package_id', null),
+            'ack_ticket' => $request->input('ack_ticket', null),
+            'state' => $request->input('state', null),
+            'status_code' => $request->input('status_code', null),
+            'index_package' => $request->input('index_package', null),
+            'cuf' => $request->input('cuf', null),
+            'urlSin' => $request->input('urlSin', null),
+            'emission_type' => $request->input('emission_type', null),
+            'direccion' => $request->input('direccion', null),
+            'sin_errors' => $request->input('sin_errors', null),
+            'reception_code' => $request->input('reception_code', null),
+        ];
 
         if(isset($data['package_id'])){
             \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
             $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
 
-            if (!empty($felInvoice)) 
+            if (!empty($felInvoice)){ 
                 $felInvoice->savePackageId($data['package_id'])
                 ->saveState($data['state'])
                 ->saveStatusCode($data['status_code'])
                 ->saveIndexPackage($data['index_package'])
                 ->saveCuf($data['cuf'])
+                ->saveUrlSin($data['urlSin'])
                 ->saveEmisionType($data['emission_type'])
+                ->saveAddressInvoice($data['direccion'])
                 ->save();
+
+            }
             else
                 \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
         } else{
@@ -55,7 +71,15 @@ class WebhookController extends BaseController
     
             \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
 
-            $invoice->saveState($data['state'])->saveStatusCode($data['status_code'])->saveSINErrors($data['sin_errors'])->saveEmisionType($data['emission_type'])->saveCuf($data['cuf'])->save();
+            $invoice->saveState($data['state'])
+                    ->saveStatusCode($data['status_code'])
+                    ->saveSINErrors($data['sin_errors'])
+                    ->saveCuf($data['cuf'])
+                    ->saveUrlSin($data['urlSin'])
+                    ->saveEmisionType($data['emission_type'])
+                    ->saveAddressInvoice($data['direccion'])
+                    ->save();
+
 
             \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
 
