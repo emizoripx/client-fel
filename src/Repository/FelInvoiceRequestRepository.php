@@ -50,7 +50,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         bitacora_info("FelInvoiceRequestRepository:delete", "");
 
         try {
-
+            // This will only process PREFACTURAS
             $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->whereNull('cuf')->first();
 
 
