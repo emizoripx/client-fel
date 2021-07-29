@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Models;
 
+use App\Models\Invoice;
 use Database\Factories\FelInvoiceRequestFactory;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
@@ -161,14 +162,14 @@ class FelInvoiceRequest extends Model
         if(! is_null($value)){
             $this->emission_type = 'Fuera de línea';
 
-            if (is_array($value))
+            if (is_array($value)){
                 if ($value['codigo'] == 1) {
                     $this->emission_type = 'En línea';
-                }
-            else
+                }}
+            else{
                 if ($value == 1){
                     $this->emission_type = 'En línea';
-                }
+                }}
         }
         return $this;
     }
@@ -357,6 +358,6 @@ class FelInvoiceRequest extends Model
 
     }
     public function getFacturaOrigin(){
-        return self::where('id', $this->factura_original_id)->first();
+        return Invoice::where('id', $this->factura_original_id)->first();
     }
 }

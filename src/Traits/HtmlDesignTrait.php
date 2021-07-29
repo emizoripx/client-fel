@@ -482,9 +482,9 @@ trait HtmlDesignTrait{
     public function appendFieldCreditoDebito( $data ){
         $facturaOriginal = $this->fel_invoice->getFacturaOrigin();
 
-        $data['$fel.client_details'] = [ 'value' => $this->makeClientDetailCreditoDebito($facturaOriginal), 'label' => 'Detalles Cliente Debito' ];
+        $data['$fel.client_details'] = [ 'value' => $this->makeClientDetailCreditoDebito($facturaOriginal->fel_invoice), 'label' => 'Detalles Cliente Debito' ];
 
-        $data['$fel.products_rows_original'] = [ 'value' => $this->makeRowsProductFacturaOriginal($facturaOriginal->detalles, $facturaOriginal->codigoMoneda ,false), 'label' => 'Detalles Productos' ];
+        $data['$fel.products_rows_original'] = [ 'value' => $this->makeRowsProductFacturaOriginal($facturaOriginal->fel_invoice->detalles, $facturaOriginal->fel_invoice->codigoMoneda ,false), 'label' => 'Detalles Productos' ];
         $data['$fel.products_rows_devolucion'] = [ 'value' => $this->makeRowsProductFacturaOriginal($this->fel_invoice->detalles, $this->fel_invoice->codigoMoneda, true), 'label' => 'Detalles Productos' ];
 
         $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
