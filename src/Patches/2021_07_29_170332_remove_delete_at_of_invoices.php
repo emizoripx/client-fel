@@ -12,19 +12,19 @@ class RemoveDeleteAtOfInvoices
      */
     public function run()
     {
-        // TODO
+        // TODO se comento porque hubieron problemas en desarrollo
 
-        \DB::table('fel_invoice_requests')->whereNotNull('cuf')->whereNotNull('deleted_at')->update([
-            'deleted_at' => null
-        ]);
+        // \DB::table('fel_invoice_requests')->whereNotNull('cuf')->whereNotNull('deleted_at')->update([
+        //     'deleted_at' => null
+        // ]);
 
-        \Log::debug("Updated FelInvoiceRequest");
+        // \Log::debug("Updated FelInvoiceRequest");
 
-        \DB::table('invoices')->whereNotNull('deleted_at')->update([
-            'deleted_at' => null
-        ]);
+        // \DB::table('invoices')->whereNotNull('deleted_at')->update([
+        //     'deleted_at' => null
+        // ]);
 
-        \Log::debug("Updated Invoices");
+        // \Log::debug("Updated Invoices");
 
     }
 }
