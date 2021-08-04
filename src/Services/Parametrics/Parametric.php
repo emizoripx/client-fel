@@ -22,8 +22,9 @@ class Parametric extends BaseConnection
         parent::__construct($host);
     }
 
-    public function get($type)
+    public function get($type, $updated_at = '', $all='')
     {
+        \Log::debug('/api/v1/parametricas/' . $type.'?updated_at=' .$updated_at. '&all=' .$all);
         try {
 
             if($type == TypeParametrics::TIPOS_DOCUMENTO_SECTOR){
@@ -31,7 +32,7 @@ class Parametric extends BaseConnection
             } 
             else{
                 
-                $response = $this->client->request('GET', '/api/v1/parametricas/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+                $response = $this->client->request('GET', '/api/v1/parametricas/' . $type.'?updated_at=' .$updated_at. '&all=' .$all, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
             }
 
             

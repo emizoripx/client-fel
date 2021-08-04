@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use Carbon\Carbon;
+use DateTime;
 
 class FelParametric
 {
@@ -235,6 +236,157 @@ class FelParametric
             default:
                 throw new ClientFelException("No existe el tipo de parametrica");
                 break;
+        }
+    }
+
+    public static function createOrUpdate($type, $data, $company_id = null){
+
+        switch ($type) {
+            case TypeParametrics::ACTIVIDADES:
+
+                    $felActivity = FelActivity::where('company_id', $company_id)->where('codigo', $data['codigo'])->first();
+
+                    if(is_null($felActivity)){
+
+                        unset($data['isActive']);
+                        static::create($type, [$data], $company_id);
+                        \Log::debug("Saved Actividad codigo #". $data['codigo']);
+                    }
+                    elseif ( !is_null($felActivity) && $data['isActive'] == false) {
+                        $felActivity->delete();
+                        \Log::debug("Delete Actividad codigo #". $data['codigo']);
+                    } 
+                    else{
+                        \Log::debug("updating Actividad codigo #". $data['codigo']);
+                        $felActivity->update([
+                            'codigo' => $data['codigo'],
+                            'descripcion' => $data['descripcion'],
+                            'tipoActividad' => $data['tipoActividad'],
+                            'updated_at' => Carbon::now()->toDateTimeString()
+                        ]);
+                    }
+                break;
+            case TypeParametrics::LEYENDAS:
+                    $felCaption = FelCaption::where('company_id', $company_id)->where('codigo', $data['codigo'])->where('codigoActividad', $data['codigoActividad'])->first();
+
+                    if(is_null($felCaption)){
+                        unset($data['isActive']);
+                        static::create($type, [$data], $company_id);
+                        \Log::debug("Saved Leyenda codigo #". $data['codigo']);
+                    }
+                    elseif (!is_null($felCaption) && $data['isActive'] == false) {
+                        \Log::debug("Delete Leyenda codigo #". $data['codigo']);
+                        $felCaption->delete();
+                    }
+                    else{
+                        \Log::debug("updating Leyenda codigo #". $data['codigo']);
+                        $felCaption->update([
+                            'codigo' => $data['codigo'],
+                            'descripcion' => $data['descripcion'],
+                            'codigoActividad' => $data['codigoActividad'],
+                            'updated_at' => Carbon::now()->toDateTimeString()
+                        ]);
+                    }
+                break;
+            case TypeParametrics::PRODUCTOS_SIN:
+
+                $sinProduct = SINProduct::where('company_id', $company_id)->where('codigo', $data['codigo'])->where('codigoActividad', $data['codigoActividad'])->first();
+
+                if(is_null($sinProduct)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved Producto SIN codigo #". $data['codigo']);
+                }
+                elseif (!is_null($sinProduct) && $data['isActive'] == false) {
+                    $sinProduct->delete();
+                    \Log::debug("Delete Producto SIN codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating Producto SIN codigo #". $data['codigo']);
+                    $sinProduct->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'codigoActividad' => $data['codigoActividad'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
+
+                $felActivityDocumentSector = FelActivityDocumentSector::where('company_id', $company_id)->where('codigoDocumentoSector', $data['codigo'])->where('codigoActividad', $data['codigoActividad'])->first();
+
+                if(is_null($felActivityDocumentSector)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved Actividad Doc Sector codigo #". $data['codigo']);
+                }
+                elseif (!is_null($felActivityDocumentSector) && $data['isActive'] == false) {
+                    $felActivityDocumentSector->delete();
+                    \Log::debug("Delete Actividad Doc Sector codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating Actividad Doc Sector codigo #". $data['codigo']);
+                    $felActivityDocumentSector->update([
+                        'codigoDocumentoSector' => $data['codigo'],
+                        'actividad' => $data['actividad'],
+                        'codigoActividad' => $data['codigoActividad'],
+                        'documentoSector' => $data['descripcion'],
+                        'tipoDocumentoSector' => $data['tipoDocumentoSector'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            
+            default:
+                throw new ClientFelException("No existe el tipo este metodo");
+                break;
+        }
+
+    }
+
+    public static function getUpdatedAt($type, $company_id){
+        switch ($type) {
+            case TypeParametrics::ACTIVIDADES:
+                $updated_at = FelActivity::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". $updated_at);
+                return strtotime($updated_at);
+                
+                break;
+            case TypeParametrics::LEYENDAS:
+                $updated_at = FelCaption::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: " .strtotime($updated_at));
+                return strtotime( $updated_at );
+
+                break;
+            case TypeParametrics::PRODUCTOS_SIN:
+                $updated_at = SINProduct::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". $updated_at);
+                return strtotime($updated_at);
+
+                break;
+            case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
+                $updated_at = FelActivityDocumentSector::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            
+            default:
+                throw new ClientFelException("No existe el tipo este metodo");
+                break;
+        }
+    }
+
+    public static function saveParametrics($type, $company_id, $data){
+        foreach ($data as $item) {
+            try {
+                static::createOrUpdate($type, $item, $company_id);
+                \Log::debug("Saved Parametric");
+            } catch (ClientFelException $ex) {
+                \Log::debug("Error to save parametric ". $ex->getMessage());
+            }
         }
     }
 }
