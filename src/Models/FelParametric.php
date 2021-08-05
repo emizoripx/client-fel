@@ -338,6 +338,169 @@ class FelParametric
                 }
 
                 break;
+            case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
+
+                $felSectorDocument = SectorDocumentTypes::where('company_id', $company_id)->where('codigo', $data['codigoDocumentSector'])->where('codigoSucursal', $data['codigoSucursal'])->first();
+
+                if(is_null($felSectorDocument)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved SectorDocument codigo #". $data['codigoDocumentSector']);
+                }
+                elseif (!is_null($felSectorDocument) && $data['isActive'] == false) {
+                    $felSectorDocument->delete();
+                    \Log::debug("Delete SectorDocument codigo #". $data['codigoDocumentSector']);
+                }
+                else {
+                    \Log::debug("updating SectorDocument codigo #". $data['codigoDocumentSector']);
+                    $felSectorDocument->update([
+                        'codigoSucursal' => $data['codigoSucursal'],
+                        'codigo' => $data['codigoDocumentSector'],
+                        'documentoSector' => $data['documentoSector'],
+                        'tipoFactura' => $data['tipoFactura'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::MOTIVO_ANULACION:
+
+                $motivoAnulacion = RevocationReason::where('codigo', $data['codigo'])->first();
+
+                if(is_null($motivoAnulacion)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved Motivo Anulacion codigo #". $data['codigo']);
+                }
+                elseif (!is_null($motivoAnulacion) && $data['isActive'] == false) {
+                    $motivoAnulacion->delete();
+                    \Log::debug("Delete Motivo Anulacion codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating Motivo Anulacion codigo #". $data['codigo']);
+                    $motivoAnulacion->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::PAISES:
+
+                $pais = Country::where('codigo', $data['codigo'])->first();
+
+                if(is_null($pais)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved Paises codigo #". $data['codigo']);
+                }
+                elseif (!is_null($pais) && $data['isActive'] == false) {
+                    $pais->delete();
+                    \Log::debug("Delete Paises codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating Paises codigo #". $data['codigo']);
+                    $pais->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
+
+                $documentIdentidad = IdentityDocumentType::where('codigo', $data['codigo'])->first();
+
+                if(is_null($documentIdentidad)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved documentIdentidad codigo #". $data['codigo']);
+                }
+                elseif (!is_null($documentIdentidad) && $data['isActive'] == false) {
+                    $documentIdentidad->delete();
+                    \Log::debug("Delete documentIdentidad codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating documentIdentidad codigo #". $data['codigo']);
+                    $documentIdentidad->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::METODOS_DE_PAGO:
+
+                $metodosPago = PaymentMethod::where('codigo', $data['codigo'])->first();
+
+                if(is_null($metodosPago)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved metodosPago codigo #". $data['codigo']);
+                }
+                elseif (!is_null($metodosPago) && $data['isActive'] == false) {
+                    $metodosPago->delete();
+                    \Log::debug("Delete metodosPago codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating metodosPago codigo #". $data['codigo']);
+                    $metodosPago->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::MONEDAS:
+
+                $currency = Currency::where('codigo', $data['codigo'])->first();
+
+                if(is_null($currency)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved currency codigo #". $data['codigo']);
+                }
+                elseif (!is_null($currency) && $data['isActive'] == false) {
+                    $currency->delete();
+                    \Log::debug("Delete currency codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating currency codigo #". $data['codigo']);
+                    $currency->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
+            case TypeParametrics::UNIDADES:
+
+                $unit = Unit::where('codigo', $data['codigo'])->first();
+
+                if(is_null($unit)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved unit codigo #". $data['codigo']);
+                }
+                elseif (!is_null($unit) && $data['isActive'] == false) {
+                    $unit->delete();
+                    \Log::debug("Delete unit codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating unit codigo #". $data['codigo']);
+                    $unit->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
             
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -368,6 +531,48 @@ class FelParametric
                 break;
             case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
                 $updated_at = FelActivityDocumentSector::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
+                $updated_at = SectorDocumentTypes::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::MOTIVO_ANULACION:
+                $updated_at = RevocationReason::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::PAISES:
+                $updated_at = Country::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
+                $updated_at = IdentityDocumentType::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::METODOS_DE_PAGO:
+                $updated_at = PaymentMethod::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::MONEDAS:
+                $updated_at = Currency::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::UNIDADES:
+                $updated_at = Unit::orderByDesc('updated_at')->pluck('updated_at')->first();
                 \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 

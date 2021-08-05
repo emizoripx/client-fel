@@ -28,7 +28,7 @@ class Parametric extends BaseConnection
         try {
 
             if($type == TypeParametrics::TIPOS_DOCUMENTO_SECTOR){
-                $response = $this->client->request('GET', '/api/v1/company/' . $type, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+                $response = $this->client->request('GET', '/api/v1/company/' . $type . '?all=' .$all, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
             } 
             else{
                 
