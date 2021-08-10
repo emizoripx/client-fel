@@ -25,7 +25,7 @@ class FelParametric
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
                 $data_ = array();
-                foreach($data as $d) { 
+                foreach($data as $d) {
                     $d["company_id"] = $company_id;
                     $d["codigo"] = $d['codigo'];
                     $d["descripcion"] = $d['descripcion'];
@@ -36,7 +36,7 @@ class FelParametric
                 break;
             case TypeParametrics::LEYENDAS:
                 $data_ = array();
-                foreach($data as $d) { 
+                foreach($data as $d) {
                     $d["company_id"] = $company_id;
                     $d["codigo"] = $d['codigo'];
                     $d["codigoActividad"] = $d['codigoActividad'];
@@ -120,7 +120,9 @@ class FelParametric
         $data_added = [];
 
         foreach($data as $d) {
-
+            if(isset($d['isActive'])){
+                unset($d['isActive']);
+            }
             $d["updated_at"] = Carbon::now()->toDateTimeString();
             $d["created_at"] = Carbon::now()->toDateTimeString();
             $data_added[] = $d;
