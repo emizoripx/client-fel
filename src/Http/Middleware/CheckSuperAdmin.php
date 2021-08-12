@@ -3,9 +3,11 @@
 namespace EmizorIpx\ClientFel\Http\Middleware;
 
 use App\Models\Company;
+use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Hashids\Hashids;
 
 class CheckSuperAdmin
 {
@@ -18,14 +20,18 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        $company = Company::where('company_key', $request->header('X-API-COMPANY-KEY'))->first();
 
-        if($company && $company->owner()->is_superadmin){
+        $hashids = new Hashids(config('ninja.hash_salt'), 10);
 
-            $request_array = $request->all();
+        $user_id = $hashids->decode($request->header('user'))[0];
 
-            $request_array['company'] = $company;
-            $request->replace($request_array);
+
+        $user = User::where('id', $user_id)->first();
+
+        if($user && $user->is_superadmin){
+
+            if( !Auth::check() || Auth::user()->id != $user_id)
+                Auth::login($user);
 
             return $next($request);
         }
