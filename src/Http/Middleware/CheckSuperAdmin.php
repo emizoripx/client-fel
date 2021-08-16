@@ -20,6 +20,9 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
+        if (!$request->has('user')) {
+            return redirect()->to('/');
+        }
 
         $hashids = new Hashids(config('ninja.hash_salt'), 10);
 
