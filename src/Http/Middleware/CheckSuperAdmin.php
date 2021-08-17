@@ -20,7 +20,7 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->has('user')) {
+        if (!$request->header('user')) {
             return redirect()->to('/');
         }
 
