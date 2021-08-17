@@ -20,9 +20,6 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->header('user')) {
-            return redirect()->to('/');
-        }
 
         if (!Auth::check()) {
 
