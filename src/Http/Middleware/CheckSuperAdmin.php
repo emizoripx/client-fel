@@ -21,6 +21,7 @@ class CheckSuperAdmin
     public function handle(Request $request, Closure $next)
     {
 
+        \Log::debug("Validation SUperadmin");
         if (!Auth::check()) {
 
             $hashids = new Hashids(config('ninja.hash_salt'), 10);
