@@ -20,13 +20,14 @@ class CheckSuperAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->header('user')) {
+        
+        if (!$request->has('user')) {
             return redirect()->to('/');
         }
 
         $hashids = new Hashids(config('ninja.hash_salt'), 10);
 
-        $user_id = $hashids->decode($request->header('user'))[0];
+        $user_id = $hashids->decode($request->has('user'))[0];
 
 
         $user = User::where('id', $user_id)->first();
