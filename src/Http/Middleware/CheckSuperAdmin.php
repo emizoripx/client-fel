@@ -19,29 +19,33 @@ class CheckSuperAdmin
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
+    {        
         
-        if (!$request->has('user')) {
-            return redirect()->to('/');
-        }
+        if (!Auth::check()) {
+            
+            if (!$request->has('user')) {
+                return redirect()->to('/');
+            }
 
-        $hashids = new Hashids(config('ninja.hash_salt'), 10);
+            $hashids = new Hashids(config('ninja.hash_salt'), 10);
+          
+            $user_id = $hashids->decode($request->input('user'))[0];
 
-        $user_id = $hashids->decode($request->input('user'))[0];
 
+            $user = User::where('id', $user_id)->first();
 
-        $user = User::where('id', $user_id)->first();
+            if ($user && $user->is_superadmin) {
 
-        if($user && $user->is_superadmin){
-
-            if( !Auth::check() || Auth::user()->id != $user_id)
                 Auth::login($user);
 
-            return $next($request);
+                return $next($request);
+            }
+        } else {
+            if (Auth::user()->is_superadmin) {
+                return $next($request);
+            }
         }
-        \Log::debug("User Not is Superadmin");
 
         return redirect()->to('/');
-    
     }
 }
