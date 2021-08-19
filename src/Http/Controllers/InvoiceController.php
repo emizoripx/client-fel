@@ -75,7 +75,28 @@ class InvoiceController extends BaseController
             }
 
             $felInvoiceRequest->setAccessToken()->sendRevocateInvoiceToFel($request->input('codigo_motivo_anulacion'));
+            $felInvoiceRequest->invoiceDateUpdatedAt();
+            return response()->json([
+                'success' => true
+            ]);
+        } catch (ClientFelException $ex) {
+            return response()->json([
+                'success' => false,
+                'msg' => $ex->getMessage()
+            ]);
+        }
+    }
+    public function reversionRevocate(Request $request)
+    {
+        try {
+            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
 
+            if (!$felInvoiceRequest) {
+                throw new ClientFelException("Factura no encontrada");
+            }
+
+            $felInvoiceRequest->setAccessToken()->sendReversionRevocateInvoiceToFel();
+            $felInvoiceRequest->invoiceDateUpdatedAt();
             return response()->json([
                 'success' => true
             ]);
