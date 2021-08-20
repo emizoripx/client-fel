@@ -122,7 +122,7 @@ class FelParametric
 
             $d["updated_at"] = Carbon::now()->toDateTimeString();
             $d["created_at"] = Carbon::now()->toDateTimeString();
-            unset($d["is_active"]);
+            unset($d["isActive"]);
             $data_added[] = $d;
         }
         \Log::debug($data_added);
