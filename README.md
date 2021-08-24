@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v1.9.29 (invoiceninja version 5.2.6.2)
+# CLIENT FEL PACKAGE v1.9.30 (invoiceninja version 5.2.6.2)
 
 ## Client for consuming services in FEL, for invoicing
 
