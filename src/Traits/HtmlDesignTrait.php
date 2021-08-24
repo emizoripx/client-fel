@@ -550,4 +550,60 @@ trait HtmlDesignTrait{
         return $component;
     }
 
+    public function addWaterMark(){
+        $javascript  = "";
+
+        if(!$this->company->company_detail->production){
+            
+            $javascript .= 'document.addEventListener("DOMContentLoaded",function(){addWaterMark();});'.
+               'function addWaterMark(){'.
+                'var totalPages = Math.ceil(document.body.scrollHeight / 1123);'.
+                'for (var i = 1; i <= totalPages; i++) {'.
+                    'var waterDiv = document.createElement("div");'.
+                    'var waterMark = document.createTextNode("SIN VALOR LEGAL");'.
+                    'waterDiv.style.position = "absolute";'.
+                    'waterDiv.style.zIndex = "9999";'.
+                    'waterDiv.style.display = "block";'.
+                    'waterDiv.style.minWidth = "100%";'.
+                    'waterDiv.style.opacity = "0.22";'.
+                    'waterDiv.style.textAlign = "center";'.
+                    'waterDiv.style.fontSize = "80px";'.
+                    'waterDiv.style.fontWeight = "bold";'.
+                    'waterDiv.style.transform = "rotate(-30deg)";'.
+                    'if(i == 1){'.
+                        'waterDiv.style.top = "calc((" + i + " * (172mm)))";'.
+                        '} else {'.
+                            'waterDiv.style.top = "calc((" + i + " * 347mm) - ((344mm / 2)))" ;'.
+                            '}'.
+                            'waterDiv.appendChild(waterMark);'.
+                            'document.body.insertBefore(waterDiv, document.getElementById("content"));'.
+                            '}}';
+    }
+
+return $javascript;
+}
+
+public function addPagination(){
+$javascript = 'document.addEventListener("DOMContentLoaded",function(){addPageNumbers();});'.
+        'function addPageNumbers() {'.
+            'var totalPages = Math.ceil(document.body.scrollHeight / 1123);'.
+            'for (var i = 1; i <= totalPages; i++) {'.
+                'var pageNumberDiv = document.createElement("div");'.
+                'var pageNumber = document.createElement( "span");'.
+                'pageNumber.innerHTML = "Página " + i + " de " + totalPages;'.
+                'pageNumberDiv.style.position = "absolute";'.
+                'if(i == 1){'.
+                    'pageNumberDiv.style.top = "calc((" + i + " * (344mm)))"; '.
+                    '} else {'.
+                        'pageNumberDiv.style.top = "calc((" + i + " * (347mm)))";'.
+                        '}'.
+                        'pageNumberDiv.style.height = "16px";'.
+                        'pageNumberDiv.appendChild(pageNumber);'.
+                        'document.body.insertBefore(pageNumberDiv, document.getElementById("content"));'.
+                        'pageNumberDiv.style.left = "calc(100% - (" + pageNumberDiv.offsetWidth + "px + 20px))";'.
+                        '}}';
+    return $javascript;
+
+    }
+
 }
