@@ -25,7 +25,7 @@ class CheckSuperAdmin
         if (!Auth::check()) {
 
             $hashids = new Hashids(config('ninja.hash_salt'), 10);
-            $user_id = $hashids->decode($request->header('user'))[0];
+            $user_id = $hashids->decode($request->query('user'))[0];
 
 
             $user = User::where('id', $user_id)->first();

@@ -174,6 +174,13 @@ class FelInvoiceRequest extends Model
         return $this;
     }
 
+    public function getLeyendaEmissionType(){
+        if($this->emission_type == "Fuera de línea"){
+            return FelCaption::PARAMETRIC_OFFLINE;
+        }
+        return FelCaption::PARAMETRIC_ONLINE;
+    }
+
     public function saveInvoiceTypeId(array $value)
     {
         $this->type_invoice_id = 1;
