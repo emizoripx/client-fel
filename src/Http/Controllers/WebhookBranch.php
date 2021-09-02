@@ -5,6 +5,8 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
+use EmizorIpx\PrepagoBags\Models\PostpagoPlanCompany;
+use EmizorIpx\PrepagoBags\Repository\AccountPrepagoBagsRepository;
 use Illuminate\Http\Request;
 
 class WebhookBranch extends BaseController
@@ -25,6 +27,16 @@ class WebhookBranch extends BaseController
                 
                 $branch = FelBranch::where('codigo', $data['code'])->where('company_id', $company->company_id)->first();
                 if (empty($branch)) {
+                    // TODO: Validate branch counter and enable overflow
+                    $postpago_plan = PostpagoPlanCompany::where('company_id', $company->company_id)->first();
+                    $counter_branches = AccountPrepagoBagsRepository::getCounterBranches($company->company_id);
+                    if( $postpago_plan && $company->is_postpago && $postpago_plan->service()->verifyLimitBranches($counter_branches) && !$postpago_plan->enable_overflow){
+
+                        \Log::debug("LLego al limite de Sucursales");
+                        bitacora_info("Webhook:CreateBranch", 'Ya llego al limite de suscursales company: ' . $company->company_id);
+
+                        continue;
+                    }
                         FelBranch::create([
                             "codigo" => $data['code'],
                             "descripcion" => $data['code'] == 0 ? "Casa Matriz" : "Sucursal " . $data["code"],
@@ -34,6 +46,8 @@ class WebhookBranch extends BaseController
                             "ciudad" => $data['city'],
                             "municipio" => $data['municipalidad']
                         ]);
+
+                        AccountPrepagoBagsRepository::updateCounterBranches($company->company_id);
 
                         \Log::debug("Branch created");
 
