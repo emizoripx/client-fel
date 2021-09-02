@@ -37,6 +37,7 @@ class BaseRepository
                         "activity_id"       => $fel_data['codigo_actividad_economica'],
                         "product_sin_id"    => $fel_data['codigo_producto_sin'],
                         "codigo_nandina" => !empty($fel_data['codigoNandina']) ? $fel_data['codigoNandina'] : "",
+                        "codigo_producto" => !empty($fel_data['codigo']) ? $fel_data['codigo'] : "",
                     ];
                     break;
                 case 'invoice':
