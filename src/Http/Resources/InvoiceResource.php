@@ -19,6 +19,7 @@ class InvoiceResource extends JsonResource
         
         return [
             "id" => (int) $this->id,
+            "ack_ticket" => $this->ack_ticket,
             "company_id" => $this->company_id,
             "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "codigoMetodoPago" => (string)$this->codigoMetodoPago,
