@@ -14,6 +14,8 @@ use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Services\Pos\Pos;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
+use EmizorIpx\PrepagoBags\Models\PostpagoPlanCompany;
+use EmizorIpx\PrepagoBags\Repository\AccountPrepagoBagsRepository;
 
 class FelCredentialRepository
 {
@@ -147,14 +149,25 @@ class FelCredentialRepository
 
     }
 
-    public function getBranches(){
+    public function getBranches( $is_postpago = false ){
         $branchService = new Branches($this->credential->access_token, $this->credential->getHost());
 
         $branches = $branchService->getBranches();
 
+        if($is_postpago){
+            $postpago_plan = PostpagoPlanCompany::where('company_id', $this->credential->account_id)->first();
+            $counter_branches = AccountPrepagoBagsRepository::getCounterBranches($this->credential->account_id);
+        }
+
         foreach($branches as $branch){
             if(FelBranch::existsBranch($this->credential->account_id, $branch['codigoSucursal'])){
 
+                // TODO: Validate branch counters and enable overflow
+                if($is_postpago && $postpago_plan->service()->verifyLimitBranches($counter_branches) && !$postpago_plan->enable_overflow){
+                    \Log::debug("LLego al limite de Sucursales");
+                    bitacora_info("SyncBranches:CreateBranch", 'Ya llego al limite de suscursales company: ' . $this->credential->account_id);
+                    return $this;
+                }
                 $branch = FelBranch::create([
                     'codigo' => $branch['codigoSucursal'],
                     'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
@@ -164,6 +177,10 @@ class FelCredentialRepository
                     'ciudad' => $branch['ciudad'],
                     'municipio' => $branch['municipio']
                 ]);
+                \Log::debug("Created Branch ". $branch['codigoSucursal']);
+
+                AccountPrepagoBagsRepository::updateCounterBranches($this->credential->account_id);
+                $counter_branches = AccountPrepagoBagsRepository::getCounterBranches($this->credential->account_id);
 
                 $this->getPOS($branch);
             }
