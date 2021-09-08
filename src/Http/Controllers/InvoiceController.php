@@ -40,6 +40,9 @@ class InvoiceController extends BaseController
             
             $felInvoiceRequest->deletePdf();
 
+            $invoice = $felInvoiceRequest->invoice_origin();
+
+            $invoice->service()->markSent()->save();
 
             $success = true;
 
