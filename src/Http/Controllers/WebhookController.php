@@ -67,11 +67,10 @@ class WebhookController extends BaseController
     
             if (empty($invoice)) {
                 \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
-            }
-    
-            \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
+            } else {
+                \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
 
-            $invoice->saveState($data['state'])
+                $invoice->saveState($data['state'])
                     ->saveStatusCode($data['status_code'])
                     ->saveSINErrors($data['sin_errors'])
                     ->saveCuf($data['cuf'])
@@ -81,26 +80,28 @@ class WebhookController extends BaseController
                     ->save();
 
 
-            \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
+                \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
 
-            $this->validateStateCode($data['status_code'], $invoice);
+                
+                $this->validateStateCode($data['status_code'], $invoice);
 
-            \Log::debug(' WEBHOOK-CONTROLLER validate invoice date update');
+                \Log::debug(' WEBHOOK-CONTROLLER validate invoice date update');
 
-            $invoice->invoiceDateUpdatedAt();
+                $invoice->invoiceDateUpdatedAt();
+                \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
+                $invoice->deletePdf();
+                \Log::debug(' WEBHOOK-CONTROLLER registering historial');
 
-            \Log::debug(' WEBHOOK-CONTROLLER registering historial');
-            
-            fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
-            
-            $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
-            if(in_array($data['state'], $stateInvalid)){
-                if(!$invoice->felCompany()->checkIsPostpago()){
-                    FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->addNumberInvoice()->setCounter(-1)->save();
-                } else {
-                    FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->setPostpagoCounter(-1)->setCounter(-1)->save();
+                fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
+
+                $stateInvalid = ['INVOICE_STATE_SIN_INVALID', 'INVOICE_STATE_SENT_TO_SIN_INVALID'];
+                if (in_array($data['state'], $stateInvalid)) {
+                    if (!$invoice->felCompany()->checkIsPostpago()) {
+                        FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->addNumberInvoice()->setCounter(-1)->save();
+                    } else {
+                        FelCompanyDocumentSector::getCompanyDocumentSectorByCode($invoice->felCompany()->id, $invoice->type_document_sector_id)->setPostpagoCounter(-1)->setCounter(-1)->save();
+                    }
                 }
-    
             }
             \Log::debug(' WEBHOOK-CONTROLLER FIN=======================================');
 
