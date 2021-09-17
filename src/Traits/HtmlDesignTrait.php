@@ -28,48 +28,22 @@ trait HtmlDesignTrait{
         $rows_table = '';
         
 
-            
-            
-            $rows_table = $rows_table.'
-            <tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoProducto']) ? ($felInvoice->detalles[0]['codigoProducto']) : '') .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['descripcionLeyes']) ? $felInvoice->detalles[0]['descripcionLeyes'] : null) .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoNandina']) ? $felInvoice->detalles[0]['codigoNandina'] : null) .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
-                (isset($felInvoice->detalles[0]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[0]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedidaExtraccion']) : null). '<br> ' .
-                (isset($felInvoice->detalles[0]['cantidad']) ? number_format((float)$felInvoice->detalles[0]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['precioUnitario']) ? number_format((float)$felInvoice->detalles[0]['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null ).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[0]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[0]['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
+            foreach ($felInvoice->detalles as $detalle) {
                 
-            </tr>';
-            if(isset($felInvoice->detalles[1]['codigoProducto'])){
-                $rows_table = $rows_table.'<tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoProducto']) ? ($felInvoice->detalles[1]['codigoProducto']) : '') .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['descripcionLeyes']) ? $felInvoice->detalles[1]['descripcionLeyes'] : null) .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoNandina']) ? $felInvoice->detalles[1]['codigoNandina'] : null) .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
-                (isset($felInvoice->detalles[1]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[1]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedidaExtraccion']) : null). '<br> ' .
-                (isset($felInvoice->detalles[1]['cantidad']) ? number_format((float)$felInvoice->detalles[1]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['precioUnitario']) ? number_format((float)$felInvoice->detalles[1]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null ).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[1]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[1]['subTotal'] ,'1',5),5,',','.') : '') .'</td>
-                
-            </tr>';
-
-            }
-            if(isset($felInvoice->detalles[1]['codigoProducto'])){
-                $rows_table = $rows_table.'<tr>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoProducto']) ? ($felInvoice->detalles[2]['codigoProducto']) : '') .' </td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['descripcionLeyes']) ? $felInvoice->detalles[2]['descripcionLeyes'] : null) .' </td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoNandina']) ? $felInvoice->detalles[2]['codigoNandina'] : null) .'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. 
-                    (isset($felInvoice->detalles[2]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[2]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedidaExtraccion']) : null). '<br> ' .
-                    (isset($felInvoice->detalles[2]['cantidad']) ? number_format((float)$felInvoice->detalles[2]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.  (isset($felInvoice->detalles[2]['precioUnitario']) ? number_format((float)$felInvoice->detalles[2]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null ).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[2]['subTotal'] ,'1',5),5,',','.') : '') .'</td>
+                $rows_table = $rows_table.'
+                <tr>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['codigoProducto']) ? ($detalle['codigoProducto']) : '') .' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['descripcionLeyes']) ? $detalle['descripcionLeyes'] : null) .' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['codigoNandina']) ? $detalle['codigoNandina'] : null) .'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
+                    (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null). '<br> ' .
+                    (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($detalle['unidadMedida']) : null).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'. (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
                     
-                </tr>
-                ';
+                </tr>';
             }
+            
 
         return $rows_table;
     }
