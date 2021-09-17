@@ -56,14 +56,14 @@ class WebhookController extends BaseController
                 \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
         } else{
 
-            if (isset($data['ack_ticket'])  ){
+            // if (isset($data['ack_ticket'])  ){
     
                 \Log::debug(' WEBHOOK-CONTROLLER ack_ticket used');
-                $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
-            } else{
-                \Log::debug(' WEBHOOK-CONTROLLER cuf used');
-                $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
-            }
+                $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
+            // } else{
+            //     \Log::debug(' WEBHOOK-CONTROLLER cuf used');
+            //     $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
+            // }
     
             if (empty($invoice)) {
                 \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
