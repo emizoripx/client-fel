@@ -21,6 +21,61 @@ trait HtmlDesignTrait{
     public function makeRowsProductExportacionMinerales(){
         $felInvoice = $this->fel_invoice;
 
+        \Log::debug("Fel INVoice");
+        \Log::debug($felInvoice);
+        \Log::debug($felInvoice->detalles);
+
+        $rows_table = '';
+        
+
+            
+            
+            $rows_table = $rows_table.'
+            <tr>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoProducto']) ? ($felInvoice->detalles[0]['codigoProducto']) : '') .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['descripcionLeyes']) ? $felInvoice->detalles[0]['descripcionLeyes'] : null) .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoNandina']) ? $felInvoice->detalles[0]['codigoNandina'] : null) .'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
+                (isset($felInvoice->detalles[0]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[0]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedidaExtraccion']) : null). '<br> ' .
+                (isset($felInvoice->detalles[0]['cantidad']) ? number_format((float)$felInvoice->detalles[0]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['precioUnitario']) ? number_format((float)$felInvoice->detalles[0]['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null ).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[0]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[0]['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
+                
+            </tr>';
+            if(isset($felInvoice->detalles[1]['codigoProducto'])){
+                $rows_table = $rows_table.'<tr>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoProducto']) ? ($felInvoice->detalles[1]['codigoProducto']) : '') .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['descripcionLeyes']) ? $felInvoice->detalles[1]['descripcionLeyes'] : null) .' </td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoNandina']) ? $felInvoice->detalles[1]['codigoNandina'] : null) .'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
+                (isset($felInvoice->detalles[1]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[1]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedidaExtraccion']) : null). '<br> ' .
+                (isset($felInvoice->detalles[1]['cantidad']) ? number_format((float)$felInvoice->detalles[1]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['precioUnitario']) ? number_format((float)$felInvoice->detalles[1]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null ).'</td>
+                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[1]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[1]['subTotal'] ,'1',5),5,',','.') : '') .'</td>
+                
+            </tr>';
+
+            }
+            if(isset($felInvoice->detalles[1]['codigoProducto'])){
+                $rows_table = $rows_table.'<tr>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoProducto']) ? ($felInvoice->detalles[2]['codigoProducto']) : '') .' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['descripcionLeyes']) ? $felInvoice->detalles[2]['descripcionLeyes'] : null) .' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoNandina']) ? $felInvoice->detalles[2]['codigoNandina'] : null) .'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. 
+                    (isset($felInvoice->detalles[2]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[2]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedidaExtraccion']) : null). '<br> ' .
+                    (isset($felInvoice->detalles[2]['cantidad']) ? number_format((float)$felInvoice->detalles[2]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.  (isset($felInvoice->detalles[2]['precioUnitario']) ? number_format((float)$felInvoice->detalles[2]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null ).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['subTotal']) ? number_format((float) bcdiv($felInvoice->detalles[2]['subTotal'] ,'1',5),5,',','.') : '') .'</td>
+                    
+                </tr>
+                ';
+            }
+
+        return $rows_table;
+    }
+    public function makeRowsProductVentaInternaMinerales(){
+        $felInvoice = $this->fel_invoice;
+
         $rows_table = '';
         
             
@@ -156,9 +211,9 @@ trait HtmlDesignTrait{
             $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
             $data['$fel.kilos_netosHumedos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosHumedos,2,',','.'), 'label' => 'Kilos Netos Húmedos'];
-            $data['$fel.humedad_porcentaje'] = ['value' => (int) $this->fel_invoice->humedadPorcentaje, 'label' => 'Humedad Porcentaje'];
+            $data['$fel.humedad_porcentaje'] = ['value' => number_format( (float) $this->fel_invoice->humedadPorcentaje,2,',','.'), 'label' => 'Humedad Porcentaje'];
             $data['$fel.humedad_valor'] = ['value' => number_format((float)$this->fel_invoice->humedadValor,2,',','.'), 'label' => 'Humedad Valor'];
-            $data['$fel.merma_porcentaje'] = ['value' => (int) $this->fel_invoice->mermaPorcentaje, 'label' => 'Merma Porcentaje'];
+            $data['$fel.merma_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->mermaPorcentaje,2,',','.'), 'label' => 'Merma Porcentaje'];
             $data['$fel.merma_valor'] = ['value' => number_format((float)$this->fel_invoice->mermaValor,2,',','.'), 'label' => 'Merma Valor'];
             $data['$fel.kilos_netosSecos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.'), 'label' => 'Kilos Netos Secos'];
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
@@ -191,7 +246,7 @@ trait HtmlDesignTrait{
             //                                     <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
             //                                 </tr>' : '', 
             //                                 'label' => 'Valor FOB Frontera Literal'];
-            $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
+            // $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
         return $data;
         
     }
@@ -241,7 +296,7 @@ trait HtmlDesignTrait{
             
             $data['$fel.subtotal'] = ['value' => number_format((float)collect($this->fel_invoice->detalles)->sum('subTotal'),5,',','.'), 'label' => 'Sub - Total'];
 
-            $data['$fel.product_rows'] = ['value' => $this->makeRowsProductExportacionMinerales(), 'label' => 'Detalle Productos'];
+            $data['$fel.product_rows'] = ['value' => $this->makeRowsProductVentaInternaMinerales(), 'label' => 'Detalle Productos'];
             $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
 
             return $data;
