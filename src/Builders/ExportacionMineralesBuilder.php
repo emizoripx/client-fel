@@ -22,7 +22,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
         
         if ($this->source_data['update'])
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->whereNull('cuf')->firstOrFail();
+            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
         else
             $this->fel_invoice = new FelInvoiceRequest();
 

@@ -25,7 +25,7 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             if($modelFelInvoice->codigoEstado != 690){
                 $this->fel_invoice = $modelFelInvoice; 
             } else{
-                $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->whereNull('cuf')->firstOrFail();
+                $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
             }
             
         }
