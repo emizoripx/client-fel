@@ -70,7 +70,7 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->first();
 
             $new = new stdClass;
-            $new->codigoProducto =  $detail->product_key . ""; // this values was added only frontend Be careful
+            $new->codigoProducto =  $product_sync->codigo_producto. ""; // this values was added only frontend Be careful
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;

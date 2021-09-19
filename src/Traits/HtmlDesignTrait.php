@@ -51,49 +51,23 @@ trait HtmlDesignTrait{
         $felInvoice = $this->fel_invoice;
 
         $rows_table = '';
-        
             
-            $rows_table = $rows_table.'
-            <tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">HUMEDAD </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center">'.number_format((float)$felInvoice->humedadPorcentaje,2,',','.').' % </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->humedadValor,2,',','.').' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoProducto']) ? ($felInvoice->detalles[0]['codigoProducto']) : '') .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['descripcionLeyes']) ? $felInvoice->detalles[0]['descripcionLeyes'] : null) .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['codigoNandina']) ? $felInvoice->detalles[0]['codigoNandina'] : null) .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
-                (isset($felInvoice->detalles[0]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[0]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedidaExtraccion']) : null). '<br> ' .
-                (isset($felInvoice->detalles[0]['cantidad']) ? number_format((float)$felInvoice->detalles[0]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[0]['precioUnitario']) ? number_format((float)$felInvoice->detalles[0]['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($felInvoice->detalles[0]['unidadMedida']) : null ).'</td>
-                
-            </tr>
-            <tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">MERMA </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center">'.number_format((float)$felInvoice->mermaPorcentaje,2,',','.').' % </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->mermaValor,2,',','.').' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoProducto']) ? ($felInvoice->detalles[1]['codigoProducto']) : '') .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['descripcionLeyes']) ? $felInvoice->detalles[1]['descripcionLeyes'] : null) .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['codigoNandina']) ? $felInvoice->detalles[1]['codigoNandina'] : null) .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
-                (isset($felInvoice->detalles[1]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[1]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedidaExtraccion']) : null). '<br> ' .
-                (isset($felInvoice->detalles[1]['cantidad']) ? number_format((float)$felInvoice->detalles[1]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($felInvoice->detalles[1]['precioUnitario']) ? number_format((float)$felInvoice->detalles[1]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[1]['unidadMedida']) : null ).'</td>
-                
-            </tr>
-            <tr>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-left center bold">KILOS NETOS SECOS </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid-right center"> </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.').' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoProducto']) ? ($felInvoice->detalles[2]['codigoProducto']) : '') .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['descripcionLeyes']) ? $felInvoice->detalles[2]['descripcionLeyes'] : null) .' </td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. (isset($felInvoice->detalles[2]['codigoNandina']) ? $felInvoice->detalles[2]['codigoNandina'] : null) .'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'. 
-                (isset($felInvoice->detalles[2]['cantidadExtraccion']) ? number_format((float) bcdiv($felInvoice->detalles[2]['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedidaExtraccion']) : null). '<br> ' .
-                (isset($felInvoice->detalles[2]['cantidad']) ? number_format((float)$felInvoice->detalles[2]['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null).'</td>
-                <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.  (isset($felInvoice->detalles[2]['precioUnitario']) ? number_format((float)$felInvoice->detalles[2]['precioUnitario'] ?? 0,5,',','.').'  '. 'x '.Unit::getUnitDescription($felInvoice->detalles[2]['unidadMedida']) : null ).'</td>
-                
-            </tr>
-            ';
+        foreach ($felInvoice->detalles as $detalle) {
+
+            $rows_table = $rows_table . '
+                <tr>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">' . (isset($detalle['codigoProducto']) ? ($detalle['codigoProducto']) : '') . ' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">' . (isset($detalle['descripcionLeyes']) ? $detalle['descripcionLeyes'] : null) . ' </td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">' . (isset($detalle['codigoNandina']) ? $detalle['codigoNandina'] : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' .
+            (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0, '1', 5), 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null) . '<br> ' .
+                (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0, 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.') . '  ' . 'x ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'], '1', 5), 5, ',', '.') : '') . '</td>
+                    
+                </tr>';
+        }
+        
 
         return $rows_table;
     }
@@ -107,7 +81,7 @@ trait HtmlDesignTrait{
                             <thead>
                             <th width="15%">NANDINA</th>
                             <th width="10%">CANTIDAD (Quantity)</th>
-                            <th width="30%">DESCRIPCION <br> (Description)</th>
+                            <th width="30%">DESCRIPCIÓN <br> (Description)</th>
                             <th width="15%">UNIDAD MEDIDA (Unit of Measurement)</th>
                             <th width="13%">PRECIO UNITARIO (Unit Value)</th>
                             <th width="17%">SUBTOTAL</th>
@@ -115,12 +89,12 @@ trait HtmlDesignTrait{
         foreach($felInvoice->detalles as $detalle){
             $rows_table .= '
             <tr>
-                <td>'. $detalle['codigoNandina'] .'</td>
-                <td>'. number_format((float) $detalle['cantidad'],5,',','.') .'</td>
+                <td >'. $detalle['codigoNandina'] . '</td>
+                <td style="text-align:right;" >'. number_format((float) $detalle['cantidad'],5,',','.') .'</td>
                 <td>'. $detalle['descripcion'] .'</td>
                 <td>'. Unit::getUnitDescription($detalle['unidadMedida']) .'</td>
-                <td class="right-align">'.number_format((float)$detalle['precioUnitario'],5,',','.').' </td>
-                <td class="right-align">'. number_format((float) $detalle['subTotal'],5,',','.') .'</td>
+                <td style="text-align:right;">'.number_format((float)$detalle['precioUnitario'],5,',','.').' </td>
+                <td width="30px" style="text-align:right;">'. number_format((float) $detalle['subTotal'],5,',','.') .'</td>
             </tr>
             ';
             $subtotal += floatval($detalle['subTotal']); 
@@ -128,10 +102,10 @@ trait HtmlDesignTrait{
         $rows_table .= '
         <tr>
             <td colspan=5 style="text-align: right;"> <b> TOTAL DETALLE ('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).') <br> (Total Detail) </b></td>
-            <td> '. number_format((float) $subtotal,5,',','.').'</td>
+            <td> '. number_format((float) $subtotal,2,',','.').'</td>
         </tr>
         <tr>
-            <td colspan=5 style="text-align: right;"> INCOTERM y alcance del Total detalle de la transacción (INCOTERM and scope of the Total Transaction Details)</td>
+            <td colspan=5 style="text-align: left;"> INCOTERM y alcance del Total detalle de la transacción (INCOTERM and scope of the Total Transaction Details)</td>
             <td> '. $felInvoice->incoterm_detalle .'</td>
         </tr>
 
@@ -282,15 +256,15 @@ trait HtmlDesignTrait{
                 <tbody>
 
                     <tr>
-                        <th colspan=4 style="font-size:36px;">FACTURA COMERCIAL EXPORTACIÓN <br> (COMERCIAL INVOICE) </th>
+                        <th colspan=4 style="font-size:25px;">FACTURA COMERCIAL EXPORTACIÓN <br> (COMERCIAL INVOICE) </th>
                     </tr>
                     
                     <tr>
-                        <td colspan=4 style="font-size:13px; text-align:center; padding-bottom: 3rem;"> <span style="font-size:12pt;"> <b>'. ModalityInvoicing::getModalityInvoicing($this->company->company_detail->modality_code) .'</b> </span> <br>('. $this->fel_invoice->type_invoice .')</t>
+                        <th colspan=4 style="font-size:13px; text-align:center; padding-bottom: 2rem;"> <span style="font-size:12pt;"> <b>'. ModalityInvoicing::getModalityInvoicing($this->company->company_detail->modality_code) .'</b> </span> <br>('. $this->fel_invoice->type_invoice . ')</t>
                     </tr>
                     <tr>
-                        <td><b>Fecha (Date):</b></td>
-                        <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                        <td width="30%" ><b>Fecha (Date):</b></td>
+                        <td width="10px" >'. date("d/m/Y g:i:s a", strtotime($this->fel_invoice->fechaEmision)).'</td>
                         <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</b></td>
                         <td>'. $this->fel_invoice->numeroDocumento .'</td>
                     </tr>
@@ -365,7 +339,7 @@ trait HtmlDesignTrait{
                         <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->costosGastosInternacionales['gastoSeguro'],2,',','.') : 0) .'</td>
                     </tr>
                     <tr>
-                        <td><b>SUBTOTAL CIF</b></td>
+                        <td><b>TOTAL CIF</b></td>
                         <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->totalGastosInternacionales,2,',','.') : 0) .'</td>
                     </tr>
                 </tbody>
@@ -396,13 +370,13 @@ trait HtmlDesignTrait{
             '<table id="bultos">
                 <tbody>
                     <tr>
-                        <td><b>Número y Descripción de Paquetes (Bultos) <br> (Number and Description of Boxes)</b></td>
+                        <td class="gastos_title" ><b>Número y Descripción de Paquetes (Bultos) <br> (Number and Description of Boxes)</b></td>
                     </tr>
                     <tr>
-                        <td>'. $this->fel_invoice->numeroDescripcionPaquetesBultos.'</td>
+                        <td>'. $this->fel_invoice->numeroDescripcionPaquetesBultos. '</td>
                     </tr>
                     <tr>
-                        <td><b>Información Adicional <br> (Additional Information)</b></td>
+                        <td class="gastos_title" ><b>Información Adicional <br> (Additional Information)</b></td>
                     </tr>
                     <tr>
                         <td>'. $this->fel_invoice->informacionAdicional .'</td>
@@ -422,25 +396,25 @@ trait HtmlDesignTrait{
                             <tbody>
 
                                 <tr>
-                                    <th colspan=4 style="font-size:38px; padding-bottom: 30px;"> NOTA CRÉDITO - DÉBITO</th>
+                                    <th colspan=4 style="font-size:25px; padding-bottom: 30px;"> NOTA CRÉDITO - DÉBITO</th>
                                 </tr>
                                 
                                 <tr>
                                     <td><b>Fecha:</b></td>
-                                    <td>'. date("d/m/Y H:i:s", strtotime($this->fel_invoice->fechaEmision)).'</td>
-                                    <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .'</td>
+                                    <td>'. date("d/m/Y g:i:s a", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                                    <td style="text-align:right;" ><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</td>
                                     <td>'. $factura->numeroDocumento .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
-                                    <td>'. $factura->nombreRazonSocial .'</td>
-                                    <td><b>Fecha Factura:</b></td>
+                                    <td>'. $factura->nombreRazonSocial . '</td>
+                                    <td style="text-align:right;" ><b>Fecha Factura:</b></td>
                                     <td>'. date("d/m/Y H:i:s", strtotime($factura->fechaEmision))  .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nº Factura:</b></td>
-                                    <td>'. $factura->numeroFactura .'</td>
-                                    <td><b>Nº Autorización/CUF:</b></td>
+                                    <td>'. $factura->numeroFactura . '</td>
+                                    <td style="text-align:right;" ><b>Nº Autorización/CUF:</b></td>
                                     <td>'. $factura->cuf .'</td>
                                 </tr>
                                 
@@ -454,12 +428,12 @@ trait HtmlDesignTrait{
         $subtotal = 0;
         $rows_table = '<table id="product-table">
                         <thead>
-                        <th width="15%">Código Producto</th>
-                        <th width="10%">Cantidad</th>
-                        <th width="30%">Descripción</th>
-                        <th width="20%">Precio Unitario</th>
-                        <th width="10%">Descuento</th>
-                        <th width="15%">Subtotal</th>
+                        <th width="15%">CÓDIGO PRODUCTO</th>
+                        <th width="10%">CANTIDAD</th>
+                        <th width="40%">DESCRIPCIÓN</th>
+                        <th width="10%">PRECIO UNITARIO</th>
+                        <th width="10%">DESCUENTO</th>
+                        <th width="15%">SUBTOTAL</th>
                         </thead><tbody>';
 
         foreach ($detalles as $detalle) {
@@ -480,7 +454,7 @@ trait HtmlDesignTrait{
         if($flag){
             $rows_table .= '
                     <tr>
-                        <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border-bottom: 0px solid #e6e6e6;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
+                        <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
                         <td colspan=2 style="text-align: right;"> <b> Monto Total Devuelto '. Currencies::getShortCode($codigoMoneda).' </b></td>
                         <td> '. number_format((float) $this->fel_invoice->montoTotal,2,',','.') .'</td>
                     </tr>
@@ -496,7 +470,8 @@ trait HtmlDesignTrait{
         } else{
             $rows_table .= '
                     <tr>
-                        <td colspan=5 style="text-align: right;"> <b> Monto Total Original '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td colspan=3 style="border:0px;" ></td>
+                        <td colspan=2 style="text-align: right;"> <b> Monto Total Original '. Currencies::getShortCode($codigoMoneda).' </b></td>
                         <td> '. number_format((float)$subtotal,2,',','.') .'</td>
                     </tr>
                     
