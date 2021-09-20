@@ -125,14 +125,28 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         }
         $data['line_items'] = $line_items;
         $settings = AccountPrepagoBags::where('company_id', $company_id)->first()->settings;
-        $settings_change = json_decode( $settings); 
-        return array_merge($data, [
-            'felData' => [
-                "codigoActividad" => $settings_change->activity_id,
-                "codigoLeyenda" => $settings_change->caption_id,
-                "codigoMetodoPago" => $settings_change->payment_method_id
-            ]
-            ]);
+        
+
+        if ( !empty($settings) ) {
+
+            $settings_array = json_decode( $settings); 
+            
+            foreach($settings_array as $settings_change) {
+                
+                if ($settings_change->codigo == "1") {
+                   return array_merge($data, [
+                        'felData' => [
+                            "codigoActividad" => $settings_change->activity_id,
+                            "codigoLeyenda" => $settings_change->caption_id,
+                            "codigoMetodoPago" => $settings_change->payment_method_id
+                        ]
+                    ]);
+                } 
+            }
+
+            
+        }
+        return $data;
     }
     public static function completeDataInvoiceRecurringRequest($invoice)
     {
