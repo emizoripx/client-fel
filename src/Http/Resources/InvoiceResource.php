@@ -74,6 +74,7 @@ class InvoiceResource extends JsonResource
             "codigo_sucursal" => (string)$this->codigoSucursal,
             "codigo_pos" => (string)$this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
+            "urlSin" => (string) $this->urlSin,
 
             // factura venta minerales
             "liquidacionPreliminar" => (string) $this->liquidacion_preliminar,
