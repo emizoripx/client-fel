@@ -98,10 +98,13 @@ class TypeDocumentSector
         
     }
 
-    public static function getFelDocumentNameByCode($code):string
+    public static function getFelDocumentNameByCode($code, $company_nit = null):string
     {
         switch ($code) {
             case static::COMPRA_VENTA:
+                if( $company_nit == '1020415021'){
+                    return 'compra-venta-custom';
+                }
                 return 'compra-venta';
                 break;
             case static::EXPORTACION_MINERALES:
