@@ -587,6 +587,43 @@ trait HtmlDesignTrait{
 return $javascript;
 }
 
+public function addRevocateWaterMark(){
+
+    $state = $this->fel_invoice->codigoEstado;
+
+    $javascript = "";
+
+    if($state == 691){
+        $javascript .= 'document.addEventListener("DOMContentLoaded",function(){addRevocateWaterMark();});'.
+               'function addRevocateWaterMark(){'.
+                'var totalPages = Math.ceil(document.body.scrollHeight / 1123);'.
+                'for (var i = 1; i <= totalPages; i++) {'.
+                    'var waterDiv = document.createElement("div");'.
+                    'var waterMark = document.createTextNode("ANULADO");'.
+                    'waterDiv.style.position = "absolute";'.
+                    'waterDiv.style.zIndex = "9999";'.
+                    'waterDiv.style.display = "block";'.
+                    'waterDiv.style.minWidth = "100%";'.
+                    'waterDiv.style.color = "red";'.
+                    'waterDiv.style.opacity = "0.22";'.
+                    'waterDiv.style.textAlign = "center";'.
+                    'waterDiv.style.fontSize = "80px";'.
+                    'waterDiv.style.fontWeight = "bold";'.
+                    'waterDiv.style.transform = "rotate(-30deg)";'.
+                    'if(i == 1){'.
+                        'waterDiv.style.top = "calc((" + i + " * (172mm)) - 30mm)";'.
+                        '} else {'.
+                            'waterDiv.style.top = "calc(((" + i + " * 347mm) - (344mm / 2)) - 30mm)" ;'.
+                            '}'.
+                            'waterDiv.appendChild(waterMark);'.
+                            'document.body.insertBefore(waterDiv, document.getElementById("content"));'.
+                            '}}';
+    }
+
+    return $javascript;
+
+}
+
 public function addPagination(){
 $javascript = 'document.addEventListener("DOMContentLoaded",function(){addPageNumbers();});'.
         'function addPageNumbers() {'.
