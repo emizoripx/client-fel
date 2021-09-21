@@ -10,6 +10,8 @@ class Country extends Model
     protected $guarded =[];
 
     public static function getDescriptionCountry($code){
-        return self::findOrFail($code)->descripcion;
+        if (!is_null($code) && $code > 0 && $code <= 208)
+            return self::findOrFail($code)->descripcion;
+        return "";
     }
 }

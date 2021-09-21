@@ -336,6 +336,15 @@ class FelInvoiceRequest extends Model
 
     }
 
+    public function setPaisDestinoAttribute($value)
+    {
+
+        if ($value >=1 && $value <= 208)
+            $this->attributes['paisDestino'] = $value;
+        else
+            $this->attributes['paisDestino'] = null;
+    }
+
     public function getCostosGastosNacionalesChangedAttribute()
     {
         return [
