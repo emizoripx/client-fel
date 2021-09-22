@@ -43,7 +43,7 @@ class LineItemResource extends JsonResource
             "codigoNandina" => !empty($this->codigoNandina) ? (string) $this->codigoNandina : "",
             "cantidadExtraccion" => !empty($this->cantidadExtraccion) ? $this->cantidadExtraccion : 0,
             "unidadMedidaExtraccion" => !empty($this->unidadMedidaExtraccion) ? $this->unidadMedidaExtraccion : 0,
-            
+            "posicionOriginal" => isset($this->posicionOriginal) ? $this->posicionOriginal : "",
         ];
     }
 }
