@@ -25,12 +25,15 @@ class FelBranch extends Model
 
     public static function getBranchAddress( $company_id, $branch_code){
 
-        $hashids = new Hashids(config('ninja.hash_salt'), 10);
-        $companyIdDecoded = $hashids->decode($company_id)[0];
+        $branch = self::where('company_id', $company_id)->where('codigo', $branch_code)->first();
 
-        $branch = self::where('company_id', $companyIdDecoded)->where('codigo', $branch_code)->first();
+        return is_null($branch) ? '' : $branch->zona;
+    }
+    public static function getBranch( $company_id, $branch_code){
 
-        return $branch->ciudad. ' - '.$branch->pais;
+        $branch = self::where('company_id', $company_id)->where('codigo', $branch_code)->first();
+
+        return $branch ? $branch : null;
     }
     public static function getBranchZone( $company_id, $branch_code){
 
