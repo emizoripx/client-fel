@@ -16,6 +16,7 @@ class WebhookBranch extends BaseController
 
         $data = $request->get('data');
         
+        \Log::debug("WEBHOOK-BRANCH>>>>>>>>>>>>>>>>>>>>>>>>>>>> INICIO");
         \Log::debug("Data");
         \Log::debug($data);
 
@@ -42,6 +43,7 @@ class WebhookBranch extends BaseController
                             "descripcion" => $data['code'] == 0 ? "Casa Matriz" : "Sucursal " . $data["code"],
                             "company_id" => $company->company_id,
                             "zona" => $data['zone'],
+                            "telefono" => $data['phone'],
                             "pais" => $data['country'],
                             "ciudad" => $data['city'],
                             "municipio" => $data['municipalidad']
@@ -74,6 +76,7 @@ class WebhookBranch extends BaseController
                         $branch->descripcion = $data['code'] == 0 ? "Casa Matriz" : "Sucursal " . $data["code"];
                         $branch->company_id = $company->company_id;
                         $branch->zona = $data['zone'];
+                        $branch->telefono = $data['phone'];
                         $branch->pais = $data['country'];
                         $branch->ciudad = $data['city'];
                         $branch->municipio = $data['municipalidad'];

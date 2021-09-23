@@ -21,9 +21,6 @@ trait HtmlDesignTrait{
     public function makeRowsProductExportacionMinerales(){
         $felInvoice = $this->fel_invoice;
 
-        \Log::debug("Fel INVoice");
-        \Log::debug($felInvoice);
-        \Log::debug($felInvoice->detalles);
 
         $rows_table = '';
         

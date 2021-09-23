@@ -173,6 +173,7 @@ class FelCredentialRepository
                     'descripcion' => $branch['codigoSucursal'] == 0 ? 'Casa Matriz' : 'Sucursal '.$branch['codigoSucursal'],
                     'company_id' => $this->credential->account_id,
                     'zona' => $branch['zona'],
+                    'telefono' => $branch['telefono'],
                     'pais' => $branch['pais'],
                     'ciudad' => $branch['ciudad'],
                     'municipio' => $branch['municipio']
