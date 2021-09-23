@@ -167,7 +167,7 @@ trait HtmlDesignTrait{
             $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, '(Bolivianos)'), 'label' => 'Valor FOB Frontera Literal'];
             
-            $data['$monto_total'] = ['value' => number_format(collect($this->fel_invoice->detalles)->sum('subTotal'),5,',','.'), 'label' => 'Monto Total'];
+            $data['$monto_total'] = ['value' => number_format(collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Monto Total'];
             $data['$total_literal'] = ['value' => 'SON: '. $this->getToWord(collect($this->fel_invoice->detalles)->sum('subTotal'), 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Total Literal'];
             
             
