@@ -44,6 +44,8 @@ class LineItemResource extends JsonResource
             "cantidadExtraccion" => !empty($this->cantidadExtraccion) ? $this->cantidadExtraccion : 0,
             "unidadMedidaExtraccion" => !empty($this->unidadMedidaExtraccion) ? $this->unidadMedidaExtraccion : 0,
             "posicionOriginal" => isset($this->posicionOriginal) ? $this->posicionOriginal : "",
+            "codigo_producto" => isset($this->codigo_producto) ? $this->codigo_producto : "",
+
         ];
     }
 }
