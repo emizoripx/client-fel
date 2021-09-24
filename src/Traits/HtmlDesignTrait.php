@@ -262,7 +262,7 @@ trait HtmlDesignTrait{
                     <tr>
                         <td width="30%" ><b>Fecha (Date):</b></td>
                         <td width="10px" >'. date("d/m/Y g:i:s a", strtotime($this->fel_invoice->fechaEmision)).'</td>
-                        <td><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</b></td>
+                        <td><b>NIT/CI/CEX:</b></td>
                         <td>'. $this->fel_invoice->numeroDocumento .'</td>
                     </tr>
                     <tr>
