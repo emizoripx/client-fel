@@ -114,10 +114,12 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         foreach($data['line_items'] as $item){
             $product_id_decode = $hashid->decode($item['product_id']);
             $product = DB::table('products')->where('id', $product_id_decode)->first();
+            $product_sync = DB::table('fel_sync_products')->where('id_origin', $product_id_decode)->first();
             
             $item_array = array_merge($item, [
                 'product_key' => $product->product_key,
-                'notes' => $product->notes
+                'notes' => $product->notes,
+                'codigo_producto' => $product_sync->codigo_producto
             ]);
             
             array_push($line_items, $item_array);
