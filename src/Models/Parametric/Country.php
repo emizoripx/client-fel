@@ -12,6 +12,6 @@ class Country extends Model
     public static function getDescriptionCountry($code){
         if (!is_null($code) && $code > 0 && $code <= 208)
             return self::findOrFail($code)->descripcion;
-        return "";
+        return "---";
     }
 }
