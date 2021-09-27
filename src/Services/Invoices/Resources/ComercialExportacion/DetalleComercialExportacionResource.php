@@ -16,6 +16,7 @@ class DetalleComercialExportacionResource extends JsonResource
     {
         return [
             "codigoProducto" => $this->resource['codigoProducto'],
+            "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "descripcion" => $this->resource['descripcion'],
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "cantidad" => $this->resource['cantidad'],
