@@ -72,6 +72,7 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             $new = new stdClass;
             $new->codigoProducto =  $product_sync->codigo_producto  . ""; // this values was added only frontend Be careful
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
+            $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);

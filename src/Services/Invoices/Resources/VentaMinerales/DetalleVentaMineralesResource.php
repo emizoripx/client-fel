@@ -20,6 +20,7 @@ class DetalleVentaMineralesResource extends JsonResource
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "codigoNandina" => $this->resource['codigoNandina'],
             "codigoProducto" => $this->resource['codigoProducto'],
+            "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "descripcion" => $this->resource['descripcion'],
             "cantidad" => $this->resource['cantidad'],
             "cantidadExtraccion" => $this->resource['cantidadExtraccion'],
