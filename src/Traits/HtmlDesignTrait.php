@@ -226,9 +226,9 @@ trait HtmlDesignTrait{
             $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
             $data['$fel.kilos_netosHumedos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosHumedos,2,',','.'), 'label' => 'Kilos Netos Húmedos'];
-            $data['$fel.humedad_porcentaje'] = ['value' => (int) $this->fel_invoice->humedadPorcentaje, 'label' => 'Humedad Porcentaje'];
+            $data['$fel.humedad_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->humedadPorcentaje,2,',','.'), 'label' => 'Humedad Porcentaje'];
             $data['$fel.humedad_valor'] = ['value' => number_format((float)$this->fel_invoice->humedadValor,2,',','.'), 'label' => 'Humedad Valor'];
-            $data['$fel.merma_porcentaje'] = ['value' => (int) $this->fel_invoice->mermaPorcentaje, 'label' => 'Merma Porcentaje'];
+            $data['$fel.merma_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->mermaPorcentaje,2,',','.'), 'label' => 'Merma Porcentaje'];
             $data['$fel.merma_valor'] = ['value' => number_format((float)$this->fel_invoice->mermaValor,2,',','.'), 'label' => 'Merma Valor'];
             $data['$fel.kilos_netosSecos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.'), 'label' => 'Kilos Netos Secos'];
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
@@ -257,11 +257,11 @@ trait HtmlDesignTrait{
                     </tr>
                     
                     <tr>
-                        <th colspan=4 style="font-size:13px; text-align:center; padding-bottom: 2rem;"> <span style="font-size:12pt;"> <b>'. ModalityInvoicing::getModalityInvoicing($this->company->company_detail->modality_code) .'</b> </span> <br>('. $this->fel_invoice->type_invoice . ')</t>
+                        <th colspan=4 style="font-size:13px; text-align:center; padding-bottom: 2rem;"> <span style="font-size:12pt;"> <b>'. ModalityInvoicing::getModalityInvoicing($this->company->company_detail->modality_code, $this->company->settings->id_number) .'</b> </span> <br>('. $this->fel_invoice->type_invoice . ')</t>
                     </tr>
                     <tr>
                         <td width="30%" ><b>Fecha (Date):</b></td>
-                        <td width="10px" >'. date("d/m/Y g:i:s a", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                        <td width="10px" >'. date("d/m/Y g:i A", strtotime($this->fel_invoice->fechaEmision)).'</td>
                         <td><b>NIT/CI/CEX:</b></td>
                         <td>'. $this->fel_invoice->numeroDocumento .'</td>
                     </tr>
@@ -293,7 +293,7 @@ trait HtmlDesignTrait{
     public function appendFieldComercialExportacion($data){
 
             $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA COMERCIAL EXPORTACIÓN' : 'PREFACTURA COMERCIAL EXPORTACIÓN', 'label' => 'Titulo'];
-            $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
+            // $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
             $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
             $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
@@ -350,12 +350,12 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Son: '.$this->getToWord($this->fel_invoice->montoTotalMoneda, 2, 'Dólares').'</td>
-                        <td style="text-align: right;"><b>Total General (Dolar)</b></td>
+                        <td style="text-align: right;"><b>TOTAL GENERAL (DOLAR)</b></td>
                         <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.') .'</td>
                     </tr>
                     <tr>
                         <td>Son: '.$this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos').'</td>
-                        <td style="text-align: right;"><b>Total General (Bolivianos)</b></td>
+                        <td style="text-align: right;"><b>TOTAL GENERAL (BOLIVIANOS)</b></td>
                         <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotal,2,',','.') .'</td>
                     </tr>
                 </tbody>
@@ -398,15 +398,15 @@ trait HtmlDesignTrait{
                                 
                                 <tr>
                                     <td><b>Fecha:</b></td>
-                                    <td>'. date("d/m/Y g:i:s a", strtotime($this->fel_invoice->fechaEmision)).'</td>
-                                    <td style="text-align:right;" ><b>'. explode('-', IdentityDocumentType::getDocumentTypeDescription($this->fel_invoice->codigoTipoDocumentoIdentidad))[0] .':</td>
+                                    <td>'. date("d/m/Y g:i A", strtotime($this->fel_invoice->fechaEmision)).'</td>
+                                    <td style="text-align:right;" ><b> NIT/CI/CEX:</td>
                                     <td>'. $factura->numeroDocumento .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
                                     <td>'. $factura->nombreRazonSocial . '</td>
                                     <td style="text-align:right;" ><b>Fecha Factura:</b></td>
-                                    <td>'. date("d/m/Y H:i:s", strtotime($factura->fechaEmision))  .'</td>
+                                    <td>'. date("d/m/Y g:i A", strtotime($factura->fechaEmision))  .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nº Factura:</b></td>
@@ -427,9 +427,9 @@ trait HtmlDesignTrait{
                         <thead>
                         <th width="15%">CÓDIGO PRODUCTO</th>
                         <th width="10%">CANTIDAD</th>
-                        <th width="40%">DESCRIPCIÓN</th>
-                        <th width="10%">PRECIO UNITARIO</th>
-                        <th width="10%">DESCUENTO</th>
+                        <th width="35%">DESCRIPCIÓN</th>
+                        <th width="15%">PRECIO UNITARIO</th>
+                        <th width="15%">DESCUENTO</th>
                         <th width="15%">SUBTOTAL</th>
                         </thead><tbody>';
 
@@ -437,7 +437,7 @@ trait HtmlDesignTrait{
             $rows_table .= '
                 <tr>
                     <td>'. $detalle['codigoProducto'] .'</td>
-                    <td style="text-align: right;">'. $detalle['cantidad'] .'</td>
+                    <td style="text-align: right;">'. number_format((float) $detalle['cantidad'] ,2,',','.') .'</td>
                     <td>'. $detalle['descripcion'] .'</td>
                     <td style="text-align: right;">'. number_format((float)$detalle['precioUnitario'],2,',','.') .'</td>
                     <td style="text-align: right;">'. (array_key_exists('descuento', $detalle) ? number_format((float)$detalle['descuento'],2,',','.') : '0,00' ) .' </td>
@@ -452,12 +452,12 @@ trait HtmlDesignTrait{
             $rows_table .= '
                     <tr>
                         <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
-                        <td colspan=2 style="text-align: right;"> <b> Monto Total Devuelto '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL DEVUELTO '. Currencies::getShortCode($codigoMoneda).' </b></td>
                         <td> '. number_format((float) $this->fel_invoice->montoTotal,2,',','.') .'</td>
                     </tr>
                     
                     <tr>
-                        <td colspan=2 style="text-align: right;"> <b>Monto Efectivo de Débito-Crédito</b></td>
+                        <td colspan=2 style="text-align: right;"> <b>MONTO EFECTIVO DE DÉBITO-CRÉDITO '. Currencies::getShortCode($codigoMoneda) .'</b></td>
                         <td> '. number_format((float) $this->fel_invoice->montoEfectivoCreditoDebito,2,',','.') .'</td>
                     </tr>
                     
@@ -468,7 +468,7 @@ trait HtmlDesignTrait{
             $rows_table .= '
                     <tr>
                         <td colspan=3 style="border:0px;" ></td>
-                        <td colspan=2 style="text-align: right;"> <b> Monto Total Original '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
                         <td> '. number_format((float)$subtotal,2,',','.') .'</td>
                     </tr>
                     

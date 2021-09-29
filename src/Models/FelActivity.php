@@ -11,4 +11,9 @@ class FelActivity extends Model {
         return self::where('codigo', $code)->first()->descripcion;
     }
 
+    public static function getMainActivity($company_id){
+        $activity = self::where('company_id', $company_id)->where('tipoActividad', 'P')->first();
+        return $activity->descripcion;
+    }
+
 }
