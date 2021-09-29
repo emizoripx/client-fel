@@ -529,18 +529,20 @@ trait HtmlDesignTrait{
                 $qr = $this->generateQR();
                 if (!$qr || !isset($qr->data))
                     return "";
-                \Log::debug("QR cambiado");
+                
 
                 $logoQR = public_path().'/images/qr-simple.jpg';
 
-                \Log::debug("URL ". $logoQR);
+                
                 $component = '
-                        <div id="box-qr">
-                            <div style="font-size: 22px; text-align:center; padding: 5px; color:#3a3939;"><strong>Escanea y paga</strong> desde tu celular</div>
-                            <img src="data:image/jpeg;base64,'.$qr->data->qrImage .'" alt="" title="" width="180" height="180" style="display: -webkit-inline-box; padding: 10px 10px; border: 1px solid gainsboro;" />
-                            <div style="display:flex; padding-top: 5px; justify-content: center; align-items: center; width:100%;">
-                                <span style="font-size:28px; font-weight: 600;">QR </span> &nbsp;&nbsp;
-                                <img src="'.$logoQR.'" height="45"/>
+                        <div style="     margin-top: 100px; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 20px; width: 100%;">
+                            <div id="box-qr">
+                                <div style="font-size: 22px; text-align:center; padding: 5px; color:#3a3939;"><strong>Escanea y paga</strong> desde tu celular</div>
+                                <img src="data:image/jpeg;base64,'.$qr->data->qrImage .'" alt="" title="" width="180" height="180" style="display: -webkit-inline-box; padding: 10px 10px; border: 1px solid gainsboro;" />
+                                <div style="display:flex; padding-top: 5px; justify-content: center; align-items: center; width:100%;">
+                                    <span style="font-size:28px; font-weight: 600;">QR </span> &nbsp;&nbsp;
+                                    <img src="'.$logoQR. '" height="45"/>
+                                </div>
                             </div>
                         </div>';
             } catch (Exception $ex) {
