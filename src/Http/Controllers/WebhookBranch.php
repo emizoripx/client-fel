@@ -21,7 +21,14 @@ class WebhookBranch extends BaseController
         \Log::debug($data);
 
 
-        $companies =  AccountPrepagoBags::where('fel_company_id', $data['company_id'])->get();
+        // $companies =  AccountPrepagoBags::where('fel_company_id', $data['company_id'])->get();
+
+        $companies = \DB::table('fel_company')
+                        ->join('fel_company_tokens', 'fel_company.company_id', 'fel_company_tokens.account_id')
+                        ->where('fel_company.fel_company_id', $data['company_id'])
+                        ->where('fel_company_tokens.host', $data['host'])
+                        ->select('fel_company.company_id', 'fel_company.is_postpago')
+                        ->get();
 
         if ($companies) {
             foreach ($companies as $company) {
@@ -82,7 +89,7 @@ class WebhookBranch extends BaseController
                         $branch->municipio = $data['municipalidad'];
                         $branch->save();
 
-                        \Log::debug("Se actualizó la Surcursal #" . $data['code']);
+                        \Log::debug("Se actualizó la Surcursal #" . $data['code'] . "Company #".$company->company_id);
                     }
                 }
             }
