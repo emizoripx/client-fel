@@ -40,7 +40,7 @@ class BaseFelInvoiceBuilder {
             #automatico
             "numeroFactura" => $model->number ?? 0,
             # it is generated in FEL
-            "fechaEmision" => substr(Carbon::parse(Carbon::now())->format('Y-m-d\TH:i:s.u'), 0, -3),
+            "fechaEmision" => substr(Carbon::parse(Carbon::now())->setTimezone('America/La_Paz')->format('Y-m-d\TH:i:s.u'), 0, -3),
             "codigoPuntoVenta" => $fel_data_parsed['codigoPuntoVenta'],
             "codigoSucursal" => $fel_data_parsed['codigoSucursal'],
             "usuario" => trim($user->first_name . " " . $user->last_name) != "" ? trim($user->first_name . " " . $user->last_name) : "Usuario Genérico",
