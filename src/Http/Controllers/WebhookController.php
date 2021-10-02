@@ -38,9 +38,10 @@ class WebhookController extends BaseController
 
         if(isset($data['package_id'])){
             \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
-            $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->first();
-
+            $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
+            
             if (!empty($felInvoice)){ 
+                \Log::debug("WEBHOOK-CONTROLLER UPDATE INVOICE ID #". $felInvoice->cuf );
                 $felInvoice->savePackageId($data['package_id'])
                 ->saveState($data['state'])
                 ->saveStatusCode($data['status_code'])
