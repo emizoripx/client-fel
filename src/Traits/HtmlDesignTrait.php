@@ -23,7 +23,7 @@ trait HtmlDesignTrait{
 
 
         $rows_table = '';
-        
+        $currency_description = strtolower($felInvoice->getExchangeDescription());        
 
             foreach ($felInvoice->detalles as $detalle) {
                 
@@ -35,7 +35,7 @@ trait HtmlDesignTrait{
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
                     (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null). '<br> ' .
                     (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($detalle['unidadMedida']) : null).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0,5,',','.').'  '.'x ' .ucfirst($currency_description)."/".Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'. (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
                     
                 </tr>';
