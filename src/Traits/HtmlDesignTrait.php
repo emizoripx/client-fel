@@ -23,7 +23,7 @@ trait HtmlDesignTrait{
 
 
         $rows_table = '';
-        
+        $currency_description = strtolower($felInvoice->getExchangeDescription());        
 
             foreach ($felInvoice->detalles as $detalle) {
                 
@@ -35,7 +35,7 @@ trait HtmlDesignTrait{
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
                     (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null). '<br> ' .
                     (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($detalle['unidadMedida']) : null).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0,5,',','.').'  '.'x '.Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.').'  '.' ' .ucfirst($currency_description)."/".Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'. (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
                     
                 </tr>';
@@ -48,7 +48,7 @@ trait HtmlDesignTrait{
         $felInvoice = $this->fel_invoice;
 
         $rows_table = '';
-            
+        $currency_description = strtolower($felInvoice->getExchangeDescription());        
         foreach ($felInvoice->detalles as $detalle) {
 
             $rows_table = $rows_table . '
@@ -59,7 +59,7 @@ trait HtmlDesignTrait{
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' .
             (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0, '1', 5), 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null) . '<br> ' .
                 (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0, 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.') . '  ' . 'x ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.') . '  ' . ' ' . ucfirst($currency_description) . "/" . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'], '1', 5), 5, ',', '.') : '') . '</td>
                     
                 </tr>';
@@ -239,7 +239,7 @@ trait HtmlDesignTrait{
             $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, '(Bolivianos)'), 'label' => 'Total Literal'];
             $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
             
-            $data['$fel.subtotal'] = ['value' => number_format((float)collect($this->fel_invoice->detalles)->sum('subTotal'),5,',','.'), 'label' => 'Sub - Total'];
+            $data['$fel.subtotal'] = ['value' => number_format((float)collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Sub - Total'];
 
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductVentaInternaMinerales(), 'label' => 'Detalle Productos'];
             $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];

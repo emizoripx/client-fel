@@ -380,4 +380,10 @@ class FelInvoiceRequest extends Model
     public function getFacturaOrigin(){
         return Invoice::where('id', $this->factura_original_id)->first();
     }
+
+    public function getExchangeDescription()
+    {
+        
+        return  \DB::table('fel_currencies')->whereCodigo($this->codigoMoneda)->first()->descripcion;
+    }
 }

@@ -2,6 +2,7 @@
 
 use EmizorIpx\ClientFel\Contracts\FelInvoiceBuilderInterface;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
+use Exception;
 
 class FelInvoiceBuilder {
 
@@ -11,8 +12,13 @@ class FelInvoiceBuilder {
         $builder->prepare();
 
         $builder->processInput();
+        
+        try{
+            $builder->createOrUpdate();
+        }catch(Exception $ex) {
+            \Log::debug($ex->getMessage());
+        }
 
-        $builder->createOrUpdate();
 
         return $builder->getFelInvoice();
     }
