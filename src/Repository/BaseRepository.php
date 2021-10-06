@@ -42,6 +42,7 @@ class BaseRepository
                     break;
                 case 'invoice':
                     $this->fel_data_parsed = [
+                        "numeroFactura" => isset($fel_data['numeroFactura'])? $fel_data['numeroFactura'] : null,
                         "activity_id" => $fel_data['codigoActividad'],
                         "caption_id" => $fel_data['codigoLeyenda'],
                         "payment_method_id" => $fel_data['codigoMetodoPago'],
