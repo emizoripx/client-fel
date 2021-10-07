@@ -386,4 +386,9 @@ class FelInvoiceRequest extends Model
         
         return  \DB::table('fel_currencies')->whereCodigo($this->codigoMoneda)->first()->descripcion;
     }
+
+    public function getFechaEmisionFormated(){
+        $date = date("d/m/Y g:i A", strtotime($this->fechaEmision));
+        return  $date;
+    }
 }

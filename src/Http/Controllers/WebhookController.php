@@ -89,8 +89,8 @@ class WebhookController extends BaseController
                 \Log::debug(' WEBHOOK-CONTROLLER validate invoice date update');
 
                 $invoice->invoiceDateUpdatedAt();
-                \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
-                $invoice->deletePdf();
+                // \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
+                // $invoice->deletePdf();
                 \Log::debug(' WEBHOOK-CONTROLLER registering historial');
 
                 fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
