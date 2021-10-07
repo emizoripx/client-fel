@@ -13,7 +13,7 @@ class UpdateProductLinesActivityCode
     public function run()
     {
 
-        \App\Models\Company::select('id')->cursor()->each(function ($company) use ($hashid) {
+        \App\Models\Company::select('id')->cursor()->each(function ($company) {
 
             $counterInvoicesOk = 0;
             $counterInvoicesNotOk = 0;

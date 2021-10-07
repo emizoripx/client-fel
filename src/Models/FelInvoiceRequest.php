@@ -54,10 +54,14 @@ class FelInvoiceRequest extends Model
 
     public function saveCuf($value) 
     {
+        \Log::debug("Saving CUF......");
         if(!is_null($value)){
             
             $this->cuf = $value;
+
+            $this->save();
         }
+
         return $this;
     }
     public function saveAckTicket($value) 
@@ -240,24 +244,24 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->sendToFel();
 
-        $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
-        // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
+        $this->saveCuf($invoice_service->getResponse()['cuf']);
+        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
-        $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
+        // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
         
-        $invoice = $invoice_service->getInvoiceByAckTicket();
+        // $invoice = $invoice_service->getInvoiceByAckTicket();
+        $invoice = $invoice_service->getInvoiceByCuf();
         \Log::debug("================================================================================");
         // \Log::debug([$invoice_service->getResponse()]);
         \Log::debug("================================================================================");
         $this->saveState($invoice['estado'])
-            //  ->saveCuf($invoice_service->getResponse()['cuf'])
-            //TO-DO: un comment once, it is sent from  fel, nota_debito with url_sin
-             //  ->saveUrlSin($invoice['urlSin'])
              ->saveUrlSin($invoice['urlSin']?? null)
              ->saveEmisionDate($invoice['fechaEmision'])
              ->saveEmisionType($invoice['tipoEmision'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
-            //  ->saveAddressInvoice($invoice['direccion'])
+             ->savePackageId($invoice['package_id'] ?? null)
+             ->saveIndexPackage($invoice['index_package'] ?? null)
              ->save();
 
         $this->invoiceDateUpdate();
@@ -375,5 +379,16 @@ class FelInvoiceRequest extends Model
     }
     public function getFacturaOrigin(){
         return Invoice::where('id', $this->factura_original_id)->first();
+    }
+
+    public function getExchangeDescription()
+    {
+        
+        return  \DB::table('fel_currencies')->whereCodigo($this->codigoMoneda)->first()->descripcion;
+    }
+
+    public function getFechaEmisionFormated(){
+        $date = date("d/m/Y g:i A", strtotime($this->fechaEmision));
+        return  $date;
     }
 }
