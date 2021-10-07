@@ -27,7 +27,8 @@ class DebitoCreditoResource extends JsonResource
             "montoTotalDevuelto" => round($this->montoTotal, 2),
             "montoDescuentoCreditoDebito" => round($this->montoDescuentoCreditoDebito, 2),
             "montoEfectivoCreditoDebito" => round($this->montoEfectivoCreditoDebito, 2),
-            'detalles' => DetalleDebitoCreditoResource::collection(collect($this->detalles))
+            'detalles' => DetalleDebitoCreditoResource::collection(collect($this->detalles)),
+            "emailCliente" => $this->emailCliente,
 
         ];
     }

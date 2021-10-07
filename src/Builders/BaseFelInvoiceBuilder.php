@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Builders;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
+use Exception;
 
 class BaseFelInvoiceBuilder {
 
@@ -25,7 +26,20 @@ class BaseFelInvoiceBuilder {
         $fel_data_parsed = $this->source_data['fel_data_parsed'];
         $user = $this->source_data['user'];
         $client = $this->source_data['client'];
-
+        $client_email_first_invitation= "";
+        try{
+            // hardcoded for msc
+            if ($model->company->settings->id_number == '1020415021'){
+                $invitation = $model->invitations()->first(); 
+                if ( !empty($invitation)) {
+                    $client_email_first_invitation = $invitation->contact->email;
+                }
+            }
+        } catch (Exception $ex) {
+            // \Log::debug("==========================================================================");
+            \Log::debug($ex->getMessage());
+            // \Log::debug("==========================================================================");
+        }
 
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
@@ -52,7 +66,7 @@ class BaseFelInvoiceBuilder {
             "numeroDocumento" => $client->document_number,
             "complemento" => $client->complement ?? null,
             "codigoCliente" => $model->client->number,
-            "emailCliente" => null,
+            "emailCliente" => $client_email_first_invitation != "" ? $client_email_first_invitation : null,
             "telefonoCliente" => $model->client->phone
         ]);
         

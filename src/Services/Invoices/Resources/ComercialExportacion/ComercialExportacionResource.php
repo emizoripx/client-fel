@@ -55,6 +55,7 @@ class ComercialExportacionResource extends JsonResource
             'detalles' => DetalleComercialExportacionResource::collection(collect($this->detalles)),
             "costosGastosNacionales" => CostosComercialExportacionResource::collection(collect($this->costosGastosNacionalesChanged)),
             "costosGastosInternacionales" => CostosComercialExportacionResource::collection(collect($this->costosGastosInternacionalesChanged)),
+            "emailCliente" => $this->emailCliente,
         ];
     }
 }

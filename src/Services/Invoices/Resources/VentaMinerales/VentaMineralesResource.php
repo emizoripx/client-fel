@@ -55,7 +55,8 @@ class VentaMineralesResource extends JsonResource
             "otrosDatos"=>json_encode($this->otrosDatos),
             "subTotal" => round(collect($this->detalles)->sum('subTotal'), 2),
             "montoTotalSujetoIva" => round($this->montoTotal, 2),
-            'detalles' => DetalleVentaMineralesResource::collection(collect($this->detalles))
+            'detalles' => DetalleVentaMineralesResource::collection(collect($this->detalles)),
+            "emailCliente" => $this->emailCliente,
             
         ];
     }
