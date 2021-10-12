@@ -16,7 +16,10 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 trait HtmlDesignTrait{
 
-    
+    public function number_format_custom($number,$q ) {
+
+        return number_format($number, $q, '.', ',');
+    }
 
     public function makeRowsProductExportacionMinerales(){
         $felInvoice = $this->fel_invoice;
@@ -33,10 +36,10 @@ trait HtmlDesignTrait{
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['descripcionLeyes']) ? $detalle['descripcionLeyes'] : null) .' </td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['codigoNandina']) ? $detalle['codigoNandina'] : null) .'</td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.
-                    (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0,'1',5),5,',','.').' '. Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null). '<br> ' .
-                    (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0,5,',','.').' '.Unit::getUnitDescription($detalle['unidadMedida']) : null).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.').'  '.' ' .ucfirst($currency_description)."/".Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'. (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'] ,'1',5),5,',','.') : '' ).'</td>
+                    (isset($detalle['cantidadExtraccion']) ? $this->number_format_custom((float) bcdiv($detalle['cantidadExtraccion'] ?? 0,'1',5),5).' '. Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null). '<br> ' .
+                    (isset($detalle['cantidad']) ? $this->number_format_custom((float)$detalle['cantidad'] ?? 0,5).' '.Unit::getUnitDescription($detalle['unidadMedida']) : null).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">'.(isset($detalle['precioUnitario']) ? $this->number_format_custom((float)$detalle['precioUnitario'] ?? 0, 5).'  '.' ' .ucfirst($currency_description)."/".Unit::getUnitDescription($detalle['unidadMedida']) : null ).'</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">'. (isset($detalle['subTotal']) ? $this->number_format_custom((float) bcdiv($detalle['subTotal'] ,'1',5),5) : '' ).'</td>
                     
                 </tr>';
             }
@@ -57,10 +60,10 @@ trait HtmlDesignTrait{
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">' . (isset($detalle['descripcionLeyes']) ? $detalle['descripcionLeyes'] : null) . ' </td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid center">' . (isset($detalle['codigoNandina']) ? $detalle['codigoNandina'] : null) . '</td>
                     <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' .
-            (isset($detalle['cantidadExtraccion']) ? number_format((float) bcdiv($detalle['cantidadExtraccion'] ?? 0, '1', 5), 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null) . '<br> ' .
-                (isset($detalle['cantidad']) ? number_format((float)$detalle['cantidad'] ?? 0, 5, ',', '.') . ' ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['precioUnitario']) ? number_format((float)$detalle['precioUnitario'] ?? 0, 5, ',', '.') . '  ' . ' ' . ucfirst($currency_description) . "/" . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
-                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['subTotal']) ? number_format((float) bcdiv($detalle['subTotal'], '1', 5), 5, ',', '.') : '') . '</td>
+            (isset($detalle['cantidadExtraccion']) ? $this->number_format_custom((float) bcdiv($detalle['cantidadExtraccion'] ?? 0, '1', 5), 5) . ' ' . Unit::getUnitDescription($detalle['unidadMedidaExtraccion']) : null) . '<br> ' .
+                (isset($detalle['cantidad']) ? $this->number_format_custom((float)$detalle['cantidad'] ?? 0, 5) . ' ' . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['precioUnitario']) ? $this->number_format_custom((float)$detalle['precioUnitario'] ?? 0, 5) . '  ' . ' ' . ucfirst($currency_description) . "/" . Unit::getUnitDescription($detalle['unidadMedida']) : null) . '</td>
+                    <td style="padding-top: 10px; padding-bottom:10px;" class="b-solid right-align">' . (isset($detalle['subTotal']) ? $this->number_format_custom((float) bcdiv($detalle['subTotal'], '1', 5), 5) : '') . '</td>
                     
                 </tr>';
         }
@@ -87,11 +90,11 @@ trait HtmlDesignTrait{
             $rows_table .= '
             <tr>
                 <td >'. $detalle['codigoNandina'] . '</td>
-                <td style="text-align:right;" >'. number_format((float) $detalle['cantidad'],5,',','.') .'</td>
+                <td style="text-align:right;" >'. $this->number_format_custom((float) $detalle['cantidad'],5) .'</td>
                 <td>'. $detalle['descripcion'] .'</td>
                 <td>'. Unit::getUnitDescription($detalle['unidadMedida']) .'</td>
-                <td style="text-align:right;">'.number_format((float)$detalle['precioUnitario'],5,',','.').' </td>
-                <td width="30px" style="text-align:right;">'. number_format((float) $detalle['subTotal'],5,',','.') .'</td>
+                <td style="text-align:right;">'.$this->number_format_custom((float)$detalle['precioUnitario'],5).' </td>
+                <td width="30px" style="text-align:right;">'. $this->number_format_custom((float) $detalle['subTotal'],5) .'</td>
             </tr>
             ';
             $subtotal += floatval($detalle['subTotal']); 
@@ -99,7 +102,7 @@ trait HtmlDesignTrait{
         $rows_table .= '
         <tr>
             <td colspan=5 style="text-align: right;"> <b> TOTAL DETALLE ('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).') <br> (Total Detail) </b></td>
-            <td> '. number_format((float) $subtotal,2,',','.').'</td>
+            <td> '. $this->number_format_custom((float) $subtotal,2).'</td>
         </tr>
         <tr>
             <td colspan=5 style="text-align: left;"> INCOTERM y alcance del Total detalle de la transacción (INCOTERM and scope of the Total Transaction Details)</td>
@@ -117,18 +120,18 @@ trait HtmlDesignTrait{
         $rows = (isset($this->fel_invoice->detalles[0]['descripcion']) ? 
         '<tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[0]['descripcion']).'</th>
-            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[0]['subTotal'] ,'1',5),5,',','.') .'</td>
+            <td class="b-solid right-align">'. $this->number_format_custom((float) bcdiv($this->fel_invoice->detalles[0]['subTotal'] ,'1',5),5) .'</td>
         </tr>' : '')
         
         .(isset($this->fel_invoice->detalles[1]['descripcion']) ? '
         <tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[1]['descripcion']).'</th>
-            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[1]['subTotal'] ,'1',5),5,',','.') .'</td>
+            <td class="b-solid right-align">'. $this->number_format_custom((float) bcdiv($this->fel_invoice->detalles[1]['subTotal'] ,'1',5),5) .'</td>
         </tr>' : '')
         . (isset($this->fel_invoice->detalles[2]['descripcion']) ? '
         <tr>
             <th class="left-align" colspan="7">'.strtoupper($this->fel_invoice->detalles[2]['descripcion']).'</th>
-            <td class="b-solid right-align">'. number_format((float) bcdiv($this->fel_invoice->detalles[2]['subTotal'] ,'1',5),5,',','.') .'</td>
+            <td class="b-solid right-align">'. $this->number_format_custom((float) bcdiv($this->fel_invoice->detalles[2]['subTotal'] ,'1',5),5) .'</td>
         </tr>' : ''
         );
 
@@ -152,22 +155,22 @@ trait HtmlDesignTrait{
             $data['$fel.pais_destino'] = ['value' => Country::getDescriptionCountry($this->fel_invoice->paisDestino), 'label' => 'País Destino'];
             $data['$fel.moneda_transaccion'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Moneda Transacción'];
             $data['$fel.moneda_code'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
-            $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
-            $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
+            $data['$fel.tipo_cambio'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2), 'label' => 'Tipo Cambio Oficial'];
+            $data['$fel.tipo_cambioANB'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambioANB,2), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
-            $data['$fel.kilos_netosHumedos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosHumedos,2,',','.'), 'label' => 'Kilos Netos Húmedos'];
-            $data['$fel.humedad_porcentaje'] = ['value' => number_format( (float) $this->fel_invoice->humedadPorcentaje,2,',','.'), 'label' => 'Humedad Porcentaje'];
-            $data['$fel.humedad_valor'] = ['value' => number_format((float)$this->fel_invoice->humedadValor,2,',','.'), 'label' => 'Humedad Valor'];
-            $data['$fel.merma_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->mermaPorcentaje,2,',','.'), 'label' => 'Merma Porcentaje'];
-            $data['$fel.merma_valor'] = ['value' => number_format((float)$this->fel_invoice->mermaValor,2,',','.'), 'label' => 'Merma Valor'];
-            $data['$fel.kilos_netosSecos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.'), 'label' => 'Kilos Netos Secos'];
-            $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
-            $data['$fel.valor_FOBFrontera'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFrontera'],2,',','.') , 'label' => 'Valor FOB Frontera'];
-            $data['$fel.valor_FOBFronteraBs'] = ['value' => number_format((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'],2,',','.'), 'label' => 'Valor FOB Frontera'];
+            $data['$fel.kilos_netosHumedos'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->kilosNetosHumedos,2), 'label' => 'Kilos Netos Húmedos'];
+            $data['$fel.humedad_porcentaje'] = ['value' => $this->number_format_custom( (float) $this->fel_invoice->humedadPorcentaje,2), 'label' => 'Humedad Porcentaje'];
+            $data['$fel.humedad_valor'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->humedadValor,2), 'label' => 'Humedad Valor'];
+            $data['$fel.merma_porcentaje'] = ['value' => $this->number_format_custom((float) $this->fel_invoice->mermaPorcentaje,2), 'label' => 'Merma Porcentaje'];
+            $data['$fel.merma_valor'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->mermaValor,2), 'label' => 'Merma Valor'];
+            $data['$fel.kilos_netosSecos'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->kilosNetosSecos,2), 'label' => 'Kilos Netos Secos'];
+            $data['$fel.gastos_realizacion'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->gastosRealizacion,2), 'label' => 'Gastos Realización'];
+            $data['$fel.valor_FOBFrontera'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->otrosDatos['valorFobFrontera'],2) , 'label' => 'Valor FOB Frontera'];
+            $data['$fel.valor_FOBFronteraBs'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'],2), 'label' => 'Valor FOB Frontera'];
             $data['$fel.valor_FOBFronteraLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFrontera'], 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Valor FOB Frontera Literal'];
             $data['$fel.valor_FOBFronteraBsLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->otrosDatos['valorFobFronteraBs'], 2, '(Bolivianos)'), 'label' => 'Valor FOB Frontera Literal'];
             
-            $data['$monto_total'] = ['value' => number_format(collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Monto Total'];
+            $data['$monto_total'] = ['value' => $this->number_format_custom(collect($this->fel_invoice->detalles)->sum('subTotal'),2), 'label' => 'Monto Total'];
             $data['$total_literal'] = ['value' => 'SON: '. $this->getToWord(collect($this->fel_invoice->detalles)->sum('subTotal'), 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Total Literal'];
             
             
@@ -176,7 +179,7 @@ trait HtmlDesignTrait{
             $data['$fel.fleteInternoUSD'] = ['value' => !empty($this->fel_invoice->otrosDatos['fleteInternoUSD']) ? 
                                             '<tr>
                                                 <th class="left-align" colspan="7">FLETE INTERNO USD</th>
-                                                <td class="b-solid right-align">'. number_format((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'] ,2,',','.').'</td>
+                                                <td class="b-solid right-align">'. $this->number_format_custom((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'] ,2).'</td>
                                             </tr>
                                             <tr>
                                                 <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['fleteInternoUSD'], 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')').' </td>
@@ -185,7 +188,7 @@ trait HtmlDesignTrait{
             // $data['$fel.valor_plata'] = ['value' => isset($this->fel_invoice->otrosDatos['valorPlata']) ? 
             //                                 '<tr>
             //                                     <th class="left-align" colspan="7">VALOR PLANTA</th>
-            //                                     <td class="b-solid right-align">'. number_format((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2,',','.').'</td>
+            //                                     <td class="b-solid right-align">'. $this->number_format_custom((float) $this->fel_invoice->otrosDatos['valorPlata'] ,2).'</td>
             //                                 </tr>
             //                                 <tr>
             //                                     <td class="b-solid" colspan="8">SON: '.$this->getToWord((float)$this->fel_invoice->otrosDatos['valorPlata'], 2, 'Dólares Americanos').' </td>
@@ -222,24 +225,24 @@ trait HtmlDesignTrait{
             $data['$fel.pais_destino'] = ['value' => Country::getDescriptionCountry($this->fel_invoice->paisDestino), 'label' => 'País Destino'];
             $data['$fel.moneda_transaccion'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Moneda Transacción'];
             $data['$fel.moneda_code'] = ['value' => Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
-            $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
-            $data['$fel.tipo_cambioANB'] = ['value' => number_format((float)$this->fel_invoice->tipoCambioANB,2,',','.'), 'label' => 'Tipo Cambio ANB'];
+            $data['$fel.tipo_cambio'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2), 'label' => 'Tipo Cambio Oficial'];
+            $data['$fel.tipo_cambioANB'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambioANB,2), 'label' => 'Tipo Cambio ANB'];
             $data['$fel.numero_lote'] = ['value' => $this->fel_invoice->numeroLote, 'label' => 'Número Lote'];
-            $data['$fel.kilos_netosHumedos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosHumedos,2,',','.'), 'label' => 'Kilos Netos Húmedos'];
-            $data['$fel.humedad_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->humedadPorcentaje,2,',','.'), 'label' => 'Humedad Porcentaje'];
-            $data['$fel.humedad_valor'] = ['value' => number_format((float)$this->fel_invoice->humedadValor,2,',','.'), 'label' => 'Humedad Valor'];
-            $data['$fel.merma_porcentaje'] = ['value' => number_format((float) $this->fel_invoice->mermaPorcentaje,2,',','.'), 'label' => 'Merma Porcentaje'];
-            $data['$fel.merma_valor'] = ['value' => number_format((float)$this->fel_invoice->mermaValor,2,',','.'), 'label' => 'Merma Valor'];
-            $data['$fel.kilos_netosSecos'] = ['value' => number_format((float)$this->fel_invoice->kilosNetosSecos,2,',','.'), 'label' => 'Kilos Netos Secos'];
-            $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
-            $data['$fel.iva'] = ['value' => number_format((float)$this->fel_invoice->iva,2,',','.') , 'label' => 'IVA'];
-            $data['$fel.liquidacion_preliminar'] = ['value' => number_format((float)$this->fel_invoice->liquidacion_preliminar,2,',','.') , 'label' => 'Liquidación Preliminar'];
-            $data['$fel.precio_concentrado'] = ['value' => number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.'), 'label' => 'Precio Concentrado'];
+            $data['$fel.kilos_netosHumedos'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->kilosNetosHumedos,2), 'label' => 'Kilos Netos Húmedos'];
+            $data['$fel.humedad_porcentaje'] = ['value' => $this->number_format_custom((float) $this->fel_invoice->humedadPorcentaje,2), 'label' => 'Humedad Porcentaje'];
+            $data['$fel.humedad_valor'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->humedadValor,2), 'label' => 'Humedad Valor'];
+            $data['$fel.merma_porcentaje'] = ['value' => $this->number_format_custom((float) $this->fel_invoice->mermaPorcentaje,2), 'label' => 'Merma Porcentaje'];
+            $data['$fel.merma_valor'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->mermaValor,2), 'label' => 'Merma Valor'];
+            $data['$fel.kilos_netosSecos'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->kilosNetosSecos,2), 'label' => 'Kilos Netos Secos'];
+            $data['$fel.gastos_realizacion'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->gastosRealizacion,2), 'label' => 'Gastos Realización'];
+            $data['$fel.iva'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->iva,2) , 'label' => 'IVA'];
+            $data['$fel.liquidacion_preliminar'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->liquidacion_preliminar,2) , 'label' => 'Liquidación Preliminar'];
+            $data['$fel.precio_concentrado'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->montoTotalMoneda,2), 'label' => 'Precio Concentrado'];
             $data['$fel.precio_ConcentradoLiteral'] = ['value' => $this->getToWord((float)$this->fel_invoice->montoTotalMoneda, 2, '('.Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda).')'), 'label' => 'Precion Concentrado Literal'];
             $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, '(Bolivianos)'), 'label' => 'Total Literal'];
-            $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+            $data['$fel.monto_total'] = ['value' => $this->number_format_custom($this->fel_invoice->montoTotal,2), 'label' => 'Monto Total'];
             
-            $data['$fel.subtotal'] = ['value' => number_format((float)collect($this->fel_invoice->detalles)->sum('subTotal'),2,',','.'), 'label' => 'Sub - Total'];
+            $data['$fel.subtotal'] = ['value' => $this->number_format_custom((float)collect($this->fel_invoice->detalles)->sum('subTotal'),2), 'label' => 'Sub - Total'];
 
             $data['$fel.product_rows'] = ['value' => $this->makeRowsProductVentaInternaMinerales(), 'label' => 'Detalle Productos'];
             $data['$fel.subtotals'] = ['value' => $this->MakeSubtotalsRows(), 'label' => 'Subtotales'];
@@ -281,7 +284,7 @@ trait HtmlDesignTrait{
                         <td><b>Moneda de la Transacción Comercial (Comercial Transaction Currency):</b></td>
                         <td>'. Currency::getCurrecyDescription($this->fel_invoice->codigoMoneda) .'</td>
                         <td><b>Tipo de Cambio (Exchange Date):</b></td>
-                        <td>'. number_format((float)$this->fel_invoice->tipoCambio,2,',','.') .'</td>
+                        <td>'. $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -295,10 +298,10 @@ trait HtmlDesignTrait{
             $data['$fel.invoice_title'] = ['value' => $this->cuf ? 'FACTURA COMERCIAL EXPORTACIÓN' : 'PREFACTURA COMERCIAL EXPORTACIÓN', 'label' => 'Titulo'];
             // $data['$fel.invoice_type'] = ['value' => $this->cuf ? '('.$this->fel_invoice->type_invoice.')' : '', 'label' => 'Tipo de Factura'];
             $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
-            $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
-            $data['$fel.gastos_realizacion'] = ['value' => number_format((float)$this->fel_invoice->gastosRealizacion,2,',','.'), 'label' => 'Gastos Realización'];
+            $data['$fel.tipo_cambio'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2), 'label' => 'Tipo Cambio Oficial'];
+            $data['$fel.gastos_realizacion'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->gastosRealizacion,2), 'label' => 'Gastos Realización'];
             $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
-            $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+            $data['$fel.monto_total'] = ['value' => $this->number_format_custom($this->fel_invoice->montoTotal,2), 'label' => 'Monto Total'];
             
             $data['$fel.products_rows'] = [ 'value' => $this->makeRowsProductComercialExportacion(), 'label' => 'Detalles Productos' ];
             $data['$fel.client_details'] = [ 'value' => $this->makeClientDetail(), 'label' => 'Detalles Cliente' ];
@@ -308,15 +311,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ?  number_format((float)$this->fel_invoice->costosGastosNacionales['gastoTransporte'],2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ?  $this->number_format_custom((float)$this->fel_invoice->costosGastosNacionales['gastoTransporte'],2) : 0) .'</td>
                     </tr>
                     <tr>
                         <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? number_format((float) $this->fel_invoice->costosGastosNacionales['gastoSeguro'],2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->number_format_custom((float) $this->fel_invoice->costosGastosNacionales['gastoSeguro'],2) : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>SUBTOTAL FOB</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? number_format((float)$this->fel_invoice->totalGastosNacionalesFob,2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosNacionalesFob,2) : 0) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -329,15 +332,15 @@ trait HtmlDesignTrait{
                 <tbody>
                     <tr>
                         <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->costosGastosInternacionales['gastoTransporte'],2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->costosGastosInternacionales['gastoTransporte'],2) : 0) .'</td>
                     </tr>
                     <tr>
                         <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->costosGastosInternacionales['gastoSeguro'],2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->costosGastosInternacionales['gastoSeguro'],2) : 0) .'</td>
                     </tr>
                     <tr>
                         <td><b>TOTAL CIF</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? number_format((float)$this->fel_invoice->totalGastosInternacionales,2,',','.') : 0) .'</td>
+                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosInternacionales,2) : 0) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -351,12 +354,12 @@ trait HtmlDesignTrait{
                     <tr>
                         <td>Son: '.$this->getToWord($this->fel_invoice->montoTotalMoneda, 2, 'Dólares').'</td>
                         <td style="text-align: right;"><b>TOTAL GENERAL (DOLAR)</b></td>
-                        <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotalMoneda,2,',','.') .'</td>
+                        <td style="text-align: right;">'. $this->number_format_custom((float)$this->fel_invoice->montoTotalMoneda,2) .'</td>
                     </tr>
                     <tr>
                         <td>Son: '.$this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos').'</td>
                         <td style="text-align: right;"><b>TOTAL GENERAL (BOLIVIANOS)</b></td>
-                        <td style="text-align: right;">'. number_format((float)$this->fel_invoice->montoTotal,2,',','.') .'</td>
+                        <td style="text-align: right;">'. $this->number_format_custom((float)$this->fel_invoice->montoTotal,2) .'</td>
                     </tr>
                 </tbody>
             </table>
@@ -437,11 +440,11 @@ trait HtmlDesignTrait{
             $rows_table .= '
                 <tr>
                     <td>'. $detalle['codigoProducto'] .'</td>
-                    <td style="text-align: right;">'. number_format((float) $detalle['cantidad'] ,2,',','.') .'</td>
+                    <td style="text-align: right;">'. $this->number_format_custom((float) $detalle['cantidad'] ,2) .'</td>
                     <td>'. $detalle['descripcion'] .'</td>
-                    <td style="text-align: right;">'. number_format((float)$detalle['precioUnitario'],2,',','.') .'</td>
-                    <td style="text-align: right;">'. (array_key_exists('descuento', $detalle) ? number_format((float)$detalle['descuento'],2,',','.') : '0,00' ) .' </td>
-                    <td class="right-align">'. number_format((float)$detalle['subTotal'],2,',','.') .'</td>
+                    <td style="text-align: right;">'. $this->number_format_custom((float)$detalle['precioUnitario'],2) .'</td>
+                    <td style="text-align: right;">'. (array_key_exists('descuento', $detalle) ? $this->number_format_custom((float)$detalle['descuento'],2) : '0.00' ) .' </td>
+                    <td class="right-align">'. $this->number_format_custom((float)$detalle['subTotal'],2) .'</td>
                 </tr>
             ';
             $subtotal += intval($detalle['subTotal']); 
@@ -453,12 +456,12 @@ trait HtmlDesignTrait{
                     <tr>
                         <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
                         <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL DEVUELTO '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. number_format((float) $this->fel_invoice->montoTotal,2,',','.') .'</td>
+                        <td> '. $this->number_format_custom((float) $this->fel_invoice->montoTotal,2) .'</td>
                     </tr>
                     
                     <tr>
                         <td colspan=2 style="text-align: right;"> <b>MONTO EFECTIVO DE DÉBITO-CRÉDITO '. Currencies::getShortCode($codigoMoneda) .'</b></td>
-                        <td> '. number_format((float) $this->fel_invoice->montoEfectivoCreditoDebito,2,',','.') .'</td>
+                        <td> '. $this->number_format_custom((float) $this->fel_invoice->montoEfectivoCreditoDebito,2) .'</td>
                     </tr>
                     
                     </tbody>
@@ -469,7 +472,7 @@ trait HtmlDesignTrait{
                     <tr>
                         <td colspan=3 style="border:0px;" ></td>
                         <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. number_format((float)$subtotal,2,',','.') .'</td>
+                        <td> '. $this->number_format_custom((float)$subtotal,2) .'</td>
                     </tr>
                     
                     </tbody>
@@ -489,9 +492,9 @@ trait HtmlDesignTrait{
         $data['$fel.products_rows_devolucion'] = [ 'value' => $this->makeRowsProductFacturaOriginal($this->fel_invoice->detalles, $this->fel_invoice->codigoMoneda, true), 'label' => 'Detalles Productos' ];
 
         $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
-        $data['$fel.tipo_cambio'] = ['value' => number_format((float)$this->fel_invoice->tipoCambio,2,',','.'), 'label' => 'Tipo Cambio Oficial'];
+        $data['$fel.tipo_cambio'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2), 'label' => 'Tipo Cambio Oficial'];
         $data['$fel.total_literal'] = ['value' => 'SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, 'Bolivianos'), 'label' => 'Total Literal'];
-        $data['$fel.monto_total'] = ['value' => number_format($this->fel_invoice->montoTotal,2,',','.'), 'label' => 'Monto Total'];
+        $data['$fel.monto_total'] = ['value' => $this->number_format_custom($this->fel_invoice->montoTotal,2), 'label' => 'Monto Total'];
 
         return $data;
 
