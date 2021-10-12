@@ -242,36 +242,39 @@ class FelInvoiceRequest extends Model
 
         $invoice_service->buildData($this);
 
-        $invoice_service->sendToFel();
+        $parse_response = $invoice_service->sendToFel();
 
-        // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
-        $this->saveCuf($invoice_service->getResponse()['cuf']);
-        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        \Log::debug(">>>>>>>>>>>>>>>>>>>>>>>>> SAVING CUF 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        \DB::table('fel_invoice_requests')->whereId($this->id)->update(['cuf'=> $parse_response['cuf']]);
+        \Log::debug(
+        "datos del cuf " . $parse_response['cuf']
+        );
+        // $this->saveCuf($parse_response['cuf']);
+        $invoice_service->setCuf($parse_response['cuf']);
 
-        // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
+
+
+        // $invoice = $invoice_service->getInvoiceByCuf();
+        // \Log::debug("================================================================================");
+        // // \Log::debug([$invoice_service->getResponse()]);
+        // \Log::debug("================================================================================");
+        // $this->saveState($invoice['estado'])
+        //      ->saveUrlSin($invoice['urlSin']?? null)
+        //      ->saveEmisionDate($invoice['fechaEmision'])
+        //      ->saveEmisionType($invoice['tipoEmision'])
+        //      ->saveInvoiceTypeId($invoice['documentoSector'])
+        //      ->savePackageId($invoice['package_id'] ?? null)
+        //      ->saveIndexPackage($invoice['index_package'] ?? null)
+        //      ->save();
+
+        // $this->invoiceDateUpdate();
         
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-        $invoice = $invoice_service->getInvoiceByCuf();
-        \Log::debug("================================================================================");
-        // \Log::debug([$invoice_service->getResponse()]);
-        \Log::debug("================================================================================");
-        $this->saveState($invoice['estado'])
-             ->saveUrlSin($invoice['urlSin']?? null)
-             ->saveEmisionDate($invoice['fechaEmision'])
-             ->saveEmisionType($invoice['tipoEmision'])
-             ->saveInvoiceTypeId($invoice['documentoSector'])
-             ->savePackageId($invoice['package_id'] ?? null)
-             ->saveIndexPackage($invoice['index_package'] ?? null)
-             ->save();
-
-        $this->invoiceDateUpdate();
-        
-        $account = $this->felCompany();
-        if(!$account->checkIsPostpago()){
-            $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
-        } else {
-            $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
-        }
+        // $account = $this->felCompany();
+        // if(!$account->checkIsPostpago()){
+        //     $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
+        // } else {
+        //     $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
+        // }
     }
 
 

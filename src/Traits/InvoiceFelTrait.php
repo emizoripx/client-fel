@@ -27,12 +27,12 @@ trait InvoiceFelTrait
             
             $invoice_service->buildData($this);
 
-            $invoice_service->sendToFel();
+            $parse_response = $invoice_service->sendToFel();
 
-            // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
-            $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
-
-            $input = $invoice_service->getInvoiceByAckTicket();
+            \Log::debug(">>>>>>>>>>>>>>>>>>>>>>>>> SAVING CUF 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            \DB::table('fel_invoice_requests')->whereId($this->id)->update(['cuf' => $parse_response['cuf']]);
+            
+            $input = $invoice_service->getInvoiceByCuf();
 
             
             $hashid = new Hashids (config('ninja.hash_salt'),10);

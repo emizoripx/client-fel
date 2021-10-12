@@ -19,7 +19,7 @@ class WebhookController extends BaseController
 
     public function callback(Request $request)
     {
-        \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK *******************************************************');
+        \Log::debug('WEBHOOK-CONTROLLER CALLBACK *******************************************************');
         \Log::debug($request->all());
 
         $data = [
@@ -37,9 +37,8 @@ class WebhookController extends BaseController
         ];
 
         if(isset($data['package_id'])){
-            \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
-            $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
-            
+
+            $felInvoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
             if (!empty($felInvoice)){ 
                 \Log::debug("WEBHOOK-CONTROLLER UPDATE INVOICE ID #". $felInvoice->cuf );
                 $felInvoice->savePackageId($data['package_id'])
@@ -53,18 +52,12 @@ class WebhookController extends BaseController
                 ->save();
 
             }
-            else
+            else{
                 \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
+            }
         } else{
-
-            // if (isset($data['ack_ticket'])  ){
-    
-                \Log::debug(' WEBHOOK-CONTROLLER ack_ticket used');
-                $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
-            // } else{
-            //     \Log::debug(' WEBHOOK-CONTROLLER cuf used');
-            //     $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
-            // }
+            
+            $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
     
             if (empty($invoice)) {
                 \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
@@ -74,7 +67,6 @@ class WebhookController extends BaseController
                 $invoice->saveState($data['state'])
                     ->saveStatusCode($data['status_code'])
                     ->saveSINErrors($data['sin_errors'])
-                    ->saveCuf($data['cuf'])
                     ->saveUrlSin($data['urlSin'])
                     ->saveEmisionType($data['emission_type'])
                     ->saveAddressInvoice($data['direccion'])
