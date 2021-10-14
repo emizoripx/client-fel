@@ -443,7 +443,7 @@ trait HtmlDesignTrait{
                     <td style="text-align: right;">'. $this->number_format_custom((float) $detalle['cantidad'] ,2) .'</td>
                     <td>'. $detalle['descripcion'] .'</td>
                     <td style="text-align: right;">'. $this->number_format_custom((float)$detalle['precioUnitario'],2) .'</td>
-                    <td style="text-align: right;">'. (array_key_exists('descuento', $detalle) ? $this->number_format_custom((float)$detalle['descuento'],2) : '0.00' ) .' </td>
+                    <td style="text-align: right;">'. (array_key_exists('montoDescuento', $detalle) ? $this->number_format_custom((float)$detalle['montoDescuento'],2) : '0.00' ) .' </td>
                     <td class="right-align">'. $this->number_format_custom((float)$detalle['subTotal'],2) .'</td>
                 </tr>
             ';
