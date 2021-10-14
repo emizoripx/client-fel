@@ -138,7 +138,7 @@ class FelParametric
                 $query = FelActivity::whereCompanyId($company_id)->orderBy('descripcion');
                 break;
             case TypeParametrics::LEYENDAS:
-                $query = FelCaption::whereCompanyId($company_id)->orderBy('descripcion');
+                $query = FelCaption::whereCompanyId($company_id)->whereDisabled(0)->orderBy('descripcion');
                 break;
             case TypeParametrics::MONEDAS:
                 $query = Currency::orderBy('descripcion');
