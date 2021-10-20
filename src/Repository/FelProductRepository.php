@@ -51,6 +51,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             $this->parseFelData($fel_data);
         
             $input = [
+                "codigo_producto" => $this->fel_data_parsed['codigo_producto'],
                 "codigo_nandina" => $this->fel_data_parsed['codigo_nandina'],
                 "codigo_producto_sin" => $this->fel_data_parsed['product_sin_id'],
                 "codigo_actividad_economica" => $this->fel_data_parsed['activity_id'],
