@@ -1,4 +1,4 @@
-# CLIENT FEL PACKAGE v2.3.0
+# CLIENT FEL PACKAGE
 
 ## Client for consuming services in FEL, for invoicing
 
