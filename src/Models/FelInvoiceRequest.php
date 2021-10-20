@@ -128,6 +128,10 @@ class FelInvoiceRequest extends Model
         $this->index_package = $value;
         return $this;
     }
+    public function saveUuidPackage($value){
+        $this->uuid_package = $value;
+        return $this;
+    }
 
     public function saveEmisionDate($fechaEmision){
         $this->fechaEmision = $fechaEmision;
@@ -262,6 +266,7 @@ class FelInvoiceRequest extends Model
              ->saveInvoiceTypeId($invoice['documentoSector'])
              ->savePackageId($invoice['package_id'] ?? null)
              ->saveIndexPackage($invoice['index_package'] ?? null)
+             ->saveUuidPackage($invoice['uuid_package'] ?? null)
              ->save();
 
         $this->invoiceDateUpdate();
