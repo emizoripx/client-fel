@@ -4,8 +4,10 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 use App\Models\Company;
+use App\Models\Invoice;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
+use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\InvoiceValidateStateTrait;
 use EmizorIpx\ClientFel\Utils\InvoiceStates;
 use EmizorIpx\ClientFel\Utils\Log;
@@ -13,6 +15,7 @@ use EmizorIpx\ClientFel\Utils\PackageStates;
 use EmizorIpx\PrepagoBags\Models\FelCompanyDocumentSector;
 use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class PackageWebhookController extends BaseController {
     
@@ -37,7 +40,7 @@ class PackageWebhookController extends BaseController {
             ]);
 
             if($packageData['state'] == PackageStates::PACKAGE_STATE_SENT_TO_SIN_INVALID){
-                $invoice = FelInvoiceRequest::where('package_id', $data['package_id'])->first();
+                $invoice = FelInvoiceRequest::where('package_id', $data['package_id'])->where('uuid_package', $data['uuid_package'])->first();
                 // TODO: updated invoice available
                 $this->updateNumberInvoiceAvailable($invoice, $affect);
             }
@@ -72,6 +75,8 @@ class PackageWebhookController extends BaseController {
             }
         }
 
+        $list_invoices = FelInvoiceRequest::where('package_id', $data['package_id'])->where('uuid_package', $data['uuid_package'])->pluck('id_origin');
+        Invoice::whereIn('id',$list_invoices)->update(['updated_at' => Carbon::now()]);
 
     }
 
