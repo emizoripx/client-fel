@@ -31,7 +31,7 @@ class PackageWebhookController extends BaseController {
 
             \Log::debug("WEBHOOK-PACKAGE UPDATE STATE - SENT TO SIN");
 
-            $affect = FelInvoiceRequest::where('package_id', $data['package_id'])->update([
+            $affect = FelInvoiceRequest::where('package_id', $data['package_id'])->where('uuid_package', $data['uuid_package'])->update([
                 'estado' => $packageData['state'] == PackageStates::PACKAGE_STATE_SENT_TO_SIN ? PackageStates::get(PackageStates::PACKAGE_STATE_SENT_TO_SIN) : PackageStates::get(PackageStates::PACKAGE_STATE_SENT_TO_SIN_INVALID),
                 'codigoEstado' => $packageData['status_code']
             ]);
@@ -47,7 +47,7 @@ class PackageWebhookController extends BaseController {
 
             \Log::debug("WEBHOOK-PACKAGE UPDATE STATE - STATE VALIDATION");
             
-            FelInvoiceRequest::where('package_id', $data['package_id'])->update([
+            FelInvoiceRequest::where('package_id', $data['package_id'])->where('uuid_package', $data['uuid_package'])->update([
                 'codigoEstado' => 690,
                 'estado' => PackageStates::get(PackageStates::PACKAGE_STATE_SIN_VALID)
             ]);
@@ -59,7 +59,7 @@ class PackageWebhookController extends BaseController {
     
                 foreach ($sinErrors as $indexPackage => $invoiceSinErrors) {
                     \Log::debug("WEBHOOK-PACKAGE UPDATE INVOICE SIN ERRORS - INDEX #". $indexPackage);
-                    $invoice = FelInvoiceRequest::where('package_id', $data['package_id'])->where('index_package', $indexPackage)->first();
+                    $invoice = FelInvoiceRequest::where('package_id', $data['package_id'])->where('uuid_package', $data['uuid_package'])->where('index_package', $indexPackage)->first();
                     $invoice->update([
                         'estado' => PackageStates::get($packageData['state']),
                         'codigoEstado' => $packageData['status_code'],
