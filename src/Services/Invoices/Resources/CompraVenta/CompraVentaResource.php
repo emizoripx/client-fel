@@ -46,6 +46,10 @@ class CompraVentaResource extends JsonResource
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
             'detalles' => DetalleCompraVentaResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "montoGiftCard" => $this->montoGiftCard,
+            "descuentoAdicional" => $this->descuentoAdicional,
         ];
     }
 }

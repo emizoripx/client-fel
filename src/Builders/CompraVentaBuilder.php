@@ -40,7 +40,11 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
     public function processInput(): FelInvoiceRequest
     {
         $input = array_merge(
-            $this->input,
+            $this->input,[
+                "montoGiftCard" => $this->source_data['fel_data_parsed']['montoGiftCard'],
+                "descuentoAdicional" => $this->source_data['fel_data_parsed']['descuentoAdicional'],
+                "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+            ],
             $this->getDetailsAndTotals()
         );
         
