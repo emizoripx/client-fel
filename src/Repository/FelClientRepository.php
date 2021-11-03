@@ -31,6 +31,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
           "business_name" => $this->fel_data_parsed['business_name'] ?? "Sin Nombre",
           "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
           "complement" => $this->fel_data_parsed['complement'],
+          "codigoExcepcion" => $this->fel_data_parsed['codigoExcepcion'],
           "company_id" => $model->company_id
         ];
 

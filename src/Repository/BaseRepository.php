@@ -27,7 +27,8 @@ class BaseRepository
                         "type_document_id" => $fel_data['type_document_id'],
                         "document_number" => $fel_data['document_number'],
                         "business_name" => $fel_data['business_name'],
-                        "complement" => $fel_data['complement'] ?? null
+                        "complement" => $fel_data['complement'] ?? null,
+                        "codigoExcepcion" => $fel_data['codigo_excepcion'] ?? null
                     ];
                     break;
                 case 'product':
@@ -76,6 +77,10 @@ class BaseRepository
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
                         "codigoPuntoVenta" => !empty($fel_data['codigo_pos']) ? $fel_data['codigo_pos'] : "",
                         "codigoSucursal" => !empty($fel_data['codigo_sucursal']) ? $fel_data['codigo_sucursal'] : 0,
+                        "codigoExcepcion" => !empty($fel_data['codigo_excepcion']) ? $fel_data['codigo_excepcion'] : null,
+                        "montoGiftCard" => !empty($fel_data['monto_gift_card']) ? $fel_data['monto_gift_card'] : null,
+                        "descuentoAdicional" => !empty($fel_data['descuento_adicional']) ? $fel_data['descuento_adicional'] : null,
+                        "cafc" => !empty($fel_data['cafc']) ? $fel_data['cafc'] : null,
                         // FACTURA VENTA MINERALES
                         "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
                         "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,
