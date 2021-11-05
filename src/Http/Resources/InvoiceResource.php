@@ -77,10 +77,10 @@ class InvoiceResource extends JsonResource
             "urlSin" => (string) $this->urlSin,
             
             // compra venta v2
-            "descuentoAdicional" => $this->descuentoAdicional ?? null,
-            "montoGiftCard" => $this->montoGiftCard ?? null,
-            "codigoExcepcion" => $this->codigoExcepcion ?? null,
-            "cafc" => $this->cafc ?? null,
+            "descuentoAdicional" => (string)$this->descuentoAdicional ?? null,
+            "montoGiftCard" => (string)$this->montoGiftCard ?? null,
+            "codigoExcepcion" => (string)$this->codigoExcepcion ?? null,
+            "cafc" => (string)$this->cafc ?? null,
 
 
             // factura venta minerales
