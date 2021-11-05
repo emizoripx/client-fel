@@ -41,13 +41,13 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
     {
         $input = array_merge(
             $this->input,[
-                "montoGiftCard" => $this->source_data['fel_data_parsed']['montoGiftCard'],
-                "descuentoAdicional" => $this->source_data['fel_data_parsed']['descuentoAdicional'],
+                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
+                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->getDetailsAndTotals()
         );
-        
+
         $this->fel_invoice->fill($input);
         
         return $this->fel_invoice;
@@ -92,12 +92,19 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
 
             $total += $new->subTotal;
         }
+        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
 
+        \Log::debug("gift card  >>>" . round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) );
+        
+        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['montoGiftCard'], 2);
+        
+
+        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$totalsujetoiva, $total,round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) , round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
-            "montoTotalSujetoIva" => $total,
+            "montoTotalSujetoIva" => $totalsujetoiva ,
             "detalles" => $details
         ];
     }

@@ -43,6 +43,7 @@ class BaseRepository
                     break;
                 case 'invoice':
                     $this->fel_data_parsed = [
+                        "fechaDeEmision" =>isset($fel_data['fechaDeEmision'])? $fel_data['fechaDeEmision'] : null,
                         "numeroFactura" => isset($fel_data['numeroFactura'])? $fel_data['numeroFactura'] : null,
                         "activity_id" => $fel_data['codigoActividad'],
                         "caption_id" => $fel_data['codigoLeyenda'],
@@ -77,9 +78,9 @@ class BaseRepository
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
                         "codigoPuntoVenta" => !empty($fel_data['codigo_pos']) ? $fel_data['codigo_pos'] : "",
                         "codigoSucursal" => !empty($fel_data['codigo_sucursal']) ? $fel_data['codigo_sucursal'] : 0,
-                        "codigoExcepcion" => !empty($fel_data['codigo_excepcion']) ? $fel_data['codigo_excepcion'] : null,
-                        "montoGiftCard" => !empty($fel_data['monto_gift_card']) ? $fel_data['monto_gift_card'] : null,
-                        "descuentoAdicional" => !empty($fel_data['descuento_adicional']) ? $fel_data['descuento_adicional'] : null,
+                        "codigoExcepcion" => !empty($fel_data['codigoExcepcion']) ? $fel_data['codigoExcepcion'] : null,
+                        "montoGiftCard" => !empty($fel_data['montoGiftCard']) ? $fel_data['montoGiftCard'] : null,
+                        "descuentoAdicional" => !empty($fel_data['descuentoAdicional']) ? $fel_data['descuentoAdicional'] : null,
                         "cafc" => !empty($fel_data['cafc']) ? $fel_data['cafc'] : null,
                         // FACTURA VENTA MINERALES
                         "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
@@ -102,6 +103,7 @@ class BaseRepository
                         "informacionAdicional" => !empty($fel_data['informacionAdicional']) ? $fel_data['informacionAdicional'] : "",
                         "montoGeneral" => !empty($fel_data['montoGeneral']) ? $fel_data['montoGeneral'] : 0,
                         "montoTotal" => !empty($fel_data['montoTotal']) ? $fel_data['montoTotal'] : 0,
+                        "montoTotalSujetoIva" => !empty($fel_data['montoTotalSujetoIva']) ? $fel_data['montoTotalSujetoIva'] : 0,
                         "montoGeneralBs" => !empty($fel_data['montoGeneralBs']) ? $fel_data['montoGeneralBs'] : 0,
 
                         // NOTA-DEBITO-CREDITO

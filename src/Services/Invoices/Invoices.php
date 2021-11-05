@@ -334,4 +334,20 @@ class Invoices extends BaseConnection
             \Log::error($th);
         }
     }
+
+    public function validateNit($nit)
+    {
+        
+        try {
+            $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $parsed_response = $this->parse_response($response);
+            $this->setResponse($parsed_response);
+            return $parsed_response;
+        } catch (\Exception $ex) {
+
+            Log::error($ex->getMessage());
+
+            throw new ClientFelException("Error en al validar el NIT: " . $ex->getResponse()->getBody());
+        }
+    }
 }
