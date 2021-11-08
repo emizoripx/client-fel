@@ -20,23 +20,23 @@ class Presenter
 
         foreach ($types as $type) {
             //TODO: cached tables 
-            if ($company_id == 165 && $type == "tipos-documento-sector") {
-                $tipos_documento_sector = FelParametric::index($type, $company_id);
+            // if ($company_id == 165 && $type == "tipos-documento-sector") {
+            //     $tipos_documento_sector = FelParametric::index($type, $company_id);
 
-                foreach ($tipos_documento_sector as $key => $value) {
-                    if ($value->codigo == 1) {
+            //     foreach ($tipos_documento_sector as $key => $value) {
+            //         if ($value->codigo == 1) {
 
-                        $value->documentoSector = "FACTURA SECTOR-EDUCATIVO";
+            //             $value->documentoSector = "FACTURA SECTOR-EDUCATIVO";
 
-                        $tipos_documento_sector[$key] = $value;
-                    } else {
-                        $tipos_documento_sector[$key] = $value;
-                    }
-                }
-                $parametrics->{$type} = $tipos_documento_sector;
-            } else {
+            //             $tipos_documento_sector[$key] = $value;
+            //         } else {
+            //             $tipos_documento_sector[$key] = $value;
+            //         }
+            //     }
+            //     $parametrics->{$type} = $tipos_documento_sector;
+            // } else {
                 $parametrics->{$type} = FelParametric::index($type, $company_id);
-            }
+            // }
         }
 
 
