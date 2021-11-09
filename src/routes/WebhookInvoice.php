@@ -16,6 +16,8 @@ class WebhookInvoice
             
             Route::post('update-branch', 'WebhookBranch@updateBranch');
 
+            Route::post('update-pos', 'WebhookPos@updatePos');
+
             Route::post('update-parametrics', 'WebhookParametrics@updateParametrics');
 
             Route::post('status-package', 'PackageWebhookController@callback');
