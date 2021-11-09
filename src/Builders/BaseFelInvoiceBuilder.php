@@ -47,6 +47,24 @@ class BaseFelInvoiceBuilder {
             $fechadeemision = Carbon::parse(Carbon::now());
         }
 
+        if ( in_array($fel_data_parsed['numeroDocumento'], [99001]) ) {
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
+            $fel_data_parsed['complemento'] = null;
+            $client->complement = null;
+        }
+        if ( in_array($fel_data_parsed['numeroDocumento'], [99002]) ) {
+            $fel_data_parsed['nombreRazonSocial'] = "CONTROL TRIBUTARIO";
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
+            $fel_data_parsed['complemento'] = null;
+            $client->complement = null;
+        }
+        if ( in_array($fel_data_parsed['numeroDocumento'], [99003]) ) {
+            $fel_data_parsed['nombreRazonSocial'] = "VENTAS MENORES DEL DÍA";
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
+            $fel_data_parsed['complemento'] = null;
+            $client->complement = null;
+        }
+
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
