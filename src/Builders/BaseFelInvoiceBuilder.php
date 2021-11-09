@@ -40,8 +40,12 @@ class BaseFelInvoiceBuilder {
             \Log::debug($ex->getMessage());
             // \Log::debug("==========================================================================");
         }
-
-        $fechadeemision = isset($fel_data_parsed['fechaDeEmision']) ? Carbon::parse($fel_data_parsed['fechaDeEmision']) : Carbon::parse(Carbon::now());
+        try {
+            
+            $fechadeemision = isset($fel_data_parsed['fechaDeEmision']) ? Carbon::parse($fel_data_parsed['fechaDeEmision']) : Carbon::parse(Carbon::now());
+        } catch (\Throwable $th) {
+            $fechadeemision = Carbon::parse(Carbon::now());
+        }
 
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
@@ -64,9 +68,9 @@ class BaseFelInvoiceBuilder {
             "extras" => $fel_data_parsed['extras'],
             "codigoMoneda" => $fel_data_parsed['codigo_moneda'],
             //clientdata
-            "nombreRazonSocial" => $client->business_name,
-            "codigoTipoDocumentoIdentidad" => $client->type_document_id,
-            "numeroDocumento" => $client->document_number,
+            "nombreRazonSocial" => is_null($fel_data_parsed['nombreRazonSocial']) ?  $client->business_name : $fel_data_parsed['nombreRazonSocial'],
+            "codigoTipoDocumentoIdentidad" => is_null($fel_data_parsed['codigoTipoDocumentoIdentidad']) ?  $client->type_document_id : $fel_data_parsed['codigoTipoDocumentoIdentidad'],
+            "numeroDocumento" => is_null($fel_data_parsed['numeroDocumento']) ? $client->document_number : $fel_data_parsed['numeroDocumento'],
             "complemento" => $client->complement ?? null,
             "codigoCliente" => $model->client->number,
             "emailCliente" => $client_email_first_invitation != "" ? $client_email_first_invitation : null,
