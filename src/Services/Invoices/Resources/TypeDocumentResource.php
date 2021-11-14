@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\Comerci
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMinerales\VentaMineralesResource;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -27,6 +28,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::EXPORTACION_MINERALES:
                 return new ExportacionMineralesResource($this);
+                break;
+            case TypeDocumentSector::SECTORES_EDUCATIVOS:
+                return new SectorEducativoResource($this);
                 break;
             case TypeDocumentSector::VENTA_INTERNA_MINERALES:
                 return new VentaMineralesResource($this);

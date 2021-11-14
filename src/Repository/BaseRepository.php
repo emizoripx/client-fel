@@ -115,6 +115,10 @@ class BaseRepository
                         "numeroAutorizacionCuf" => !empty($fel_data['numeroAutorizacionCuf']) ? $fel_data['numeroAutorizacionCuf'] : null,
                         "montoDescuentoCreditoDebito" => !empty($fel_data['montoDescuentoCreditoDebito']) ? $fel_data['montoDescuentoCreditoDebito'] : null,
                         "montoEfectivoCreditoDebito" => !empty($fel_data['montoEfectivoCreditoDebito']) ? $fel_data['montoEfectivoCreditoDebito'] : null,
+
+                        // SECTOR EDUCATIVO
+                        "nombreEstudiante" => !empty($fel_data['nombreEstudiante']) ? $fel_data['nombreEstudiante'] : "NOMBRE ESTUDIANTE",
+                        "periodoFacturado" => !empty($fel_data['periodoFacturado']) ? $fel_data['periodoFacturado'] : " PERIODO FACTURADO",
                     ];
                     break;
                 
