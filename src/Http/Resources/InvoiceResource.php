@@ -107,6 +107,9 @@ class InvoiceResource extends JsonResource
 
             // nota crédito débito
             "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
+            // factura sector educativo
+            "nombreEstudiante" => $this->nombreEstudiante,
+            "periodoFacturado" => $this->periodoFacturado,
         ];
     }
 }
