@@ -114,6 +114,9 @@ class TypeDocumentSector
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
                 break;
+            case static::SECTORES_EDUCATIVOS:
+                return 'sector-educativo';
+                break;
             case static::VENTA_INTERNA_MINERALES:
                 return 'venta-interna-minerales';
                 break;
