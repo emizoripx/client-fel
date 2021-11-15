@@ -58,7 +58,9 @@ class VentaMineralesResource extends JsonResource
             'detalles' => DetalleVentaMineralesResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
-            "codigoExcepcion" => $this->codigoExcepcion
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "montoGiftCard" => round($this->montoGiftCard, 2),
+            "descuentoAdicional" => round($this->descuentoAdicional, 2),
             
         ];
     }

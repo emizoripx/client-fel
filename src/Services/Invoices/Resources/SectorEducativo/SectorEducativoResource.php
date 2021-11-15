@@ -47,10 +47,12 @@ class SectorEducativoResource extends JsonResource
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
             'detalles' => DetalleSectorEducativoResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
-            "cafc" => $this->cafc,
             "nombreEstudiante" => $this->nombreEstudiante,
             "periodoFacturado" => $this->periodoFacturado,
-            "codigoExcepcion" => $this->codigoExcepcion
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "montoGiftCard" => round($this->montoGiftCard, 2),
+            "descuentoAdicional" => round($this->descuentoAdicional, 2),
         ];
     }
 }

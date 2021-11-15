@@ -41,7 +41,9 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
                 "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
                 "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
-                "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"]
+                "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
+                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
+                "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->input,
             $this->getDetailsAndTotals(),

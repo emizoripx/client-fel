@@ -52,7 +52,9 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "mermaPorcentaje" => $this->source_data['fel_data_parsed']["mermaPorcentaje"],
                 "mermaValor" => $this->source_data['fel_data_parsed']["mermaValor"],
                 "kilosNetosSecos" => $this->source_data['fel_data_parsed']["kilosNetosSecos"],
-                "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"]
+                "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
+                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'], 2),
+
             ],
             $this->getOtrosDatos(),
             $this->getDetailsAndTotals()

@@ -43,6 +43,8 @@ class SectorEducativoBuilder extends BaseFelInvoiceBuilder implements FelInvoice
             $this->input,[
                 "nombreEstudiante" => $this->source_data['fel_data_parsed']['nombreEstudiante'],
                 "periodoFacturado" => $this->source_data['fel_data_parsed']['periodoFacturado'],
+                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'], 2),
+                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->getDetailsAndTotals()
