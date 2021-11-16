@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 
 class TypeDocumentSector
@@ -79,6 +80,9 @@ class TypeDocumentSector
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
                 break;
+            case static::TASA_CERO:
+                return TasaCeroBuilder::class;
+                break;
             case static::EXPORTACION_MINERALES:
                 return ExportacionMineralesBuilder::class;
                 break;
@@ -113,6 +117,9 @@ class TypeDocumentSector
                 break;
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
+                break;
+            case static::TASA_CERO:
+                return 'tasa-cero';
                 break;
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
