@@ -139,6 +139,34 @@ class TypeDocumentSector
                 break;
         }
     }
+    public static function geTemplateByCode($code):string
+    {
+        \Log::debug("sector document ". $code);
+        switch ($code) {
+            case static::COMPRA_VENTA:
+                return 'compra-venta';
+                break;
+            case static::EXPORTACION_MINERALES:
+                return 'comercial-exportacion-minerales';
+                break;
+            case static::SECTORES_EDUCATIVOS:
+                return 'sector-educativo';
+                break;
+            case static::VENTA_INTERNA_MINERALES:
+                return 'venta-interna-minerales';
+                break;
+            case static::COMERCIAL_EXPORTACION:
+                return 'comercial-exportacion';
+                break;
+            case static::DEBITO_CREDITO:
+                return 'nota-debito-credito';
+                break;
+
+            default:
+                return 'compra-venta';
+                break;
+        }
+    }
 
     public static function getName($code){
 

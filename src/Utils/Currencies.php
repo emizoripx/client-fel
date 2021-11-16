@@ -32,5 +32,18 @@ class Currencies{
         }
         
     }
+    public static function getSingularDescriptionCurrency($code){
+
+        switch ($code) {
+            case self::DOLAR:
+                return 'Dólar';
+                break;
+            case self::BOLIVIANO:
+                return 'Boliviano';
+                break;
+            
+        }
+        
+    }
 
 }
