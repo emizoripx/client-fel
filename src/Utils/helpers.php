@@ -2,6 +2,7 @@
 
 use EmizorIpx\ClientFel\Models\BitacoraLog;
 use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
+use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Utils\Currencies;
 use EmizorIpx\ClientFel\Utils\NumberToWord;
 
@@ -49,5 +50,10 @@ if(!function_exists('currency_description')){
 if(!function_exists('currency_description_plural')){
     function currency_description_plural($codigoMoneda){
         return Currencies::getDescriptionCurrency($codigoMoneda);
+    }
+}
+if(!function_exists('country')){
+    function country($codigo){
+        return Country::getDescriptionCountry($codigo);
     }
 }
