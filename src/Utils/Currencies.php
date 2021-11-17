@@ -36,7 +36,7 @@ class Currencies{
 
         switch ($code) {
             case self::DOLAR:
-                return 'Dólar';
+                return 'Dolar';
                 break;
             case self::BOLIVIANO:
                 return 'Boliviano';
