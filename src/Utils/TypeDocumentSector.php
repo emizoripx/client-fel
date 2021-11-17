@@ -149,6 +149,9 @@ class TypeDocumentSector
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
                 break;
+            case static::TASA_CERO:
+                return 'tasa-cero';
+                break;
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
                 break;
