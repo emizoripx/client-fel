@@ -342,7 +342,7 @@ class Invoices extends BaseConnection
             $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
-            return $parsed_response;
+            return $this->parse_response($response);
         } catch (\Exception $ex) {
 
             Log::error($ex->getMessage());
