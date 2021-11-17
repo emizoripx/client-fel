@@ -23,7 +23,8 @@ class DetalleComercialExportacionResource extends JsonResource
             "precioUnitario" => $this->resource['precioUnitario'],
             "subTotal" => $this->resource['subTotal'],
             "unidadMedida" => $this->resource['unidadMedida'],
-            "codigoNandina" => $this->resource['codigoNandina']
+            "codigoNandina" => $this->resource['codigoNandina'],
+            "montoDescuento" => $this->resource['montoDescuento']
         ];
     }
 }
