@@ -28,6 +28,7 @@ class DetalleExportacionMineralesResource extends JsonResource
             "subTotal" => $this->resource['subTotal'],
             "unidadMedida" => $this->resource['unidadMedida'],
             "unidadMedidaExtraccion" => $this->resource['unidadMedidaExtraccion'],
+            "montoDescuento" => $this->resource['montoDescuento'] ?? 0
         ];
     }
 }
