@@ -27,6 +27,7 @@ class ExportacionMineralesResource extends JsonResource
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
+            "fechaEmision"=> $this->fechaEmision,
             "kilosNetosHumedos" => round($this->kilosNetosHumedos, 2),
             "humedadPorcentaje" => round($this->humedadPorcentaje, 2),
             "humedadValor" => round($this->humedadValor, 2),
