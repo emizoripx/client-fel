@@ -472,7 +472,7 @@ trait HtmlDesignTrait{
                     <tr>
                         <td colspan=3 style="border:0px;" ></td>
                         <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. $this->number_format_custom((float)$subtotal,2) .'</td>
+                        <td> '. $this->number_format_custom((float) collect($detalles)->sum('subTotal') ,2) .'</td>
                     </tr>
                     
                     </tbody>
