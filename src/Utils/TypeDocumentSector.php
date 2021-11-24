@@ -139,14 +139,20 @@ class TypeDocumentSector
                 break;
         }
     }
-    public static function geTemplateByCode($code):string
+    public static function geTemplateByCode($code, $company_nit = null):string
     {
         \Log::debug("sector document ". $code);
         switch ($code) {
             case static::COMPRA_VENTA:
+                if( $company_nit == '1020415021'){
+                    return 'compra-venta-msc';
+                }
                 return 'compra-venta';
                 break;
             case static::EXPORTACION_MINERALES:
+                if( $company_nit == '1020415021'){
+                    return 'comercial-exportacion-minerales-msc';
+                }
                 return 'comercial-exportacion-minerales';
                 break;
             case static::TASA_CERO:
@@ -156,9 +162,15 @@ class TypeDocumentSector
                 return 'sector-educativo';
                 break;
             case static::VENTA_INTERNA_MINERALES:
+                if( $company_nit == '1020415021'){
+                    return 'venta-interna-minerales-msc';
+                }
                 return 'venta-interna-minerales';
                 break;
             case static::COMERCIAL_EXPORTACION:
+                if( $company_nit == '1020415021'){
+                    return 'comercial-exportacion-msc';
+                }
                 return 'comercial-exportacion';
                 break;
             case static::DEBITO_CREDITO:
