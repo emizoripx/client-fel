@@ -21,7 +21,6 @@ class AddNewColumnsToFelInvoiceRequestsOtherDocumentSectorTable extends Migratio
 
             $table->string("mes")->nullable();
             $table->string("gestion")->nullable();
-            $table->string("ciudad")->nullable();
             $table->string("zona")->nullable();
             $table->string("numeroMedidor")->nullable();
             $table->string("domicilioCliente")->nullable();
@@ -61,7 +60,6 @@ class AddNewColumnsToFelInvoiceRequestsOtherDocumentSectorTable extends Migratio
 
             $table->dropColumn("mes");
             $table->dropColumn("gestion");
-            $table->dropColumn("ciudad");
             $table->dropColumn("zona");
             $table->dropColumn("numeroMedidor");
             $table->dropColumn("domicilioCliente");
