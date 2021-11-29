@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
+use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 
 class TypeDocumentSector
@@ -95,6 +96,9 @@ class TypeDocumentSector
             case static::COMERCIAL_EXPORTACION:
                 return ComercialExportacionBuilder::class;
                 break;
+            case static::TELECOMUNICACIONES:
+                return TelecomunicacionesBuilder::class;
+                break;
             case static::DEBITO_CREDITO:
                 return CreditoDebitoBuilder::class;
                 break;
@@ -128,6 +132,9 @@ class TypeDocumentSector
                 return 'venta-interna-minerales';
                 break;
             case static::COMERCIAL_EXPORTACION:
+                return 'comercial-exportacion';
+                break;
+            case static::TELECOMUNICACIONES:
                 return 'comercial-exportacion';
                 break;
             case static::DEBITO_CREDITO:
@@ -172,6 +179,9 @@ class TypeDocumentSector
                     return 'comercial-exportacion-msc';
                 }
                 return 'comercial-exportacion';
+                break;
+            case static::TELECOMUNICACIONES:
+                return 'compra-venta'; //TODO: CHANGE in case needs different template
                 break;
             case static::DEBITO_CREDITO:
                 return 'nota-debito-credito';
