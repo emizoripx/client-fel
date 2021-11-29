@@ -1,11 +1,11 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos;
 
-use EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones\DetalleTelecomunicacionesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos\DetalleHidrocarburosResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TelecomunicacionesResource extends JsonResource
+class HidrocarburosResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -34,6 +34,7 @@ class TelecomunicacionesResource extends JsonResource
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
             "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
+            "montoIehd" => $this->montoIehd ? round($this->montoDescuento, 2): null,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,
             "numeroDocumento" => $this->numeroDocumento,
@@ -46,12 +47,15 @@ class TelecomunicacionesResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            'detalles' => DetalleTelecomunicacionesResource::collection(collect($this->detalles)),
+            'detalles' => DetalleHidrocarburosResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
-            "montoGiftCard" => round($this->montoGiftCard,2),
-            "descuentoAdicional" => round($this->descuentoAdicional,2),
+            "ciudad" => $this->ciudad,
+            "nombrePropietario" => $this->nombrePropietario,
+            "nombreRepresentanteLegal" => $this->nombreRepresentanteLegal,
+            "condicionPago" => $this->condicionPago,
+            "periodoEntrega" => $this->periodoEntrega,
         ];
     }
 }

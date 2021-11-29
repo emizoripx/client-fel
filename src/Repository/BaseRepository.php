@@ -119,6 +119,15 @@ class BaseRepository
                         // SECTOR EDUCATIVO
                         "nombreEstudiante" => !empty($fel_data['nombreEstudiante']) ? $fel_data['nombreEstudiante'] : "NOMBRE ESTUDIANTE",
                         "periodoFacturado" => !empty($fel_data['periodoFacturado']) ? $fel_data['periodoFacturado'] : " PERIODO FACTURADO",
+
+                        // HIDROCARBUROS
+                        "ciudad" => !empty($fel_data['ciudad']) ? $fel_data['ciudad'] : null,
+                        "nombrePropietario" => !empty($fel_data['nombrePropietario']) ? $fel_data['nombrePropietario'] : null,
+                        "nombreRepresentanteLegal" => !empty($fel_data['nombreRepresentanteLegal']) ? $fel_data['nombreRepresentanteLegal'] : null,
+                        "condicionPago" => !empty($fel_data['condicionPago']) ? $fel_data['condicionPago'] : null,
+                        "periodoEntrega" => !empty($fel_data['periodoEntrega']) ? $fel_data['periodoEntrega'] : null,
+                        "montoIehd" => !empty($fel_data['montoIehd']) ? $fel_data['montoIehd'] : null,
+
                     ];
                     break;
                 
