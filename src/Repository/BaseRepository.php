@@ -128,6 +128,27 @@ class BaseRepository
                         "periodoEntrega" => !empty($fel_data['periodoEntrega']) ? $fel_data['periodoEntrega'] : null,
                         "montoIehd" => !empty($fel_data['montoIehd']) ? $fel_data['montoIehd'] : null,
 
+                        // SERVICIOS BASICOS
+
+                        "mes" => !empty($fel_data['mes']) ? $fel_data['mes'] : null,
+                        "gestion" => !empty($fel_data['gestion']) ? $fel_data['gestion'] : null,
+                        "ciudad" => !empty($fel_data['ciudad']) ? $fel_data['ciudad'] : null,
+                        "zona" => !empty($fel_data['zona']) ? $fel_data['zona'] : null,
+                        "numeroMedidor" => !empty($fel_data['numeroMedidor']) ? $fel_data['numeroMedidor'] : null,
+                        "domicilioCliente" => !empty($fel_data['domicilioCliente']) ? $fel_data['domicilioCliente'] : null,
+                        "consumoPeriodo" => !empty($fel_data['consumoPeriodo']) ? $fel_data['consumoPeriodo'] : null,
+                        "beneficiarioLey1886" => !empty($fel_data['beneficiarioLey1886']) ? $fel_data['beneficiarioLey1886'] : null,
+                        "montoDescuentoLey1886" => !empty($fel_data['montoDescuentoLey1886']) ? $fel_data['montoDescuentoLey1886'] : null,
+                        "montoDescuentoTarifaDignidad" => !empty($fel_data['montoDescuentoTarifaDignidad']) ? $fel_data['montoDescuentoTarifaDignidad'] : null,
+                        "tasaAseo" => !empty($fel_data['tasaAseo']) ? $fel_data['tasaAseo'] : null,
+                        "tasaAlumbrado" => !empty($fel_data['tasaAlumbrado']) ? $fel_data['tasaAlumbrado'] : null,
+                        "ajusteNoSujetoIva" => !empty($fel_data['ajusteNoSujetoIva']) ? $fel_data['ajusteNoSujetoIva'] : null,
+                        "detalleAjusteNoSujetoIva" => !empty($fel_data['detalleAjusteNoSujetoIva']) ? $fel_data['detalleAjusteNoSujetoIva'] : null,
+                        "ajusteSujetoIva" => !empty($fel_data['ajusteSujetoIva']) ? $fel_data['ajusteSujetoIva'] : null,
+                        "detalleAjusteSujetoIva" => !empty($fel_data['detalleAjusteSujetoIva']) ? $fel_data['detalleAjusteSujetoIva'] : null,
+                        "otrosPagosNoSujetoIva" => !empty($fel_data['otrosPagosNoSujetoIva']) ? $fel_data['otrosPagosNoSujetoIva'] : null,
+                        "detalleOtrosPagosNoSujetoIva" => !empty($fel_data['detalleOtrosPagosNoSujetoIva']) ? $fel_data['detalleOtrosPagosNoSujetoIva'] : null,
+
                     ];
                     break;
                 

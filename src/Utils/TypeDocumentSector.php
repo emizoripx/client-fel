@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
@@ -91,6 +92,9 @@ class TypeDocumentSector
             case static::SECTORES_EDUCATIVOS:
                 return SectorEducativoBuilder::class;
                 break;
+            case static::SERVICIOS_BASICOS:
+                return ServiciosBasicosBuilder::class;
+                break;
             case static::HIDROCARBUROS:
                 return HidrocarburosBuilder::class;
                 break;
@@ -131,6 +135,9 @@ class TypeDocumentSector
                 break;
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
+                break;
+            case static::SERVICIOS_BASICOS:
+                return 'servicios-basicos';
                 break;
             case static::HIDROCARBUROS:
                 return 'hidrocarburos';
@@ -174,6 +181,9 @@ class TypeDocumentSector
                 break;
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
+                break;
+            case static::SERVICIOS_BASICOS:
+                return 'servicios-basicos';
                 break;
             case static::HIDROCARBUROS:
                 return 'hidrocarburos';
