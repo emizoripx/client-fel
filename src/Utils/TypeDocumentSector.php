@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
+use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
@@ -98,6 +99,9 @@ class TypeDocumentSector
             case static::HIDROCARBUROS:
                 return HidrocarburosBuilder::class;
                 break;
+            case static::HOTELES:
+                return HotelesBuilder::class;
+                break;
             case static::VENTA_INTERNA_MINERALES:
                 return VentaMineralesBuilder::class;
                 break;
@@ -141,6 +145,9 @@ class TypeDocumentSector
                 break;
             case static::HIDROCARBUROS:
                 return 'hidrocarburos';
+                break;
+            case static::HOTELES:
+                return 'hoteles';
                 break;
             case static::VENTA_INTERNA_MINERALES:
                 return 'venta-interna-minerales';
@@ -187,6 +194,9 @@ class TypeDocumentSector
                 break;
             case static::HIDROCARBUROS:
                 return 'hidrocarburos';
+                break;
+            case static::HOTELES:
+                return 'hoteles';
                 break;
             case static::VENTA_INTERNA_MINERALES:
                 if( $company_nit == '1020415021'){

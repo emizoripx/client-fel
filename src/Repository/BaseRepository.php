@@ -149,6 +149,13 @@ class BaseRepository
                         "otrosPagosNoSujetoIva" => !empty($fel_data['otrosPagosNoSujetoIva']) ? $fel_data['otrosPagosNoSujetoIva'] : null,
                         "detalleOtrosPagosNoSujetoIva" => !empty($fel_data['detalleOtrosPagosNoSujetoIva']) ? $fel_data['detalleOtrosPagosNoSujetoIva'] : null,
 
+                        //hoteles 
+                        "cantidadHuespedes" => $fel_data["cantidadHuespedes"] ? $fel_data["cantidadHuespedes"] : null,
+                        "cantidadHabitaciones" => $fel_data["cantidadHabitaciones"] ? $fel_data["cantidadHabitaciones"] : null,
+                        "cantidadMayores" => $fel_data["cantidadMayores"] ? $fel_data["cantidadMayores"] : null,
+                        "cantidadMenores" => $fel_data["cantidadMenores"] ? $fel_data["cantidadMenores"] : null,
+                        "fechaIngresoHospedaje" => $fel_data["fechaIngresoHospedaje"] ? $fel_data["fechaIngresoHospedaje"] : null,
+
                     ];
                     break;
                 
