@@ -159,6 +159,9 @@ class TypeDocumentSector
                 return 'comercial-exportacion';
                 break;
             case static::DEBITO_CREDITO:
+                if( $company_nit == '1020415021'){
+                    return 'nota-debito-credito-msc';
+                }
                 return 'nota-debito-credito';
                 break;
 
