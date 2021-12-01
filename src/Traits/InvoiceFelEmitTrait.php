@@ -59,7 +59,8 @@ trait InvoiceFelEmitTrait
 
     public function xml_file_path()
     {
-        $felInvoiceRequest = $this->invoice->fel_invoice->fresh();   
+        \Log::debug("XML_FILE >>>>>> " .json_encode($this));
+        $felInvoiceRequest = $this->fel_invoice->fresh();   
         
         if (empty($felInvoiceRequest)) {
             return null;
