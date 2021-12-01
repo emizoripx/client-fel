@@ -49,7 +49,7 @@ class WebhookController extends BaseController
                 ->saveCuf($data['cuf'])
                 ->saveUrlSin($data['urlSin'])
                 ->saveEmisionType($data['emission_type'])
-                ->saveXmlUrl($invoice['xml_url'])
+                ->saveXmlUrl($data['xml_url'])
                 ->saveAddressInvoice($data['direccion'])
                 ->save();
 
@@ -78,7 +78,7 @@ class WebhookController extends BaseController
                     ->saveCuf($data['cuf'])
                     ->saveUrlSin($data['urlSin'])
                     ->saveEmisionType($data['emission_type'])
-                    ->saveXmlUrl($invoice['xml_url'])
+                    ->saveXmlUrl($data['xml_url'])
                     ->saveAddressInvoice($data['direccion'])
                     ->save();
 
