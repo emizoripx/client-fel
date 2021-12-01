@@ -55,4 +55,21 @@ trait InvoiceFelEmitTrait
             return $this;
         }
     }
+
+
+    public function xml_file_path()
+    {
+        $felInvoiceRequest = $this->invoice->fel_invoice->fresh();   
+        
+        if (empty($felInvoiceRequest)) {
+            return null;
+        }
+
+        if (is_null($felInvoiceRequest->cuf)) {
+            return null;            
+        }
+        \Log::debug("REQUEST FOR ATTACHMENT IN SEND INVOICE  XML>>>>>> " . $felInvoiceRequest->xml_url);
+        return $felInvoiceRequest->xml_url;
+
+    }
 }
