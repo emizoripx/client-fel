@@ -34,6 +34,7 @@ class WebhookController extends BaseController
             'direccion' => $request->input('direccion', null),
             'sin_errors' => $request->input('sin_errors', null),
             'reception_code' => $request->input('reception_code', null),
+            'xml_url' => $request->input('xml_url', null),
         ];
 
         if(isset($data['package_id'])){
