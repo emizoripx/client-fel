@@ -18,13 +18,13 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
     public function create($fel_data, $model)
     {
-
+        \Log::debug("create !!!!! ");
         bitacora_info("FelInvoiceRequestRepository:create", json_encode($fel_data));
         
         try {
            
             $this->processInput($fel_data, $model);
-          
+            \Log::debug("PARA EL PROCESS INPUT CREATE");
         } catch (Exception $ex) {
             bitacora_error("FelInvoiceRequestRepository:create", "File: " . $ex->getFile() . " Line: " . $ex->getLine() . "Message: " . $ex->getMessage());
         }
@@ -32,13 +32,14 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
     public function update($fel_data, $model)
     {
-
+        \Log::debug("update !!!!! ");
         bitacora_info("FelInvoiceRequestRepository:update", json_encode($fel_data));
 
         try {
             if (request()->has('felData')) {
 
                 $this->processInput($fel_data, $model, true);
+                \Log::debug("PARA EL PROCESS INPUT UPDATE");
             }
 
         } catch (Exception $ex) {
@@ -89,19 +90,25 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             'company' => $model->company->company_detail,
             'update' => $update
         ];
-        
 
-        // this an instance of generic builder
-        $builder = new FelInvoiceBuilder;
-        
-        // this part should have the number of type document sector, for example: 1 : FACTURA COMPRA-VENTA
-        $code =  $this->fel_data_parsed['type_document_sector_id'];
+        try{
 
-        // get instance builder by typde document sector, as default should result in CompraVentaBuilder
-        $instance = TypeDocumentSector::getInstanceByCode($code);
+            // this an instance of generic builder
+            $builder = new FelInvoiceBuilder;
+            
+            // this part should have the number of type document sector, for example: 1 : FACTURA COMPRA-VENTA
+            $code =  $this->fel_data_parsed['type_document_sector_id'];
+    
+            // get instance builder by typde document sector, as default should result in CompraVentaBuilder
+            $instance = TypeDocumentSector::getInstanceByCode($code);
+            
+            //process input if saved or update 
+            $builder->make(new $instance($source_data));
+        }catch (Exception $e) {
+
+            \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
+        }
         
-        //process input if saved or update 
-        $builder->make(new $instance($source_data));
 
     }
 

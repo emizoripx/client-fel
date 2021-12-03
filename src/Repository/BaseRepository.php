@@ -27,7 +27,8 @@ class BaseRepository
                         "type_document_id" => $fel_data['type_document_id'],
                         "document_number" => $fel_data['document_number'],
                         "business_name" => $fel_data['business_name'],
-                        "complement" => $fel_data['complement'] ?? null
+                        "complement" => $fel_data['complement'] ?? null,
+                        "codigoExcepcion" => $fel_data['codigo_excepcion'] ?? null
                     ];
                     break;
                 case 'product':
@@ -42,6 +43,11 @@ class BaseRepository
                     break;
                 case 'invoice':
                     $this->fel_data_parsed = [
+                        "nombreRazonSocial" =>isset($fel_data['nombreRazonSocial'])? $fel_data['nombreRazonSocial'] : null,
+                        "codigoTipoDocumentoIdentidad" =>isset($fel_data['codigoTipoDocumentoIdentidad'])? $fel_data['codigoTipoDocumentoIdentidad'] : null,
+                        "numeroDocumento" =>isset($fel_data['numeroDocumento'])? $fel_data['numeroDocumento'] : null,
+                        "complemento" =>isset($fel_data['complemento'])? $fel_data['complemento'] : null,
+                        "fechaDeEmision" =>isset($fel_data['fechaDeEmision'])? $fel_data['fechaDeEmision'] : null,
                         "numeroFactura" => isset($fel_data['numeroFactura'])? $fel_data['numeroFactura'] : null,
                         "activity_id" => $fel_data['codigoActividad'],
                         "caption_id" => $fel_data['codigoLeyenda'],
@@ -76,6 +82,10 @@ class BaseRepository
                         "monedaTransaccional" => !empty($fel_data['monedaTransaccional']) ? $fel_data['monedaTransaccional'] : "",
                         "codigoPuntoVenta" => !empty($fel_data['codigo_pos']) ? $fel_data['codigo_pos'] : "",
                         "codigoSucursal" => !empty($fel_data['codigo_sucursal']) ? $fel_data['codigo_sucursal'] : 0,
+                        "codigoExcepcion" => !empty($fel_data['codigoExcepcion']) ? $fel_data['codigoExcepcion'] : null,
+                        "montoGiftCard" => !empty($fel_data['montoGiftCard']) ? $fel_data['montoGiftCard'] : null,
+                        "descuentoAdicional" => !empty($fel_data['descuentoAdicional']) ? $fel_data['descuentoAdicional'] : null,
+                        "cafc" => !empty($fel_data['cafc']) ? $fel_data['cafc'] : null,
                         // FACTURA VENTA MINERALES
                         "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
                         "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,
@@ -97,6 +107,7 @@ class BaseRepository
                         "informacionAdicional" => !empty($fel_data['informacionAdicional']) ? $fel_data['informacionAdicional'] : "",
                         "montoGeneral" => !empty($fel_data['montoGeneral']) ? $fel_data['montoGeneral'] : 0,
                         "montoTotal" => !empty($fel_data['montoTotal']) ? $fel_data['montoTotal'] : 0,
+                        "montoTotalSujetoIva" => !empty($fel_data['montoTotalSujetoIva']) ? $fel_data['montoTotalSujetoIva'] : 0,
                         "montoGeneralBs" => !empty($fel_data['montoGeneralBs']) ? $fel_data['montoGeneralBs'] : 0,
 
                         // NOTA-DEBITO-CREDITO
@@ -104,13 +115,54 @@ class BaseRepository
                         "numeroAutorizacionCuf" => !empty($fel_data['numeroAutorizacionCuf']) ? $fel_data['numeroAutorizacionCuf'] : null,
                         "montoDescuentoCreditoDebito" => !empty($fel_data['montoDescuentoCreditoDebito']) ? $fel_data['montoDescuentoCreditoDebito'] : null,
                         "montoEfectivoCreditoDebito" => !empty($fel_data['montoEfectivoCreditoDebito']) ? $fel_data['montoEfectivoCreditoDebito'] : null,
+
+                        // SECTOR EDUCATIVO
+                        "nombreEstudiante" => !empty($fel_data['nombreEstudiante']) ? $fel_data['nombreEstudiante'] : "NOMBRE ESTUDIANTE",
+                        "periodoFacturado" => !empty($fel_data['periodoFacturado']) ? $fel_data['periodoFacturado'] : " PERIODO FACTURADO",
+
+                        // HIDROCARBUROS
+                        "ciudad" => !empty($fel_data['ciudad']) ? $fel_data['ciudad'] : null,
+                        "nombrePropietario" => !empty($fel_data['nombrePropietario']) ? $fel_data['nombrePropietario'] : null,
+                        "nombreRepresentanteLegal" => !empty($fel_data['nombreRepresentanteLegal']) ? $fel_data['nombreRepresentanteLegal'] : null,
+                        "condicionPago" => !empty($fel_data['condicionPago']) ? $fel_data['condicionPago'] : null,
+                        "periodoEntrega" => !empty($fel_data['periodoEntrega']) ? $fel_data['periodoEntrega'] : null,
+                        "montoIehd" => !empty($fel_data['montoIehd']) ? $fel_data['montoIehd'] : null,
+
+                        // SERVICIOS BASICOS
+
+                        "mes" => !empty($fel_data['mes']) ? $fel_data['mes'] : null,
+                        "gestion" => !empty($fel_data['gestion']) ? $fel_data['gestion'] : null,
+                        "ciudad" => !empty($fel_data['ciudad']) ? $fel_data['ciudad'] : null,
+                        "zona" => !empty($fel_data['zona']) ? $fel_data['zona'] : null,
+                        "numeroMedidor" => !empty($fel_data['numeroMedidor']) ? $fel_data['numeroMedidor'] : null,
+                        "domicilioCliente" => !empty($fel_data['domicilioCliente']) ? $fel_data['domicilioCliente'] : null,
+                        "consumoPeriodo" => !empty($fel_data['consumoPeriodo']) ? $fel_data['consumoPeriodo'] : null,
+                        "beneficiarioLey1886" => !empty($fel_data['beneficiarioLey1886']) ? $fel_data['beneficiarioLey1886'] : null,
+                        "montoDescuentoLey1886" => !empty($fel_data['montoDescuentoLey1886']) ? $fel_data['montoDescuentoLey1886'] : null,
+                        "montoDescuentoTarifaDignidad" => !empty($fel_data['montoDescuentoTarifaDignidad']) ? $fel_data['montoDescuentoTarifaDignidad'] : null,
+                        "tasaAseo" => !empty($fel_data['tasaAseo']) ? $fel_data['tasaAseo'] : null,
+                        "tasaAlumbrado" => !empty($fel_data['tasaAlumbrado']) ? $fel_data['tasaAlumbrado'] : null,
+                        "ajusteNoSujetoIva" => !empty($fel_data['ajusteNoSujetoIva']) ? $fel_data['ajusteNoSujetoIva'] : null,
+                        "detalleAjusteNoSujetoIva" => !empty($fel_data['detalleAjusteNoSujetoIva']) ? $fel_data['detalleAjusteNoSujetoIva'] : null,
+                        "ajusteSujetoIva" => !empty($fel_data['ajusteSujetoIva']) ? $fel_data['ajusteSujetoIva'] : null,
+                        "detalleAjusteSujetoIva" => !empty($fel_data['detalleAjusteSujetoIva']) ? $fel_data['detalleAjusteSujetoIva'] : null,
+                        "otrosPagosNoSujetoIva" => !empty($fel_data['otrosPagosNoSujetoIva']) ? $fel_data['otrosPagosNoSujetoIva'] : null,
+                        "detalleOtrosPagosNoSujetoIva" => !empty($fel_data['detalleOtrosPagosNoSujetoIva']) ? $fel_data['detalleOtrosPagosNoSujetoIva'] : null,
+
+                        //hoteles 
+                        "cantidadHuespedes" => !empty($fel_data["cantidadHuespedes"]) ? $fel_data["cantidadHuespedes"] : null,
+                        "cantidadHabitaciones" => !empty($fel_data["cantidadHabitaciones"]) ? $fel_data["cantidadHabitaciones"] : null,
+                        "cantidadMayores" => !empty($fel_data["cantidadMayores"]) ? $fel_data["cantidadMayores"] : null,
+                        "cantidadMenores" => !empty($fel_data["cantidadMenores"]) ? $fel_data["cantidadMenores"] : null,
+                        "fechaIngresoHospedaje" => !empty($fel_data["fechaIngresoHospedaje"]) ? $fel_data["fechaIngresoHospedaje"] : null,
+
                     ];
                     break;
                 
             }
 
         } catch (Throwable $ex) {
-            
+            \Log::emergency("File: " . $ex->getFile() . " Line: " . $ex->getLine() . " Message: " . $ex->getMessage());
             bitacora_error("BaseRepository", $ex->getMessage());
         }
     }

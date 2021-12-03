@@ -16,6 +16,7 @@ class ElectronicInvoice
             Route::put('invoices', 'InvoiceController@updateEmitedInvoice');
             Route::post('invoices/revocate', 'InvoiceController@revocate');
             Route::post('invoices/reversion-revocate', 'InvoiceController@reversionRevocate');
+            Route::get('verify_nit/{NIT}', 'InvoiceController@verifynit');
         });
     }
 }

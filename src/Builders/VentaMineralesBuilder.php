@@ -53,7 +53,10 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
                     "mermaPorcentaje" => $this->source_data['fel_data_parsed']["mermaPorcentaje"],
                     "mermaValor" => $this->source_data['fel_data_parsed']["mermaValor"],
                     "kilosNetosSecos" => $this->source_data['fel_data_parsed']["kilosNetosSecos"],
-                    "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"]
+                    "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
+                    "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'], 2),
+                    "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
+                    "cafc" => $this->source_data['fel_data_parsed']['cafc'],
                 ],
                 $this->getOtrosDatos(),
                 $this->getDetailsAndTotals()

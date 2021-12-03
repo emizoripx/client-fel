@@ -6,6 +6,12 @@ use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
+use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
+use EmizorIpx\ClientFel\Builders\HotelesBuilder;
+use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
+use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
+use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 
 class TypeDocumentSector
@@ -78,14 +84,32 @@ class TypeDocumentSector
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
                 break;
+            case static::TASA_CERO:
+                return TasaCeroBuilder::class;
+                break;
             case static::EXPORTACION_MINERALES:
                 return ExportacionMineralesBuilder::class;
+                break;
+            case static::SECTORES_EDUCATIVOS:
+                return SectorEducativoBuilder::class;
+                break;
+            case static::SERVICIOS_BASICOS:
+                return ServiciosBasicosBuilder::class;
+                break;
+            case static::HIDROCARBUROS:
+                return HidrocarburosBuilder::class;
+                break;
+            case static::HOTELES:
+                return HotelesBuilder::class;
                 break;
             case static::VENTA_INTERNA_MINERALES:
                 return VentaMineralesBuilder::class;
                 break;
             case static::COMERCIAL_EXPORTACION:
                 return ComercialExportacionBuilder::class;
+                break;
+            case static::TELECOMUNICACIONES:
+                return TelecomunicacionesBuilder::class;
                 break;
             case static::DEBITO_CREDITO:
                 return CreditoDebitoBuilder::class;
@@ -110,11 +134,87 @@ class TypeDocumentSector
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
                 break;
+            case static::TASA_CERO:
+                return 'tasa-cero';
+                break;
+            case static::SECTORES_EDUCATIVOS:
+                return 'sector-educativo';
+                break;
+            case static::SERVICIOS_BASICOS:
+                return 'servicios-basicos';
+                break;
+            case static::HIDROCARBUROS:
+                return 'hidrocarburos';
+                break;
+            case static::HOTELES:
+                return 'hoteles';
+                break;
             case static::VENTA_INTERNA_MINERALES:
                 return 'venta-interna-minerales';
                 break;
             case static::COMERCIAL_EXPORTACION:
                 return 'comercial-exportacion';
+                break;
+            case static::TELECOMUNICACIONES:
+                return 'comercial-exportacion';
+                break;
+            case static::DEBITO_CREDITO:
+                if( $company_nit == '1020415021'){
+                    return 'nota-debito-credito-msc';
+                }
+                return 'nota-debito-credito';
+                break;
+
+            default:
+                return 'compra-venta';
+                break;
+        }
+    }
+    public static function geTemplateByCode($code, $company_nit = null):string
+    {
+        \Log::debug("sector document ". $code);
+        switch ($code) {
+            case static::COMPRA_VENTA:
+                if( $company_nit == '1020415021'){
+                    return 'compra-venta-msc';
+                }
+                return 'compra-venta';
+                break;
+            case static::EXPORTACION_MINERALES:
+                if( $company_nit == '1020415021'){
+                    return 'comercial-exportacion-minerales-msc';
+                }
+                return 'comercial-exportacion-minerales';
+                break;
+            case static::TASA_CERO:
+                return 'tasa-cero';
+                break;
+            case static::SECTORES_EDUCATIVOS:
+                return 'sector-educativo';
+                break;
+            case static::SERVICIOS_BASICOS:
+                return 'servicios-basicos';
+                break;
+            case static::HIDROCARBUROS:
+                return 'hidrocarburos';
+                break;
+            case static::HOTELES:
+                return 'hoteles';
+                break;
+            case static::VENTA_INTERNA_MINERALES:
+                if( $company_nit == '1020415021'){
+                    return 'venta-interna-minerales-msc';
+                }
+                return 'venta-interna-minerales';
+                break;
+            case static::COMERCIAL_EXPORTACION:
+                if( $company_nit == '1020415021'){
+                    return 'comercial-exportacion-msc';
+                }
+                return 'comercial-exportacion';
+                break;
+            case static::TELECOMUNICACIONES:
+                return 'compra-venta'; //TODO: CHANGE in case needs different template
                 break;
             case static::DEBITO_CREDITO:
                 return 'nota-debito-credito';

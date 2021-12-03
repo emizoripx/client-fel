@@ -29,6 +29,7 @@ class Pos extends BaseConnection{
 
     public function getPOS(){
         try{
+            \Log::debug("get pos >> URI : ". '/api/v1/puntos-de-venta?branch_code=' . $this->branch_code);
             $response = $this->client->request('GET', '/api/v1/puntos-de-venta?branch_code='.$this->branch_code, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
 
             return $this->parse_response($response);

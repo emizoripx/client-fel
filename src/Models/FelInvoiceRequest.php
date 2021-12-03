@@ -208,6 +208,14 @@ class FelInvoiceRequest extends Model
 
         return $this;
     }
+    public function saveXmlUrl($value){
+        
+        if( !is_null($value)){
+            $this->xml_url = $value;
+        }
+
+        return $this;
+    }
     /**
      * Get the prepagoAccount instance
      *
@@ -263,6 +271,7 @@ class FelInvoiceRequest extends Model
              ->saveUrlSin($invoice['urlSin']?? null)
              ->saveEmisionDate($invoice['fechaEmision'])
              ->saveEmisionType($invoice['tipoEmision'])
+             ->saveXmlUrl($invoice['xml_url'])
              ->saveInvoiceTypeId($invoice['documentoSector'])
              ->savePackageId($invoice['package_id'] ?? null)
              ->saveIndexPackage($invoice['index_package'] ?? null)

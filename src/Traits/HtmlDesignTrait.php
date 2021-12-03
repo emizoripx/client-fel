@@ -408,13 +408,18 @@ trait HtmlDesignTrait{
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
                                     <td>'. $factura->nombreRazonSocial . '</td>
-                                    <td style="text-align:right;" ><b>Fecha Factura:</b></td>
-                                    <td>'. date("d/m/Y g:i A", strtotime($factura->fechaEmision))  .'</td>
+                                    <td style="text-align:right;"><b>Código Cliente:</b></td>
+                                    <td>'. $factura->codigoCliente . '</td>
                                 </tr>
                                 <tr>
-                                    <td><b>Nº Factura:</b></td>
+                                    <td ><b>Fecha Factura:</b></td>
+                                    <td>'. date("d/m/Y g:i A", strtotime($factura->fechaEmision))  .'</td>
+                                    <td style="text-align:right;"><b>Nº Factura:</b></td>
                                     <td>'. $factura->numeroFactura . '</td>
-                                    <td style="text-align:right;" ><b>Nº Autorización/CUF:</b></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td><b>Nº Autorización/CUF:</b></td>
                                     <td>'. $factura->cuf .'</td>
                                 </tr>
                                 
@@ -472,7 +477,7 @@ trait HtmlDesignTrait{
                     <tr>
                         <td colspan=3 style="border:0px;" ></td>
                         <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. $this->number_format_custom((float)$subtotal,2) .'</td>
+                        <td> '. $this->number_format_custom((float) collect($detalles)->sum('subTotal') ,2) .'</td>
                     </tr>
                     
                     </tbody>

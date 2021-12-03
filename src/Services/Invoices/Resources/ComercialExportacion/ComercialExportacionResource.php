@@ -26,6 +26,7 @@ class ComercialExportacionResource extends JsonResource
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
+            "fechaEmision"=> $this->fechaEmision,
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
@@ -56,6 +57,9 @@ class ComercialExportacionResource extends JsonResource
             "costosGastosNacionales" => CostosComercialExportacionResource::collection(collect($this->costosGastosNacionalesChanged)),
             "costosGastosInternacionales" => CostosComercialExportacionResource::collection(collect($this->costosGastosInternacionalesChanged)),
             "emailCliente" => $this->emailCliente,
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "descuentoAdicional" => round($this->descuentoAdicional, 2),
         ];
     }
 }

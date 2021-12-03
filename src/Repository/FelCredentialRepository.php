@@ -191,12 +191,13 @@ class FelCredentialRepository
     }
 
     public function getPOS($branch){
-
+        \Log::debug("GET POS >> ingresando al servicio");
         $posService = new Pos($this->credential->access_token, $this->credential->getHost());
-
+        \Log::debug("GET POS >> servicio consumiendo a " . $this->credential->getHost() );
         $pos = $posService->setBranch($branch->codigo)->getPOS();
-
+        \Log::debug("GET POS >> respuesta de servicio " . json_encode($pos) );
         foreach($pos as $p){
+            \Log::debug("GET POS >> POS: " . json_encode($p));
             if(FelPOS::existsPOS($branch->company_id, $branch->codigo, $p['codigo'])){
                 FelPOS::create([
                     'codigo' => $p['codigo'],
@@ -204,6 +205,7 @@ class FelCredentialRepository
                     'branch_id' => $branch->id,
                     'company_id' => $branch->company_id
                 ]);
+                \Log::debug("GET POS >> POS: created " . json_encode($p));
             }
         }
 

@@ -27,6 +27,7 @@ class VentaMineralesResource extends JsonResource
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
+            "fechaEmision"=> $this->fechaEmision,
             "kilosNetosHumedos" => round($this->kilosNetosHumedos, 2),
             "humedadPorcentaje" => round($this->humedadPorcentaje, 2),
             "humedadValor" => round($this->humedadValor, 2),
@@ -57,6 +58,10 @@ class VentaMineralesResource extends JsonResource
             "montoTotalSujetoIva" => round($this->montoTotal, 2),
             'detalles' => DetalleVentaMineralesResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "montoGiftCard" => round($this->montoGiftCard, 2),
+            "descuentoAdicional" => round($this->descuentoAdicional, 2),
             
         ];
     }

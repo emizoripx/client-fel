@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasEmited;
 use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasEmitedUpdate;
 use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
+use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -146,5 +147,46 @@ class InvoiceController extends BaseController
                 'msg' => json_decode($ex->getMessage())
             ]);
         }
+    }
+
+    public function verifynit(Request $request,$nit)
+    {
+        
+        if ( !is_numeric($nit) ) {
+            return response()->json([
+                "success" => false,
+                "message" => "NIT INEXISTENTE",
+                "codigo" => 994
+            ]);
+        }
+
+        $success = false;
+        try {
+            
+            $invoice_service = new Invoices($request->host);
+            $invoice_service->setAccessToken($request->access_token);
+            $invoice_service->validateNit($nit);
+
+            $response = $invoice_service->getResponse();
+            \Log::debug($response);
+            
+
+            if ($response['codigo'] == 986) {
+                $success = true;
+            }
+
+            return response()->json([
+                "success" => $success,
+                "message" => $response['descripcion'],
+                "codigo" => $response['codigo']
+            ]);
+        } catch (ClientFelException $ex) {
+            return response()->json([
+               "success" => false,
+                "message" => $ex->getMessage(),
+                "codigo" => -1
+            ]);
+        }
+
     }
 }

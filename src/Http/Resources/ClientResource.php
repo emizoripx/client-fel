@@ -24,6 +24,7 @@ class ClientResource extends JsonResource
             "type_document_id" => (string) $this->type_document_id,
             "document_number" => $this->document_number,
             "complement" => $this->complement,
+            "codigoExcepcion" => $this->codigoExcepcion,
             "business_name" => $this->business_name,
             "deleted_at" => $this->deleted_at,
             "created_at" => $this->created_at,

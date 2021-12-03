@@ -75,6 +75,13 @@ class InvoiceResource extends JsonResource
             "codigo_pos" => (string)$this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
             "urlSin" => (string) $this->urlSin,
+            
+            // compra venta v2
+            "descuentoAdicional" => (string)$this->descuentoAdicional ?? null,
+            "montoGiftCard" => (string)$this->montoGiftCard ?? null,
+            "codigoExcepcion" => (string)$this->codigoExcepcion ?? null,
+            "cafc" => (string)$this->cafc ?? null,
+
 
             // factura venta minerales
             "liquidacionPreliminar" => (string) $this->liquidacion_preliminar,
@@ -100,6 +107,37 @@ class InvoiceResource extends JsonResource
 
             // nota crédito débito
             "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
+            // factura sector educativo
+            "nombreEstudiante" => $this->nombreEstudiante,
+            "periodoFacturado" => $this->periodoFacturado,
+            
+            // hidrocarburos
+            "ciudad" => $this->ciudad,
+            "nombrePropietario" => $this->nombrePropietario,
+            "nombreRepresentanteLegal" => $this->nombreRepresentanteLegal,
+            "condicionPago" => $this->condicionPago,
+            "periodoEntrega" => $this->periodoEntrega,
+
+            //servicios básicos
+
+            "mes" => $this->mes,
+            "gestion" => $this->gestion,
+            "ciudad" => $this->ciudad,
+            "zona" => $this->zona,
+            "numeroMedidor" => $this->numeroMedidor,
+            "domicilioCliente" => $this->domicilioCliente,
+            "consumoPeriodo" => $this->consumoPeriodo,
+            "beneficiarioLey1886" => $this->beneficiarioLey1886,
+            "montoDescuentoLey1886" => $this->montoDescuentoLey1886,
+            "montoDescuentoTarifaDignidad" => $this->montoDescuentoTarifaDignidad,
+            "tasaAseo" => $this->tasaAseo,
+            "tasaAlumbrado" => $this->tasaAlumbrado,
+            "ajusteNoSujetoIva" => $this->ajusteNoSujetoIva,
+            "detalleAjusteNoSujetoIva" => $this->detalleAjusteNoSujetoIva,
+            "ajusteSujetoIva" => $this->ajusteSujetoIva,
+            "detalleAjusteSujetoIva" => $this->detalleAjusteSujetoIva,
+            "otrosPagosNoSujetoIva" => $this->otrosPagosNoSujetoIva,
+            "detalleOtrosPagosNoSujetoIva" => $this->detalleOtrosPagosNoSujetoIva,
         ];
     }
 }

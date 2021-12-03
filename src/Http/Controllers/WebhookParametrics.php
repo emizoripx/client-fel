@@ -39,19 +39,21 @@ class WebhookParametrics extends BaseController
             // Sync Company in phase Testing
             $companyTesting = $companies->whereIn('phase', ['Testing', 'Piloto testing'])->all();
 
+            if (!empty($companyTesting)){
 
-            $company = collect($companyTesting)->first();
-            $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
-
-            \Log::debug("Company First");
-            \Log::debug($company);
-
-            foreach ($data['data'] as $parametric) {
-                \Log::debug("WEBHOOK PARAMETRICAS ------ Get " . $parametric);
-                $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
-
-                $this->parametricSyncPhaseTesting($parametric, $companyTesting, $parametricService->getResponse());
+                $company = collect($companyTesting)->first();
+                $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+                \Log::debug("Company First");
+                \Log::debug($company);
+                foreach ($data['data'] as $parametric) {
+                    \Log::debug("WEBHOOK PARAMETRICAS ------ Get " . $parametric);
+                    $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
+    
+                    $this->parametricSyncPhaseTesting($parametric, $companyTesting, $parametricService->getResponse());
+                }
             }
+
+
         }
         else{
 

@@ -23,10 +23,23 @@ class Currencies{
 
         switch ($code) {
             case self::DOLAR:
-                return 'Dólares Americanos';
+                return 'Dólares';
                 break;
             case self::BOLIVIANO:
                 return 'Bolivianos';
+                break;
+            
+        }
+        
+    }
+    public static function getSingularDescriptionCurrency($code){
+
+        switch ($code) {
+            case self::DOLAR:
+                return 'Dolar';
+                break;
+            case self::BOLIVIANO:
+                return 'Boliviano';
                 break;
             
         }

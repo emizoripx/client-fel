@@ -26,10 +26,11 @@ class CompraVentaResource extends JsonResource
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
+            "fechaEmision"=> $this->fechaEmision,
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
-            "montoTotalSujetoIva" => round($this->montoTotal, 2),
+            "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
             "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
             "nombreRazonSocial" => $this->nombreRazonSocial,
@@ -46,6 +47,10 @@ class CompraVentaResource extends JsonResource
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
             'detalles' => DetalleCompraVentaResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "montoGiftCard" => round($this->montoGiftCard,2),
+            "descuentoAdicional" => round($this->descuentoAdicional,2),
         ];
     }
 }

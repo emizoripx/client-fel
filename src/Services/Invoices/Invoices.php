@@ -11,7 +11,7 @@ use Exception;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-
+use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 class Invoices extends BaseConnection
 {
     protected $access_token;
@@ -332,6 +332,23 @@ class Invoices extends BaseConnection
             \Log::debug(json_encode($this->prepared_data));
         }catch(Throwable $th) {
             \Log::error($th);
+        }
+    }
+
+    public function validateNit($nit)
+    {
+        
+        try {
+            $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $parsed_response = $this->parse_response($response);
+            $this->setResponse($parsed_response);
+            return $this->parse_response($response);
+        } catch (MaintenanceModeException $ex) {
+            Log::error($ex->getMessage());
+            throw new ClientFelException("El servicio FEL está en mantenimiento, espere por favor.");
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+            throw new ClientFelException("Error al validar el NIT");
         }
     }
 }

@@ -27,6 +27,7 @@ class ExportacionMineralesResource extends JsonResource
             "incoterm" => $this->incoterm,
             "tipoCambioANB" => $this->tipoCambioANB,
             "numeroLote" => $this->numeroLote,
+            "fechaEmision"=> $this->fechaEmision,
             "kilosNetosHumedos" => round($this->kilosNetosHumedos, 2),
             "humedadPorcentaje" => round($this->humedadPorcentaje, 2),
             "humedadValor" => round($this->humedadValor, 2),
@@ -53,6 +54,9 @@ class ExportacionMineralesResource extends JsonResource
             "otrosDatos"=>json_encode($this->otrosDatos),
             'detalles' => DetalleExportacionMineralesResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
+            "cafc" => $this->cafc,
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "descuentoAdicional" => round($this->descuentoAdicional, 2),
             
         ];
     }
