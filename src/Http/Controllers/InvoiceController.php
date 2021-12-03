@@ -182,8 +182,9 @@ class InvoiceController extends BaseController
             ]);
         } catch (ClientFelException $ex) {
             return response()->json([
-                "success" => false,
-                "msg" => $ex->getMessage()
+               "success" => false,
+                "message" => $ex->getMessage(),
+                "codigo" => -1
             ]);
         }
 
