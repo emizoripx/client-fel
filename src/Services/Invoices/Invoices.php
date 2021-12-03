@@ -343,12 +343,12 @@ class Invoices extends BaseConnection
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $this->parse_response($response);
-        } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
-            throw new ClientFelException("Error en al validar el NIT");
         } catch (MaintenanceModeException $ex) {
             Log::error($ex->getMessage());
             throw new ClientFelException("El servicio FEL está en mantenimiento, espere por favor.");
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+            throw new ClientFelException("Error al validar el NIT");
         }
     }
 }
