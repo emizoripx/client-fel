@@ -21,12 +21,14 @@ class UpdateCompanySettingsPdfVariable
 
             ],
             'company_details' => [
+                '$company.name',
                 // EMIZOR-INVOICE-INSERT
                 '$fel.casa_matriz',
+                '$fel.pos',
                 // EMIZOR-INVOICE-END
                 '$company.website',
                 '$company.email',
-
+                
             ],
             'company_address' => [
                 '$company.address1',
@@ -71,7 +73,7 @@ class UpdateCompanySettingsPdfVariable
                 '$product.discount',
                 '$product.line_total',
             ],
-            'task_columns' => [
+            'task_columns' =>[
                 '$task.service',
                 '$task.description',
                 '$task.rate',
@@ -81,10 +83,11 @@ class UpdateCompanySettingsPdfVariable
                 '$task.line_total',
             ],
             'total_columns' => [
-                '$subtotal',
                 // EMIZOR-INVOICE-INSERT
-                '$monto_gift_card',
+                '$subtotal',
                 '$descuento_adicional',
+                '$monto_gift_card',
+                '$monto_total',
                 '$total_iva'
                 // EMIZOR-INVOICE-END
             ],
