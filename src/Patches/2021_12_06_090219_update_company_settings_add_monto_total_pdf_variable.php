@@ -1,6 +1,6 @@
 <?php
 
-class UpdateCompanySettingsPdfVariable
+class UpdateCompanySettingsAddMontoTotalPdfVariable
 {
     /**
      * Run the patch.
