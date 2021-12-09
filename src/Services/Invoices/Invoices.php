@@ -86,7 +86,7 @@ class Invoices extends BaseConnection
 
         try {
             
-            \Log::debug("Send to : " . "/api/v2/sucursales/$this->branch_number/facturas/$this->type_document" );
+            \Log::debug("Send to : " . "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document" );
             \Log::debug("data : " . json_encode($this->prepared_data));
             $response = $this->client->request('POST', "/api/v1/sucursales/$this->branch_number/facturas/$this->type_document", ["json" => $this->prepared_data, "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $parsed_response = $this->parse_response($response);
