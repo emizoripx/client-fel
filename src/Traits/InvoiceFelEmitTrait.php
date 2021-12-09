@@ -13,7 +13,7 @@ trait InvoiceFelEmitTrait
 
     public function emit( $should_emit = 'true')
     {
-        
+        \Log::debug("Usando el EMIT TRAIT >>>>>>>>>>>>>>>>>");
         //if should invoice is not set, then not emit
         if ($should_emit !== 'true')
             return $this;
@@ -33,6 +33,13 @@ trait InvoiceFelEmitTrait
             if ($felInvoiceRequest->codigoEstado != null || $felInvoiceRequest->cuf != null){
                 return $this;
             }
+            
+            // generate next number new emission invoice
+            $this->invoice->service()->applyNumber()->save();
+            // save number in felinvoicerequest 
+            $felInvoiceRequest->setNumeroFactura($this->invoice->number);
+            // reload changes in model
+            $felInvoiceRequest = $felInvoiceRequest->fresh();
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 

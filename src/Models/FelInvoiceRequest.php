@@ -12,6 +12,7 @@ use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
 use EmizorIpx\ClientFel\Traits\InvoiceUpdateDateTrait;
 use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
+use Exception;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,6 +43,41 @@ class FelInvoiceRequest extends Model
 
     protected $access_token;
     protected $host;
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($query) {
+            $next_number = self::nextNumber($query->company_id);
+            $query->prefactura_number = $next_number;
+        });
+    }
+
+    public static function nextNumber($company_id)
+    {
+        
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        $company_id = $hashid->decode($company_id);
+
+        $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id','prefactura_number_counter')->first();
+
+        \Log::debug("NEXT NUMBER >>>>>>>>>>>>>>>>>> " . json_encode($data));
+        if ($data!=null) {
+            $data->increment('prefactura_number_counter');
+            
+            return $data->prefactura_number_counter;
+        }
+        return 1;
+    }
+
+    public function getNumeroFacturaAttribute()
+    {
+        if ( $this->attributes['numeroFactura'] == 0 ) {
+            return "Pre-factura " . $this->attributes['prefactura_number'];
+        }
+        return $this->attributes['numeroFactura'];
+    }
 
     protected static function newFactory(){
         return FelInvoiceRequestFactory::new();
@@ -253,9 +289,11 @@ class FelInvoiceRequest extends Model
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
         $invoice_service->buildData($this);
-
-        $invoice_service->sendToFel();
-
+        try{
+            $invoice_service->sendToFel();
+        } catch (Exception $ex) {
+            throw new ClientFelException($ex->getMessage());
+        }
         // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
         $this->saveCuf($invoice_service->getResponse()['cuf']);
         $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
@@ -404,5 +442,15 @@ class FelInvoiceRequest extends Model
     public function getFechaEmisionFormated(){
         $date = date("d/m/Y g:i A", strtotime($this->fechaEmision));
         return  $date;
+    }
+
+    public function setNumeroFactura($number)
+    {
+        // condition to detect if  numeroFactura still doest not have value,
+        // check if contains "Pre", this is because, in an above method there is a mutator that changes value in case is 0
+        if ($this->numeroFactura == 0 ||  strpos( $this->numeroFactura,"Pre") === 0) {
+            $this->numeroFactura = $number;
+            $this->save();
+        }
     }
 }

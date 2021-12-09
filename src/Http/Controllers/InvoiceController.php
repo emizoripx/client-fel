@@ -17,8 +17,7 @@ class InvoiceController extends BaseController
 
     public function emit(Request $request)
     {
-
-        
+        \Log::debug("Usando InvoiceController:emit >>>>>>>>>>>>>>>>>");
         $success = false;
 
         try {
@@ -34,19 +33,23 @@ class InvoiceController extends BaseController
             if($felInvoiceRequest->codigoEstado == 690){
                 throw new ClientFelException('La factura ya fue emitida');
             }
-            
-            $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
-
-            $felInvoiceRequest->invoiceDateUpdatedAt();
-            
-            $felInvoiceRequest->deletePdf();
-
             $invoice = $felInvoiceRequest->invoice_origin();
-
+            
+            // begin a trasaction in case an error happend, rollback changes
+            \DB::beginTransaction();
+            // generate next number new emission invoice
+            $invoice->service()->applyNumber()->save();
+            // save number in felinvoicerequest 
+            $felInvoiceRequest->setNumeroFactura($invoice->number);
+            // reload changes in model
+            $felInvoiceRequest = $felInvoiceRequest->fresh();
+            $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
+            $felInvoiceRequest->invoiceDateUpdatedAt();
+            $felInvoiceRequest->deletePdf();
             $invoice->service()->markSent()->save();
 
             $success = true;
-
+            \DB::commit();
             fel_register_historial($felInvoiceRequest);
 
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id) ));
@@ -56,7 +59,8 @@ class InvoiceController extends BaseController
             ]);
 
         } catch (ClientFelException $ex) {
-            
+            \Log::debug("Rollback number emit invoice");
+            \DB::rollback();
             fel_register_historial($felInvoiceRequest, $ex->getMessage());
 
             return response()->json([
@@ -139,7 +143,7 @@ class InvoiceController extends BaseController
             ]);
 
         } catch (Exception $ex) {
-            \Log::debug('Errors');
+            \Log::debug('Errors ' . $ex->getMessage());
             fel_register_historial(isset($felInvoiceRequest) ? $felInvoiceRequest : null, json_decode($ex->getMessage()));
 
             return response()->json([
