@@ -184,6 +184,9 @@ class TypeDocumentSector
                 if( $company_nit == '1020415021'){
                     return 'comercial-exportacion-minerales-msc';
                 }
+                if( $company_nit == '1017233026'){
+                    return 'comercial-exportacion-minerales-manquiri';
+                }
                 return 'comercial-exportacion-minerales';
                 break;
             case static::TASA_CERO:
