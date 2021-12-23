@@ -20,7 +20,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
 
     public function prepare(): FelInvoiceRequest
     {
-        
+        \Log::debug("ingresando ya con la data : " . json_encode($this->source_data['fel_data_parsed']));
         if ($this->source_data['update'])
             $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
         else
@@ -71,13 +71,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
 
         return [
-            "otrosDatos" => [
-                "valorFobFrontera" => $this->source_data['fel_data_parsed']['valorFobFrontera'],
-                "fleteInternoUSD" => $this->source_data['fel_data_parsed']['fleteInternoUSD'],
-                "valorPlata" => $this->source_data['fel_data_parsed']['valorPlata'],
-                "valorFobFronteraBs" => $this->source_data['fel_data_parsed']['valorFobFronteraBs'],
-                "monedaTransaccional" => $this->source_data['fel_data_parsed']['codigo_moneda']
-            ]
+            "otrosDatos" => $this->source_data['fel_data_parsed']['otrosDatos']
         ];
     }
 

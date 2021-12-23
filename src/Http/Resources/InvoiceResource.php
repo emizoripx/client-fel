@@ -75,6 +75,7 @@ class InvoiceResource extends JsonResource
             "codigo_pos" => (string)$this->codigoPuntoVenta,
             "numeroTarjeta" => (int) $this->numeroTarjeta,
             "urlSin" => (string) $this->urlSin,
+            "otrosDatos" => json_encode($this->otrosDatos),
             
             // compra venta v2
             "descuentoAdicional" => (string)$this->descuentoAdicional ?? null,

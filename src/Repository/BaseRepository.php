@@ -19,6 +19,7 @@ class BaseRepository
 
     protected function parseFelData($fel_data)
     {
+        \Log::debug("datos feldata : " . json_encode($fel_data));
         try {
 
             switch ($this->entity) {
@@ -156,6 +157,8 @@ class BaseRepository
                         "cantidadMenores" => !empty($fel_data["cantidadMenores"]) ? $fel_data["cantidadMenores"] : null,
                         "fechaIngresoHospedaje" => !empty($fel_data["fechaIngresoHospedaje"]) ? $fel_data["fechaIngresoHospedaje"] : null,
 
+                        //otros datos, dinamically
+                        "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
                     ];
                     break;
                 
