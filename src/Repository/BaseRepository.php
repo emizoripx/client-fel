@@ -87,6 +87,10 @@ class BaseRepository
                         "montoGiftCard" => !empty($fel_data['montoGiftCard']) ? $fel_data['montoGiftCard'] : null,
                         "descuentoAdicional" => !empty($fel_data['descuentoAdicional']) ? $fel_data['descuentoAdicional'] : null,
                         "cafc" => !empty($fel_data['cafc']) ? $fel_data['cafc'] : null,
+
+                        "pesoBrutoGr" => !empty($fel_data['pesoBrutoGr']) ? $fel_data['pesoBrutoGr'] : 0,
+                        "pesoBrutoKg" => !empty($fel_data['pesoBrutoKg']) ? $fel_data['pesoBrutoKg'] : 0,
+                        "pesoNetoGr" => !empty($fel_data['pesoNetoGr']) ? $fel_data['pesoNetoGr'] : 0,
                         // FACTURA VENTA MINERALES
                         "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
                         "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,

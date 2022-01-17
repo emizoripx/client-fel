@@ -139,6 +139,12 @@ class InvoiceResource extends JsonResource
             "detalleAjusteSujetoIva" => $this->detalleAjusteSujetoIva,
             "otrosPagosNoSujetoIva" => $this->otrosPagosNoSujetoIva,
             "detalleOtrosPagosNoSujetoIva" => $this->detalleOtrosPagosNoSujetoIva,
+
+            // additional data for manquiri
+            "pesoBrutoGr" => $this->pesoBrutoGr,
+            "pesoBrutoKg" => $this->pesoBrutoKg,
+            "pesoNetoGr" => $this->pesoNetoGr,
+ 
         ];
     }
 }

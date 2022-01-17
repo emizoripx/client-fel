@@ -55,6 +55,9 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "pesoBrutoGr" => $this->source_data['fel_data_parsed']['pesoBrutoGr'],
+                "pesoBrutoKg" => $this->source_data['fel_data_parsed']['pesoBrutoKg'],
+                "pesoNetoGr" => $this->source_data['fel_data_parsed']['pesoNetoGr'],
             ],
             $this->getOtrosDatos(),
             $this->getDetailsAndTotals()
