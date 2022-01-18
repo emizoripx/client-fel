@@ -91,6 +91,7 @@ class BaseRepository
                         "pesoBrutoGr" => !empty($fel_data['pesoBrutoGr']) ? $fel_data['pesoBrutoGr'] : 0,
                         "pesoBrutoKg" => !empty($fel_data['pesoBrutoKg']) ? $fel_data['pesoBrutoKg'] : 0,
                         "pesoNetoGr" => !empty($fel_data['pesoNetoGr']) ? $fel_data['pesoNetoGr'] : 0,
+                        "numeroContrato" => !empty($fel_data['numeroContrato']) ? $fel_data['numeroContrato'] : "",
                         // FACTURA VENTA MINERALES
                         "iva" => !empty($fel_data['iva']) ? $fel_data['iva'] : 0,
                         "liquidacionPreliminar" => !empty($fel_data['liquidacionPreliminar']) ? $fel_data['liquidacionPreliminar'] : 0,

@@ -58,6 +58,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
                 "pesoBrutoGr" => $this->source_data['fel_data_parsed']['pesoBrutoGr'],
                 "pesoBrutoKg" => $this->source_data['fel_data_parsed']['pesoBrutoKg'],
                 "pesoNetoGr" => $this->source_data['fel_data_parsed']['pesoNetoGr'],
+                "numeroContrato" => $this->source_data['fel_data_parsed']['numeroContrato'],
             ],
             $this->getOtrosDatos(),
             $this->getDetailsAndTotals()

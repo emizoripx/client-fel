@@ -144,6 +144,7 @@ class InvoiceResource extends JsonResource
             "pesoBrutoGr" => $this->pesoBrutoGr,
             "pesoBrutoKg" => $this->pesoBrutoKg,
             "pesoNetoGr" => $this->pesoNetoGr,
+            "numeroContrato" => (string)$this->numeroContrato ?? "",
  
         ];
     }
