@@ -21,7 +21,7 @@ class FelClientObserver
 
     public function saved($model)
     {
-        if (!is_null(request()->input('felData')))
+        if (!is_null(request()->input('felData')) && isset(request()->input('felData')['type_document_id']))
             $this->repo->create(request()->input('felData'), $model);
     }
 
