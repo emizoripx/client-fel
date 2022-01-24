@@ -14,6 +14,7 @@ use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use Carbon\Carbon;
 use DateTime;
+use EmizorIpx\ClientFel\Models\Parametric\FelRoomType;
 
 class FelParametric
 {
@@ -109,6 +110,9 @@ class FelParametric
                 }
                 return FelActivityDocumentSector::insert(static::addTimeStamp($data_));
                 break;
+            case TypeParametrics::TIPOS_HABITACION :
+                return FelRoomType::insert(static::addTimeStamp($data));
+                break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
                 break;
@@ -166,6 +170,9 @@ class FelParametric
                 break;
             case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
                 $query = FelActivityDocumentSector::whereCompanyId($company_id)->orderBy('actividad');
+                break;
+            case TypeParametrics::TIPOS_HABITACION:
+                $query = FelRoomType::orderBy('descripcion');
                 break;
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -233,6 +240,10 @@ class FelParametric
             case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
                 $activity_sector_documents = FelActivityDocumentSector::whereCompanyId($company_id)->first();
                 return is_null($activity_sector_documents);
+                break;
+            case TypeParametrics::TIPOS_HABITACION:
+                $room_type = FelRoomType::first();
+                return is_null($room_type);
                 break;
             
             default:
@@ -503,6 +514,29 @@ class FelParametric
                 }
 
                 break;
+            case TypeParametrics::TIPOS_HABITACION:
+
+                $room_type = FelRoomType::where('codigo', $data['codigo'])->first();
+
+                if(is_null($room_type)){
+                    unset($data['isActive']);
+                    static::create($type, [$data], $company_id);
+                    \Log::debug("Saved room type codigo #". $data['codigo']);
+                }
+                elseif (!is_null($room_type) && $data['isActive'] == false) {
+                    $room_type->delete();
+                    \Log::debug("Delete room type codigo #". $data['codigo']);
+                }
+                else {
+                    \Log::debug("updating room type codigo #". $data['codigo']);
+                    $room_type->update([
+                        'codigo' => $data['codigo'],
+                        'descripcion' => $data['descripcion'],
+                        'updated_at' => Carbon::now()->toDateTimeString()
+                    ]);
+                }
+
+                break;
             
             default:
                 throw new ClientFelException("No existe el tipo este metodo");
@@ -575,6 +609,12 @@ class FelParametric
                 break;
             case TypeParametrics::UNIDADES:
                 $updated_at = Unit::orderByDesc('updated_at')->pluck('updated_at')->first();
+                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
+                return strtotime( strval( $updated_at));
+
+                break;
+            case TypeParametrics::TIPOS_HABITACION:
+                $updated_at = FelRoomType::orderByDesc('updated_at')->pluck('updated_at')->first();
                 \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
