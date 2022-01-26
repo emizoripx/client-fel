@@ -591,6 +591,8 @@ trait HtmlDesignTrait{
                             '}}';
     }
 
+    $javascript = "";
+
 return $javascript;
 }
 
