@@ -15,6 +15,7 @@ class TypeParametrics {
     const PRODUCTOS_SIN="productos-sin";
     const TIPOS_DOCUMENTO_SECTOR = "tipos-documento-sector";
     const ACTIVIDADES_DOCUMENTO_SECTOR = "actividades-documento-sector";
+    const TIPOS_HABITACION = 'tipo-habitacion';
 
 
     public static function getAll()
@@ -30,7 +31,8 @@ class TypeParametrics {
             SELF::LEYENDAS,
             SELF::PRODUCTOS_SIN,
             SELF::TIPOS_DOCUMENTO_SECTOR,
-            SELF::ACTIVIDADES_DOCUMENTO_SECTOR
+            SELF::ACTIVIDADES_DOCUMENTO_SECTOR,
+            SELF::TIPOS_HABITACION
         ];
     }
 }
