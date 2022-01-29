@@ -219,7 +219,9 @@ class FelCredentialRepository
 
         AccountPrepagoBags::where('company_id', $this->credential->account_id)->update([
             'fel_company_id' => $felCompany['id'],
-            'modality_code' => $felCompany['modality_code']
+            'modality_code' => $felCompany['modality_code'],
+            'business_name' => $felCompany['business_name'],
+            'is_uniper' => $felCompany['is_uniper']
         ]);
 
         return $this;
