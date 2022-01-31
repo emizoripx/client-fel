@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
@@ -84,6 +85,9 @@ class TypeDocumentSector
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
                 break;
+            case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
+                return ComercialConsignacionBuilder::class;
+                break;
             case static::TASA_CERO:
                 return TasaCeroBuilder::class;
                 break;
@@ -130,6 +134,9 @@ class TypeDocumentSector
                     return 'compra-venta-custom';
                 }
                 return 'compra-venta';
+                break;
+            case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
+                return 'comercial-libre-consignacion';
                 break;
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
@@ -179,6 +186,9 @@ class TypeDocumentSector
                     return 'compra-venta-msc';
                 }
                 return 'compra-venta';
+                break;
+            case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
+                return 'comercial-libre-consignacion';
                 break;
             case static::EXPORTACION_MINERALES:
                 if( $company_nit == '1020415021'){
