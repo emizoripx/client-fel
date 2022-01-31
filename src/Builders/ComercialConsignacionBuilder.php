@@ -33,7 +33,6 @@ class ComercialConsignacionBuilder extends BaseFelInvoiceBuilder implements FelI
             [
                 "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
                 "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
-                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->input,
@@ -96,8 +95,8 @@ class ComercialConsignacionBuilder extends BaseFelInvoiceBuilder implements FelI
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
-            "montoTotal" => $this->source_data['fel_data_parsed']['montoGeneralBs'],
-            "montoTotalMoneda" => $this->source_data['fel_data_parsed']['montoGeneral'],
+            "montoTotal" => $total,
+            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'], 2),
             "montoTotalSujetoIva" => 0,
             "detalles" => $details
         ];
