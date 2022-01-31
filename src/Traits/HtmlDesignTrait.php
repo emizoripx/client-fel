@@ -428,24 +428,26 @@ trait HtmlDesignTrait{
         return $clientDetails;
     }
 
-    public function makeRowsProductFacturaOriginal( $detalles, $codigoMoneda ,$flag ){
+    public function makeRowsProductFacturaOriginal( $felInvoice, $codigoMoneda ,$flag, $descuentoOriginal = 0){
         
         $subtotal = 0;
         $rows_table = '<table id="product-table">
                         <thead>
                         <th width="15%">CÓDIGO PRODUCTO</th>
-                        <th width="10%">CANTIDAD</th>
+                        <th width="5%">CANTIDAD</th>
+                        <th width="5%">UNIDAD MEDIDA</th>
                         <th width="35%">DESCRIPCIÓN</th>
                         <th width="15%">PRECIO UNITARIO</th>
                         <th width="15%">DESCUENTO</th>
-                        <th width="15%">SUBTOTAL</th>
+                        <th width="10%">SUBTOTAL</th>
                         </thead><tbody>';
 
-        foreach ($detalles as $detalle) {
+        foreach ($felInvoice->detalles as $detalle) {
             $rows_table .= '
                 <tr>
                     <td>'. $detalle['codigoProducto'] .'</td>
                     <td style="text-align: right;">'. $this->number_format_custom((float) $detalle['cantidad'] ,2) .'</td>
+                    <td style="text-align: center;">'.  Unit::getUnitDescription($detalle['unidadMedida'])  .'</td>
                     <td>'. $detalle['descripcion'] .'</td>
                     <td style="text-align: right;">'. $this->number_format_custom((float)$detalle['precioUnitario'],2) .'</td>
                     <td style="text-align: right;">'. (array_key_exists('montoDescuento', $detalle) ? $this->number_format_custom((float)$detalle['montoDescuento'],2) : '0.00' ) .' </td>
@@ -457,31 +459,82 @@ trait HtmlDesignTrait{
 
 
         if($flag){
-            $rows_table .= '
-                    <tr>
-                        <td rowspan=2 colspan=3 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($this->fel_invoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
-                        <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL DEVUELTO '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. $this->number_format_custom((float) $this->fel_invoice->montoTotal,2) .'</td>
-                    </tr>
-                    
-                    <tr>
-                        <td colspan=2 style="text-align: right;"> <b>MONTO EFECTIVO DE DÉBITO-CRÉDITO '. Currencies::getShortCode($codigoMoneda) .'</b></td>
-                        <td> '. $this->number_format_custom((float) $this->fel_invoice->montoEfectivoCreditoDebito,2) .'</td>
-                    </tr>
-                    
-                    </tbody>
-                    </table>';
+            if ($descuentoOriginal > 0){
+                $rows_table .= '
+                        <tr>
+                            <td colspan=4 style="text-align: left; vertical-align: top; border:0px;"> </td>
+                            <td colspan=2 style="text-align: right;"> <b>SUBTOTAL '. Currencies::getShortCode($codigoMoneda) .'</b></td>
+                            <td> '. $this->number_format_custom((float) collect($felInvoice->detalles)->sum('subTotal') ,2) .'</td>
+                        </tr>
+                        <tr>
+                            <td colspan=4 style="text-align: left; vertical-align: top; border:0px;"> </td>
+                            <td colspan=2 style="text-align: right;"> <b>DESCUENTO ADICIONAL  '. Currencies::getShortCode($codigoMoneda) .'</b></td>
+                            <td> '. $this->number_format_custom((float) $descuentoOriginal ,2) .'</td>
+                        </tr>
+                        <tr>
+                            <td rowspan=2 colspan=4 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($felInvoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
+                            <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL DEVUELTO '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice->montoTotal,2) .'</td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan=2 style="text-align: right;"> <b>MONTO EFECTIVO DE DÉBITO-CRÉDITO '. Currencies::getShortCode($codigoMoneda) .'</b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice->montoEfectivoCreditoDebito,2) .'</td>
+                        </tr>
+                        
+                        </tbody>
+                        </table>';
+
+            }else{
+                $rows_table .= '
+                        <tr>
+                            <td rowspan=2 colspan=4 style="text-align: left; vertical-align: top; border:0px;"> SON: '. $this->getToWord($felInvoice->montoTotal, 2, Currencies::getDescriptionCurrency($codigoMoneda)) .'</td>
+                            <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL DEVUELTO '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice->montoTotal,2) .'</td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan=2 style="text-align: right;"> <b>MONTO EFECTIVO DE DÉBITO-CRÉDITO '. Currencies::getShortCode($codigoMoneda) .'</b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice->montoEfectivoCreditoDebito,2) .'</td>
+                        </tr>
+                        
+                        </tbody>
+                        </table>';
+            }
+                
 
         } else{
-            $rows_table .= '
+            
+            if ($felInvoice->descuentoAdicional > 0){
+                $rows_table .='
+                        <tr>
+                            <td colspan=4 style="border:0px;" ></td>
+                            <td colspan=2 style="text-align: right;"> <b>  SUBTOTAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                            <td> '. $this->number_format_custom((float) collect($felInvoice->detalles)->sum('subTotal') ,2) .'</td>
+                        </tr>
+                        <tr>
+                            <td colspan=4 style="border:0px;" ></td>
+                            <td colspan=2 style="text-align: right;"> <b> DESCUENTO ADICIONAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice['descuentoAdicional'] ,2) .'</td>
+                        </tr>
+                        <tr>
+                            <td colspan=4 style="border:0px;" ></td>
+                            <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                            <td> '. $this->number_format_custom((float) $felInvoice['montoTotal'] ,2) .'</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    ';
+            } else {
+                $rows_table .= '
                     <tr>
-                        <td colspan=3 style="border:0px;" ></td>
-                        <td colspan=2 style="text-align: right;"> <b> MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
-                        <td> '. $this->number_format_custom((float) collect($detalles)->sum('subTotal') ,2) .'</td>
+                        <td colspan=4 style="border:0px;" ></td>
+                        <td colspan=2 style="text-align: right;"> <b>  MONTO TOTAL ORIGINAL '. Currencies::getShortCode($codigoMoneda).' </b></td>
+                        <td> '. $this->number_format_custom((float) collect($felInvoice->detalles)->sum('subTotal') ,2) .'</td>
                     </tr>
-                    
                     </tbody>
                     </table>';
+            }
         }
 
         return $rows_table;
@@ -493,8 +546,8 @@ trait HtmlDesignTrait{
 
         $data['$fel.client_details'] = [ 'value' => $this->makeClientDetailCreditoDebito($facturaOriginal->fel_invoice), 'label' => 'Detalles Cliente Debito' ];
 
-        $data['$fel.products_rows_original'] = [ 'value' => $this->makeRowsProductFacturaOriginal($facturaOriginal->fel_invoice->detalles, $facturaOriginal->fel_invoice->codigoMoneda ,false), 'label' => 'Detalles Productos' ];
-        $data['$fel.products_rows_devolucion'] = [ 'value' => $this->makeRowsProductFacturaOriginal($this->fel_invoice->detalles, $this->fel_invoice->codigoMoneda, true), 'label' => 'Detalles Productos' ];
+        $data['$fel.products_rows_original'] = [ 'value' => $this->makeRowsProductFacturaOriginal($facturaOriginal->fel_invoice, $facturaOriginal->fel_invoice->codigoMoneda ,false), 'label' => 'Detalles Productos' ];
+        $data['$fel.products_rows_devolucion'] = [ 'value' => $this->makeRowsProductFacturaOriginal($this->fel_invoice, $this->fel_invoice->codigoMoneda, true, $facturaOriginal->fel_invoice->descuentoAdicional ), 'label' => 'Detalles Productos' ];
 
         $data['$fel.moneda_code'] = ['value' => Currencies::getShortCode($this->fel_invoice->codigoMoneda), 'label' => 'Código Moneda'];
         $data['$fel.tipo_cambio'] = ['value' => $this->number_format_custom((float)$this->fel_invoice->tipoCambio,2), 'label' => 'Tipo Cambio Oficial'];
