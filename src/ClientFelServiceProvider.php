@@ -22,6 +22,7 @@ use EmizorIpx\ClientFel\Console\Commands\DataDummy;
 use EmizorIpx\ClientFel\Console\Commands\UpdateLangCommand;
 use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSuperAdmin;
+use EmizorIpx\ClientFel\Http\Middleware\ValidateSpecialCodes;
 use EmizorIpx\ClientFel\Providers\ClientFelEventServiceProvider;
 
 class ClientFelServiceProvider extends ServiceProvider
@@ -57,6 +58,7 @@ class ClientFelServiceProvider extends ServiceProvider
         $router->aliasMiddleware('needs_access_token', NeedsToken::class);
         $router->aliasMiddleware('check_settings', CheckSettings::class);
         $router->aliasMiddleware('check_auth_admin', CheckSuperAdmin::class);
+        $router->aliasMiddleware('validate_special_codes', ValidateSpecialCodes::class);
 
 
         # OBSERVERS
