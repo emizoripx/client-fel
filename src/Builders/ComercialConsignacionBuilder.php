@@ -95,8 +95,8 @@ class ComercialConsignacionBuilder extends BaseFelInvoiceBuilder implements FelI
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
-            "montoTotal" => $total,
-            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'], 2),
+            "montoTotal" => $this->source_data['fel_data_parsed']['montoGeneralBs'],
+            "montoTotalMoneda" => $this->source_data['fel_data_parsed']['montoGeneral'],
             "montoTotalSujetoIva" => 0,
             "detalles" => $details
         ];
