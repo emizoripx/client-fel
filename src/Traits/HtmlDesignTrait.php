@@ -403,7 +403,7 @@ trait HtmlDesignTrait{
                                     <td><b>Fecha:</b></td>
                                     <td>'. date("d/m/Y g:i A", strtotime($this->fel_invoice->fechaEmision)).'</td>
                                     <td style="text-align:right;" ><b> NIT/CI/CEX:</td>
-                                    <td>'. $factura->complemento ? $factura->numeroDocumento . "  " . $factura->complemento : $factura->numeroDocumento .'</td>
+                                    <td>'. ($factura->complemento ? $factura->numeroDocumento . ' ' . $factura->complemento : $factura->numeroDocumento) .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
