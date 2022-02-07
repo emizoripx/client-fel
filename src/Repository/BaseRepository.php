@@ -162,6 +162,11 @@ class BaseRepository
                         "cantidadMenores" => !empty($fel_data["cantidadMenores"]) ? $fel_data["cantidadMenores"] : null,
                         "fechaIngresoHospedaje" => !empty($fel_data["fechaIngresoHospedaje"]) ? $fel_data["fechaIngresoHospedaje"] : null,
 
+                        // Comercializacion Hidrocarburos
+                        "placaVehiculo" => !empty($fel_data["placaVehiculo"]) ? $fel_data["placaVehiculo"] : null,
+                        "tipoEnvase" => !empty($fel_data["tipoEnvase"]) ? $fel_data["tipoEnvase"] : null,
+                        "montoTotalSujetoIvaLey317" => !empty($fel_data["montoTotalSujetoIvaLey317"]) ? $fel_data["montoTotalSujetoIvaLey317"] : null,
+
                         //otros datos, dinamically
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
                     ];

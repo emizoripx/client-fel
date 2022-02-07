@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
+use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
@@ -97,6 +98,9 @@ class TypeDocumentSector
             case static::SECTORES_EDUCATIVOS:
                 return SectorEducativoBuilder::class;
                 break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return ComercializacionHidrocarburosBuilder::class;
+                break;
             case static::SERVICIOS_BASICOS:
                 return ServiciosBasicosBuilder::class;
                 break;
@@ -146,6 +150,9 @@ class TypeDocumentSector
                 break;
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
+                break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return 'comercializacion-hidrocarburos';
                 break;
             case static::SERVICIOS_BASICOS:
                 return 'servicios-basicos';
@@ -231,6 +238,9 @@ class TypeDocumentSector
                 break;
             case static::DEBITO_CREDITO:
                 return 'nota-debito-credito';
+                break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return 'comercializacion-hidrocarburos';
                 break;
 
             default:

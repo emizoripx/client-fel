@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Services\Invoices\Resources;
 
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialConsignacion\ComercialConsignacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburos\ComercializacionHidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
@@ -39,6 +40,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::SECTORES_EDUCATIVOS:
                 return new SectorEducativoResource($this);
+                break;
+            case TypeDocumentSector::COMERCIALIZACION_HIDROCARBUROS:
+                return new ComercializacionHidrocarburosResource ($this);
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS:
                 return new ServiciosBasicosResource($this);
