@@ -30,7 +30,7 @@ class DebitoCreditoResource extends JsonResource
             'detalles' => DetalleDebitoCreditoResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "codigoExcepcion" => $this->codigoExcepcion,
-
+            "complemento" => $this->complemento,
         ];
     }
 }

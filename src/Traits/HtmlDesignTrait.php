@@ -266,7 +266,7 @@ trait HtmlDesignTrait{
                         <td width="30%" ><b>Fecha (Date):</b></td>
                         <td width="10px" >'. date("d/m/Y g:i A", strtotime($this->fel_invoice->fechaEmision)).'</td>
                         <td><b>NIT/CI/CEX:</b></td>
-                        <td>'. $this->fel_invoice->numeroDocumento .'</td>
+                        <td>' . $this->fel_invoice->complemento ? $this->fel_invoice->numeroDocumento . ' ' . $this->fel_invoice->complemento : $this->fel_invoice->numeroDocumento . '</td>
                     </tr>
                     <tr>
                         <td><b>Nombre/Razón Social (Name Buyer):</b></td>
@@ -403,7 +403,7 @@ trait HtmlDesignTrait{
                                     <td><b>Fecha:</b></td>
                                     <td>'. date("d/m/Y g:i A", strtotime($this->fel_invoice->fechaEmision)).'</td>
                                     <td style="text-align:right;" ><b> NIT/CI/CEX:</td>
-                                    <td>'. $factura->numeroDocumento .'</td>
+                                    <td>'. $factura->complemento ? $factura->numeroDocumento . "  " . $factura->complemento : $factura->numeroDocumento .'</td>
                                 </tr>
                                 <tr>
                                     <td><b>Nombre/Razón Social:</b></td>
