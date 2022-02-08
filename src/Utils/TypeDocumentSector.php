@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
@@ -85,6 +86,9 @@ class TypeDocumentSector
         switch ($code) {
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
+                break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return AlquileresBuilder::class;
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return ComercialConsignacionBuilder::class;
@@ -178,6 +182,9 @@ class TypeDocumentSector
                 }
                 return 'nota-debito-credito';
                 break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return 'alquileres';
+                break;
 
             default:
                 return 'compra-venta';
@@ -241,6 +248,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIALIZACION_HIDROCARBUROS:
                 return 'comercializacion-hidrocarburos';
+                break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return 'alquileres';
                 break;
 
             default:
