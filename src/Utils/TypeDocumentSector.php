@@ -174,7 +174,7 @@ class TypeDocumentSector
                 return 'comercial-exportacion';
                 break;
             case static::TELECOMUNICACIONES:
-                return 'comercial-exportacion';
+                return 'telecomunicaciones';
                 break;
             case static::DEBITO_CREDITO:
                 if( $company_nit == '1020415021'){
@@ -241,7 +241,7 @@ class TypeDocumentSector
                 return 'comercial-exportacion';
                 break;
             case static::TELECOMUNICACIONES:
-                return 'compra-venta'; //TODO: CHANGE in case needs different template
+                return 'telecomunicaciones'; //TODO: CHANGE in case needs different template
                 break;
             case static::DEBITO_CREDITO:
                 return 'nota-debito-credito';

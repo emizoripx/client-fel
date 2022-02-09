@@ -24,6 +24,8 @@ class DetalleTelecomunicacionesResource extends JsonResource
             "subTotal" => round($this->resource['subTotal'], 2),
             "montoDescuento" => !empty($this->resource['montoDescuento']) ? round($this->resource['montoDescuento'], 2) : null,
             "unidadMedida" => $this->resource['unidadMedida'],
+            "numeroSerie" => isset($this->resource['numeroSerie']) ? $this->resource['numeroSerie'] : null ,
+            "numeroImei" => isset($this->resource['numeroImei']) ? $this->resource['numeroImei'] : null ,
         ];
     }
 }
