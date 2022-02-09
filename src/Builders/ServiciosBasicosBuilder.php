@@ -110,7 +110,9 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
             $total += $new->subTotal;
         }
         
-        $totalsujetoiva = $total;
+        $total = $total + round($this->source_data['fel_data_parsed']['tasaAseo'], 2) + round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) - round($this->source_data['fel_data_parsed']['descuentoAdicional'],2);
+
+        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['tasaAseo'], 2) - round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) - round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2);
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
