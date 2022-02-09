@@ -2,8 +2,10 @@
 
 namespace EmizorIpx\ClientFel\Services\Invoices\Resources;
 
+use EmizorIpx\ClientFel\Services\Invoices\Resources\Alquileres\AlquileresResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialConsignacion\ComercialConsignacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburos\ComercializacionHidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
@@ -31,6 +33,9 @@ class TypeDocumentResource extends JsonResource
             case TypeDocumentSector::COMPRA_VENTA:
                 return new CompraVentaResource($this);
                 break;
+            case TypeDocumentSector::ALQUILER_BIENES_INMUEBLES:
+                return new AlquileresResource($this);
+                break;
             case TypeDocumentSector::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return new ComercialConsignacionResource($this);
                 break;
@@ -39,6 +44,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::SECTORES_EDUCATIVOS:
                 return new SectorEducativoResource($this);
+                break;
+            case TypeDocumentSector::COMERCIALIZACION_HIDROCARBUROS:
+                return new ComercializacionHidrocarburosResource ($this);
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS:
                 return new ServiciosBasicosResource($this);

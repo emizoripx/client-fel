@@ -2,8 +2,10 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
+use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
@@ -85,6 +87,9 @@ class TypeDocumentSector
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
                 break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return AlquileresBuilder::class;
+                break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return ComercialConsignacionBuilder::class;
                 break;
@@ -96,6 +101,9 @@ class TypeDocumentSector
                 break;
             case static::SECTORES_EDUCATIVOS:
                 return SectorEducativoBuilder::class;
+                break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return ComercializacionHidrocarburosBuilder::class;
                 break;
             case static::SERVICIOS_BASICOS:
                 return ServiciosBasicosBuilder::class;
@@ -147,6 +155,9 @@ class TypeDocumentSector
             case static::SECTORES_EDUCATIVOS:
                 return 'sector-educativo';
                 break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return 'comercializacion-hidrocarburos';
+                break;
             case static::SERVICIOS_BASICOS:
                 return 'servicios-basicos';
                 break;
@@ -170,6 +181,9 @@ class TypeDocumentSector
                     return 'nota-debito-credito-msc';
                 }
                 return 'nota-debito-credito';
+                break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return 'alquileres';
                 break;
 
             default:
@@ -231,6 +245,12 @@ class TypeDocumentSector
                 break;
             case static::DEBITO_CREDITO:
                 return 'nota-debito-credito';
+                break;
+            case static::COMERCIALIZACION_HIDROCARBUROS:
+                return 'comercializacion-hidrocarburos';
+                break;
+            case static::ALQUILER_BIENES_INMUEBLES:
+                return 'alquileres';
                 break;
 
             default:

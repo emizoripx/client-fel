@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class AlquileresBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -41,26 +41,9 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
     {
         $input = array_merge(
             $this->input,[
+                "periodoFacturado" => $this->source_data['fel_data_parsed']['periodoFacturado'],
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                "mes" => $this->source_data['fel_data_parsed']['mes'],
-                "gestion" => $this->source_data['fel_data_parsed']['gestion'],
-                "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
-                "zona" => $this->source_data['fel_data_parsed']['zona'],
-                "numeroMedidor" => $this->source_data['fel_data_parsed']['numeroMedidor'],
-                "domicilioCliente" => $this->source_data['fel_data_parsed']['domicilioCliente'],
-                "consumoPeriodo" => $this->source_data['fel_data_parsed']['consumoPeriodo'],
-                "beneficiarioLey1886" => $this->source_data['fel_data_parsed']['beneficiarioLey1886'],
-                "montoDescuentoLey1886" => $this->source_data['fel_data_parsed']['montoDescuentoLey1886'],
-                "montoDescuentoTarifaDignidad" => $this->source_data['fel_data_parsed']['montoDescuentoTarifaDignidad'],
-                "tasaAseo" => $this->source_data['fel_data_parsed']['tasaAseo'],
-                "tasaAlumbrado" => $this->source_data['fel_data_parsed']['tasaAlumbrado'],
-                "ajusteNoSujetoIva" => $this->source_data['fel_data_parsed']['ajusteNoSujetoIva'],
-                "detalleAjusteNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteNoSujetoIva'],
-                "ajusteSujetoIva" => $this->source_data['fel_data_parsed']['ajusteSujetoIva'],
-                "detalleAjusteSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteSujetoIva'],
-                "otrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'],
-                "detalleOtrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleOtrosPagosNoSujetoIva'],
             ],
             $this->getDetailsAndTotals()
         );
@@ -109,11 +92,13 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
 
             $total += $new->subTotal;
         }
+        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
+
         
-        $total = $total + round($this->source_data['fel_data_parsed']['tasaAseo'], 2) + round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) - round($this->source_data['fel_data_parsed']['descuentoAdicional'],2);
+        $totalsujetoiva = $total;
+        
 
-        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['tasaAseo'], 2) - round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) - round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2);
-
+        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$totalsujetoiva, $total, round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,

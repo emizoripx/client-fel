@@ -122,7 +122,7 @@ class InvoiceResource extends JsonResource
             //servicios básicos
 
             "mes" => $this->mes,
-            "gestion" => $this->gestion,
+            "gestion" => (int) $this->gestion,
             "ciudad" => $this->ciudad,
             "zona" => $this->zona,
             "numeroMedidor" => $this->numeroMedidor,
@@ -145,6 +145,12 @@ class InvoiceResource extends JsonResource
             "pesoBrutoKg" => $this->pesoBrutoKg,
             "pesoNetoGr" => $this->pesoNetoGr,
             "numeroContrato" => (string)$this->numeroContrato ?? "",
+
+            // Comercialización Hidrocarburos
+            "placaVehiculo" => $this->placaVehiculo,
+            "tipoEnvase" => $this->tipoEnvase,
+            "montoTotalSujetoIvaLey317" => $this->montoTotalSujetoIvaLey317,
+
  
         ];
     }
