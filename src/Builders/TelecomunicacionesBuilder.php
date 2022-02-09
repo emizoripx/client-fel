@@ -44,6 +44,7 @@ class TelecomunicacionesBuilder extends BaseFelInvoiceBuilder implements FelInvo
                 "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "nitConjunto" => $this->source_data['fel_data_parsed']['nitConjunto'],
             ],
             $this->getDetailsAndTotals()
         );
@@ -81,7 +82,8 @@ class TelecomunicacionesBuilder extends BaseFelInvoiceBuilder implements FelInvo
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
+            $new->numeroSerie = isset($detail->numeroSerie) ? $detail->numeroSerie : null ;
+            $new->numeroImei = isset($detail->numeroImei) ? $detail->numeroImei : null ;
 
             if ($detail->discount > 0)
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);

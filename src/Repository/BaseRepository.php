@@ -167,6 +167,9 @@ class BaseRepository
                         "tipoEnvase" => !empty($fel_data["tipoEnvase"]) ? $fel_data["tipoEnvase"] : null,
                         "montoTotalSujetoIvaLey317" => !empty($fel_data["montoTotalSujetoIvaLey317"]) ? $fel_data["montoTotalSujetoIvaLey317"] : null,
 
+                        // Telecomunicaciones
+                        "nitConjunto" => !empty($fel_data["nitConjunto"]) ? $fel_data["nitConjunto"] : null,
+
                         //otros datos, dinamically
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
                     ];
