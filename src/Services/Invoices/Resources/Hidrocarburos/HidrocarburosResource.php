@@ -16,17 +16,6 @@ class HidrocarburosResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "direccionComprador" => $this->direccionComprador,
-            "ruex" => $this->ruex,
-            "nim" => $this->nim,
-            "concentradoGranel" => $this->concentradoGranel,
-            "origen" => $this->origen,
-            "puertoTransito" => $this->puertoTransito,
-            "puertoDestino" => $this->puertoDestino,
-            "paisDestino" => $this->paisDestino,
-            "incoterm" => $this->incoterm,
-            "tipoCambioANB" => $this->tipoCambioANB,
-            "numeroLote" => $this->numeroLote,
             "fechaEmision"=> $this->fechaEmision,
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
@@ -34,7 +23,7 @@ class HidrocarburosResource extends JsonResource
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
             "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
-            "montoIehd" => $this->montoIehd ? round($this->montoDescuento, 2): null,
+            "montoIehd" => $this->montoIehd ? round($this->montoIehd, 2): null,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,
             "numeroDocumento" => $this->numeroDocumento,
