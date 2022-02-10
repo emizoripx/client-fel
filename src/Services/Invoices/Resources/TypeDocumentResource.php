@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburo
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos\HidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
@@ -68,6 +69,10 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::DEBITO_CREDITO;
                 return new DebitoCreditoResource($this);
+                break;
+            case TypeDocumentSector::COMERCIAL_EXPORTACION_SERVICIOS ;
+                return new ExportacionServiciosResource($this);
+                break;
             default:
                 return new CompraVentaResource($this);
                 break;
