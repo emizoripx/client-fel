@@ -89,7 +89,7 @@ class BaseFelInvoiceBuilder {
             "nombreRazonSocial" => is_null($fel_data_parsed['nombreRazonSocial']) ?  $client->business_name : $fel_data_parsed['nombreRazonSocial'],
             "codigoTipoDocumentoIdentidad" => is_null($fel_data_parsed['codigoTipoDocumentoIdentidad']) ?  $client->type_document_id : $fel_data_parsed['codigoTipoDocumentoIdentidad'],
             "numeroDocumento" => is_null($fel_data_parsed['numeroDocumento']) ? $client->document_number : $fel_data_parsed['numeroDocumento'],
-            "complemento" => is_null($fel_data_parsed['complemento']) ? $client->complement : $fel_data_parsed['complemento'],
+            "complemento" => $fel_data_parsed['complemento'],
             "codigoCliente" => $model->client->number,
             "emailCliente" => $client_email_first_invitation != "" ? $client_email_first_invitation : null,
             "telefonoCliente" => $model->client->phone
