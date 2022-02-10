@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
+use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
@@ -126,6 +127,9 @@ class TypeDocumentSector
             case static::DEBITO_CREDITO:
                 return CreditoDebitoBuilder::class;
                 break;
+            case static::COMERCIAL_EXPORTACION_SERVICIOS:
+                return ExportacionServiciosBuilder::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -184,6 +188,9 @@ class TypeDocumentSector
                 break;
             case static::ALQUILER_BIENES_INMUEBLES:
                 return 'alquileres';
+                break;
+            case static::COMERCIAL_EXPORTACION_SERVICIOS:
+                return 'exportacion-servicios';
                 break;
 
             default:
@@ -251,6 +258,9 @@ class TypeDocumentSector
                 break;
             case static::ALQUILER_BIENES_INMUEBLES:
                 return 'alquileres';
+                break;
+            case static::COMERCIAL_EXPORTACION_SERVICIOS:
+                return 'exportacion-servicios';
                 break;
 
             default:
