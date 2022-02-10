@@ -170,6 +170,9 @@ class BaseRepository
                         // Telecomunicaciones
                         "nitConjunto" => !empty($fel_data["nitConjunto"]) ? $fel_data["nitConjunto"] : null,
 
+                        // Seguros
+                        "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : null,
+
                         //otros datos, dinamically
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
                     ];

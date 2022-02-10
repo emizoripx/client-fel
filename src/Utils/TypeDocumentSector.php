@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
@@ -49,6 +50,7 @@ class TypeDocumentSector
     const PRODUCTOS_NACIONALES_ICE = 26;
     const REGIMEN_7RG = 27;
     const COMERCIAL_EXPORTACION_SERVICIOS = 28;
+    const SEGUROS = 34;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -78,7 +80,8 @@ class TypeDocumentSector
         25 => "Factura de Productos Nacionales",
         26 => "Factura de Productos Nacionales - ICE",
         27 => "Factura Regimen 7RG",
-        28 => "Factura Comercial de Exportación de Servicios"
+        28 => "Factura Comercial de Exportación de Servicios",
+        34 => "Factura de Seguros"
     ];
 
     public static function getInstanceByCode($code):string
@@ -129,6 +132,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return ExportacionServiciosBuilder::class;
+                break;
+            case static::SEGUROS:
+                return SegurosBuilder::class;
                 break;
             
             default:
@@ -191,6 +197,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'exportacion-servicios';
+                break;
+            case static::SEGUROS:
+                return 'seguros';
                 break;
 
             default:
@@ -261,6 +270,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'exportacion-servicios';
+                break;
+            case static::SEGUROS:
+                return 'seguros';
                 break;
 
             default:
@@ -365,6 +377,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN DE SERVICIOS';
+                break;
+            case static::SEGUROS:
+                return 'FACTURA DE SEGUROS';
                 break;
             
             
