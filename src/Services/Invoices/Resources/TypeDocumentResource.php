@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Services\Invoices\Resources;
 
+use EmizorIpx\ClientFel\Services\Invoices\Resources\AlcanzadosIce\AlcanzadosIceResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Alquileres\AlquileresResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialConsignacion\ComercialConsignacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
@@ -76,6 +77,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::SEGUROS :
                 return new SegurosResource($this);
+                break;
+            case TypeDocumentSector::PRODUCTOS_ALCANZADOS_ICE :
+                return new AlcanzadosIceResource($this);
                 break;
             default:
                 return new CompraVentaResource($this);

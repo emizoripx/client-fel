@@ -173,6 +173,10 @@ class BaseRepository
                         // Seguros
                         "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : null,
 
+                        // Alcanzados ICE
+                        "montoIcePorcentual" => !empty($fel_data["montoIcePorcentual"]) ? $fel_data["montoIcePorcentual"] : null,
+                        "montoIceEspecifico" => !empty($fel_data["montoIceEspecifico"]) ? $fel_data["montoIceEspecifico"] : null,
+
                         //otros datos, dinamically
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
                     ];

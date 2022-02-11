@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Builders\AlcanzadosIceBuilder;
 use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
@@ -136,6 +137,9 @@ class TypeDocumentSector
             case static::SEGUROS:
                 return SegurosBuilder::class;
                 break;
+            case static::PRODUCTOS_ALCANZADOS_ICE :
+                return AlcanzadosIceBuilder::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -200,6 +204,9 @@ class TypeDocumentSector
                 break;
             case static::SEGUROS:
                 return 'seguros';
+                break;
+            case static::PRODUCTOS_ALCANZADOS_ICE:
+                return 'alcanzados-ice';
                 break;
 
             default:
@@ -273,6 +280,9 @@ class TypeDocumentSector
                 break;
             case static::SEGUROS:
                 return 'seguros';
+                break;
+            case static::PRODUCTOS_ALCANZADOS_ICE:
+                return 'alcanzados-ice';
                 break;
 
             default:
