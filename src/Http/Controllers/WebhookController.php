@@ -21,16 +21,16 @@ class WebhookController extends BaseController
     {
         \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK *******************************************************');
         \Log::debug($request->all());
-
         $data = [
             'package_id' => $request->input('package_id', null),
             'ack_ticket' => $request->input('ack_ticket', null),
             'state' => $request->input('state', null),
             'status_code' => $request->input('status_code', null),
             'index_package' => $request->input('index_package', null),
+            'uuid_package' => $request->input('uuid_package', null),
             'cuf' => $request->input('cuf', null),
             'urlSin' => $request->input('urlSin', null),
-            'emission_type' => $request->input('emission_type', null),
+            'emission_type' => $request->input('emission_type_code', null),
             'direccion' => $request->input('direccion', null),
             'sin_errors' => $request->input('sin_errors', null),
             'reception_code' => $request->input('reception_code', null),
@@ -52,21 +52,15 @@ class WebhookController extends BaseController
                 ->saveEmisionType($data['emission_type'])
                 ->saveXmlUrl($data['xml_url'])
                 ->saveAddressInvoice($data['direccion'])
+                ->saveUuidPackage($data['uuid_package'])
                 ->save();
 
             }
             else
                 \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
         } else{
-
-            // if (isset($data['ack_ticket'])  ){
     
-                \Log::debug(' WEBHOOK-CONTROLLER ack_ticket used');
-                $invoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
-            // } else{
-            //     \Log::debug(' WEBHOOK-CONTROLLER cuf used');
-            //     $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
-            // }
+            $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
     
             if (empty($invoice)) {
                 \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
@@ -93,7 +87,10 @@ class WebhookController extends BaseController
 
                 $invoice->invoiceDateUpdatedAt();
                 // \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
-                // $invoice->deletePdf();
+                if ($data['status_code'] == 691){
+
+                    $invoice->deletePdf();
+                }
                 \Log::debug(' WEBHOOK-CONTROLLER registering historial');
 
                 fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);

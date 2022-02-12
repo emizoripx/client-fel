@@ -43,7 +43,7 @@ trait InvoiceFelEmitTrait
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
-            $felInvoiceRequest->deletePdf();
+            // $felInvoiceRequest->deletePdf();
 
             $invoice = $felInvoiceRequest->invoice_origin();
 

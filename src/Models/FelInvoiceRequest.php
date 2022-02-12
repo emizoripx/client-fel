@@ -295,28 +295,28 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
-        $this->saveCuf($invoice_service->getResponse()['cuf']);
-        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf']]);
+        // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
         
         // $invoice = $invoice_service->getInvoiceByAckTicket();
-        $invoice = $invoice_service->getInvoiceByCuf();
-        \Log::debug("================================================================================");
-        // \Log::debug([$invoice_service->getResponse()]);
-        \Log::debug("================================================================================");
-        $this->saveState($invoice['estado'])
-             ->saveUrlSin($invoice['urlSin']?? null)
-             ->saveEmisionDate($invoice['fechaEmision'])
-             ->saveEmisionType($invoice['tipoEmision'])
-             ->saveXmlUrl($invoice['xml_url'])
-             ->saveInvoiceTypeId($invoice['documentoSector'])
-             ->savePackageId($invoice['package_id'] ?? null)
-             ->saveIndexPackage($invoice['index_package'] ?? null)
-             ->saveUuidPackage($invoice['uuid_package'] ?? null)
-             ->save();
-
-        $this->invoiceDateUpdate();
+        // $invoice = $invoice_service->getInvoiceByCuf();
+        // \Log::debug("================================================================================");
+        // // \Log::debug([$invoice_service->getResponse()]);
+        // \Log::debug("================================================================================");
+        // $this->saveState($invoice['estado'])
+        //      ->saveUrlSin($invoice['urlSin']?? null)
+        //      ->saveEmisionDate($invoice['fechaEmision'])
+        //      ->saveEmisionType($invoice['tipoEmision'])
+        //      ->saveXmlUrl($invoice['xml_url'])
+        //      ->saveInvoiceTypeId($invoice['documentoSector'])
+        //      ->savePackageId($invoice['package_id'] ?? null)
+        //      ->saveIndexPackage($invoice['index_package'] ?? null)
+        //      ->saveUuidPackage($invoice['uuid_package'] ?? null)
+        //      ->save();
+        \Log::debug("INGRESANDO AL INVOICE FEL EMIT TRAIT======================================");
+        // $this->invoiceDateUpdate();
         
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
