@@ -104,8 +104,8 @@ class ExportacionServiciosBuilder extends BaseFelInvoiceBuilder implements FelIn
         \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$totalsujetoiva, $total , round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
-            "montoTotal" => $total,
-            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
+            "montoTotal" => round($total * $this->source_data['fel_data_parsed']['tipo_cambio'],2),
+            "montoTotalMoneda" => $total,
             "montoTotalSujetoIva" => $totalsujetoiva ,
             "detalles" => $details
         ];
