@@ -87,10 +87,9 @@ class WebhookController extends BaseController
 
                 $invoice->invoiceDateUpdatedAt();
                 // \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
-                if ($data['status_code'] == 691){
 
-                    $invoice->deletePdf();
-                }
+                $invoice->deletePdf();
+                
                 \Log::debug(' WEBHOOK-CONTROLLER registering historial');
 
                 fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
