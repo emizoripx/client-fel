@@ -66,7 +66,7 @@ trait InvoiceSendMessageWhatsappTrait {
                 \Log::debug("PDF URL >>>>>>>>>>>>>>>>>> " . $pdf_url);
 
                 $data = [
-                    "nit" => $company->settings->id_number,
+                    "nit" => $fel_invoice->complemento == null ? $fel_invoice->numeroDocumento : $fel_invoice->numeroDocumento . ' ' . $fel_invoice->complemento,
                     "company_name" => $company->settings->name,
                     "monto_total" => $fel_invoice->montoTotal,
                     "contact_key" => $client_contact->contact_key,
