@@ -39,10 +39,10 @@ class WhatsappMessageStates{
                 return "El mensaje ha sido borrado.";
                 break;
             case  static::NO_OPT_IN:
-                return "No se pudo entregar el mensaje al usuario final.";
+                return "Mensaje rechazado, el destinatario no esta registrado.";
                 break;
             case  static::FAILED:
-                return "Mensaje rechazado, el destinatario no esta registrado.";
+                return "No se ha podido entregar el mensaje";
                 break;
             case  static::NO_CAPABILITY:
                 return "Mensaje rechazado, el destinatario no tiene capacidad para Whatsapp.";

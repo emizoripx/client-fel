@@ -3,10 +3,12 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use App\Models\ClientContact;
+use App\Utils\Ninja;
 use EmizorIpx\ClientFel\Exceptions\WhatsappException;
 use EmizorIpx\ClientFel\Models\InvoiceMessageWhatsapp;
 use EmizorIpx\ClientFel\Services\Whatsapp\Whatsapp;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasWhatsappSent;
 use EmizorIpx\ClientFel\Utils\WhatsappMessageStates;
 use Exception;
 
@@ -100,6 +102,8 @@ trait InvoiceSendMessageWhatsappTrait {
                 ]);
 
                 // $invoice_message_whatsapp->update($whatsapp_array_data);
+
+                event(new InvoiceWasWhatsappSent($fel_invoice->invoice_origin(),  Ninja::eventVars(auth()->user() ? auth()->user()->id : null), $phone_number));
 
                 return $msg;
 
