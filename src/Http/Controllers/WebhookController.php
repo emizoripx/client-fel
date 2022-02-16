@@ -39,7 +39,7 @@ class WebhookController extends BaseController
 
         if(isset($data['package_id'])){
             \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
-            $felInvoice = FelInvoiceRequest::withTrashed()->where('ack_ticket', $data['ack_ticket'])->orWhere('cuf', $data['cuf'])->first();
+            $felInvoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
             
             if (!empty($felInvoice)){ 
                 \Log::debug("WEBHOOK-CONTROLLER UPDATE INVOICE ID #". $felInvoice->cuf );
@@ -47,7 +47,6 @@ class WebhookController extends BaseController
                 ->saveState($data['state'])
                 ->saveStatusCode($data['status_code'])
                 ->saveIndexPackage($data['index_package'])
-                ->saveCuf($data['cuf'])
                 ->saveUrlSin($data['urlSin'])
                 ->saveEmisionType($data['emission_type'])
                 ->saveXmlUrl($data['xml_url'])
@@ -57,20 +56,19 @@ class WebhookController extends BaseController
 
             }
             else
-                \Log::debug(' WEBHOOK-CONTROLLER invoice package was not found');
+                \Log::debug('WEBHOOK-CONTROLLER invoice package was not found');
         } else{
     
             $invoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
     
             if (empty($invoice)) {
-                \Log::debug(' WEBHOOK-CONTROLLER invoice was not found');
+                \Log::debug('WEBHOOK-CONTROLLER invoice was not found');
             } else {
-                \Log::debug(' WEBHOOK-CONTROLLER saving status and sin errors');
+                \Log::debug('WEBHOOK-CONTROLLER saving status and sin errors');
 
                 $invoice->saveState($data['state'])
                     ->saveStatusCode($data['status_code'])
                     ->saveSINErrors($data['sin_errors'])
-                    ->saveCuf($data['cuf'])
                     ->saveUrlSin($data['urlSin'])
                     ->saveEmisionType($data['emission_type'])
                     ->saveXmlUrl($data['xml_url'])
@@ -78,19 +76,16 @@ class WebhookController extends BaseController
                     ->save();
 
 
-                \Log::debug(' WEBHOOK-CONTROLLER validating status invoice');
+                \Log::debug('WEBHOOK-CONTROLLER validating status invoice');
 
                 
                 $this->validateStateCode($data['status_code'], $invoice);
 
-                \Log::debug(' WEBHOOK-CONTROLLER validate invoice date update');
+                \Log::debug('WEBHOOK-CONTROLLER validate invoice date update');
 
                 $invoice->invoiceDateUpdatedAt();
-                // \Log::debug(' WEBHOOK-CONTROLLER deleting PDF');
-
-                $invoice->deletePdf();
                 
-                \Log::debug(' WEBHOOK-CONTROLLER registering historial');
+                \Log::debug('WEBHOOK-CONTROLLER registering historial');
 
                 fel_register_historial($invoice, $data['sin_errors'], $data['reception_code']);
 
@@ -103,7 +98,7 @@ class WebhookController extends BaseController
                     }
                 }
             }
-            \Log::debug(' WEBHOOK-CONTROLLER FIN=======================================');
+            \Log::debug('WEBHOOK-CONTROLLER FIN=======================================');
 
         }
         

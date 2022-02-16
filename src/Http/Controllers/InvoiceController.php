@@ -17,7 +17,7 @@ class InvoiceController extends BaseController
 
     public function emit(Request $request)
     {
-        \Log::debug("Usando InvoiceController:emit >>>>>>>>>>>>>>>>>");
+        \Log::debug("EMIT-FROM-PREFACTURA >>>>>>>>>>>>>>>>>");
         $success = false;
 
         try {
@@ -34,7 +34,7 @@ class InvoiceController extends BaseController
                 throw new ClientFelException('La factura ya fue emitida');
             }
             $invoice = $felInvoiceRequest->invoice_origin();
-            
+            \Log::debug("EMIT-INVOICE ==============> START TRANSACTION");
             // begin a trasaction in case an error happend, rollback changes
             \DB::beginTransaction();
             // generate next number new emission invoice
@@ -44,12 +44,13 @@ class InvoiceController extends BaseController
             // reload changes in model
             $felInvoiceRequest = $felInvoiceRequest->fresh();
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
-            $felInvoiceRequest->invoiceDateUpdatedAt();
-            $felInvoiceRequest->deletePdf();
+            // $felInvoiceRequest->invoiceDateUpdatedAt();
+            // $felInvoiceRequest->deletePdf();
             $invoice->service()->markSent()->save();
 
             $success = true;
             \DB::commit();
+            \Log::debug("EMIT-INVOICE ==============> END TRANSACTION");
             fel_register_historial($felInvoiceRequest);
 
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id) ));
