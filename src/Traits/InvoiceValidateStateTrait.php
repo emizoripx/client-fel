@@ -18,7 +18,7 @@ trait InvoiceValidateStateTrait
             case InvoiceStates::ANULACION_CONFIRMADA:
                 $invoice = Invoice::withTrashed()->where('id', $fel_invoice->id_origin)->first();
 
-                $invoice->service()->handleCancellation()->deletePdf()->save();
+                $invoice->service()->handleCancellation()->save();
 
                 break;
 

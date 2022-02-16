@@ -62,12 +62,13 @@ class FelInvoiceRequest extends Model
 
         $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id','prefactura_number_counter')->first();
 
-        \Log::debug("NEXT NUMBER >>>>>>>>>>>>>>>>>> " . json_encode($data));
+        
         if ($data!=null) {
             $data->increment('prefactura_number_counter');
-            
+            \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-PREFACTURA=" . $data->prefactura_number_counter );    
             return $data->prefactura_number_counter;
         }
+        \Log::debug("PREFACTURA NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );    
         return 1;
     }
 
@@ -295,7 +296,8 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
-        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf']]);
+        \Log::debug("RESPONSE FEL => " . json_encode( $invoice_service->getResponse() ));
+        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin']]);
         // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
@@ -315,7 +317,7 @@ class FelInvoiceRequest extends Model
         //      ->saveIndexPackage($invoice['index_package'] ?? null)
         //      ->saveUuidPackage($invoice['uuid_package'] ?? null)
         //      ->save();
-        \Log::debug("INGRESANDO AL INVOICE FEL EMIT TRAIT======================================");
+        // \Log::debug("INGRESANDO AL INVOICE FEL EMIT TRAIT======================================");
         // $this->invoiceDateUpdate();
         
         $account = $this->felCompany();
