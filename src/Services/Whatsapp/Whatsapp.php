@@ -31,12 +31,11 @@ class Whatsapp {
 
     public function __construct()
     {
-        \Log::debug("Data Cliente >>>>>>>>>>> " . 'Bearer ' . config('clientfel.token_whatsapp'));
+        \Log::debug("Data Cliente >>>>>>>>>>> " . 'Bearer ');
         $data_client['base_uri'] = config('clientfel.host_whatsapp');
         $data_client['headers']['Authorization'] = 'Bearer ' . config('clientfel.token_whatsapp');
         $data_client['headers']['Content-Type'] = 'application/json';
 
-        \Log::debug("Data Cliente >>>>>>>>>>> " . json_encode($data_client) );
 
         $this->client = new Client($data_client);
 

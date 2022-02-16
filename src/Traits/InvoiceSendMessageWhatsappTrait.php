@@ -3,10 +3,12 @@
 namespace EmizorIpx\ClientFel\Traits;
 
 use App\Models\ClientContact;
+use App\Utils\Ninja;
 use EmizorIpx\ClientFel\Exceptions\WhatsappException;
 use EmizorIpx\ClientFel\Models\InvoiceMessageWhatsapp;
 use EmizorIpx\ClientFel\Services\Whatsapp\Whatsapp;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Events\Invoice\InvoiceWasWhatsappSent;
 use EmizorIpx\ClientFel\Utils\WhatsappMessageStates;
 use Exception;
 
@@ -66,7 +68,7 @@ trait InvoiceSendMessageWhatsappTrait {
                 \Log::debug("PDF URL >>>>>>>>>>>>>>>>>> " . $pdf_url);
 
                 $data = [
-                    "nit" => $company->settings->id_number,
+                    "nit" => $fel_invoice->complemento == null ? $fel_invoice->numeroDocumento : $fel_invoice->numeroDocumento . ' ' . $fel_invoice->complemento,
                     "company_name" => $company->settings->name,
                     "monto_total" => $fel_invoice->montoTotal,
                     "contact_key" => $client_contact->contact_key,
@@ -100,6 +102,8 @@ trait InvoiceSendMessageWhatsappTrait {
                 ]);
 
                 // $invoice_message_whatsapp->update($whatsapp_array_data);
+
+                event(new InvoiceWasWhatsappSent($fel_invoice->invoice_origin(),  Ninja::eventVars(auth()->user() ? auth()->user()->id : null), $phone_number));
 
                 return $msg;
 
