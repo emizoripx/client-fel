@@ -296,8 +296,9 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
-        \Log::debug("RESPONSE FEL => " . json_encode( $invoice_service->getResponse() ));
-        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin']]);
+        \Log::debug("RESPONSE FEL ===========> " . json_encode( $invoice_service->getResponse() ));
+        $emission_type_literal =  $invoice_service->getResponse()['emission_type_code'] == 2 ? "Fuera de línea" : "En línea";
+        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal]);
         // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
