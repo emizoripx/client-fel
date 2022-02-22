@@ -245,6 +245,9 @@ class TypeDocumentSector
                 if( $company_nit == '1020415021'){
                     return 'comercial-exportacion-msc';
                 }
+                if ($company_nit == '1015607026') {
+                    return 'comercial-exportacion-urqupina';
+                }
                 return 'comercial-exportacion';
                 break;
             case static::TELECOMUNICACIONES:
