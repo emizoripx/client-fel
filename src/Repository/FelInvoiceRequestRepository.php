@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Repository;
 
 use EmizorIpx\ClientFel\Builders\FelInvoiceBuilder;
+use EmizorIpx\ClientFel\Http\Resources\InvoiceResource;
 use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
@@ -161,13 +162,9 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
     {
         
         $fel_invoice = FelInvoiceRequest::whereIdOrigin($invoice->recurring_id)->first();
-
+        \Log::debug("invoice resources completing data : " . json_encode(new InvoiceResource($fel_invoice)));
         return [
-            'felData' => [
-                "codigoActividad" => $fel_invoice->codigoActividad,
-                "codigoLeyenda" => $fel_invoice->codigoLeyenda,
-                "codigoMetodoPago" => $fel_invoice->codigoMetodoPago
-            ]
+            'felData' => new InvoiceResource($fel_invoice)
         ];
 
     }
