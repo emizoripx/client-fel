@@ -456,4 +456,38 @@ class FelInvoiceRequest extends Model
             $this->save();
         }
     }
+
+    public function getExtras()
+    {
+        $extras_aux = json_decode($this->extras);
+        if ($extras_aux !== null){
+            $aux= new \stdClass;
+            foreach ($extras_aux as $key => $value) {
+                $aux->{$key} = is_null($value) ? "" : $value;
+            }
+            return $aux;
+        } 
+
+        return new \stdClass;
+    }
+
+    public function getVariableExtra($extra)
+    {
+        if (empty($this->extras)) 
+            return "";
+        
+        if ( is_array($this->extras) ) 
+            return $this->extras[$extra];
+        
+        if ( $this->extras instanceof \stdClass)
+            return $this->extras->{$extra};
+        
+        $decoded = json_decode($this->extras);
+        if ( $decoded !== null  && isset($decoded->{$extra}))
+            return $decoded->{$extra};
+
+
+        return "";
+
+    }
 }

@@ -203,6 +203,9 @@ class TypeDocumentSector
         \Log::debug("sector document ". $code);
         switch ($code) {
             case static::COMPRA_VENTA:
+                if ($company_nit == '1001665021') {
+                    return 'compra-venta-carraza';
+                }
                 if( $company_nit == '1020415021'){
                     return 'compra-venta-msc';
                 }
@@ -212,6 +215,9 @@ class TypeDocumentSector
                 return 'comercial-libre-consignacion';
                 break;
             case static::EXPORTACION_MINERALES:
+                if( $company_nit == '301400028'){
+                    return 'comercial-exportacion-minerales-roque';
+                }
                 if( $company_nit == '1020415021'){
                     return 'comercial-exportacion-minerales-msc';
                 }

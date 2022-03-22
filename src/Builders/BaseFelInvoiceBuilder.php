@@ -83,7 +83,7 @@ class BaseFelInvoiceBuilder {
             "codigoPuntoVenta" => $fel_data_parsed['codigoPuntoVenta'],
             "codigoSucursal" => $fel_data_parsed['codigoSucursal'],
             "usuario" => trim($user->first_name . " " . $user->last_name) != "" ? trim($user->first_name . " " . $user->last_name) : "Usuario Genérico",
-            "extras" => $fel_data_parsed['extras'],
+            "extras" => json_encode($fel_data_parsed['extras']),
             "codigoMoneda" => $fel_data_parsed['codigo_moneda'],
             //clientdata
             "nombreRazonSocial" => is_null($fel_data_parsed['nombreRazonSocial']) ?  $client->business_name : $fel_data_parsed['nombreRazonSocial'],

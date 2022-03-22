@@ -151,6 +151,9 @@ class InvoiceResource extends JsonResource
             "tipoEnvase" => $this->tipoEnvase,
             "montoTotalSujetoIvaLey317" => $this->montoTotalSujetoIvaLey317,
 
+            // added extra variable to customize template
+            "extras" => $this->getExtras(),
+
  
         ];
     }
