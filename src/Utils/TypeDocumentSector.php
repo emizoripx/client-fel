@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use CompraVentaPdfBuilder;
 use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
@@ -379,6 +380,15 @@ class TypeDocumentSector
             
         }
 
+    }
+
+    public static function getInstancePdfByCode($code)
+    {
+        // switch ($code) {
+        //     case static::COMPRA_VENTA:
+        //         return CompraVentaPdfBuilder::class;
+        //         break;
+        // }
     }
     
 }

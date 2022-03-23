@@ -490,4 +490,13 @@ class FelInvoiceRequest extends Model
         return "";
 
     }
+
+    public function getBranchByCode()
+    {
+        return FelBranch::whereCompanyId($this->company_id)->whereCodigo($this->codigoSucursal)->first();
+    }
+    public function getLeyenda()
+    {
+        return FelCaption::getCaptionDescription($this->codigoLeyenda);
+    }
 }
