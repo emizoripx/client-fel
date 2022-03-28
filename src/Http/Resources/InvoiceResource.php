@@ -154,6 +154,8 @@ class InvoiceResource extends JsonResource
             // added extra variable to customize template
             "extras" => $this->getExtras(),
 
+            // typeDocument
+            "typeDocument" => $this->typeDocument
  
         ];
     }

@@ -49,31 +49,42 @@ class FelInvoiceRequest extends Model
     {
         parent::boot();
         static::creating(function ($query) {
-            $next_number = self::nextNumber($query->company_id);
-            $query->prefactura_number = $next_number;
+            if( $query->typeDocument == 0 ){
+                $next_number = self::nextNumber($query->company_id);
+                $query->prefactura_number = $next_number;
+            }
+
+            if ($query->typeDocument == 1) {
+                $next_number = self::nextNumber($query->company_id,'planilla');
+                $query->document_number = $next_number;
+            }
         });
     }
 
-    public static function nextNumber($company_id)
+    public static function nextNumber($company_id, $document = "prefactura")
     {
         
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $company_id = $hashid->decode($company_id);
 
-        $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id','prefactura_number_counter')->first();
+        $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->first();
 
         
         if ($data!=null) {
-            $data->increment('prefactura_number_counter');
-            \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-PREFACTURA=" . $data->prefactura_number_counter );    
-            return $data->prefactura_number_counter;
+            $data->increment($document.'_number_counter');
+            \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->prefactura_number_counter );    
+            return $data->{$document."_number_counter"};
         }
-        \Log::debug("PREFACTURA NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );    
+        \Log::debug("PREFACTURA NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
         return 1;
     }
 
     public function getNumeroFacturaAttribute()
     {
+        if ($this->attributes['typeDocument'] == 1) {
+            return "Planilla " . $this->attributes['document_number'];
+        }
+
         if ( $this->attributes['numeroFactura'] == 0 ) {
             return "Pre-factura " . $this->attributes['prefactura_number'];
         }

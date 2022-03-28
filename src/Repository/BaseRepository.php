@@ -172,6 +172,9 @@ class BaseRepository
 
                         //otros datos, dinamically
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
+
+                        // typeDocument for different types of documents
+                        "typeDocument" =>!empty($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
                     ];
                     break;
                 

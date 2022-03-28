@@ -92,7 +92,8 @@ class BaseFelInvoiceBuilder {
             "complemento" => $fel_data_parsed['complemento'],
             "codigoCliente" => $model->client->number,
             "emailCliente" => $client_email_first_invitation != "" ? $client_email_first_invitation : null,
-            "telefonoCliente" => $model->client->phone
+            "telefonoCliente" => $model->client->phone,
+            "typeDocument" => $fel_data_parsed['typeDocument'],
         ]);
         
     }

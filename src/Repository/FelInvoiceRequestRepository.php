@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Models\FelClient;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
+use EmizorIpx\ClientFel\Utils\Documents;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
@@ -94,17 +95,28 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         try{
 
-            // this an instance of generic builder
-            $builder = new FelInvoiceBuilder;
-            
+            //this parte should have number of type document , for example 1 : PLANILLA
+            $typeDocument = $this->fel_data_parsed['typeDocument'];
+
             // this part should have the number of type document sector, for example: 1 : FACTURA COMPRA-VENTA
             $code =  $this->fel_data_parsed['type_document_sector_id'];
-    
-            // get instance builder by typde document sector, as default should result in CompraVentaBuilder
-            $instance = TypeDocumentSector::getInstanceByCode($code);
-            
+
+            // this an instance of generic builder
+            $builder = new FelInvoiceBuilder;
+
+            if ($typeDocument == 0) {
+        
+                // get instance builder by typde document sector, as default should result in CompraVentaBuilder
+                $instance = TypeDocumentSector::getInstanceByCode($code);
+            } else {
+
+                // get instance builder by typde document, example: Planilla
+                $instance = Documents::getInstanceByName($typeDocument);
+            }
+
             //process input if saved or update 
             $builder->make(new $instance($source_data));
+
         }catch (Exception $e) {
 
             \Log::emergency("File: " . $e->getFile() . " Line: " . $e->getLine() . " Message: " . $e->getMessage());
