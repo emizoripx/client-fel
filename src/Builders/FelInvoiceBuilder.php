@@ -18,7 +18,8 @@ class FelInvoiceBuilder {
         }catch(Exception $ex) {
             \Log::debug($ex->getMessage());
         }
-
+        
+        $builder->changeOriginalTotal($builder->getFelInvoice());
 
         return $builder->getFelInvoice();
     }

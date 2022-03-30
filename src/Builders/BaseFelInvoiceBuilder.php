@@ -2,6 +2,7 @@
 namespace EmizorIpx\ClientFel\Builders;
 
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
 use Exception;
@@ -96,6 +97,25 @@ class BaseFelInvoiceBuilder {
             "typeDocument" => $fel_data_parsed['typeDocument'],
         ]);
         
+    }
+
+    public  function changeOriginalTotal( FelInvoiceRequest $fel_invoice_request)
+    {
+        \Log::debug("ingresando a recalculate totals");
+        try {
+            $model = $this->source_data['model'];
+    
+            $model->amount = $fel_invoice_request->montoTotal;
+    
+            $model->saveQuietly();
+            
+            \Log::debug("se registro existosamente el recalculo de los totales");
+
+
+        } catch (\Throwable $th) {
+            \Log::error("ERROR EN  " . $th->getMessage());
+        }
+
     }
 
 }
