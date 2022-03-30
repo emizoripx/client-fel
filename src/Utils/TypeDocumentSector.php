@@ -204,6 +204,9 @@ class TypeDocumentSector
         \Log::debug("sector document ". $code);
         switch ($code) {
             case static::COMPRA_VENTA:
+                if ($company_nit == '373172026') {
+                    return 'compra-venta-hurbens';
+                }
                 if ($company_nit == '1001665021') {
                     return 'compra-venta-carraza';
                 }
