@@ -100,6 +100,7 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total, 5);
             $new->cantidad = $detail->quantity;
+            $new->nombre = $detail->product_key;
             $new->numeroSerie = null;
 
             if ($detail->discount > 0)
