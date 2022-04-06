@@ -252,6 +252,9 @@ class TypeDocumentSector
                 return 'venta-interna-minerales';
                 break;
             case static::COMERCIAL_EXPORTACION:
+                if( $company_nit == '1015601025'){
+                    return 'comercial-exportacion-blacutt';
+                }
                 if( $company_nit == '1020415021'){
                     return 'comercial-exportacion-msc';
                 }
