@@ -155,8 +155,9 @@ class InvoiceResource extends JsonResource
             "extras" => $this->getExtras(),
 
             // typeDocument
-            "typeDocument" => $this->typeDocument
- 
+            "typeDocument" => $this->typeDocument,
+            // seguros
+            "ajusteAfectacionIva" => $this->ajusteAfectacionIva,
         ];
     }
 }

@@ -175,6 +175,9 @@ class BaseRepository
 
                         // typeDocument for different types of documents
                         "typeDocument" =>!empty($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
+
+                        // seguros
+                        "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : null,
                     ];
                     break;
                 
