@@ -61,14 +61,8 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
 
         return [
             "otrosDatos" => [],
-            "costosGastosNacionales" => [
-                "gastoTransporte" => $this->source_data['fel_data_parsed']['gastoTransporteNacional'],
-                "gastoSeguro" => $this->source_data['fel_data_parsed']['gastoSeguroNacional']
-            ],
-            "costosGastosInternacionales" => [
-                "gastoTransporte" => $this->source_data['fel_data_parsed']['gastoTransporteInternacional'],
-                "gastoSeguro" => $this->source_data['fel_data_parsed']['gastoSeguroInternacional']
-            ]
+            "costosGastosNacionales" => json_decode($this->source_data['fel_data_parsed']['costosGastosNacionales']),
+            "costosGastosInternacionales" => json_decode($this->source_data['fel_data_parsed']['costosGastosInternacionales'])
         ];
     }
 

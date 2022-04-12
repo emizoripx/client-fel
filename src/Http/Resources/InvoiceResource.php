@@ -99,6 +99,8 @@ class InvoiceResource extends JsonResource
             "totalGastosInternacionales" => $this->totalGastosInternacionales,
             "numeroDescripcionPaquetesBultos" => $this->numeroDescripcionPaquetesBultos,
             "informacionAdicional" => $this->informacionAdicional,
+            "costosGastosNacionales" => json_encode($this->costosGastosNacionales),
+            "costosGastosInternacionales" => json_encode($this->costosGastosInternacionales),
 
             // factura nota debito crédito
             "numeroNota" => (int) $this->numero_factura,

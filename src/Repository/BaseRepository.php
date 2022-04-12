@@ -101,11 +101,18 @@ class BaseRepository
                         // COMERCIA EXPORTACION
                         "incoterm_detalle" => !empty($fel_data['incotermDetalle']) ? $fel_data['incotermDetalle'] : "",
                         "lugarDestino" => !empty($fel_data['lugarDestino']) ? $fel_data['lugarDestino'] : "",
-                        "gastoTransporteNacional" => !empty($fel_data['gastoTransporteNacional']) ? $fel_data['gastoTransporteNacional'] : '0',
-                        "gastoSeguroNacional" => !empty($fel_data['gastoSeguroNacional']) ? $fel_data['gastoSeguroNacional'] : '0',
+
+                        "costosGastosNacionales" =>!empty($fel_data['costosGastosNacionales']) ? $fel_data['costosGastosNacionales'] : [],
+
+                        // "gastoTransporteNacional" => !empty($fel_data['gastoTransporteNacional']) ? $fel_data['gastoTransporteNacional'] : '0',
+                        // "gastoSeguroNacional" => !empty($fel_data['gastoSeguroNacional']) ? $fel_data['gastoSeguroNacional'] : '0',
+                       
                         "totalGastosNacionalesFob" => !empty($fel_data['totalGastosNacionalesFob']) ? $fel_data['totalGastosNacionalesFob'] : 0,
-                        "gastoTransporteInternacional" => !empty($fel_data['gastoTransporteInternacional']) ? $fel_data['gastoTransporteInternacional'] : '0',
-                        "gastoSeguroInternacional" => !empty($fel_data['gastoSeguroInternacional']) ? $fel_data['gastoSeguroInternacional'] : '0',
+
+                        "costosGastosInternacionales" => !empty($fel_data['costosGastosInternacionales']) ? $fel_data['costosGastosInternacionales'] : [],
+
+                        // "gastoTransporteInternacional" => !empty($fel_data['gastoTransporteInternacional']) ? $fel_data['gastoTransporteInternacional'] : '0',
+                        // "gastoSeguroInternacional" => !empty($fel_data['gastoSeguroInternacional']) ? $fel_data['gastoSeguroInternacional'] : '0',
 
                         "totalGastosInternacionales" => !empty($fel_data['totalGastosInternacionales']) ? $fel_data['totalGastosInternacionales'] : 0,
 
@@ -177,7 +184,7 @@ class BaseRepository
                         "typeDocument" =>!empty($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
 
                         // seguros
-                        "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : null,
+                        "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : 0,
                     ];
                     break;
                 

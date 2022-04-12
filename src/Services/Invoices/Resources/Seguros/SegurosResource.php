@@ -30,7 +30,7 @@ class SegurosResource extends JsonResource
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
-            "ajusteAfectacionIva" => $this->ajusteAfectacionIva == 0 ? null : round($this->ajusteAfectacionIva, 2),
+            "ajusteAfectacionIva" => round($this->ajusteAfectacionIva, 2),
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
             "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,

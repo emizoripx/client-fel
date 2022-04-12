@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use stdClass;
 
 class FelInvoiceRequest extends Model
 {
@@ -398,9 +399,6 @@ class FelInvoiceRequest extends Model
 
     public function invoice_origin()
     {
-        // $hashid = new Hashids(config('ninja.hash_salt'), 10);
-
-        // $id_origin_decode = $hashid->decode($this->id_origin)[0];
 
         return \App\Models\Invoice::withTrashed()->find($this->id_origin);
 
@@ -417,31 +415,24 @@ class FelInvoiceRequest extends Model
 
     public function getCostosGastosNacionalesChangedAttribute()
     {
-        return [
-            [
-                "campo" => "Gasto Transporte",
-                "valor" => $this->costosGastosNacionales['gastoTransporte']
-            ],
-            [
-                "campo" => "Gasto de Seguro",
-                "valor" => $this->costosGastosNacionales['gastoSeguro']
-            ]
-        ];
+        
+        $data =[];
+        foreach (self::ensureIterable($this->costosGastosNacionales) as $key => $value) {
+            $data[] = ["campo" => $key, "valor"=>$value];
+        }
+        
+        return $data;
 
     }
     public function getCostosGastosInternacionalesChangedAttribute()
     {
-        return [
-            [
-                "campo" => "Gasto Transporte",
-                "valor" => $this->costosGastosInternacionales['gastoTransporte']
-            ],
-            [
-                "campo" => "Gasto de Seguro",
-                "valor" => $this->costosGastosInternacionales['gastoSeguro']
-            ]
-        ];
-
+        
+        $data = [];
+        foreach ( self::ensureIterable($this->costosGastosInternacionales)  as $key => $value) {
+            $data[] = ["campo" => $key, "valor" => $value];
+        }
+        
+        return $data;
     }
     public function getFacturaOrigin(){
         return Invoice::where('id', $this->factura_original_id)->first();
@@ -470,36 +461,47 @@ class FelInvoiceRequest extends Model
 
     public function getExtras()
     {
-        $extras_aux = json_decode($this->extras);
-        if ($extras_aux !== null){
-            $aux= new \stdClass;
-            foreach ($extras_aux as $key => $value) {
-                $aux->{$key} = is_null($value) ? "" : $value;
-            }
-            return $aux;
-        } 
 
-        return new \stdClass;
+        $extras_aux = self::ensureIterable($this->extras);
+
+        $aux= new \stdClass;
+        foreach ($extras_aux as $key => $value) {
+            $aux->{$key} = is_null($value) ? "" : $value;
+        }
+        return $aux;
     }
 
     public function getVariableExtra($extra)
     {
-        if (empty($this->extras)) 
+        $extras = self::ensureIterable($this->extras);
+
+        if (empty($extras)) 
             return "";
-        
-        if ( is_array($this->extras) ) 
+
+        if ( is_array($extras) ) 
             return $this->extras[$extra];
         
-        if ( $this->extras instanceof \stdClass)
+        if ( is_object($extras) )
             return $this->extras->{$extra};
-        
-        $decoded = json_decode($this->extras);
-        if ( $decoded !== null  && isset($decoded->{$extra}))
-            return $decoded->{$extra};
-
 
         return "";
 
+    }
+
+    public static function ensureIterable($var)
+    {
+        if (is_array($var) || is_object($var))
+            return $var;
+
+        if (is_null($var))
+            return [];
+
+        $extras_aux = json_decode($var);
+
+        if (!is_array($extras_aux) && !is_object($extras_aux))
+            return [];
+
+        return $extras_aux;
     }
 
     public function getBranchByCode()
