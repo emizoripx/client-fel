@@ -481,7 +481,7 @@ class FelInvoiceRequest extends Model
         if ( is_array($extras) ) 
             return $extras[$extra];
         
-        if ( is_object($extras) )
+        if ( is_object($extras) && isset($extras->{$extra}) )
             return $extras->{$extra};
 
         return "";
