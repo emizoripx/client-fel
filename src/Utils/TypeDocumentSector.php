@@ -222,6 +222,9 @@ class TypeDocumentSector
                 if( $company_nit == '1020415021'){
                     return 'compra-venta-msc';
                 }
+                if( $company_nit == '191310020'){
+                    return 'compra-venta-crediseguros';
+                }
                 return 'compra-venta';
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
@@ -272,6 +275,9 @@ class TypeDocumentSector
                 }
                 if ($company_nit == '1015607026') {
                     return 'comercial-exportacion-urqupina';
+                }
+                if ($company_nit == '1005479029') {
+                    return 'comercial-exportacion-saite';
                 }
                 return 'comercial-exportacion';
                 break;
