@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use stdClass;
+use Carbon\Carbon;
 
 class FelInvoiceRequest extends Model
 {
@@ -310,7 +311,8 @@ class FelInvoiceRequest extends Model
         // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
         \Log::debug("RESPONSE FEL ===========> " . json_encode( $invoice_service->getResponse() ));
         $emission_type_literal =  $invoice_service->getResponse()['emission_type_code'] == 2 ? "Fuera de línea" : "En línea";
-        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal]);
+        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal, 'fechaEmision' => $invoice_service->getResponse()['fechaEmision'] ]);
+        \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($invoice_service->getResponse()['fechaEmision'])->toDateString()]);
         // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
 
         // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
