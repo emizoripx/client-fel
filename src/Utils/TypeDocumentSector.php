@@ -231,6 +231,9 @@ class TypeDocumentSector
                 return 'comercial-libre-consignacion';
                 break;
             case static::EXPORTACION_MINERALES:
+                if( $company_nit == '425917027'){
+                    return 'comercial-exportacion-minerales-sanfrancisco';
+                }
                 if( $company_nit == '344946021'){
                     return 'comercial-exportacion-minerales-ingenio-sansilvestre';
                 }
