@@ -308,32 +308,10 @@ class FelInvoiceRequest extends Model
         } catch (Exception $ex) {
             throw new ClientFelException($ex->getMessage());
         }
-        // $this->saveAckTicket($invoice_service->getResponse()['ack_ticket']);
         \Log::debug("RESPONSE FEL ===========> " . json_encode( $invoice_service->getResponse() ));
         $emission_type_literal =  $invoice_service->getResponse()['emission_type_code'] == 2 ? "Fuera de línea" : "En línea";
-        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal, 'fechaEmision' => $invoice_service->getResponse()['fechaEmision'] ]);
+        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal, 'fechaEmision' => Carbon::parse($invoice_service->getResponse()['fechaEmision'])->toDateTimeString() ]);
         \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($invoice_service->getResponse()['fechaEmision'])->toDateString()]);
-        // $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
-
-        // $invoice_service->setAckTicket($invoice_service->getResponse()['ack_ticket']);
-        
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-        // $invoice = $invoice_service->getInvoiceByCuf();
-        // \Log::debug("================================================================================");
-        // // \Log::debug([$invoice_service->getResponse()]);
-        // \Log::debug("================================================================================");
-        // $this->saveState($invoice['estado'])
-        //      ->saveUrlSin($invoice['urlSin']?? null)
-        //      ->saveEmisionDate($invoice['fechaEmision'])
-        //      ->saveEmisionType($invoice['tipoEmision'])
-        //      ->saveXmlUrl($invoice['xml_url'])
-        //      ->saveInvoiceTypeId($invoice['documentoSector'])
-        //      ->savePackageId($invoice['package_id'] ?? null)
-        //      ->saveIndexPackage($invoice['index_package'] ?? null)
-        //      ->saveUuidPackage($invoice['uuid_package'] ?? null)
-        //      ->save();
-        // \Log::debug("INGRESANDO AL INVOICE FEL EMIT TRAIT======================================");
-        // $this->invoiceDateUpdate();
         
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
@@ -447,7 +425,7 @@ class FelInvoiceRequest extends Model
     }
 
     public function getFechaEmisionFormated(){
-        $date = date("d/m/Y g:i A", strtotime($this->fechaEmision));
+        $date = Carbon::parse($this->fechaEmision,'America/La_Paz')->format("d/m/Y g:i A");
         return  $date;
     }
 
