@@ -12,6 +12,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\Exporta
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos\HidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion\NotaConciliacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ServiciosBasicos\ServiciosBasicosResource;
@@ -73,6 +74,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::COMERCIAL_EXPORTACION_SERVICIOS ;
                 return new ExportacionServiciosResource($this);
+                break;
+            case TypeDocumentSector::NOTA_CONCILIACION ;
+                return new NotaConciliacionResource($this);
                 break;
             case TypeDocumentSector::SEGUROS;
                 return new SegurosResource($this);
