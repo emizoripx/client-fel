@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
+use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
 use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
@@ -51,6 +52,7 @@ class TypeDocumentSector
     const PRODUCTOS_NACIONALES_ICE = 26;
     const REGIMEN_7RG = 27;
     const COMERCIAL_EXPORTACION_SERVICIOS = 28;
+    const NOTA_CONCILIACION = 29;
     const SEGUROS = 34;
 
     const ARRAY_NAMES = [
@@ -82,6 +84,7 @@ class TypeDocumentSector
         26 => "Factura de Productos Nacionales - ICE",
         27 => "Factura Regimen 7RG",
         28 => "Factura Comercial de Exportación de Servicios",
+        29 => "Nota de Conciliación",
         34 => "Factura Seguros",
     ];
 
@@ -133,6 +136,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return ExportacionServiciosBuilder::class;
+                break;
+            case static::NOTA_CONCILIACION:
+                return NotaConciliacionBuilder::class;
                 break;
             case static::SEGUROS:
                 return  SegurosBuilder::class;
@@ -199,6 +205,9 @@ class TypeDocumentSector
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'exportacion-servicios';
                 break;
+            case static::NOTA_CONCILIACION:
+                return 'nota-conciliacion';
+                break;
             case static::SEGUROS:
                 return 'seguros';
                 break;
@@ -231,7 +240,7 @@ class TypeDocumentSector
                 return 'comercial-libre-consignacion';
                 break;
             case static::EXPORTACION_MINERALES:
-                if( $company_nit == '425917027'){
+                if( $company_nit == '421759027'){
                     return 'comercial-exportacion-minerales-sanfrancisco';
                 }
                 if( $company_nit == '344946021'){
@@ -298,6 +307,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'exportacion-servicios';
+                break;
+            case static::NOTA_CONCILIACION:
+                return 'nota-conciliacion';
                 break;
             case static::SEGUROS:
                 return 'seguros';
@@ -405,6 +417,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN DE SERVICIOS';
+                break;
+            case static::NOTA_CONCILIACION:
+                return 'NOTA DE CONCILIACIÓN';
                 break;
             case static::SEGUROS:
                 return 'FACTURA SEGUROS';

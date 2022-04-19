@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSegurosColumnsFelInvoiceRequests extends Migration
+class AddNotaconciliacionColumnsFelInvoiceRequests extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddSegurosColumnsFelInvoiceRequests extends Migration
      */
     public function up()
     {
-        Schema::table("fel_invoice_requests", function(Blueprint $table){
-            $table->decimal('ajusteAfectacionIva',17,2)->nullable();
+        Schema::table("fel_invoice_requests", function (Blueprint $table) {
+            $table->decimal('debitoFiscalIva', 17, 2)->default(0);
+            $table->decimal('creditoFiscalIva', 17, 2)->default(0);
         });
-
     }
 
     /**
@@ -27,8 +27,8 @@ class AddSegurosColumnsFelInvoiceRequests extends Migration
     public function down()
     {
         Schema::table("fel_invoice_requests", function (Blueprint $table) {
-            $table->dropColumn('ajusteAfectacionIva');
+            $table->dropColumn('debitoFiscalIva');
+            $table->dropColumn('creditoFiscalIva');
         });
-   
     }
 }
