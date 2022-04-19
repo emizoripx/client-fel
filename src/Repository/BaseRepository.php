@@ -185,6 +185,10 @@ class BaseRepository
 
                         // seguros
                         "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : 0,
+
+                        // nota conciliacion
+                        "creditoFiscalIva" => !empty($fel_data["creditoFiscalIva"]) ? $fel_data["creditoFiscalIva"] : 0,
+                        "debitoFiscalIva" => !empty($fel_data["debitoFiscalIva"]) ? $fel_data["debitoFiscalIva"] : 0,
                     ];
                     break;
                 
