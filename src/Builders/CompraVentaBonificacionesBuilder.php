@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -79,12 +79,12 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,2);
+            $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
             $new->numeroSerie = null;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 

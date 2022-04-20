@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
+use EmizorIpx\ClientFel\Builders\CompraVentaBonificacionesBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
@@ -20,6 +21,7 @@ use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
+use EmizorIpx\ClientFel\Builders\ZonaFrancaBuilder;
 
 class TypeDocumentSector
 {
@@ -54,6 +56,7 @@ class TypeDocumentSector
     const COMERCIAL_EXPORTACION_SERVICIOS = 28;
     const NOTA_CONCILIACION = 29;
     const SEGUROS = 34;
+    const COMPRA_VENTA_BONIFICACIONES = 35;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -86,6 +89,7 @@ class TypeDocumentSector
         28 => "Factura Comercial de Exportación de Servicios",
         29 => "Nota de Conciliación",
         34 => "Factura Seguros",
+        35 => "Factura compra venta bonificaciones",
     ];
 
     public static function getInstanceByCode($code):string
@@ -100,6 +104,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return ComercialConsignacionBuilder::class;
+                break;
+            case static::ZONA_FRANCA:
+                return ZonaFrancaBuilder::class;
                 break;
             case static::TASA_CERO:
                 return TasaCeroBuilder::class;
@@ -143,6 +150,9 @@ class TypeDocumentSector
             case static::SEGUROS:
                 return  SegurosBuilder::class;
                 break;
+            case static::COMPRA_VENTA_BONIFICACIONES:
+                return CompraVentaBonificacionesBuilder::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -162,6 +172,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return 'comercial-libre-consignacion';
+                break;
+            case static::ZONA_FRANCA:
+                return 'venta-zona-franca';
                 break;
             case static::EXPORTACION_MINERALES:
                 return 'comercial-exportacion-minerales';
@@ -211,6 +224,9 @@ class TypeDocumentSector
             case static::SEGUROS:
                 return 'seguros';
                 break;
+            case static::COMPRA_VENTA_BONIFICACIONES:
+                return 'compra-venta-bonificacion';
+                break;
 
             default:
                 return 'compra-venta';
@@ -238,6 +254,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return 'comercial-libre-consignacion';
+                break;
+            case static::ZONA_FRANCA:
+                return 'zona-franca';
                 break;
             case static::EXPORTACION_MINERALES:
                 if( $company_nit == '421759027'){
@@ -314,6 +333,9 @@ class TypeDocumentSector
             case static::SEGUROS:
                 return 'seguros';
                 break;
+            case static::COMPRA_VENTA_BONIFICACIONES:
+                return 'compra-venta-bonificaciones';
+                break;
 
             default:
                 return 'compra-venta';
@@ -336,6 +358,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return 'FACTURA COMERCIAL DE EXPORTACIÓN EN LIBRE CONSIGNACIÓN';
+                break;
+            case static::ZONA_FRANCA:
+                return 'FACTURA ZONA FRANCA';
                 break;
             case static::ZONA_FRANCA:
                 return 'FACTURA DE ZONA FRANCA';
@@ -423,6 +448,9 @@ class TypeDocumentSector
                 break;
             case static::SEGUROS:
                 return 'FACTURA SEGUROS';
+                break;
+            case static::COMPRA_VENTA_BONIFICACIONES:
+                return 'FACTURA COMPRA-VENTA BONIFICACIONES';
                 break;
             
             

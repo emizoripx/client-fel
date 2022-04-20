@@ -189,6 +189,9 @@ class BaseRepository
                         // nota conciliacion
                         "creditoFiscalIva" => !empty($fel_data["creditoFiscalIva"]) ? $fel_data["creditoFiscalIva"] : 0,
                         "debitoFiscalIva" => !empty($fel_data["debitoFiscalIva"]) ? $fel_data["debitoFiscalIva"] : 0,
+
+                        // zona franca
+                        "numeroParteRecepcion" => !empty($fel_data["numeroParteRecepcion"]) ? $fel_data["numeroParteRecepcion"] : null,
                     ];
                     break;
                 

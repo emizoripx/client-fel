@@ -160,6 +160,9 @@ class InvoiceResource extends JsonResource
             "typeDocument" => $this->typeDocument,
             // seguros
             "ajusteAfectacionIva" => $this->ajusteAfectacionIva,
+
+            // zona franca
+            'numeroParteRecepcion' => $this->numeroParteRecepcion,
         ];
     }
 }

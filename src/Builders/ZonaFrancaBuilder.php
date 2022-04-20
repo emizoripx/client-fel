@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class ZonaFrancaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -44,6 +44,7 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
                 "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "numeroParteRecepcion" => $this->source_data['fel_data_parsed']['numeroParteRecepcion'],
             ],
             $this->getDetailsAndTotals()
         );
@@ -79,12 +80,12 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,2);
+            $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
             $new->numeroSerie = null;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 

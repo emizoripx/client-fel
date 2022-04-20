@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialConsignacion\Comerc
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburos\ComercializacionHidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVentaBonificaciones\CompraVentaBonificacionesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
@@ -18,6 +19,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ServiciosBasicos\ServiciosBasicosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones\TelecomunicacionesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMinerales\VentaMineralesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ZonaFranca\ZonaFrancaResource;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -41,6 +43,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return new ComercialConsignacionResource($this);
+                break;
+            case TypeDocumentSector::ZONA_FRANCA:
+                return new ZonaFrancaResource($this);
                 break;
             case TypeDocumentSector::EXPORTACION_MINERALES:
                 return new ExportacionMineralesResource($this);
@@ -80,6 +85,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::SEGUROS;
                 return new SegurosResource($this);
+                break;
+            case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES;
+                return new CompraVentaBonificacionesResource($this);
                 break;
             default:
                 return new CompraVentaResource($this);
