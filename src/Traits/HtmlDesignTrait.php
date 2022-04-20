@@ -305,48 +305,49 @@ trait HtmlDesignTrait{
             
             $data['$fel.products_rows'] = [ 'value' => $this->makeRowsProductComercialExportacion(), 'label' => 'Detalles Productos' ];
             $data['$fel.client_details'] = [ 'value' => $this->makeClientDetail(), 'label' => 'Detalles Cliente' ];
-            
-            $data['$fel.costos_GastosNacionales'] = [ 'value' => 
-            '<table id="gastos-nacionales">
-                <tbody>
-                    <tr>
-                        <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ?  $this->number_format_custom((float)$this->fel_invoice->costosGastosNacionales['gastoTransporte'],2) : 0) .'</td>
-                    </tr>
-                    <tr>
-                        <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosNacionales) ? $this->number_format_custom((float) $this->fel_invoice->costosGastosNacionales['gastoSeguro'],2) : 0) .'</td>
-                    </tr>
+
+            $valuecostosgastosnacionales = '<table id="gastos-nacionales"> <tbody>';
+
+            if(!empty($this->fel_invoice->costosGastosNacionales) && $this->fel_invoice->costosGastosNacionales!='null') {
+                foreach ($this->fel_invoice->costosGastosNacionales as $key => $item) {
+
+                $valuecostosgastosnacionales .= ' <tr>
+                        <td>'. $key .'</td>
+                        <td style="text-align: right;">'. number_format($item,2, '.', ',') .'</td>
+                    </tr>';
+                }
+            }
+            $valuecostosgastosnacionales .= ' 
                     <tr>
                         <td><b>SUBTOTAL FOB</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosNacionalesFob,2) : 0) .'</td>
+                        <td style="text-align: right;">' . (isset($this->fel_invoice->totalGastosNacionalesFob) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosNacionalesFob, 2) : 0) . '</td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody> </table>';
 
-            '
-            , 'label' => 'Detalles Productos' ];
 
-            $data['$fel.costos_GastosInternacionales'] = [ 'value' => 
-            '<table id="gastos-internacionales">
-                <tbody>
-                    <tr>
-                        <td>Gasto Transporte</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->costosGastosInternacionales['gastoTransporte'],2) : 0) .'</td>
-                    </tr>
-                    <tr>
-                        <td>Gasto de Seguro</td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->costosGastosInternacionales['gastoSeguro'],2) : 0) .'</td>
-                    </tr>
+            $data['$fel.costos_GastosNacionales'] = [ 'value' => $valuecostosgastosnacionales, 'label' => 'Detalles Productos' ];
+
+
+            $valuecostosgastosinternacionales = '<table id="gastos-internacionales"> <tbody>';
+
+            if(!empty($this->fel_invoice->costosGastosInternacionales) && $this->fel_invoice->costosGastosInternacionales!='null') {
+                foreach ($this->fel_invoice->costosGastosInternacionales as $key => $item) {
+
+                $valuecostosgastosinternacionales .= ' <tr>
+                        <td>'. $key .'</td>
+                        <td style="text-align: right;">'. number_format($item, 2, '.', ',') .'</td>
+                    </tr>';
+                }
+            }
+        $valuecostosgastosinternacionales .= ' 
                     <tr>
                         <td><b>TOTAL CIF</b></td>
-                        <td style="text-align: right;">'. (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosInternacionales,2) : 0) .'</td>
+                        <td style="text-align: right;">' . (isset($this->fel_invoice->costosGastosInternacionales) ? $this->number_format_custom((float)$this->fel_invoice->totalGastosInternacionales, 2) : 0) . '</td>
                     </tr>
-                </tbody>
-            </table>
+                </tbody> </table>';
 
-            '
-            , 'label' => 'Detalles Productos' ];
+
+            $data['$fel.costos_GastosInternacionales'] = [ 'value' => $valuecostosgastosinternacionales , 'label' => 'Detalles Productos' ];
 
             $data['$fel.totales'] = [ 'value' => 
             '<table id="totales">
