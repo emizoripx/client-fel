@@ -80,7 +80,7 @@ class NumberToWordHelper
     /**
      * @var bool
      */
-    public $apocope = false;
+    public $apocope = true;
 
     /**
      * Formatea y convierte un número a letras.
