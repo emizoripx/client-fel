@@ -298,6 +298,9 @@ class TypeDocumentSector
                 return 'venta-interna-minerales';
                 break;
             case static::COMERCIAL_EXPORTACION:
+                if( $company_nit == '1004057020'){
+                    return 'comercial-exportacion-andean';
+                }
                 if( $company_nit == '1015601025'){
                     return 'comercial-exportacion-blacutt';
                 }
@@ -322,6 +325,9 @@ class TypeDocumentSector
                 return 'comercializacion-hidrocarburos';
                 break;
             case static::ALQUILER_BIENES_INMUEBLES:
+                if ($company_nit == '191310020') {
+                    return 'alquileres-crediseguros-personales';
+                }
                 return 'alquileres';
                 break;
             case static::COMERCIAL_EXPORTACION_SERVICIOS:
