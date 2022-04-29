@@ -161,6 +161,7 @@ class BaseRepository
                         "detalleAjusteSujetoIva" => !empty($fel_data['detalleAjusteSujetoIva']) ? $fel_data['detalleAjusteSujetoIva'] : null,
                         "otrosPagosNoSujetoIva" => !empty($fel_data['otrosPagosNoSujetoIva']) ? $fel_data['otrosPagosNoSujetoIva'] : null,
                         "detalleOtrosPagosNoSujetoIva" => !empty($fel_data['detalleOtrosPagosNoSujetoIva']) ? $fel_data['detalleOtrosPagosNoSujetoIva'] : null,
+                        "otrasTasas" => !empty($fel_data['otrasTasas']) ? $fel_data['otrasTasas'] : null,
 
                         //hoteles 
                         "cantidadHuespedes" => !empty($fel_data["cantidadHuespedes"]) ? $fel_data["cantidadHuespedes"] : null,

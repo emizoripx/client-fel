@@ -47,6 +47,7 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
                 "gestion" => $this->source_data['fel_data_parsed']['gestion'],
                 "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
                 "zona" => $this->source_data['fel_data_parsed']['zona'],
+                "otrasTasas" => $this->source_data['fel_data_parsed']['otrasTasas'],
                 "numeroMedidor" => $this->source_data['fel_data_parsed']['numeroMedidor'],
                 "domicilioCliente" => $this->source_data['fel_data_parsed']['domicilioCliente'],
                 "consumoPeriodo" => $this->source_data['fel_data_parsed']['consumoPeriodo'],
@@ -110,9 +111,9 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
             $total += $new->subTotal;
         }
         
-        $total = $total + round($this->source_data['fel_data_parsed']['tasaAseo'], 2) + round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) - round($this->source_data['fel_data_parsed']['descuentoAdicional'],2);
+        $total = $total + round($this->source_data['fel_data_parsed']['tasaAseo'], 2) + round($this->source_data['fel_data_parsed']['otrasTasas'], 2) +  round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) + round($this->source_data['fel_data_parsed']['ajusteSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2 ) - round($this->source_data['fel_data_parsed']['descuentoAdicional'],2);
 
-        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['tasaAseo'], 2) - round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) - round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) + round($this->source_data['fel_data_parsed']['ajusteNoSujetoIva'], 2);
+        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['tasaAseo'], 2) - round($this->source_data['fel_data_parsed']['otrasTasas'], 2) - round($this->source_data['fel_data_parsed']['tasaAlumbrado'], 2) - round($this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'], 2) ;
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
