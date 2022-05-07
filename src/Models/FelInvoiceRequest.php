@@ -486,7 +486,8 @@ class FelInvoiceRequest extends Model
 
     public function getBranchByCode()
     {
-        return FelBranch::whereCompanyId($this->company_id)->whereCodigo($this->codigoSucursal)->first();
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        return FelBranch::whereCompanyId($hashid->decode($this->company_id)[0])->whereCodigo(strval($this->codigoSucursal))->first();
     }
     public function getLeyenda()
     {

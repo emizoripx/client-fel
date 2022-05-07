@@ -11,6 +11,7 @@ class FelCaption extends Model
 
     const PARAMETRIC_OFFLINE = '“Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido fuera de línea, verifique su envío con su proveedor o en la página web <a href="https://www.impuestos.gob.bo"> www.impuestos.gob.bo </a> .”';
     const PARAMETRIC_ONLINE = '"Este documento es la Representación Gráfica de un Documento Fiscal Digital emitido en una modalidad de facturación en línea".';
+    const CAPTION_SIN = '"ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY"';
 
     public static function getCaptionDescription($code){
         return self::where('codigo', $code)->first()->descripcion;
