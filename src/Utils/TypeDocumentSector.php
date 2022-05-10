@@ -349,20 +349,22 @@ class TypeDocumentSector
         }
     }
 
-    public static function getTemplateByDocumentSector( $document_sector, $branch_id ){
+    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null ){
 
-        $template = \DB::table('fel_branch_document_templates')
-                        ->join('fel_templates', 'fel_branch_document_templates.template_id', '=', 'fel_templates.id')
-                        ->where('fel_branch_document_templates.document_sector_code', $document_sector)
-                        ->where('fel_branch_document_templates.branch_id', $branch_id)
-                        ->select('fel_templates.blade_resource as blade_resource')
+        $template = \DB::table('fel_templates')
+                        ->where('company_id', $company_id)
+                        ->where('document_sector_code', $document_sector)
+                        ->where('branch_code', $branch_code)
                         ->first();
 
-        \Log::debug("Template:  " . $template->blade_resource);
-
+        // if(count($template) > 1){
+        //     $template = $template->where('branch_code', $branch_code)->all();
+        // }
+        
         if( empty($template) ){
             return "templates/general/1/default.blade.php";
         }
+        \Log::debug($template->blade_resource);
 
         return $template->blade_resource;
 

@@ -12,10 +12,13 @@ use EmizorIpx\ClientFel\Services\Company\Company;
 use EmizorIpx\ClientFel\Services\Connection\Connection;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Services\Pos\Pos;
+use EmizorIpx\ClientFel\Services\Templates\Templates;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use EmizorIpx\PrepagoBags\Models\PostpagoPlanCompany;
 use EmizorIpx\PrepagoBags\Repository\AccountPrepagoBagsRepository;
+use Exception;
+use Carbon\Carbon;
 
 class FelCredentialRepository
 {
@@ -188,6 +191,48 @@ class FelCredentialRepository
         }
 
         return $this;
+    }
+
+    public function getTemplates() {
+
+        try {
+
+            $templateServices = new Templates( $this->credential->access_token, $this->credential->getHost() );
+    
+            $templates = $templateServices->getTemplates();
+    
+            $array_input = [];
+    
+            \Log::debug("Template Response: " . json_encode($templates));
+            \Log::debug("Template Response: " . $this->company_id);
+    
+            foreach ($templates as $template) {
+                if( $templateServices->exitsTemplate($this->company_id, $template['document_sector_code'] ,$template['codigoSucursal']  ) ) {
+                    array_push($array_input, [
+                        "display_name" => $template['display_name'],
+                        "document_sector_code" => $template['document_sector_code'],
+                        "blade_resource" => $template['blade_resource'],
+                        "branch_code" => $template['codigoSucursal'],
+                        "created_at" => Carbon::now()->toDateTimeString(),
+                        "updated_at" => Carbon::now()->toDateTimeString(),
+                        "company_id" => $this->company_id,
+                    ]);
+                }
+            }
+    
+            \Log::debug("Array Templates " . json_encode($array_input));
+            if( count($array_input) > 0 ){
+                \DB::table('fel_templates')->insert($array_input);
+                \Log::debug("Insert Templates >>>>>>>>>>>>>>>>> ");
+            }
+
+            return $this;
+
+        } catch(Exception | ClientFelException $ex){
+            \Log::debug("Ocurrio un Error al sincronizar templates: " . $ex->getMessage());
+        }
+
+
     }
 
     public function getPOS($branch){
