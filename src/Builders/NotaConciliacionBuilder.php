@@ -35,9 +35,13 @@ class NotaConciliacionBuilder extends BaseFelInvoiceBuilder implements FelInvoic
         $input = array_merge(
             $this->input,
             [
-                "factura_original_id" => $invoice_origin->id_origin,
-                "numeroFacturaOriginal" => $invoice_origin->numeroFactura,
-                "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
+                "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
+                "facturaExterna" => !is_null($invoice_origin) ? 0 : 1,
+                "external_invoice_data" => [
+                        "numeroFacturaOriginal" => $this->source_data['fel_data_parsed']["numeroFactura"], // TODO: change in frontend variable to register DB 
+                        "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
+                        "codigoControl" => $this->source_data['fel_data_parsed']["codigoControl"]
+                    ],
                 "creditoFiscalIva" => $this->source_data['fel_data_parsed']["creditoFiscalIva"],
                 "debitoFiscalIva" => $this->source_data['fel_data_parsed']["debitoFiscalIva"],
             ],
@@ -57,6 +61,9 @@ class NotaConciliacionBuilder extends BaseFelInvoiceBuilder implements FelInvoic
     public function getDetailsAndTotals(): array
     {
         $line_items = $this->source_data['model']->line_items;
+        $line_items_nc = $this->source_data['fel_data_parsed']['line_items_nc'];
+        $details = [];
+        $details_nc = [];
         $model = $this->source_data['model'];
 
         $total = 0;
@@ -77,7 +84,6 @@ class NotaConciliacionBuilder extends BaseFelInvoiceBuilder implements FelInvoic
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
 
             if ($detail->discount > 0)
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
@@ -89,12 +95,36 @@ class NotaConciliacionBuilder extends BaseFelInvoiceBuilder implements FelInvoic
             $total += $new->subTotal;
         }
 
+        foreach ($line_items_nc as $detail) {
+
+            $id_origin = $hashid->decode($detail->product_id)[0];
+
+            $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->withTrashed()->first();
+
+            $new = new stdClass;
+            $new->codigoProducto =  $product_sync->codigo_producto. ""; // this values was added only frontend Be careful
+            $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
+            $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
+            $new->descripcion = $detail->notes;
+            $new->precioUnitario = $detail->cost;
+            $new->subTotal = round((float)$detail->line_total,5);
+            $new->cantidad = $detail->quantity;
+            $new->montoOriginal = $detail->montoOriginal;
+            $new->montoFinal = $detail->montoFinal;
+            $new->montoConciliado = $detail->montoConciliado;
+            $new->unidadMedida = $product_sync->codigo_unidad;
+
+            $details_nc[] = $new;
+
+            $total += $new->subTotal;
+        }
+
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $this-> source_data['fel_data_parsed']['montoTotal'],
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
             "montoTotalSujetoIva" => $this-> source_data['fel_data_parsed']['montoTotal'],
-            "detalles" => $details
+            "detalles" => ["original" => $details,"conciliado" => $details_nc],
         ];
     }
 
