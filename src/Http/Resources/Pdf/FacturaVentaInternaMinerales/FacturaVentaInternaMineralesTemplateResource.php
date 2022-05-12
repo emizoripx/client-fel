@@ -17,7 +17,7 @@ class FacturaVentaInternaMineralesTemplateResource extends BaseTemplateResource 
         $common['subTotal'] = NumberUtils::number_format_custom( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2);
 
         return array_merge($common, [
-            "title" => "FACTURA",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA" : "FACTURA",
             "subtitle" => is_null($fel_invoice->cuf) ? null : "(Con Derecho a Crédito Fiscal)",
             "monedaDescripcion" => strtoupper(currency_description( $fel_invoice->codigoMoneda )),
             "direccionComprador" => $fel_invoice->direccionComprador,

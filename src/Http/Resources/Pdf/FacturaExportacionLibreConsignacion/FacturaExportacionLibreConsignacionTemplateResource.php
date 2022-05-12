@@ -14,8 +14,8 @@ class FacturaExportacionLibreConsignacionTemplateResource extends BaseTemplateRe
         $fel_invoice = $this->fel_invoice;
 
         return array_merge($common, [
-            "title" => "FACTURA COMERCIAL DE EXPORTACIÓN EN LIBRE CONSIGNACIÓN",
-            "subtitle" => "(Sin Derecho A Crédito Fiscal)",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACIÓN EN LIBRE CONSIGNACIÓN" : "FACTURA COMERCIAL DE EXPORTACIÓN EN LIBRE CONSIGNACIÓN",
+            "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho A Crédito Fiscal)",
             "puertoDestino" => $fel_invoice->puertoDestino,
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
             "monedaDescripcion" => strtoupper(currency_description( $fel_invoice->codigoMoneda )),

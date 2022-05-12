@@ -18,8 +18,8 @@ class FacturaComercialExportacionServiciosTemplateResource extends BaseTemplateR
 
 
         return array_merge( $common, [
-            "title" => "FACTURA COMERCIAL DE EXPORTACION DE SERVICIOS <br> (COMMERCIAL SERVICE EXPORT INVOICE)",
-            "subtitle" => "(Sin Derecho A Crédito Fiscal)",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACION DE SERVICIOS" : "FACTURA COMERCIAL DE EXPORTACION DE SERVICIOS <br> (COMMERCIAL SERVICE EXPORT INVOICE)",
+            "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho A Crédito Fiscal)",
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
             "direccionComprador" => $fel_invoice->direccionComprador,
             "lugarDestino" => $fel_invoice->lugarDestino,

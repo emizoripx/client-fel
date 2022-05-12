@@ -27,7 +27,7 @@ class FacturaComercialExportacionTemplateResource extends BaseTemplateResource {
         }
 
         return array_merge( $common, [
-            "title" => "FACTURA COMERCIAL EXPORTACIÓN <br> (COMMERCIAL INVOICE)",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL EXPORTACIÓN <br> (COMMERCIAL INVOICE)" : "FACTURA COMERCIAL EXPORTACIÓN <br> (COMMERCIAL INVOICE)",
             "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho a Crédito Fiscal)",
             "incoterm" => $fel_invoice->incoterm,
             "incotermDetalle" => $fel_invoice->incoterm_detalle,

@@ -31,6 +31,7 @@ class BaseTemplateResource extends JsonResource
             "logoEmizor" => 'https://s3.amazonaws.com/EMIZOR/Logo-Emizor-Sep-2019.png' ,
             "isUnipersonalCompany" => boolval($this->company->company_detail->is_uniper),
             "razonSocialEmisor" => $this->company->company_detail->business_name,
+            "company_name" =>  $this->entity->company->settings->name,
             "codigoSucursal" => $fel_invoice->codigoSucursal,
             "codigoPuntoVenta" => $fel_invoice->codigoPuntoVenta,
             "direccion" => $branch->zona,

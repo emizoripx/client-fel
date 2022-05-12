@@ -15,8 +15,8 @@ class FacturaComercializacionHidrocarburosTemplateResource extends BaseTemplateR
         $fel_invoice = $this->fel_invoice;
 
         return array_merge($common, [
-            "title" => "FACTURA",
-            "subtitle" => "(Con Derecho A Crédito Fiscal)",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA" : "FACTURA",
+            "subtitle" => is_null($fel_invoice->cuf) ? null : "(Con Derecho A Crédito Fiscal)",
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1) ,
             "montoTotalSujetoIvaLey317" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalSujetoIvaLey317 , 2),

@@ -17,7 +17,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
         $common['subTotal'] = NumberUtils::number_format_custom( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2);
 
         return array_merge($common, [
-            "title" => "FACTURA EXPORTACIÓN",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACIÓN" : "FACTURA EXPORTACIÓN",
             "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho a Crédito Fiscal)",
             "ruex" => $fel_invoice->ruex,
             "nim" => $fel_invoice->nim,
@@ -31,6 +31,9 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "monedaDescripcion" => strtoupper(currency_description( $fel_invoice->codigoMoneda )),
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
             "tipoCambioANB" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambioANB, 2),
+            "pesoBrutoKg" => isset($fel_invoice->pesoBrutoKg) ? NumberUtils::number_format_custom( (float) $fel_invoice->pesoBrutoKg, 2) : '',
+            "pesoBrutoGr" => isset($fel_invoice->pesoBrutoGr) ? NumberUtils::number_format_custom( (float) $fel_invoice->pesoBrutoGr, 2) : '',
+            "pesoNetoGr" => isset($fel_invoice->pesoNetoGr) ? NumberUtils::number_format_custom( (float) $fel_invoice->pesoNetoGr, 2) : '',
             "numeroLote" => $fel_invoice->numeroLote,
             "kilosNetosHumedos" => NumberUtils::number_format_custom( (float) $fel_invoice->kilosNetosHumedos, 2),
             "humedadPorcentaje" => NumberUtils::number_format_custom( (float) $fel_invoice->humedadPorcentaje, 2),
@@ -40,7 +43,9 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "kilosNetosSecos" => NumberUtils::number_format_custom( (float) $fel_invoice->kilosNetosSecos, 2),
 
             "subTotalLiteral" => to_word( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2, $fel_invoice->codigoMoneda),
+            "subTotalBsLiteral" => to_word( (float) (collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio), 2, 1),
             "gastosRealizacion" => NumberUtils::number_format_custom( (float) $fel_invoice->gastosRealizacion, 2 ),
+            "gastosRealizacionLiteral" => to_word( (float) $fel_invoice->gastosRealizacion * $fel_invoice->tipoCambio, 2, 1),
             "montoTotalMoneda" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalMoneda, 2 ),
             "montoTotalMonedaLiteral" => to_word( (float) $fel_invoice->montoTotalMoneda, 2, $fel_invoice->codigoMoneda),
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal, 2 ),
