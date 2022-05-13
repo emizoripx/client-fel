@@ -191,6 +191,13 @@ class BaseRepository
                         "creditoFiscalIva" => !empty($fel_data["creditoFiscalIva"]) ? $fel_data["creditoFiscalIva"] : 0,
                         "debitoFiscalIva" => !empty($fel_data["debitoFiscalIva"]) ? $fel_data["debitoFiscalIva"] : 0,
                         "line_items_nc" => !empty($fel_data["line_items_nc"]) ? $fel_data["line_items_nc"] : [],
+                        "numeroFacturaOriginal" => !empty($fel_data["numeroFacturaOriginal"])? $fel_data["numeroFacturaOriginal"] : "",
+                        "numeroAutorizacionCuf" => !empty($fel_data["numeroAutorizacionCuf"])? $fel_data["numeroAutorizacionCuf"] : "",
+                        "codigoControl" => !empty($fel_data["codigoControl"])? $fel_data["codigoControl"] : "",
+                        "fechaEmisionOriginal" => !empty($fel_data["fechaEmisionOriginal"])? $fel_data["fechaEmisionOriginal"] : "",
+                        "montoTotalOriginal" => !empty($fel_data["montoTotalOriginal"])? $fel_data["montoTotalOriginal"] : "",
+                        "montoTotalConciliado" => !empty($fel_data["montoTotalConciliado"])? $fel_data["montoTotalConciliado"] : "",
+
 
                         // zona franca
                         "numeroParteRecepcion" => !empty($fel_data["numeroParteRecepcion"]) ? $fel_data["numeroParteRecepcion"] : null,

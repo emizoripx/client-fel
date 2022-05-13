@@ -78,7 +78,7 @@ class Invoices extends BaseConnection
 
         $this->checkParameters();
 
-        $this->validateData();
+        // $this->validateData();
 
         $this->setTypeDocument();
 
