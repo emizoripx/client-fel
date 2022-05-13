@@ -166,12 +166,12 @@ class InvoiceResource extends JsonResource
 
             // nota conciliacion
             
-            "numeroFacturaOriginal" =>$this->external_invoice_data['numeroFacturaOriginal'],
-            "montoTotalOriginal" =>$this->external_invoice_data['montoTotalOriginal'],
-            "codigoControl" =>$this->external_invoice_data['codigoControl'],
+            "numeroFacturaOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['numeroFacturaOriginal']:"",
+            "montoTotalOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['montoTotalOriginal']:"",
+            "codigoControl" => isset($this->external_invoice_data)?$this->external_invoice_data['codigoControl']:"",
             "debitoFiscalIva" =>$this->debitoFiscalIva,
             "creditoFiscalIva" =>$this->creditoFiscalIva,
-            "fechaEmisionOriginal" =>$this->external_invoice_data['fechaEmisionOriginal'],
+            "fechaEmisionOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['fechaEmisionOriginal']:"",
             "montoTotalConciliado" =>$this->montoTotal,
         ];
     }
