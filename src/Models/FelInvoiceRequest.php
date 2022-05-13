@@ -38,6 +38,7 @@ class FelInvoiceRequest extends Model
 
     protected $casts =[
         'detalles' => 'array',
+        'external_invoice_data' => 'array',
         'otrosDatos' => 'array',
         'costosGastosNacionales' => 'array',
         'costosGastosInternacionales' => 'array',
@@ -99,7 +100,8 @@ class FelInvoiceRequest extends Model
 
     public function getDetallesAttribute()
     {
-       return json_decode($this->attributes['detalles'],true);
+        $result = json_decode($this->attributes['detalles'], true);
+        return is_array($result) ?  $result : $result['original'];
     }
 
     public function saveCuf($value) 
@@ -493,4 +495,24 @@ class FelInvoiceRequest extends Model
     {
         return FelCaption::getCaptionDescription($this->codigoLeyenda);
     }
+
+     public function originalExternalInvoice()
+    {
+
+        \Log::debug("tipo de archivo " , [$this->external_invoice_data, gettype($this->external_invoice_data)]);
+        if ($this->facturaExterna == 1) {
+            $new = new FelInvoiceRequest();
+            $new->cuf = $this->numeroAutorizacionCuf;
+            $new->numeroFactura = $this->external_invoice_data['numeroFacturaOriginal'];
+            $new->fechaEmision = $this->external_invoice_data['fechaEmisionOriginal'];
+            $new->montoTotal = $this-> external_invoice_data['montoTotalOriginal'] ;
+            $new->codigoControl = $this->external_invoice_data['codigoControl'];
+            $new->typeDocument = 2;
+            $new->details = (json_decode($this->attributes['detalles'], true))['conciliado'];
+            return $new;
+        }
+        return [];
+    }
+
+
 }

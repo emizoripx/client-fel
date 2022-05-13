@@ -4,7 +4,7 @@ namespace EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetalleNotaConciliacionResource extends JsonResource
+class DetalleNotaConciliacionOriginalResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,12 +21,10 @@ class DetalleNotaConciliacionResource extends JsonResource
             "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "cantidad" => $this->resource['cantidad'],
             "precioUnitario" => $this->resource['precioUnitario'],
-            "subTotal" => $this->resource['montoFinal'],
+            "subTotal" => $this->resource['subTotal'],
             "unidadMedida" => $this->resource['unidadMedida'],
             "montoDescuento" => $this->resource['montoDescuento'] ?? null,
-            "montoConciliado" => $this->resource["montoConciliado"],
-            "montoFinal" => $this->resource["montoFinal"],
-            "subtotalOriginal" => $this->resource["montoOriginal"],
+     
         ];
     }
 }
