@@ -17,7 +17,13 @@ class BaseTemplateResource extends JsonResource
     public function toArray($request)
     {
         $fel_invoice = $this->fel_invoice;
-        $branch = $fel_invoice->getBranchByCode();
+
+        $branch = null;
+        if( !empty($fel_invoice->company_id) ){
+            \Log::debug("Get Branch >>>>>>>>>>>>>>>>>>>> ");
+            $branch = $fel_invoice->getBranchByCode();
+        }
+
 
         $extras = [];
 
@@ -27,32 +33,32 @@ class BaseTemplateResource extends JsonResource
 
 
         return array_merge([
-            "companyLogo" =>  'data:image/jpg;base64,' . base64_encode(file_get_contents($this->company->present()->logo())),
+            "companyLogo" => isset($this->company) ? 'data:image/jpg;base64,' . base64_encode(file_get_contents($this->company->present()->logo())) : '',
             "logoEmizor" => 'https://s3.amazonaws.com/EMIZOR/Logo-Emizor-Sep-2019.png' ,
-            "isUnipersonalCompany" => boolval($this->company->company_detail->is_uniper),
-            "razonSocialEmisor" => $this->company->company_detail->business_name,
-            "company_name" =>  $this->entity->company->settings->name,
-            "codigoSucursal" => $fel_invoice->codigoSucursal,
-            "codigoPuntoVenta" => $fel_invoice->codigoPuntoVenta,
-            "direccion" => $branch->zona,
-            "telefono" => $branch->telefono,
-            "municipio" => $branch->municipio,
-            "nitEmisor" => $this->company->settings->id_number,
-            "numeroFactura" => $fel_invoice->numeroFactura,
+            "isUnipersonalCompany" => isset($this->company) ? boolval($this->company->company_detail->is_uniper) : '',
+            "razonSocialEmisor" => isset($this->company->company_detail->business_name) ? $this->company->company_detail->business_name : '',
+            "company_name" => isset($this->entity->company->settings->name) ? $this->entity->company->settings->name : '',
+            "codigoSucursal" => isset( $fel_invoice->codigoSucursal ) ? $fel_invoice->codigoSucursal : '',
+            "codigoPuntoVenta" => isset($fel_invoice->codigoPuntoVenta) ? $fel_invoice->codigoPuntoVenta : '',
+            "direccion" => isset($branch) ? $branch->zona : '',
+            "telefono" => isset($branch) ? $branch->telefono : '',
+            "municipio" => isset($branch) ? $branch->municipio : '',
+            "nitEmisor" => isset($this->company) ? $this->company->settings->id_number : '',
+            "numeroFactura" => isset($fel_invoice->numeroFactura) ? $fel_invoice->numeroFactura : '',
             "cuf" => is_null($fel_invoice->cuf) ? null : $fel_invoice->cuf ,
-            "fechaEmision" => $fel_invoice->getFechaEmisionFormated(),
-            "numeroDocumento" => $fel_invoice->numeroDocumento,
-            "complemento" => $fel_invoice->complemento,
-            "nombreRazonSocial" => $fel_invoice->nombreRazonSocial,
-            "codigoCliente" => $fel_invoice->codigoCliente,
-            "subTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional , 2),
-            "descuentoAdicional" => NumberUtils::number_format_custom( (float) $fel_invoice->descuentoAdicional , 2),
+            "fechaEmision" => isset($fel_invoice->fechaEmision) ?  $fel_invoice->getFechaEmisionFormated() : '',
+            "numeroDocumento" => isset($fel_invoice->numeroDocumento) ? $fel_invoice->numeroDocumento : '',
+            "complemento" => isset($fel_invoice->complemento) ? $fel_invoice->complemento : '' ,
+            "nombreRazonSocial" => isset($fel_invoice->nombreRazonSocial) ? $fel_invoice->nombreRazonSocial : '',
+            "codigoCliente" => isset($fel_invoice->codigoCliente) ? $fel_invoice->codigoCliente : '',
+            "subTotal" => isset($fel_invoice->montoTotal) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional , 2) : '',
+            "descuentoAdicional" => isset($fel_invoice->descuentoAdicional) ? NumberUtils::number_format_custom( (float) $fel_invoice->descuentoAdicional , 2) : '',
             "leyendaSIN" => FelCaption::CAPTION_SIN,
-            "leyenda" => FelCaption::getCaptionDescription($fel_invoice->codigoLeyenda),
-            "leyendaSIN2" => $fel_invoice->getLeyendaEmissionType(),
+            "leyenda" => isset($fel_invoice->codigoLeyenda) ? FelCaption::getCaptionDescription($fel_invoice->codigoLeyenda) : '',
+            "leyendaSIN2" => isset($fel_invoice->emission_type) ? $fel_invoice->getLeyendaEmissionType() : '',
             "qrCode" => \QrCode::generate($fel_invoice->getUrlSin()),
-            "environmentCode" => $this->company->company_detail->production,
-            "status_code" => $fel_invoice->codigoEstado,
+            "environmentCode" => isset($this->company) ? $this->company->company_detail->production : '',
+            "status_code" => isset($fel_invoice->codigoEstado) ? $fel_invoice->codigoEstado : '',
             "terminos" => !empty($this->terms) ? $this->terms : null,
             "notasPublicas" => isset($this->public_notes) ? $this->public_notes : null,
             "piePagina" => !empty($this->footer) ? $this->footer : null,

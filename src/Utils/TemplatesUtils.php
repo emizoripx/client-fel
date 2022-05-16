@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSect
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaInternaMinerales\FacturaVentaInternaMineralesTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaDebitoCredito\NotaDebitoCreditoTemplateResource;
 
 class TemplatesUtils {
@@ -55,6 +56,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::COMERCIAL_EXPORTACION_SERVICIOS:
                 return FacturaComercialExportacionServiciosTemplateResource::class;
+                break;
+            case TypeDocumentSector::NOTA_CONCILIACION:
+                return NotaConciliacionTemplateResource::class;
                 break;
             
             default:
