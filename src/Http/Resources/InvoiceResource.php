@@ -163,6 +163,16 @@ class InvoiceResource extends JsonResource
 
             // zona franca
             'numeroParteRecepcion' => $this->numeroParteRecepcion,
+
+            // nota conciliacion
+            
+            "numeroFacturaOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['numeroFacturaOriginal']:"",
+            "montoTotalOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['montoTotalOriginal']:"",
+            "codigoControl" => isset($this->external_invoice_data)?$this->external_invoice_data['codigoControl']:"",
+            "debitoFiscalIva" =>$this->debitoFiscalIva,
+            "creditoFiscalIva" =>$this->creditoFiscalIva,
+            "fechaEmisionOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['fechaEmisionOriginal']:"",
+            "montoTotalConciliado" =>$this->montoTotal,
         ];
     }
 }

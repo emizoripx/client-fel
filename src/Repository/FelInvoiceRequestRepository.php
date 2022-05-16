@@ -175,6 +175,8 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         
         $fel_invoice = FelInvoiceRequest::whereIdOrigin($invoice->recurring_id)->first();
         \Log::debug("invoice resources completing data : " . json_encode(new InvoiceResource($fel_invoice)));
+        //Fix, using same number of recurring invoice
+        $fel_invoice->numeroFactura = 0;
         return [
             'felData' => new InvoiceResource($fel_invoice)
         ];
