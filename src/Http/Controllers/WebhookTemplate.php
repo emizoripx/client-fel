@@ -15,20 +15,21 @@ class WebhookTemplate extends BaseController {
         \Log::debug("WEBHOOK TEMPLATE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT");
         \Log::debug("WEBHOOK TEMPLATE DATA: " .json_encode($request->get('data')));
         $data = $request->get('data');
+        \Log::debug("WEBHOOK TEMPLATE DATA PARAMETERS : ",[$data['company_id'], $data['host'], $templates]);
 
         $companies = \DB::table('fel_company')
-                        ->join('fel_company_tokens', 'fel_company.company_id', 'fel_company_tokens.account_id')
+                        ->join('fel_company_tokens','fel_company_tokens.account_id', '=', 'fel_company.company_id')
                         ->where('fel_company.fel_company_id', $data['company_id'])
                         ->where('fel_company_tokens.host', $data['host'])
-                        ->select('fel_company.company_id', 'fel_company.fel_company_id')
-                        ->get();
+                        ->select('fel_company.company_id', 'fel_company.fel_company_id');
         
         $templates = $data['templates'];
-
+        \Log::debug("Sql => " . json_encode($companies->toSql()));
+        $companies= $companies->get();
         \Log::debug("Cantidad Companies para actualizar: " . sizeof($companies));
         try {
             $array_templates = [];
-            if ($companies) {
+            if (sizeof($companies) > 0) {
                 \Log::debug("WEBHOOK TEMPLATE ITERATING COMPANIES");
                 foreach ($companies as $company) {
                     $company_id = $company->company_id;
