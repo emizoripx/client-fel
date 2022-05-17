@@ -488,7 +488,9 @@ class FelInvoiceRequest extends Model
 
     public function getBranchByCode()
     {
-        return FelBranch::whereCompanyId($this->company_id)->whereCodigo($this->codigoSucursal)->first();
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        \Log::debug( " Get Branch Code - Company ID:  ". $hashid->decode($this->company_id)[0]);
+        return FelBranch::whereCompanyId($hashid->decode($this->company_id)[0])->whereCodigo(strval($this->codigoSucursal))->first();
     }
     public function getLeyenda()
     {
@@ -497,18 +499,28 @@ class FelInvoiceRequest extends Model
 
      public function originalExternalInvoice()
     {
+        \Log::debug("Get Factura Origin External");
 
-        \Log::debug("tipo de archivo " , [$this->external_invoice_data, gettype($this->external_invoice_data)]);
         if ($this->facturaExterna == 1) {
+
+            $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+            $newInvoice = new Invoice();
+
             $new = new FelInvoiceRequest();
             $new->cuf = $this->numeroAutorizacionCuf;
+            $new->company_id = $hashid->encode($this->company_id);
             $new->numeroFactura = $this->external_invoice_data['numeroFacturaOriginal'];
             $new->fechaEmision = $this->external_invoice_data['fechaEmisionOriginal'];
             $new->montoTotal = $this-> external_invoice_data['montoTotalOriginal'] ;
             $new->codigoControl = $this->external_invoice_data['codigoControl'];
             $new->typeDocument = 2;
-            $new->details = (json_decode($this->attributes['detalles'], true))['conciliado'];
-            return $new;
+            $new->codigoSucursal = $this->codigoSucursal;
+            $new->detalles = (json_decode($this->attributes['detalles'], true))['original'];
+
+            $newInvoice->fel_invoice = $new;
+
+            return $newInvoice;
         }
         return [];
     }

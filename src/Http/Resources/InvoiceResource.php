@@ -166,13 +166,13 @@ class InvoiceResource extends JsonResource
 
             // nota conciliacion
             
-            "numeroFacturaOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['numeroFacturaOriginal']:"",
-            "montoTotalOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['montoTotalOriginal']:"",
-            "codigoControl" => isset($this->external_invoice_data)?$this->external_invoice_data['codigoControl']:"",
-            "debitoFiscalIva" =>$this->debitoFiscalIva,
-            "creditoFiscalIva" =>$this->creditoFiscalIva,
-            "fechaEmisionOriginal" => isset($this->external_invoice_data)?$this->external_invoice_data['fechaEmisionOriginal']:"",
-            "montoTotalConciliado" =>$this->montoTotal,
+            "numeroFacturaOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['numeroFacturaOriginal'] : null,
+            "montoTotalOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['montoTotalOriginal'] : null,
+            "codigoControl" =>  isset($this->external_invoice_data) ? $this->external_invoice_data['codigoControl'] : null,
+            "debitoFiscalIva" =>    isset($this->debitoFiscalIva) ? $this->debitoFiscalIva : null,
+            "creditoFiscalIva" =>   isset($this->creditoFiscalIva) ? $this->creditoFiscalIva : null,
+            "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
+            "montoTotalConciliado" =>   isset($this->montoTotal) ? $this->montoTotal : null,
         ];
     }
 }
