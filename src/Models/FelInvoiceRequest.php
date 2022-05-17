@@ -486,6 +486,21 @@ class FelInvoiceRequest extends Model
         return $extras_aux;
     }
 
+    public static function forceToArrayExtras($var)
+    {
+        $arr = [];
+        if ( is_array($var) )
+            return $var;
+
+        if (is_object($var)) {
+            foreach ($var as $key => $value) {
+                $arr[$key] = $value;
+            }
+        }
+            
+        return $arr;
+    }
+
     public function getBranchByCode()
     {
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
