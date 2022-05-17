@@ -13,7 +13,7 @@ class WebhookTemplate extends BaseController {
     public function updateTemplates ( Request $request) {
 
         \Log::debug("WEBHOOK TEMPLATE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT");
-
+        \Log::debug("WEBHOOK TEMPLATE DATA: " .json_encode($request->get('data')));
         $data = $request->get('data');
 
         $companies = \DB::table('fel_company')
@@ -29,10 +29,10 @@ class WebhookTemplate extends BaseController {
 
         $array_templates = [];
         if( $companies ) {
-
+            \Log::debug("WEBHOOK TEMPLATE ITERATING COMPANIES");
             foreach ($companies as $company) {
-                
                 $company_id = $company->company_id;
+                \Log::debug("WEBHOOK TEMPLATE COMPANY : ".$company_id);
                 $array_parsed = collect( $templates )->map( function( $item ) use ($company_id) {
 
                     $arr = (array) $item;
