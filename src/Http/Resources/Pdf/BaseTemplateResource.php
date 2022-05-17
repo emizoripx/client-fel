@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Http\Resources\Pdf;
 
 use EmizorIpx\ClientFel\Models\FelCaption;
+use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Utils\NumberUtils;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,7 +28,8 @@ class BaseTemplateResource extends JsonResource
 
         $extras = [];
 
-        $extras_aux = json_decode($fel_invoice->extras);
+        $extras_aux = FelInvoiceRequest::ensureIterable($fel_invoice->extras);
+        \Log::debug("extras ========> " . json_encode($extras_aux));
         if (is_array($extras_aux))
             $extras = $extras_aux;
 
