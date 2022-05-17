@@ -28,7 +28,7 @@ class BaseTemplateResource extends JsonResource
 
         $extras = [];
 
-        $extras_aux = FelInvoiceRequest::ensureIterable($fel_invoice->extras);
+        $extras_aux = FelInvoiceRequest::forceToArrayExtras(FelInvoiceRequest::ensureIterable($fel_invoice->extras));
         \Log::debug("extras ========> " . json_encode($extras_aux));
         if (is_array($extras_aux))
             $extras = $extras_aux;
