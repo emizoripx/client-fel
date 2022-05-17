@@ -357,14 +357,9 @@ class TypeDocumentSector
                         ->where('branch_code', $branch_code)
                         ->first();
 
-        // if(count($template) > 1){
-        //     $template = $template->where('branch_code', $branch_code)->all();
-        // }
-        
         if( empty($template) ){
-            return "templates/general/1/default.blade.php";
+            return "templates/general/". $document_sector . "/default.blade.php";
         }
-        \Log::debug($template->blade_resource);
 
         return $template->blade_resource;
 
