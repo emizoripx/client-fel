@@ -15,7 +15,7 @@ class WebhookTemplate extends BaseController {
         \Log::debug("WEBHOOK TEMPLATE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT");
         \Log::debug("WEBHOOK TEMPLATE DATA: " .json_encode($request->get('data')));
         $data = $request->get('data');
-        \Log::debug("WEBHOOK TEMPLATE DATA PARAMETERS : ",[$data['company_id'], $data['host'], $templates]);
+        \Log::debug("WEBHOOK TEMPLATE DATA PARAMETERS : ",[$data['company_id'], $data['host'], $data['templates']]);
 
         $companies = \DB::table('fel_company')
                         ->join('fel_company_tokens','fel_company_tokens.account_id', '=', 'fel_company.company_id')
