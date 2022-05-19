@@ -6,8 +6,6 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Request;
 use Carbon\Carbon;
 
-use function PHPSTORM_META\type;
-
 class WebhookTemplate extends BaseController {
 
     public function updateTemplates ( Request $request) {
@@ -21,25 +19,40 @@ class WebhookTemplate extends BaseController {
                         ->join('fel_company_tokens','fel_company_tokens.account_id', '=', 'fel_company.company_id')
                         ->where('fel_company.fel_company_id', $data['company_id'])
                         ->where('fel_company_tokens.host', $data['host'])
-                        ->select('fel_company.company_id', 'fel_company.fel_company_id');
+                        ->select('fel_company.company_id', 'fel_company.fel_company_id')
+                        ->get();
         
         $templates = $data['templates'];
-        \Log::debug("Sql => " . json_encode($companies->toSql()));
-        $companies= $companies->get();
-        \Log::debug("Cantidad Companies para actualizar: " . sizeof($companies));
-        try {
-            $array_templates = [];
-            if (sizeof($companies) > 0) {
+
+        // \Log::debug("Companies: " . json_encode($companies));
+
+        $array_templates = [];
+        if( sizeof($companies) > 0 ) {
+
+            try{
+
+                $doc_sector_codes = collect( $templates )->pluck('document_sector_code')->all();
+
+                $branch_codes = collect( $templates )->pluck('codigoSucursal')->all();
+
+                \Log::debug("Doc sector ", [$doc_sector_codes]);
+                \Log::debug("Branch sector ", [$branch_codes]);
+
                 \Log::debug("WEBHOOK TEMPLATE ITERATING COMPANIES");
                 foreach ($companies as $company) {
                     $company_id = $company->company_id;
                     \Log::debug("WEBHOOK TEMPLATE COMPANY : " . $company_id);
                     \Log::debug("WEBHOOK TEMPLATE COMPANY, templates : " , $templates);
-                    $array_parsed = collect($templates)->map(function ($item) use ($company_id) {
+
+                    \DB::table('fel_templates')->where('company_id', $company_id)->where( function ($query) use ($branch_codes, $doc_sector_codes) {
+                        $query->whereNotIn('branch_code', $branch_codes)->orWhereNotIn('document_sector_code', $doc_sector_codes);
+                    })->delete();
+
+                    $array_parsed = collect( $templates )->map( function( $item ) use ($company_id) {
 
                         $arr = (array) $item;
 
-                        $arr_temp = array_merge($arr, ['company_id' =>  $company_id, 'branch_code' => $item['codigoSucursal'], 'updated_at' => Carbon::now()->toDateTimeString()]);
+                        $arr_temp = array_merge($arr, [ 'company_id' =>  $company_id, 'branch_code' => $item['codigoSucursal'], 'updated_at' => Carbon::now()->toDateTimeString() ]);
                         unset($arr_temp['codigoSucursal']);
 
                         return $arr_temp;
@@ -48,13 +61,14 @@ class WebhookTemplate extends BaseController {
                     $array_templates = array_merge($array_templates, $array_parsed);
 
                     \Log::debug("Upated templates company ID: " . $company->company_id);
+
                 }
+
+                \DB::table('fel_templates')->upsert($array_templates, ['document_sector_code', 'company_id', 'branch_code'], ['display_name', 'blade_resource', 'updated_at']);
+
+            } catch (\Throwable $th) {
+                \Log::debug("errors in update templates " . $th->getMessage());
             }
-
-            \DB::table('fel_templates')->upsert($array_templates, ['document_sector_code', 'company_id', 'branch_code'], ['display_name', 'blade_resource', 'updated_at']);
-
-        } catch (\Throwable $th) {
-            \Log::debug("errors in update templates " . $th->getMessage());
         }
        
         return response()->json(['status' => true], 200);
