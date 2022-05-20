@@ -42,6 +42,7 @@ class FelInvoiceRequest extends Model
         'otrosDatos' => 'array',
         'costosGastosNacionales' => 'array',
         'costosGastosInternacionales' => 'array',
+        'data_specific_by_sector' => 'array',
     ];
 
     protected $access_token;

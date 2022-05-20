@@ -12,7 +12,8 @@ use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
-use EmizorIpx\ClientFel\Builders\HidrocarburosBuilder;
+use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
+use EmizorIpx\ClientFel\Builders\HidrocarburosNoIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
@@ -44,7 +45,7 @@ class TypeDocumentSector
     const HOTELES = 16;
     const HOSPITALES_CLINICAS = 17;
     const JUEGOS_AZAR = 18;
-    const HIDROCARBUROS = 19;
+    const HIDROCARBUROS_IEHD = 19;
     const EXPORTACION_MINERALES = 20;
     const VENTA_INTERNA_MINERALES = 21;
     const TELECOMUNICACIONES = 22;
@@ -57,6 +58,7 @@ class TypeDocumentSector
     const NOTA_CONCILIACION = 29;
     const SEGUROS = 34;
     const COMPRA_VENTA_BONIFICACIONES = 35;
+    const HIDROCARBUROS_NO_IEHD = 38;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -77,7 +79,7 @@ class TypeDocumentSector
         16 => "Factura de hoteles",
         17 => "Factura de Hospitales/Clínicas",
         18 => "Factura de Juegos de Azar",
-        19 => "Factura Hidrocarburos",
+        19 => "Factura De Hidrocarburos Alcanzada IEHD",
         20 => "Factura de exportación de minerales",
         21 => "Factura de venta interna de minerales",
         22 => "Factura telecomunicaciones",
@@ -90,6 +92,7 @@ class TypeDocumentSector
         29 => "Nota de Conciliación",
         34 => "Factura Seguros",
         35 => "Factura compra venta bonificaciones",
+        38 => "Factura De Hidrocarburos No Alcanzada IEHD",
     ];
 
     public static function getInstanceByCode($code):string
@@ -123,8 +126,8 @@ class TypeDocumentSector
             case static::SERVICIOS_BASICOS:
                 return ServiciosBasicosBuilder::class;
                 break;
-            case static::HIDROCARBUROS:
-                return HidrocarburosBuilder::class;
+            case static::HIDROCARBUROS_IEHD:
+                return HidrocarburosIehdBuilder::class;
                 break;
             case static::HOTELES:
                 return HotelesBuilder::class;
@@ -152,6 +155,9 @@ class TypeDocumentSector
                 break;
             case static::COMPRA_VENTA_BONIFICACIONES:
                 return CompraVentaBonificacionesBuilder::class;
+                break;
+            case static::HIDROCARBUROS_NO_IEHD :
+                return HidrocarburosNoIehdBuilder::class ;
                 break;
             
             default:
@@ -191,8 +197,8 @@ class TypeDocumentSector
             case static::SERVICIOS_BASICOS:
                 return 'servicios-basicos';
                 break;
-            case static::HIDROCARBUROS:
-                return 'hidrocarburos';
+            case static::HIDROCARBUROS_IEHD:
+                return 'hidrocarburo-iehd';
                 break;
             case static::HOTELES:
                 return 'hoteles';
@@ -226,6 +232,9 @@ class TypeDocumentSector
                 break;
             case static::COMPRA_VENTA_BONIFICACIONES:
                 return 'compra-venta-bonificacion';
+                break;
+            case static::HIDROCARBUROS_NO_IEHD:
+                return 'hidrocarburo-noiehd';
                 break;
 
             default:
@@ -285,7 +294,7 @@ class TypeDocumentSector
             case static::SERVICIOS_BASICOS:
                 return 'servicios-basicos';
                 break;
-            case static::HIDROCARBUROS:
+            case static::HIDROCARBUROS_IEHD:
                 return 'hidrocarburos';
                 break;
             case static::HOTELES:
@@ -431,8 +440,8 @@ class TypeDocumentSector
             case static::JUEGOS_AZAR:
                 return 'FACTURA DE JUEGOS DE AZAR';
                 break;
-            case static::HIDROCARBUROS:
-                return 'FACTURA HIDROCARBUROS';
+            case static::HIDROCARBUROS_IEHD:
+                return 'FACTURA DE HIDROCARBUROS ALCANZADA IEHD';
                 break;
             
             case static::EXPORTACION_MINERALES:
@@ -473,6 +482,9 @@ class TypeDocumentSector
                 break;
             case static::COMPRA_VENTA_BONIFICACIONES:
                 return 'FACTURA COMPRA-VENTA BONIFICACIONES';
+                break;
+            case static::HIDROCARBUROS_NO_IEHD:
+                return 'FACTURA DE HIDROCARBUROS NO ALCANZADA IEHD';
                 break;
             
             

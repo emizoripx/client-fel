@@ -1,11 +1,10 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosNoIehd;
 
-use EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos\DetalleHidrocarburosResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HidrocarburosResource extends JsonResource
+class HidrocarburosNoIehdResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,17 +15,6 @@ class HidrocarburosResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "direccionComprador" => $this->direccionComprador,
-            "ruex" => $this->ruex,
-            "nim" => $this->nim,
-            "concentradoGranel" => $this->concentradoGranel,
-            "origen" => $this->origen,
-            "puertoTransito" => $this->puertoTransito,
-            "puertoDestino" => $this->puertoDestino,
-            "paisDestino" => $this->paisDestino,
-            "incoterm" => $this->incoterm,
-            "tipoCambioANB" => $this->tipoCambioANB,
-            "numeroLote" => $this->numeroLote,
             "fechaEmision"=> $this->fechaEmision,
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
@@ -34,7 +22,6 @@ class HidrocarburosResource extends JsonResource
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
             "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
-            "montoIehd" => $this->montoIehd ? round($this->montoDescuento, 2): null,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,
             "numeroDocumento" => $this->numeroDocumento,
@@ -47,15 +34,15 @@ class HidrocarburosResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            'detalles' => DetalleHidrocarburosResource::collection(collect($this->detalles)),
+            'detalles' => DetalleHidrocarburosNoIehdResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
-            "ciudad" => $this->ciudad,
-            "nombrePropietario" => $this->nombrePropietario,
-            "nombreRepresentanteLegal" => $this->nombreRepresentanteLegal,
-            "condicionPago" => $this->condicionPago,
-            "periodoEntrega" => $this->periodoEntrega,
+            "ciudad" => isset($this->data_specific_by_sector['ciudad']) ? $this->data_specific_by_sector['ciudad'] : '',
+            "nombrePropietario" => isset($this->data_specific_by_sector['nombrePropietario']) ? $this->data_specific_by_sector['nombrePropietario'] : '',
+            "nombreRepresentanteLegal" => isset($this->data_specific_by_sector['nombreRepresentanteLegal']) ? $this->data_specific_by_sector['nombreRepresentanteLegal'] : '',
+            "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
+            "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
         ];
     }
 }

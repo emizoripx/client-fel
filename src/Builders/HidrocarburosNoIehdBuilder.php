@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class HidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class HidrocarburosNoIehdBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -19,6 +19,7 @@ class HidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
 
     public function prepare(): FelInvoiceRequest
     {
+
         if ($this->source_data['update']){
             $modelFelInvoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->first();
 
@@ -40,13 +41,14 @@ class HidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
     public function processInput(): FelInvoiceRequest
     {
         $input = array_merge(
-            $this->input,[
-                "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
-                "nombrePropietario" => $this->source_data['fel_data_parsed']['nombrePropietario'],
-                "nombreRepresentanteLegal" => $this->source_data['fel_data_parsed']['nombreRepresentanteLegal'],
-                "condicionPago" => $this->source_data['fel_data_parsed']['condicionPago'],
-                "periodoEntrega" => $this->source_data['fel_data_parsed']['periodoEntrega'],
+            $this->input, ['data_specific_by_sector' => [
+                    "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                    "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
+                    "nombrePropietario" => $this->source_data['fel_data_parsed']['nombrePropietario'],
+                    "nombreRepresentanteLegal" => $this->source_data['fel_data_parsed']['nombreRepresentanteLegal'],
+                    "condicionPago" => $this->source_data['fel_data_parsed']['condicionPago'],
+                    "periodoEntrega" => $this->source_data['fel_data_parsed']['periodoEntrega'],
+                ]
             ],
             $this->getDetailsAndTotals()
         );
@@ -80,15 +82,13 @@ class HidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             $new->codigoProducto =  $product_sync->codigo_producto  . ""; // this values was added only frontend Be careful
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
-            $new->porcentajeIehd =  $detail->porcentajeIehd;
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,5);
+            $new->subTotal = round((float)$detail->line_total,2);
             $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
@@ -97,14 +97,13 @@ class HidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             $total += $new->subTotal;
         }
 
-        $totalsujetoiva = $total -  ( $this->source_data['fel_data_parsed']['montoIehd'] ? $this->source_data['fel_data_parsed']['montoIehd'] : 0 );
+        $totalsujetoiva = $total ;
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
-            "montoIehd" => $this->source_data['fel_data_parsed']['montoIehd'],
-            "montoTotalSujetoIva" => $totalsujetoiva ,
+            "montoTotalSujetoIva" => $totalsujetoiva,
             "detalles" => $details
         ];
     }

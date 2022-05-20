@@ -11,7 +11,8 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVentaBonificaciones\Co
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
-use EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos\HidrocarburosResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosIehd\HidrocarburosIehdResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosNoIehd\HidrocarburosNoIehdResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion\NotaConciliacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
@@ -59,8 +60,8 @@ class TypeDocumentResource extends JsonResource
             case TypeDocumentSector::SERVICIOS_BASICOS:
                 return new ServiciosBasicosResource($this);
                 break;
-            case TypeDocumentSector::HIDROCARBUROS:
-                return new HidrocarburosResource($this);
+            case TypeDocumentSector::HIDROCARBUROS_IEHD:
+                return new HidrocarburosIehdResource($this);
                 break;
             case TypeDocumentSector::VENTA_INTERNA_MINERALES:
                 return new VentaMineralesResource($this);
@@ -88,6 +89,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES;
                 return new CompraVentaBonificacionesResource($this);
+                break;
+            case TypeDocumentSector::HIDROCARBUROS_NO_IEHD ;
+                return new HidrocarburosNoIehdResource($this);
                 break;
             default:
                 return new CompraVentaResource($this);
