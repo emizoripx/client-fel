@@ -1,10 +1,10 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hidrocarburos;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosNoIehd;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetalleHidrocarburosResource extends JsonResource
+class DetalleHidrocarburosNoIehdResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,7 +24,6 @@ class DetalleHidrocarburosResource extends JsonResource
             "subTotal" => round($this->resource['subTotal'], 2),
             "montoDescuento" => !empty($this->resource['montoDescuento']) ? round($this->resource['montoDescuento'], 2) : null,
             "unidadMedida" => $this->resource['unidadMedida'],
-            "porcentajeIehd" => $this->resource['porcentajeIehd'],
         ];
     }
 }
