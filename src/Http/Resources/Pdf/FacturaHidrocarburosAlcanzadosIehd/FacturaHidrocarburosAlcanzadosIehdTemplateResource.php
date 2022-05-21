@@ -23,12 +23,12 @@ class FacturaHidrocarburosAlcanzadosIehdTemplateResource extends BaseTemplateRes
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
             "detalles" => DetalleFacturaHidrocarburosAlcanzadosIehdTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve(),
             "currencyShortCode" => "Bs",
-            "ciudad" => isset($fel_invoice->data_specific_by_sector->ciudad) ? $fel_invoice->data_specific_by_sector->ciudad : '',
-            "nombrePropietario" => isset($fel_invoice->data_specific_by_sector->nombrePropietario) ? $fel_invoice->data_specific_by_sector->nombrePropietario : '',
-            "nombreRepresentanteLegal" => isset($fel_invoice->data_specific_by_sector->nombreRepresentanteLegal) ? $fel_invoice->data_specific_by_sector->nombreRepresentanteLegal : '',
-            "condicionPago" => isset($fel_invoice->data_specific_by_sector->condicionPago) ? $fel_invoice->data_specific_by_sector->condicionPago : '',
-            "periodoEntrega" => isset($fel_invoice->data_specific_by_sector->periodoEntrega) ? $fel_invoice->data_specific_by_sector->periodoEntrega : '',
-            "montoIehd" => isset($fel_invoice->data_specific_by_sector->montoIehd) ? round($fel_invoice->data_specific_by_sector->montoIehd, 2) : '0.00',
+            "ciudad" => isset($fel_invoice->data_specific_by_sector['ciudad']) ? $fel_invoice->data_specific_by_sector['ciudad'] : '',
+            "nombrePropietario" => isset($fel_invoice->data_specific_by_sector['nombrePropietario']) ? $fel_invoice->data_specific_by_sector['nombrePropietario'] : '',
+            "nombreRepresentanteLegal" => isset($fel_invoice->data_specific_by_sector['nombreRepresentanteLegal']) ? $fel_invoice->data_specific_by_sector['nombreRepresentanteLegal'] : '',
+            "condicionPago" => isset($fel_invoice->data_specific_by_sector['condicionPago']) ? $fel_invoice->data_specific_by_sector['condicionPago'] : '',
+            "periodoEntrega" => isset($fel_invoice->data_specific_by_sector['periodoEntrega']) ? $fel_invoice->data_specific_by_sector['periodoEntrega'] : '',
+            "montoIehd" => isset($fel_invoice->data_specific_by_sector['montoIehd']) ? round($fel_invoice->data_specific_by_sector['montoIehd'], 2) : '0.00',
         ]);
         
     }

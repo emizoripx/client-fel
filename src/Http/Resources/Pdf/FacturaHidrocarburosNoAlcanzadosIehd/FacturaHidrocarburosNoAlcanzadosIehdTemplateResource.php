@@ -23,11 +23,11 @@ class FacturaHidrocarburosNoAlcanzadosIehdTemplateResource extends BaseTemplateR
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
             "detalles" => DetalleFacturaHidrocarburosNoAlcanzadosIehdTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve(),
             "currencyShortCode" => "Bs",
-            "ciudad" => isset($fel_invoice->data_specific_by_sector->ciudad) ? $fel_invoice->data_specific_by_sector->ciudad : '',
-            "nombrePropietario" => isset($fel_invoice->data_specific_by_sector->nombrePropietario) ? $fel_invoice->data_specific_by_sector->nombrePropietario : '',
-            "nombreRepresentanteLegal" => isset($fel_invoice->data_specific_by_sector->nombreRepresentanteLegal) ? $fel_invoice->data_specific_by_sector->nombreRepresentanteLegal : '',
-            "condicionPago" => isset($fel_invoice->data_specific_by_sector->condicionPago) ? $fel_invoice->data_specific_by_sector->condicionPago : '',
-            "periodoEntrega" => isset($fel_invoice->data_specific_by_sector->periodoEntrega) ? $fel_invoice->data_specific_by_sector->periodoEntrega : '',
+            "ciudad" => isset($fel_invoice->data_specific_by_sector['ciudad']) ? $fel_invoice->data_specific_by_sector['ciudad'] : '',
+            "nombrePropietario" => isset($fel_invoice->data_specific_by_sector['nombrePropietario']) ? $fel_invoice->data_specific_by_sector['nombrePropietario'] : '',
+            "nombreRepresentanteLegal" => isset($fel_invoice->data_specific_by_sector['nombreRepresentanteLegal']) ? $fel_invoice->data_specific_by_sector['nombreRepresentanteLegal'] : '',
+            "condicionPago" => isset($fel_invoice->data_specific_by_sector['condicionPago']) ? $fel_invoice->data_specific_by_sector['condicionPago'] : '',
+            "periodoEntrega" => isset($fel_invoice->data_specific_by_sector['periodoEntrega']) ? $fel_invoice->data_specific_by_sector['periodoEntrega'] : '',
         ]);
         
     }

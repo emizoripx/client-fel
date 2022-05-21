@@ -173,6 +173,15 @@ class InvoiceResource extends JsonResource
             "creditoFiscalIva" =>   isset($this->creditoFiscalIva) ? $this->creditoFiscalIva : null,
             "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
             "montoTotalConciliado" =>   isset($this->montoTotal) ? $this->montoTotal : null,
+
+            // HIDROCARBUROS
+
+            "ciudad" => isset($this->data_specific_by_sector['ciudad']) ? $this->data_specific_by_sector['ciudad'] : '',
+            "nombrePropietario" => isset($this->data_specific_by_sector['nombrePropietario']) ? $this->data_specific_by_sector['nombrePropietario'] : '',
+            "nombreRepresentanteLegal" => isset($this->data_specific_by_sector['nombreRepresentanteLegal']) ? $this->data_specific_by_sector['nombreRepresentanteLegal'] : '',
+            "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
+            "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
+            "montoIehd" => isset($this->data_specific_by_sector['montoIehd']) ?  (string)(round($this->data_specific_by_sector['montoIehd'], 2)) : '0.00',
         ];
     }
 }
