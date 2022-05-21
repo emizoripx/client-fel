@@ -11,7 +11,7 @@ class DetalleFacturaHidrocarburosAlcanzadosIehdTemplateResource extends BaseDeta
         $common = parent::toArray($request);
 
         return array_merge( $common,
-            ["montoDescuento" => !empty($this->resource['montoDescuento']) ? round($this->resource['montoDescuento'], 2) : null]
+            ["montoDescuento" => !empty($this->resource->montoDescuento) ? round($this->resource->montoDescuento, 2) : null]
         );
         
     }
