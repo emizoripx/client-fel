@@ -9,6 +9,8 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionServicios\
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\FacturaComercializacionHidrocarburosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
@@ -59,6 +61,12 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::NOTA_CONCILIACION:
                 return NotaConciliacionTemplateResource::class;
+                break;
+            case TypeDocumentSector::HIDROCARBUROS_IEHD:
+                return FacturaHidrocarburosAlcanzadosIehdTemplateResource::class;
+                break;
+            case TypeDocumentSector::HIDROCARBUROS_NO_IEHD:
+                return FacturaHidrocarburosNoAlcanzadosIehdTemplateResource::class;
                 break;
             
             default:
