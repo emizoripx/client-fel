@@ -20,7 +20,6 @@ class ComercializacionHidrocarburosResource extends JsonResource
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
             "montoTotalSujetoIvaLey317" => round($this->montoTotalSujetoIvaLey317, 2),
-            "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,

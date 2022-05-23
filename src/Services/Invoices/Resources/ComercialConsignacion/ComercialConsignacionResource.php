@@ -22,7 +22,6 @@ class ComercialConsignacionResource extends JsonResource
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
             "montoTotalSujetoIva" => round($this->montoEfectivoCreditoDebito, 2),
-            "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,
