@@ -54,7 +54,7 @@ class BaseTemplateResource extends JsonResource
             "nombreRazonSocial" => isset($fel_invoice->nombreRazonSocial) ? $fel_invoice->nombreRazonSocial : '',
             "codigoCliente" => isset($fel_invoice->codigoCliente) ? $fel_invoice->codigoCliente : '',
             "subTotal" => isset($fel_invoice->montoTotal) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional , 2) : '',
-            "descuentoAdicional" => isset($fel_invoice->descuentoAdicional) ? NumberUtils::number_format_custom( (float) $fel_invoice->descuentoAdicional , 2) : '',
+            "descuentoAdicional" => isset($fel_invoice->descuentoAdicional) ? NumberUtils::number_format_custom( (float) $fel_invoice->descuentoAdicional , 2) : '0.00',
             "leyendaSIN" => FelCaption::CAPTION_SIN,
             "leyenda" => isset($fel_invoice->codigoLeyenda) ? FelCaption::getCaptionDescription($fel_invoice->codigoLeyenda) : '',
             "leyendaSIN2" => isset($fel_invoice->emission_type) ? $fel_invoice->getLeyendaEmissionType() : '',
