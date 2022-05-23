@@ -42,13 +42,13 @@ class HidrocarburosNoIehdBuilder extends BaseFelInvoiceBuilder implements FelInv
     {
         $input = array_merge(
             $this->input, ['data_specific_by_sector' => [
-                    "cafc" => $this->source_data['fel_data_parsed']['cafc'],
                     "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
                     "nombrePropietario" => $this->source_data['fel_data_parsed']['nombrePropietario'],
                     "nombreRepresentanteLegal" => $this->source_data['fel_data_parsed']['nombreRepresentanteLegal'],
                     "condicionPago" => $this->source_data['fel_data_parsed']['condicionPago'],
                     "periodoEntrega" => $this->source_data['fel_data_parsed']['periodoEntrega'],
-                ]
+                    ],
+                    "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->getDetailsAndTotals()
         );
