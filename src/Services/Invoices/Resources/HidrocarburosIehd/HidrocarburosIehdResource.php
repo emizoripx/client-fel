@@ -20,7 +20,6 @@ class HidrocarburosIehdResource extends JsonResource
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
             "montoTotal" => round($this->montoTotal, 2),
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
-            "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
             "montoIehd" => isset($this->data_specific_by_sector['montoIehd']) ? round($this->data_specific_by_sector['montoIehd'], 2) : '0.00',
             "nombreRazonSocial" => $this->nombreRazonSocial,
@@ -44,6 +43,7 @@ class HidrocarburosIehdResource extends JsonResource
             "nombreRepresentanteLegal" => isset($this->data_specific_by_sector['nombreRepresentanteLegal']) ? $this->data_specific_by_sector['nombreRepresentanteLegal'] : '',
             "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
             "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
+            "descuentoAdicional" => round($this->descuentoAdicional,2),
         ];
     }
 }

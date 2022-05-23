@@ -32,7 +32,6 @@ class SegurosResource extends JsonResource
             "montoTotal" => round($this->montoTotal, 2),
             "ajusteAfectacionIva" => round($this->ajusteAfectacionIva, 2),
             "montoTotalSujetoIva" => round($this->montoTotalSujetoIva, 2),
-            "montoDescuento" => round($this->montoDescuento, 2),
             "numeroFactura" => $this->numeroFactura,
             "nombreRazonSocial" => $this->nombreRazonSocial,
             "codigoTipoDocumentoIdentidad" => $this->codigoTipoDocumentoIdentidad,
