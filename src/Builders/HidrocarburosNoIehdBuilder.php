@@ -49,6 +49,7 @@ class HidrocarburosNoIehdBuilder extends BaseFelInvoiceBuilder implements FelInv
                     "periodoEntrega" => $this->source_data['fel_data_parsed']['periodoEntrega'],
                     ],
                     "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                    "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
             ],
             $this->getDetailsAndTotals()
         );
