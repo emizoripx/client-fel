@@ -12,7 +12,7 @@ class DetalleFacturaHidrocarburosAlcanzadosIehdTemplateResource extends BaseDeta
 
         return array_merge( $common,
             [
-                "porcentajeIehd" => $this->resource->porcentajeIehd,
+                "porcentajeIehd" => $this->porcentajeIehd,
             ]
         );
         
