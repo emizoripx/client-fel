@@ -28,7 +28,7 @@ class FacturaHidrocarburosAlcanzadosIehdTemplateResource extends BaseTemplateRes
             "nombreRepresentanteLegal" => isset($fel_invoice->data_specific_by_sector['nombreRepresentanteLegal']) ? $fel_invoice->data_specific_by_sector['nombreRepresentanteLegal'] : '',
             "condicionPago" => isset($fel_invoice->data_specific_by_sector['condicionPago']) ? $fel_invoice->data_specific_by_sector['condicionPago'] : '',
             "periodoEntrega" => isset($fel_invoice->data_specific_by_sector['periodoEntrega']) ? $fel_invoice->data_specific_by_sector['periodoEntrega'] : '',
-            "montoIehd" => isset($fel_invoice->data_specific_by_sector['montoIehd']) ? round($fel_invoice->data_specific_by_sector['montoIehd'], 2) : '0.00',
+            "montoIehd" => isset($fel_invoice->data_specific_by_sector['montoIehd']) ? NumberUtils::number_format_custom( (float) $fel_invoice->data_specific_by_sector['montoIehd'], 2) : '0.00',
         ]);
         
     }
