@@ -108,7 +108,7 @@ class HidrocarburosIehdBuilder extends BaseFelInvoiceBuilder implements FelInvoi
             $montoIedh += ($new->subTotal * $new->porcentajeIehd);
         }
 
-        $total = round($total +  $montoIedh, 2) ;
+        $total = round($total +  $montoIedh, 2) - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2) ;
 
         \Log::debug("Monto IEHD >>>>>>>>>>>>>>>>>>>>>>>> " . $montoIedh);
 

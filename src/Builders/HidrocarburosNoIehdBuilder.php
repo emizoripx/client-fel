@@ -97,7 +97,7 @@ class HidrocarburosNoIehdBuilder extends BaseFelInvoiceBuilder implements FelInv
             $total += $new->subTotal;
         }
 
-        $totalsujetoiva = $total ;
+        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2) ;
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
