@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionMinerales\
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionServicios\FacturaComercialExportacionServiciosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\FacturaComercializacionHidrocarburosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\FacturaCompraVentaBonificacionesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
@@ -68,7 +69,9 @@ class TemplatesUtils {
             case TypeDocumentSector::HIDROCARBUROS_NO_IEHD:
                 return FacturaHidrocarburosNoAlcanzadosIehdTemplateResource::class;
                 break;
-            
+            case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES:
+                return FacturaCompraVentaBonificacionesTemplateResource::class;
+
             default:
                 return FacturaCompraVentaTemplateResource::class;
                 break;
