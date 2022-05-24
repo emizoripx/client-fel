@@ -3,7 +3,7 @@
 namespace EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones;
 
 use EmizorIpx\ClientFel\Http\Resources\Pdf\BaseDetalleTemplateResource;
-
+use EmizorIpx\ClientFel\Utils\NumberUtils;
 class DetalleFacturaCompraVentaBonificacionesTemplateResource extends BaseDetalleTemplateResource {
 
     public function toArray($request)
