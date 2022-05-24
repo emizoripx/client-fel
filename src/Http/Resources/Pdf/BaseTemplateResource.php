@@ -33,6 +33,7 @@ class BaseTemplateResource extends JsonResource
         if (is_array($extras_aux))
             $extras = $extras_aux;
 
+        \Log::debug("PAYMENT QR " . json_encode($this->getPaymentQR()));
 
         return array_merge([
             "companyLogo" => isset($this->company) ? 'data:image/jpg;base64,' . base64_encode(file_get_contents($this->company->present()->logo())) : '',
