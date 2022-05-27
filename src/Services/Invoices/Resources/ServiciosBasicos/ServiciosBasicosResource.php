@@ -68,6 +68,7 @@ class ServiciosBasicosResource extends JsonResource
             "detalleAjusteSujetoIva" => $this->detalleAjusteSujetoIva,
             "otrosPagosNoSujetoIva" => $this->otrosPagosNoSujetoIva,
             "detalleOtrosPagosNoSujetoIva" => $this->detalleOtrosPagosNoSujetoIva,
+            "extras" => json_decode($this->extras)
         ];
     }
 }

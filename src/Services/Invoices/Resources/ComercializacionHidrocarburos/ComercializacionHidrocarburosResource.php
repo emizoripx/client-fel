@@ -41,6 +41,7 @@ class ComercializacionHidrocarburosResource extends JsonResource
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
             "descuentoAdicional" => round($this->descuentoAdicional,2),
+            "extras" => json_decode($this->extras)
         ];
     }
 }

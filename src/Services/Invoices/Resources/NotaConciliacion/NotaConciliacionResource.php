@@ -35,7 +35,8 @@ class NotaConciliacionResource extends JsonResource
             "debitoFiscalIva" => $this->debitoFiscalIva,
             "creditoFiscalIva" => $this->creditoFiscalIva,
             "montoTotalConciliado" => round($this->montoTotal, 2),
-            "numeroNota" => $this->numeroFactura
+            "numeroNota" => $this->numeroFactura,
+            "extras" => json_decode($this->extras)
         ];
     }
 }
