@@ -55,6 +55,7 @@ class HotelesResource extends JsonResource
             "cantidadMayores" => $this->cantidadMayores ,
             "cantidadMenores" => $this->cantidadMenores ,
             "fechaIngresoHospedaje" => $this->fechaIngresoHospedaje ,
+            "extras" => json_decode($this->extras)
         ];
     }
 }

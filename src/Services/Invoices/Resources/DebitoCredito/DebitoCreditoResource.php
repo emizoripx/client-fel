@@ -31,6 +31,7 @@ class DebitoCreditoResource extends JsonResource
             "emailCliente" => $this->emailCliente,
             "codigoExcepcion" => $this->codigoExcepcion,
             "complemento" => $this->complemento,
+            "extras" => json_decode($this->extras)
         ];
     }
 }
