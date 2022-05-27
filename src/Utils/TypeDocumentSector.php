@@ -363,7 +363,7 @@ class TypeDocumentSector
         $template = \DB::table('fel_templates')
                         ->where('company_id', $company_id)
                         ->where('document_sector_code', $document_sector)
-                        ->where('branch_code', $branch_code)
+                        // ->where('branch_code', $branch_code)
                         ->first();
 
         if( empty($template) ){

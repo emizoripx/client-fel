@@ -41,6 +41,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "mermaPorcentaje" => NumberUtils::number_format_custom( (float) $fel_invoice->mermaPorcentaje,2),
             "mermaValor" => NumberUtils::number_format_custom( (float) $fel_invoice->mermaValor, 2),
             "kilosNetosSecos" => NumberUtils::number_format_custom( (float) $fel_invoice->kilosNetosSecos, 2),
+            "kilosSecos" => NumberUtils::number_format_custom( (float) ($fel_invoice->kilosNetosHumedos- $fel_invoice->humedadValor), 2),
 
             "subTotalLiteral" => to_word( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2, $fel_invoice->codigoMoneda),
             "subTotalBsLiteral" => to_word( (float) (collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio), 2, 1),

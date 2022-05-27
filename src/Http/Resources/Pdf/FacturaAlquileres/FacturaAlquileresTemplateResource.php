@@ -22,6 +22,9 @@ class FacturaAlquileresTemplateResource extends BaseTemplateResource {
             "totalPagar" => NumberUtils::number_format_custom( (float) ($fel_invoice->montoTotal - $fel_invoice->montoGiftCard) , 2),
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
             "periodoFacturado" => $fel_invoice->periodoFacturado,
+            "codigoMoneda" => $this->codigoMoneda,
+            "monedaDescripcion" => strtoupper(currency_description($fel_invoice->codigoMoneda)),
+            "montoTotalMoneda" => NumberUtils::number_format_custom((float) $fel_invoice->montoTotalMoneda, 2),
             "detalles" => DetalleFacturaAlquileresTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
         ]);
 

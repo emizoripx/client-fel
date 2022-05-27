@@ -66,7 +66,7 @@ class BaseTemplateResource extends JsonResource
             "notasPublicas" => isset($this->public_notes) ? $this->public_notes : null,
             "piePagina" => !empty($this->footer) ? $this->footer : null,
             "paymnetQr" => $this->getPaymentQR(),
-            "displayBusinessName" => isset($this->company->company_detail->displayBusinessName) ? $this->company->company_detail->displayBusinessName : null,
+            "displayBusinessName" => isset($this->company->company_detail->business_name) ? 1 : 0,
             "currencyShortCode" => "Bs",
 
         ], $extras);
