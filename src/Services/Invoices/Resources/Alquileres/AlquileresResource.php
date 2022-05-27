@@ -40,6 +40,7 @@ class AlquileresResource extends JsonResource
             "codigoExcepcion" => $this->codigoExcepcion,
             "descuentoAdicional" => round($this->descuentoAdicional,2),
             "periodoFacturado" => $this->periodoFacturado ,
+            "extras" => json_decode($this->extras)
         ];
     }
 }

@@ -44,6 +44,7 @@ class HidrocarburosIehdResource extends JsonResource
             "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
             "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
             "descuentoAdicional" => round($this->descuentoAdicional,2),
+            "extras" => json_decode($this->extras)
         ];
     }
 }

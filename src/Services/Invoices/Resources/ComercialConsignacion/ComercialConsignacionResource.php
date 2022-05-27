@@ -39,7 +39,8 @@ class ComercialConsignacionResource extends JsonResource
             'detalles' => DetalleComercialConsignacionResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
-            "codigoExcepcion" => $this->codigoExcepcion
+            "codigoExcepcion" => $this->codigoExcepcion,
+            "extras" => json_decode($this->extras)
         ];
     }
 }

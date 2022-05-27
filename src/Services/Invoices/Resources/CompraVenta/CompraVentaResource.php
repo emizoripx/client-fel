@@ -50,6 +50,7 @@ class CompraVentaResource extends JsonResource
             "codigoExcepcion" => $this->codigoExcepcion,
             "montoGiftCard" => round($this->montoGiftCard,2),
             "descuentoAdicional" => round($this->descuentoAdicional,2),
+            "extras" => json_decode($this->extras)
         ];
     }
 }
