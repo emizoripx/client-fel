@@ -4,6 +4,7 @@ use EmizorIpx\ClientFel\Models\BitacoraLog;
 use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Utils\Currencies;
+use EmizorIpx\ClientFel\Utils\InvoiceUtils;
 use EmizorIpx\ClientFel\Utils\NumberToWord;
 
 if (!function_exists('bitacora_info')) {
@@ -55,5 +56,11 @@ if(!function_exists('currency_description_plural')){
 if(!function_exists('country')){
     function country($codigo){
         return Country::getDescriptionCountry($codigo);
+    }
+}
+
+if(!function_exists('emission_date_to_literal')){
+    function emission_date_to_literal($fecha_emision = null){
+        return InvoiceUtils::getFechaEmisionLiteral( $fecha_emision);
     }
 }
