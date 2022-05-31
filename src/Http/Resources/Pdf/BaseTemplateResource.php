@@ -50,6 +50,7 @@ class BaseTemplateResource extends JsonResource
             "numeroFactura" => isset($fel_invoice->numeroFactura) ? $fel_invoice->numeroFactura : '',
             "cuf" => is_null($fel_invoice->cuf) ? null : $fel_invoice->cuf ,
             "fechaEmision" => isset($fel_invoice->fechaEmision) ?  $fel_invoice->getFechaEmisionFormated() : '',
+            "fechaEmisionNotFormat" => $fel_invoice->fechaEmision,
             "numeroDocumento" => isset($fel_invoice->numeroDocumento) ? $fel_invoice->numeroDocumento : '',
             "complemento" => isset($fel_invoice->complemento) ? $fel_invoice->complemento : '' ,
             "nombreRazonSocial" => isset($fel_invoice->nombreRazonSocial) ? $fel_invoice->nombreRazonSocial : '',
