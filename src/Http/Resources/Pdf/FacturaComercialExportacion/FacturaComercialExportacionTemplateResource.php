@@ -33,7 +33,7 @@ class FacturaComercialExportacionTemplateResource extends BaseTemplateResource {
             "incotermDetalle" => $fel_invoice->incoterm_detalle,
             "direccionComprador" => $fel_invoice->direccionComprador,
             "puertoDestino" => $fel_invoice->puertoDestino,
-            "monedaDescripcion" => strtoupper(currency_description( $fel_invoice->codigoMoneda )),
+            "monedaDescripcion" => strtoupper($fel_invoice->getExchangeDescription()),
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
             "montoDetalle" => NumberUtils::number_format_custom( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') , 2) ,
             "costosGastosNacionales" => $array_costosGastosNacionales,

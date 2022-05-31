@@ -17,7 +17,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
         $common['subTotal'] = NumberUtils::number_format_custom( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2);
 
         return array_merge($common, [
-            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACIÓN" : "FACTURA EXPORTACIÓN",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACIÓN" : "FACTURA COMERCIAL DE EXPORTACIÓN",
             "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho a Crédito Fiscal)",
             "ruex" => $fel_invoice->ruex,
             "nim" => $fel_invoice->nim,
@@ -28,7 +28,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "incoterm" => $fel_invoice->incoterm,
             "puertoDestino" => $fel_invoice->puertoDestino,
             "destinyCountry" => $fel_invoice->paisDestino ? country($fel_invoice->paisDestino) : '---',
-            "monedaDescripcion" => strtoupper(currency_description( $fel_invoice->codigoMoneda )),
+            "monedaDescripcion" => strtoupper($fel_invoice->getExchangeDescription()),
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
             "tipoCambioANB" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambioANB, 2),
             "pesoBrutoKg" => isset($fel_invoice->pesoBrutoKg) ? NumberUtils::number_format_custom( (float) $fel_invoice->pesoBrutoKg, 2) : '',

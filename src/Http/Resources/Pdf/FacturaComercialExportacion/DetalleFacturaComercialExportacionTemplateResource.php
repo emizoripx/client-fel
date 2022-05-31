@@ -14,7 +14,7 @@ class DetalleFacturaComercialExportacionTemplateResource extends BaseDetalleTemp
 
         $common['cantidad'] = NumberUtils::number_format_custom($this->cantidad, 5);
         $common['precioUnitario'] =intval($this->precioUnitario) < $this->precioUnitario ? NumberUtils::number_format_custom( (float) $this->precioUnitario, 5   ) : NumberUtils::number_format_custom( (float) $this->precioUnitario, 5);
-        $common["montoDescuento"] = isset($this->montoDescuento) ?  NumberUtils::number_format_custom( (float) $this->montoDescuento, 5) : '0.0000';
+        $common["montoDescuento"] = isset($this->montoDescuento) ?  NumberUtils::number_format_custom( (float) $this->montoDescuento, 5) : '0.00000';
         $common["subTotal"] = NumberUtils::number_format_custom( (float) $this->subTotal, 5);
 
         return array_merge($common, [
