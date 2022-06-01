@@ -27,6 +27,15 @@ trait InvoiceValidateStateTrait
                 $invoice = Invoice::withTrashed()->where('id', $fel_invoice->id_origin)->first();
                 $invoice->service()->reverseCancellation()->save();
                 break;
+
+            case InvoiceStates::INVOICE_VALID_STATUS_CODE :
+
+                $invoice = Invoice::withTrashed()->where('id', $fel_invoice->id_origin)->first();
+                if( $invoice->status_id == Invoice::STATUS_CANCELLED ){
+                    \Log::debug("Reverse Cancellation Invoice #". $fel_invoice->numeroFactura);
+                    $invoice->service()->reverseCancellation()->save();
+                }
+                break;
             default:
 
                 break;
