@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaAlquileres\FacturaAlquileresTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaClinicas\FacturaClinicasTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacion\FacturaComercialExportacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionMinerales\FacturaComercialExportacionMineralesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionServicios\FacturaComercialExportacionServiciosTemplateResource;
@@ -48,6 +49,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS :
                 return FacturaServiciosBasicosTemplateResource::class;
+                break;
+            case TypeDocumentSector::HOSPITALES_CLINICAS  :
+                return FacturaClinicasTemplateResource::class;
                 break;
             case TypeDocumentSector::EXPORTACION_MINERALES:
                 return FacturaComercialExportacionMineralesTemplateResource::class;

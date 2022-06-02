@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Utils;
 
 use CompraVentaPdfBuilder;
 use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
+use EmizorIpx\ClientFel\Builders\ClinicasBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
@@ -132,6 +133,9 @@ class TypeDocumentSector
             case static::HOTELES:
                 return HotelesBuilder::class;
                 break;
+            case static::HOSPITALES_CLINICAS:
+                return ClinicasBuilder::class;
+                break;
             case static::VENTA_INTERNA_MINERALES:
                 return VentaMineralesBuilder::class;
                 break;
@@ -202,6 +206,9 @@ class TypeDocumentSector
                 break;
             case static::HOTELES:
                 return 'hoteles';
+                break;
+            case static::HOSPITALES_CLINICAS:
+                return 'clinicas';
                 break;
             case static::VENTA_INTERNA_MINERALES:
                 return 'venta-interna-minerales';

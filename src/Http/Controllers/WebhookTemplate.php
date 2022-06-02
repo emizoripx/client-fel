@@ -13,7 +13,7 @@ class WebhookTemplate extends BaseController {
         \Log::debug("WEBHOOK TEMPLATE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT");
         \Log::debug("WEBHOOK TEMPLATE DATA: " .json_encode($request->get('data')));
         $data = $request->get('data');
-        \Log::debug("WEBHOOK TEMPLATE DATA PARAMETERS : ",[$data['company_id'], $data['host'], $data['templates']]);
+        // \Log::debug("WEBHOOK TEMPLATE DATA PARAMETERS : ",[$data['company_id'], $data['host'], $data['templates']]);
 
         $companies = \DB::table('fel_company')
                         ->join('fel_company_tokens','fel_company_tokens.account_id', '=', 'fel_company.company_id')
@@ -42,7 +42,7 @@ class WebhookTemplate extends BaseController {
                 foreach ($companies as $company) {
                     $company_id = $company->company_id;
                     \Log::debug("WEBHOOK TEMPLATE COMPANY : " . $company_id);
-                    \Log::debug("WEBHOOK TEMPLATE COMPANY, templates : " , $templates);
+                    // \Log::debug("WEBHOOK TEMPLATE COMPANY, templates : " , $templates);
 
                     \DB::table('fel_templates')->where('company_id', $company_id)->where( function ($query) use ($branch_codes, $doc_sector_codes) {
                         $query->whereNotIn('branch_code', $branch_codes)->orWhereNotIn('document_sector_code', $doc_sector_codes);
