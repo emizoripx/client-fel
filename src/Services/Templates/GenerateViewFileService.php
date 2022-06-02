@@ -10,7 +10,7 @@ class GenerateViewFileService {
             $path = \Config::get('view.paths.0');
 
             // Here we use the date for unique filename - This is the filename for the View
-            $viewfilename = $url."-".hash('sha1', $updated_at . md5(1,1000));
+            $viewfilename = $url."-".hash('sha1', $updated_at . md5(rand(1, 1000)));
 
             // Full path with filename
             $fullfilename = $path."/pdf-designs/".$viewfilename.".blade.php";
