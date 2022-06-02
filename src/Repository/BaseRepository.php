@@ -201,6 +201,10 @@ class BaseRepository
 
                         // zona franca
                         "numeroParteRecepcion" => !empty($fel_data["numeroParteRecepcion"]) ? $fel_data["numeroParteRecepcion"] : null,
+                        
+                        // CLINICAS
+                        "modalidadServicio" => !empty($fel_data["modalidadServicio"]) ? $fel_data["modalidadServicio"] : null,
+
                     ];
                     break;
                 
