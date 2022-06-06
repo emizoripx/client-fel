@@ -18,7 +18,7 @@ class DetalleFacturaComercialExportacionMineralesTemplateResource extends BaseDe
         $common["subTotal"] = NumberUtils::number_format_custom( (float) $this->subTotal, 5);
 
         return array_merge($common, [
-            "descripcionLeyes" => $this->descripcionLeyes . "%",
+            "descripcionLeyes" => $this->descripcionLeyes,
             "codigoNandina" => $this->codigoNandina,
             "cantidadExtraccion" => NumberUtils::number_format_custom((float) bcdiv($this->cantidadExtraccion,'1',5) ,5) ,
             "unidadMedidaExtraccion" => ucwords(strtolower( Unit::getUnitDescription($this->unidadMedidaExtraccion))),
