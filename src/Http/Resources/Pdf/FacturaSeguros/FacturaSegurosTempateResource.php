@@ -26,7 +26,7 @@ class FacturaSegurosTempateResource extends BaseTemplateResource {
             "tipoCambio" => isset($fel_invoice->tipoCambio) ? NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2) : '',
             "montoTotalMoneda" => isset($fel_invoice->montoTotalMoneda) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalMoneda, 2) : '',
             "montoTotalMonedaLiteral" => to_word((float)( $fel_invoice->montoTotalMoneda), 2, $fel_invoice->codigoMoneda) ,
-            "ajusteAfectacionIva" => to_word((float)( $fel_invoice->ajusteAfectacionIva), 2, $fel_invoice->ajusteAfectacionIva) ,
+            "ajusteAfectacionIva" => isset($fel_invoice->ajusteAfectacionIva) ? NumberUtils::number_format_custom((float) $fel_invoice->ajusteAfectacionIva, 2) : '',
         ]);
         
     }
