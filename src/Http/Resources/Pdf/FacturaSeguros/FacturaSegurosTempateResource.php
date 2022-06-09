@@ -20,7 +20,7 @@ class FacturaSegurosTempateResource extends BaseTemplateResource {
             "montoGiftCard" => NumberUtils::number_format_custom( (float) ( $fel_invoice->montoGiftCard) , 2),
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
             "totalPagar" => NumberUtils::number_format_custom( (float) ($fel_invoice->montoTotal - $fel_invoice->montoGiftCard - $fel_invoice->ajusteAfectacionIva) , 2),
-            "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
+            "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard - $fel_invoice->ajusteAfectacionIva), 2, 1),
             "detalles" => DetalleFacturaSegurosTempateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve(),
             "currencyShortCode" => "Bs",
             "tipoCambio" => isset($fel_invoice->tipoCambio) ? NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2) : '',
