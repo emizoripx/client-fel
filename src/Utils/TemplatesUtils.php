@@ -14,6 +14,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\F
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSeguros\FacturaSegurosTempateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaServiciosBasicos\FacturaServiciosBasicosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
@@ -77,6 +78,8 @@ class TemplatesUtils {
             case TypeDocumentSector::HIDROCARBUROS_NO_IEHD:
                 return FacturaHidrocarburosNoAlcanzadosIehdTemplateResource::class;
                 break;
+            case TypeDocumentSector::SEGUROS :
+                return FacturaSegurosTempateResource::class;
             case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES:
                 return FacturaCompraVentaBonificacionesTemplateResource::class;
 
