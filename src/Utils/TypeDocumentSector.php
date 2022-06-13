@@ -17,6 +17,7 @@ use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosNoIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
+use EmizorIpx\ClientFel\Builders\PrevaloradaBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
 use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
@@ -103,6 +104,9 @@ class TypeDocumentSector
             case static::COMPRA_VENTA:
                 return CompraVentaBuilder::class;
                 break;
+            case static::PREVALORADA:
+                return PrevaloradaBuilder::class;
+                break;
             case static::ALQUILER_BIENES_INMUEBLES:
                 return AlquileresBuilder::class;
                 break;
@@ -145,6 +149,9 @@ class TypeDocumentSector
             case static::TELECOMUNICACIONES:
                 return TelecomunicacionesBuilder::class;
                 break;
+            case static::PREVALORADA:
+                return PrevaloradaBuilder::class;
+                break;
             case static::DEBITO_CREDITO:
                 return CreditoDebitoBuilder::class;
                 break;
@@ -175,10 +182,10 @@ class TypeDocumentSector
     {
         switch ($code) {
             case static::COMPRA_VENTA:
-                if( $company_nit == '1020415021'){
-                    return 'compra-venta-custom';
-                }
                 return 'compra-venta';
+                break;
+            case static::PREVALORADA:
+                return 'prevalorada';
                 break;
             case static::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
                 return 'comercial-libre-consignacion';
@@ -220,9 +227,6 @@ class TypeDocumentSector
                 return 'telecomunicaciones';
                 break;
             case static::DEBITO_CREDITO:
-                if( $company_nit == '1020415021'){
-                    return 'nota-debito-credito-msc';
-                }
                 return 'nota-debito-credito';
                 break;
             case static::ALQUILER_BIENES_INMUEBLES:

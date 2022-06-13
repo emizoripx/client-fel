@@ -16,6 +16,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosIehd\Hidrocarbu
 use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosNoIehd\HidrocarburosNoIehdResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion\NotaConciliacionResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\Prevalorada\PrevaloradaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ServiciosBasicos\ServiciosBasicosResource;
@@ -39,6 +40,9 @@ class TypeDocumentResource extends JsonResource
         switch ($this->type_document_sector_id) {
             case TypeDocumentSector::COMPRA_VENTA:
                 return new CompraVentaResource($this);
+                break;
+            case TypeDocumentSector::PREVALORADA:
+                return new PrevaloradaResource($this);
                 break;
             case TypeDocumentSector::ALQUILER_BIENES_INMUEBLES:
                 return new AlquileresResource($this);

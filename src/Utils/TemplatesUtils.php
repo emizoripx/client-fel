@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\Fact
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaPrevalorada\FacturaPrevaloradaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSeguros\FacturaSegurosTempateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaServiciosBasicos\FacturaServiciosBasicosTemplateResource;
@@ -62,6 +63,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::TELECOMUNICACIONES :
                 return FacturaTelecomunicacionesTemplateResource::class;
+                break;
+            case TypeDocumentSector::PREVALORADA:
+                return FacturaPrevaloradaTemplateResource::class;
                 break;
             case TypeDocumentSector::DEBITO_CREDITO :
                 return NotaDebitoCreditoTemplateResource::class;
