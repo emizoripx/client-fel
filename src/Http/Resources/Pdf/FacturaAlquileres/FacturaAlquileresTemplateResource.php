@@ -15,7 +15,7 @@ class FacturaAlquileresTemplateResource extends BaseTemplateResource {
         $fel_invoice = $this->fel_invoice;
 
         return array_merge( $common, [
-            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA DE ALQUILERES DE BIENES INMUEBLES" : "FACTURA DE ALQUILERES DE BIENES INMUEBLES",
+            "title" => is_null($fel_invoice->cuf) ? "PREFACTURA DE ALQUILER" : "FACTURA DE ALQUILER",
             "subtitle" => is_null($fel_invoice->cuf) ? null :  "(Con Derecho A Crédito Fiscal)",
             "montoTotalSujetoIva" => is_null($fel_invoice->cuf) ? null : NumberUtils::number_format_custom( (float) ($fel_invoice->montoTotalSujetoIva ) , 2),
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
