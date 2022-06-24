@@ -87,6 +87,7 @@ class FelParametric
                     $d["codigo"] = $d['codigoDocumentSector'];
                     $d["documentoSector"] = $d['documentoSector'];
                     $d["tipoFactura"] = $d['tipoFactura'];
+                    $d["codigoSistema"] = $d['codigoSistema'];
 
                     unset($d['codigoDocumentSector']);
                     $data_[] = $d;
@@ -371,6 +372,7 @@ class FelParametric
                         'codigo' => $data['codigoDocumentSector'],
                         'documentoSector' => $data['documentoSector'],
                         'tipoFactura' => $data['tipoFactura'],
+                        'codigoSistema' => $data['codigoSistema'],
                         'updated_at' => Carbon::now()->toDateTimeString()
                     ]);
                 }

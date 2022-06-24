@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Console\Commands\DataDummy;
+use EmizorIpx\ClientFel\Console\Commands\GetSystemCode;
 use EmizorIpx\ClientFel\Console\Commands\UpdateLangCommand;
 use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSuperAdmin;
@@ -84,6 +85,7 @@ class ClientFelServiceProvider extends ServiceProvider
                 UpdateTokens::class,
                 DataDummy::class,
                 UpdateLangCommand::class,
+                GetSystemCode::class,
                 
             ]);
         }
