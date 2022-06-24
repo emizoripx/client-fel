@@ -45,6 +45,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
 
             "subTotalLiteral" => to_word( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2, $fel_invoice->codigoMoneda),
             "subTotalBsLiteral" => to_word( (float) (collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio), 2, 1),
+            "subTotalBs" =>  NumberUtils::number_format_custom( (float) (collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio), 2 ) ,
             "gastosRealizacion" => NumberUtils::number_format_custom( (float) $fel_invoice->gastosRealizacion, 2 ),
             "gastosRealizacionLiteral" => to_word( (float) $fel_invoice->gastosRealizacion * $fel_invoice->tipoCambio, 2, 1),
             "montoTotalMoneda" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalMoneda, 2 ),
