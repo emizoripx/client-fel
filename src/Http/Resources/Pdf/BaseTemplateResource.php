@@ -41,6 +41,7 @@ class BaseTemplateResource extends JsonResource
             "isUnipersonalCompany" => isset($this->company) ? boolval($this->company->company_detail->is_uniper) : '',
             "razonSocialEmisor" => isset($this->company->company_detail->business_name) ? $this->company->company_detail->business_name : '',
             "company_name" => isset($this->entity->company->settings->name) ? $this->entity->company->settings->name : '',
+            "name" => isset($this->entity->company->settings->name) ? $this->entity->company->settings->name : '',
             "codigoSucursal" => isset( $fel_invoice->codigoSucursal ) ? $fel_invoice->codigoSucursal : '',
             "codigoPuntoVenta" => isset($fel_invoice->codigoPuntoVenta) ? $fel_invoice->codigoPuntoVenta : '',
             "direccion" => isset($branch) ? $branch->zona : '',
