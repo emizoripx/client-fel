@@ -114,7 +114,10 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->descripcionLeyes = !empty($detail->leyes) ? $detail->leyes."" : "";
             $new->codigoNandina = $detail->codigoNandina;
             
+            if( !empty($detail->valorBruto) || !is_null($detail->valorBruto) ) {
 
+                $new->valorBruto = $detail->valorBruto;
+            }
 
             if ($detail->discount > 0)
                 $new->montoDescuento = round(($detail->cost * $detail->quantity) - $detail->line_total,5);
