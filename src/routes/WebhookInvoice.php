@@ -25,6 +25,9 @@ class WebhookInvoice
             Route::post('update-templates', 'WebhookTemplate@updateTemplates');
 
             Route::post('update-documents', 'WebhookDocumentSector@updateDocumentSector');
+
+            Route::post('update-cuis', 'WebhookCuis@updateCuis');
+            
         });
     }
 }
