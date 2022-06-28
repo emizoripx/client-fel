@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaClinicas\FacturaClinicasTempla
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacion\FacturaComercialExportacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionMinerales\FacturaComercialExportacionMineralesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionServicios\FacturaComercialExportacionServiciosTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionGnv\FacturaComercializacionGnvTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\FacturaComercializacionHidrocarburosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\FacturaCompraVentaBonificacionesTemplateResource;
@@ -52,6 +53,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::COMERCIALIZACION_HIDROCARBUROS :
                 return FacturaComercializacionHidrocarburosTemplateResource::class;
+                break;
+            case TypeDocumentSector::COMERCIALIZACION_GNV :
+                return FacturaComercializacionGnvTemplateResource::class;
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS :
                 return FacturaServiciosBasicosTemplateResource::class;
