@@ -173,7 +173,9 @@ class BaseRepository
                         // Comercializacion Hidrocarburos
                         "placaVehiculo" => !empty($fel_data["placaVehiculo"]) ? $fel_data["placaVehiculo"] : null,
                         "tipoEnvase" => !empty($fel_data["tipoEnvase"]) ? $fel_data["tipoEnvase"] : null,
-                        "montoTotalSujetoIvaLey317" => !empty($fel_data["montoTotalSujetoIvaLey317"]) ? $fel_data["montoTotalSujetoIvaLey317"] : null,
+                        "codigoAutorizacionSC" => !empty($fel_data["codigoAutorizacionSC"]) ? $fel_data["codigoAutorizacionSC"] : null,
+                        "observacion" => !empty($fel_data["observacion"]) ? $fel_data["observacion"] : null,
+                        "montoVale" => !empty($fel_data["montoVale"]) ? $fel_data["montoVale"] : null,
 
                         // Telecomunicaciones
                         "nitConjunto" => !empty($fel_data["nitConjunto"]) ? $fel_data["nitConjunto"] : null,

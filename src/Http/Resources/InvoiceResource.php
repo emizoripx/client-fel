@@ -149,9 +149,13 @@ class InvoiceResource extends JsonResource
             "numeroContrato" => (string)$this->numeroContrato ?? "",
 
             // Comercialización Hidrocarburos
-            "placaVehiculo" => $this->placaVehiculo,
-            "tipoEnvase" => $this->tipoEnvase,
-            "montoTotalSujetoIvaLey317" => $this->montoTotalSujetoIvaLey317,
+            "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '',
+            "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '',
+            "codigoAutorizacionSC" => isset($this->data_specific_by_sector['codigoAutorizacionSC']) ? $this->data_specific_by_sector['codigoAutorizacionSC'] : '',
+            "observacion" => isset($this->data_specific_by_sector['observacion']) ? $this->data_specific_by_sector['observacion'] : '',
+
+            // Comercializacion Gnv
+            "montoVale" => isset($this->data_specific_by_sector['montoVale']) ? $this->data_specific_by_sector['montoVale'] : '',
 
             // added extra variable to customize template
             "extras" => $this->getExtras(),

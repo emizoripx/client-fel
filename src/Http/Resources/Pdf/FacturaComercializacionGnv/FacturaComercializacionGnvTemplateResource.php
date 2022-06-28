@@ -1,11 +1,11 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos;
+namespace EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionGnv;
 
 use EmizorIpx\ClientFel\Http\Resources\Pdf\BaseTemplateResource;
 use EmizorIpx\ClientFel\Utils\NumberUtils;
 
-class FacturaComercializacionHidrocarburosTemplateResource extends BaseTemplateResource {
+class FacturaComercializacionGnvTemplateResource extends BaseTemplateResource {
 
     public function toArray($request)
     {
@@ -22,7 +22,7 @@ class FacturaComercializacionHidrocarburosTemplateResource extends BaseTemplateR
             "montoTotalSujetoIva" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalSujetoIva , 2),
             "placaVehiculo" => isset($fel_invoice->data_specific_by_sector['placaVehiculo']) ? $fel_invoice->data_specific_by_sector['placaVehiculo'] : '',
             "tipoEnvase" => isset($fel_invoice->data_specific_by_sector['tipoEnvase']) ? $fel_invoice->data_specific_by_sector['tipoEnvase'] : '',
-            "detalles" => DetalleFacturaComercializacionHidrocarburosTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
+            "detalles" => DetalleFacturaComercializacionGnvTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
         ]);
 
     }

@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ClinicasBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialExportacionBuilder;
+use EmizorIpx\ClientFel\Builders\ComercializacionGnvBuilder;
 use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBonificacionesBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
@@ -60,6 +61,7 @@ class TypeDocumentSector
     const NOTA_CONCILIACION = 29;
     const SEGUROS = 34;
     const COMPRA_VENTA_BONIFICACIONES = 35;
+    const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
 
     const ARRAY_NAMES = [
@@ -127,6 +129,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIALIZACION_HIDROCARBUROS:
                 return ComercializacionHidrocarburosBuilder::class;
+                break;
+            case static::COMERCIALIZACION_GNV:
+                return ComercializacionGnvBuilder::class;
                 break;
             case static::SERVICIOS_BASICOS:
                 return ServiciosBasicosBuilder::class;
@@ -204,6 +209,9 @@ class TypeDocumentSector
                 break;
             case static::COMERCIALIZACION_HIDROCARBUROS:
                 return 'comercializacion-hidrocarburos';
+                break;
+            case static::COMERCIALIZACION_GNV:
+                return 'comercializacion-gnv';
                 break;
             case static::SERVICIOS_BASICOS:
                 return 'servicios-basicos';

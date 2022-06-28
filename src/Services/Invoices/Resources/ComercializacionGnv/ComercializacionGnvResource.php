@@ -1,10 +1,10 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburos;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionGnv;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ComercializacionHidrocarburosResource extends JsonResource
+class ComercializacionGnvResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -33,12 +33,10 @@ class ComercializacionHidrocarburosResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '',
-            "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '',
-            "codigoAutorizacionSC" => isset($this->data_specific_by_sector['codigoAutorizacionSC']) ? $this->data_specific_by_sector['codigoAutorizacionSC'] : '', 
-            "observacion" => isset($this->data_specific_by_sector['observacion']) ? $this->data_specific_by_sector['observacion'] : '', 
+            "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '', 
+            "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '', 
             "codigoPais" => $this->paisDestino,
-            'detalles' => DetalleComercializacionHidrocarburos::collection(collect($this->detalles)),
+            'detalles' => DetalleComercializacionGnv::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
