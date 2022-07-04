@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\ClientFel\Models\FelCaption;
 use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Throwable;
 
 class InvoiceResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class InvoiceResource extends JsonResource
         try{
             $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
 
-        }catch (Exception $ex) {
+        }catch (Throwable $ex) {
             $number_literal = "";
         }
 
@@ -218,7 +219,7 @@ class InvoiceResource extends JsonResource
                 "leyenda_especifica"=> !empty($caption)? $caption->descripcion : "",
             ]
         ];
-    } catch(Exception $ex) {
+    } catch(Throwable $ex) {
         \Log::debug("error  file " . $ex->getFile(). " Line " . $ex->getLine(). " Message : " . $ex->getMessage() );
     }
     }
