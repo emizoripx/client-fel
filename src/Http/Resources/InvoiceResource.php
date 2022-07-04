@@ -25,6 +25,7 @@ class InvoiceResource extends JsonResource
         $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
 
         $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
+        $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
         return [
             "id" => (int) $this->id,
             "ack_ticket" => $this->ack_ticket,
@@ -207,7 +208,7 @@ class InvoiceResource extends JsonResource
                 "telefono_sucursal"=> "Telefono: ".$branch->telefono,
                 "municipio"=> "$branch->municipio - Bolivia",
                 "monto_literal"=> "SON: ". to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1),
-                "leyenda_especifica"=> FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first()->descripcion,
+                "leyenda_especifica"=> !empty($caption)? $caption->descripcion : "",
             ]
         ];
     } catch(Exception $ex) {
