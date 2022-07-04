@@ -19,7 +19,7 @@ class NotaDebitoCreditoTemplateResource extends BaseTemplateResource {
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
             "montoTotalLiteral" => to_word( (float) $fel_invoice->montoTotal, 2, 1) ,
             "montoEfectivoCreditoDebito" => NumberUtils::number_format_custom( (float) $fel_invoice->montoEfectivoCreditoDebito, 2),
-            "detalles" => DetalleNotaDebitoCreditoTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
+            "detalles" => isset($fel_invoice->detalles['debitado']) ? DetalleNotaDebitoCreditoTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles['debitado'])))->resolve() : DetalleNotaDebitoCreditoTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
         ]);
 
     }

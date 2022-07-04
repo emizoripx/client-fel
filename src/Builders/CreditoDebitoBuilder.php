@@ -35,9 +35,14 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
         $input = array_merge(
             $this->input,
             [
-                "factura_original_id" => $invoice_origin->id_origin,
-                "numeroFacturaOriginal" => $invoice_origin->numeroFactura,
+                "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
+                "facturaExterna" => !is_null($invoice_origin) ? 0 : 1,
                 "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
+                "external_invoice_data" => [
+                    "numeroFacturaOriginal" => $this->source_data['fel_data_parsed']["numeroFacturaOriginal"],
+                    "fechaEmisionOriginal" => $this->source_data['fel_data_parsed']["fechaEmisionOriginal"],
+                    "montoTotalOriginal" => collect($this->source_data['model']->line_items)->where('isFacturaOriginal',true)->sum('line_total') . "",
+                ],
                 "montoDescuentoCreditoDebito" => $this->source_data['fel_data_parsed']["montoDescuentoCreditoDebito"],
                 "montoEfectivoCreditoDebito" => $this->source_data['fel_data_parsed']["montoEfectivoCreditoDebito"],
             ],
@@ -57,6 +62,8 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
     public function getDetailsAndTotals(): array
     {
         $line_items = $this->source_data['model']->line_items;
+        $details = [];
+        $details_nc = [];
         $model = $this->source_data['model'];
 
         $total = 0;
@@ -84,9 +91,15 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
-            $details[] = $new;
+            if (!$detail->isFacturaOriginal) {
 
-            $total += $new->subTotal;
+                if ($detail->discount > 0)
+                    $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total, 5);
+                $details[] = $new;
+            } else {
+                $details_nc[] = $new;
+            }
+            
         }
 
         return [
@@ -94,7 +107,7 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             "montoTotal" => $this-> source_data['fel_data_parsed']['montoTotal'],
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
             "montoTotalSujetoIva" => $this-> source_data['fel_data_parsed']['montoTotal'],
-            "detalles" => $details
+            "detalles" => ["original" => $details, "debitado" => $details_nc],
         ];
     }
 

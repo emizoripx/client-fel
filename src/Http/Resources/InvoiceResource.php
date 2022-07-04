@@ -189,7 +189,7 @@ class InvoiceResource extends JsonResource
             
             "numeroFacturaOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['numeroFacturaOriginal'] : null,
             "montoTotalOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['montoTotalOriginal'] : null,
-            "codigoControl" =>  isset($this->external_invoice_data) ? $this->external_invoice_data['codigoControl'] : null,
+            "codigoControl" =>  isset($this->external_invoice_data) && isset($this->external_invoice_data['codigoControl']) ? $this->external_invoice_data['codigoControl'] : null,
             "debitoFiscalIva" =>    isset($this->debitoFiscalIva) ? $this->debitoFiscalIva : null,
             "creditoFiscalIva" =>   isset($this->creditoFiscalIva) ? $this->creditoFiscalIva : null,
             "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
@@ -209,10 +209,10 @@ class InvoiceResource extends JsonResource
             "invoiceInfo"=> [
                 "titulo"=> "FACTURA",
                 "tipo_factura"=>"(".ucwords( strtolower($sector->tipoFactura) ).")",
-                "razon_social_emisor"=> isset($company->business_name) ? $company->business_name : '',
+                "razon_social_emisor"=> isset($company->business_name) && !is_null($company->business_name) ? $company->business_name : '',
                 "nombre_sucursal"=> $branch->codigo == 0 ? "CASA MATRIZ":"Sucursal " . $branch->codigo,
                 "numero_punto_venta"=>"Punto de venta ".$this->codigoPuntoVenta,
-                "direccion_sucursal"=>$branch->zona,
+                "direccion_sucursal"=>isset($branch->zona) && !is_null($branch->zona) ? $branch->zona : "",
                 "telefono_sucursal"=> "Telefono: ".$branch->telefono,
                 "municipio"=> "$branch->municipio - Bolivia",
                 "monto_literal"=> "SON: ". $number_literal,
