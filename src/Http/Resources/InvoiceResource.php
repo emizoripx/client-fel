@@ -19,6 +19,13 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
+        try{
+            $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
+
+        }catch (Exception $ex) {
+            $number_literal = "";
+        }
+
         $company_id = $this->decodePrimaryKey($this->company_id);
         try{
         $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
@@ -207,7 +214,7 @@ class InvoiceResource extends JsonResource
                 "direccion_sucursal"=>$branch->zona,
                 "telefono_sucursal"=> "Telefono: ".$branch->telefono,
                 "municipio"=> "$branch->municipio - Bolivia",
-                "monto_literal"=> "SON: ". to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1),
+                "monto_literal"=> "SON: ". $number_literal,
                 "leyenda_especifica"=> !empty($caption)? $caption->descripcion : "",
             ]
         ];
