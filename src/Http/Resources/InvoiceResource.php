@@ -3,6 +3,9 @@
 namespace EmizorIpx\ClientFel\Http\Resources;
 
 use App\Utils\Traits\MakesHash;
+use EmizorIpx\ClientFel\Models\FelBranch;
+use EmizorIpx\ClientFel\Models\FelCaption;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class InvoiceResource extends JsonResource
@@ -16,7 +19,12 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
-        
+        $company_id = $this->decodePrimaryKey($this->company_id);
+        try{
+        $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
+        $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
+
+        $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
         return [
             "id" => (int) $this->id,
             "ack_ticket" => $this->ack_ticket,
@@ -186,6 +194,24 @@ class InvoiceResource extends JsonResource
             "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
             "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
             "montoIehd" => isset($this->data_specific_by_sector['montoIehd']) ?  (string)(round($this->data_specific_by_sector['montoIehd'], 2)) : '0.00',
+
+            //ADDITIONAL INFORMATION FROM INVOICE
+
+            "invoiceInfo"=> [
+                "titulo"=> "FACTURA",
+                "tipo_factura"=>"(".ucwords( strtolower($sector->tipoFactura) ).")",
+                "razon_social_emisor"=> isset($company->business_name) ? $company->business_name : '',
+                "nombre_sucursal"=> $branch->codigo == 0 ? "CASA MATRIZ":"Sucursal " . $branch->codigo,
+                "numero_punto_venta"=>"Punto de venta ".$this->codigoPuntoVenta,
+                "direccion_sucursal"=>$branch->zona,
+                "telefono_sucursal"=> "Telefono: ".$branch->telefono,
+                "municipio"=> "$branch->municipio - Bolivia",
+                "monto_literal"=> "SON: ". to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1),
+                "leyenda_especifica"=> FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first()->descripcion,
+            ]
         ];
+    } catch(Exception $ex) {
+        \Log::debug("error  file " . $ex->getFile(). " Line " . $ex->getLine(). " Message : " . $ex->getMessage() );
+    }
     }
 }
