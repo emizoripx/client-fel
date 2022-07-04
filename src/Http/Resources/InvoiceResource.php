@@ -217,6 +217,7 @@ class InvoiceResource extends JsonResource
                 "municipio"=> "$branch->municipio - Bolivia",
                 "monto_literal"=> "SON: ". $number_literal,
                 "leyenda_especifica"=> !empty($caption)? $caption->descripcion : "",
+                "leyenda_fija" => FelCaption::CAPTION_SIN,
             ]
         ];
     } catch(Throwable $ex) {
