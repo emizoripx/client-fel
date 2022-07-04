@@ -91,7 +91,7 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
-            if (!$detail->isFacturaOriginal) {
+            if (isset($detail->isFacturaOriginal) && $detail->isFacturaOriginal) {
 
                 if ($detail->discount > 0)
                     $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total, 5);
