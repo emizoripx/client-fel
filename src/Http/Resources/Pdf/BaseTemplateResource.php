@@ -70,6 +70,7 @@ class BaseTemplateResource extends JsonResource
             "paymnetQr" => $this->getPaymentQR(),
             "displayBusinessName" => isset($this->company->company_detail->business_name) ? 1 : 0,
             "currencyShortCode" => "Bs",
+            "codigoMoneda" => $fel_invoice->codigoMoneda
 
         ], $extras);
     }

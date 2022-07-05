@@ -21,6 +21,11 @@ class DetalleExportacionMineralesResource extends JsonResource
                 'valorBruto' => $this->resource['valorBruto']
             ];
         }
+        if( isset($this->resource['alicuota']) ){
+            $data_array['extras'] = [
+                'alicuota' => $this->resource['alicuota']
+            ];
+        }
      
         return array_merge( $data_array, [
             "descripcionLeyes" => $this->resource['descripcionLeyes'],
