@@ -64,3 +64,9 @@ if(!function_exists('emission_date_to_literal')){
         return InvoiceUtils::getFechaEmisionLiteral( $fecha_emision);
     }
 }
+
+if(!function_exists('short_emission_date_to_literal')){
+    function short_emission_date_to_literal($fecha_emision = null){
+        return InvoiceUtils::getFechaEmisionLiteralFormato2( $fecha_emision);
+    }
+}
