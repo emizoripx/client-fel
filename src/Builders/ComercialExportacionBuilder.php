@@ -103,6 +103,10 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
             $new->unidadMedida = $product_sync->codigo_unidad;
             $new->codigoNandina = $detail->codigoNandina;
 
+            if( isset($detail->leyes) ) {
+                $new->leyes = $detail->leyes;
+            }
+
             $details[] = $new;
 
             $total += $new->subTotal;

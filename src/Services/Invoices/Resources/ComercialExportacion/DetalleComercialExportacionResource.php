@@ -14,7 +14,15 @@ class DetalleComercialExportacionResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $data_array = []; 
+
+        if( isset($this->resource['leyes']) ){
+            $data_array['extras'] = [
+                'leyes' => $this->resource['leyes']
+            ];
+        }
+
+        return array_merge($data_array, [
             "codigoProducto" => $this->resource['codigoProducto'],
             "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "descripcion" => $this->resource['descripcion'],
@@ -25,6 +33,6 @@ class DetalleComercialExportacionResource extends JsonResource
             "unidadMedida" => $this->resource['unidadMedida'],
             "codigoNandina" => $this->resource['codigoNandina'],
             "montoDescuento" => $this->resource['montoDescuento'] ?? 0
-        ];
+        ]);
     }
 }
