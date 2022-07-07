@@ -18,6 +18,7 @@ class DebitoCreditoResource extends JsonResource
             "numeroFactura" => $this->external_invoice_data['numeroFacturaOriginal'],
             "facturaExterna" => $this->facturaExterna,
             "descuentoFacturaOriginal" => 0,
+            "codigoControl" => "",
             "fechaFacturaOriginal" => $this->external_invoice_data['fechaEmisionOriginal'],
             "montoTotalFacturaOriginal" =>  round($this->external_invoice_data['montoTotalOriginal'], 2),
             'detalleFacturaOriginal' => DetalleDebitoCreditoOriginalResource::collection(collect($this->detalles['original'])),
