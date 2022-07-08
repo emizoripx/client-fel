@@ -20,7 +20,8 @@ class FelCuisCufdController extends Controller
 
             $company_id = auth()->user()->getCompany()->id;
     
-            $sectorDocument = SectorDocumentTypes::where('company', $company_id)->where('codigo', $sectorDocumentCode)->select('codigoSistema')->first();
+            \Log::debug("GET Company");
+            $sectorDocument = SectorDocumentTypes::where('company_id', $company_id)->where('codigo', $sectorDocumentCode)->select('codigoSistema')->first();
     
             if( empty($sectorDocument) ) {
                 throw new Exception('No se encontró en Documento Sector #' . $sectorDocumentCode);
@@ -34,7 +35,7 @@ class FelCuisCufdController extends Controller
                 throw new Exception('No se encontro un CUIS');
             }
 
-            $cufd = FelCufd::where('company_id', $company_id)->where('branc_code', $branch_code)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $pos_code )->first();
+            $cufd = FelCufd::where('company_id', $company_id)->where('branch_code', $branch_code)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $pos_code )->first();
 
             if( empty($cufd) ) {
                 throw new Exception('No se encontro un CUFD');
@@ -51,7 +52,7 @@ class FelCuisCufdController extends Controller
         
         } catch( Exception $ex ) {
 
-            \Log::debug($ex->getMessage());
+            \Log::debug($ex->getMessage() . ' File: ' . $ex->getFile() . ' Line: ' . $ex->getLine());
 
             return response()->json([
                 "success" => false,
