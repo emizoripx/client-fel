@@ -17,6 +17,13 @@ class ElectronicInvoice
             Route::post('invoices/revocate', 'InvoiceController@revocate');
             Route::post('invoices/reversion-revocate', 'InvoiceController@reversionRevocate');
             Route::get('verify_nit/{NIT}', 'InvoiceController@verifynit');
+
+
+            Route::prefix('reports')->group(function () {
+                
+                Route::post('generate', 'FelReportController@getGenerateReport');
+
+            });
         });
     }
 }
