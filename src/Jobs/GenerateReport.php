@@ -34,7 +34,7 @@ class GenerateReport implements ShouldQueue
 
     protected $report_record_id;
 
-    protected $user_id;
+    protected $user;
 
     public $timeout = 300;
 
@@ -43,7 +43,7 @@ class GenerateReport implements ShouldQueue
      *
      * @return void
      */
-    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user_id )
+    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user )
     {
         $this->request = collect($request);
 
@@ -59,7 +59,7 @@ class GenerateReport implements ShouldQueue
 
         $this->report_record_id = $report_record_id;
 
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**
@@ -77,7 +77,7 @@ class GenerateReport implements ShouldQueue
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'start_process_at' => Carbon::now()->toDateTimeString(),
                 'status' => 2,
-                'user_id' => $this->user_id,
+                'user_id' => $this->user->id,
                 'request_parameters' => json_encode([
                     'branch_code' => $this->request->has('branch_code') ? $this->request->get('branch_code') : null,
                     'type_document' => $this->request->has('type_document') ? $this->request->get('type_document') : null,
@@ -92,7 +92,7 @@ class GenerateReport implements ShouldQueue
 
             \Log::debug("Report Type: "  . $report_class);
             
-            $service_report = new $report_class ($this->company_id, $this->request, $this->columns);
+            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user->name());
 
             $invoices = $service_report->generateReport();
             $driver = new PhpSpreadsheetDriver();

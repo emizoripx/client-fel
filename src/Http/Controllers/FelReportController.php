@@ -76,7 +76,7 @@ class FelReportController extends BaseController
                 "registered_at" => Carbon::now()->toDateTimeString(),
             ]);
             
-            GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user->id );
+            GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user );
 
         } catch (Exception $ex) {
 

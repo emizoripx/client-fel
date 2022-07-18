@@ -22,13 +22,15 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
     protected $company_id;
 
+    protected $user_name;
+
     const GROUP_BY_CLIENT = 'cliente';
 
     const GROUP_BY_BRANCH = 'sucursal';
 
 
 
-    public function __construct( $company_id, $request, $columns )
+    public function __construct( $company_id, $request, $columns, $user_name )
     {
         $this->company_id = $company_id;
 
@@ -44,6 +46,8 @@ class InvoiceReport extends BaseReport implements ReportInterface {
         $to = $request->has('to_date') ? $request->get('to_date') : null;
 
         $this->columns = $columns;
+
+        $this->user_name = $user_name;
 
         parent::__construct($from, $to);
         
@@ -216,8 +220,8 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
         return [
             "header" => [
-                "sucursal" => "Sucursal 1",
-                "usuario" => "Molina",
+                "sucursal" => is_null($this->branch_code) ?  "Todos" : $this->branch_code = 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code,
+                "usuario" => $this->user_name,
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],
             "totales" =>[
