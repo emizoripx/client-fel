@@ -78,7 +78,7 @@ class UploadReport implements ShouldQueue
                 'filename' => "$date-$this->report_filename",
             ]);
 
-            // unlink($this->report_path);
+            unlink($this->report_path);
 
             \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
         
