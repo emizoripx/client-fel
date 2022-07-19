@@ -48,6 +48,10 @@ class InvoiceController extends BaseController
             // $felInvoiceRequest->deletePdf();
             $invoice->service()->markSent()->save();
 
+            \Log::debug("Update user assigned " . auth()->user()->id );
+            $invoice->assigned_user_id = auth()->user()->id;
+            $invoice->save();
+
             $success = true;
             \DB::commit();
             \Log::debug("EMIT-INVOICE ==============> END TRANSACTION");
