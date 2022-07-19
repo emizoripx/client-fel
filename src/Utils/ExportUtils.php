@@ -3,11 +3,15 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
+use EmizorIpx\ClientFel\Reports\Products\ProductReport;
 use Exception;
 
 class ExportUtils {
 
     const INVOICE_ENTITY = 'Invoice';
+    
+    const ITEMS_ENTITY = 'Items';
+
 
     public static function saveFileLocal($name, $datetime, $content) {
 
@@ -41,12 +45,20 @@ class ExportUtils {
             case static::INVOICE_ENTITY:
                 return InvoiceReport::class;
                 break;
+
+            case static::ITEMS_ENTITY:
+                return ProductReport::class ;
+                break;
             
             default:
                 new Exception('Reporte no soportado');
                 break;
         }
 
+    }
+
+    public static function flatten_array ( $array ) {
+        return array_merge (...$array);
     }
 
 }
