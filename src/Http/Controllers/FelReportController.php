@@ -4,8 +4,6 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Models\FelReportRequest;
-use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
-use AnourValar\Office\SheetsService;
 use Exception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -65,9 +63,6 @@ class FelReportController extends BaseController
 
             }
 
-            $filters = $report_type->filters;
-            \Log::debug("GENERATE-INOICE: Get Filters:  " . json_encode($filters));
-
             $report_record = FelReportRequest::create([
                 "company_id" => $company->id,
                 "custom_report_id" => $report_type->id,
@@ -77,6 +72,11 @@ class FelReportController extends BaseController
             ]);
             
             GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user );
+
+            return response()->json([
+                "success" => true,
+                "message" => 'Generación de Reporte en Proceso',
+            ]);
 
         } catch (Exception $ex) {
 
