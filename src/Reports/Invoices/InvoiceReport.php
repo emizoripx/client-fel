@@ -220,7 +220,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
         return [
             "header" => [
-                "sucursal" => (is_null($this->branch_code) ?  "Todos" : intval($this->branch_code) == 0) ? "Casa Matriz" : 'Sucursal ' . $this->branch_code,
+                "sucursal" => is_null($this->branch_code) ?  "Todos" : ($this->branch_code == 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code),
                 "usuario" => $this->user_name,
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],

@@ -1,16 +1,16 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Reports\Products;
+namespace EmizorIpx\ClientFel\Reports\ItemInvoice;
 
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
-use EmizorIpx\ClientFel\Utils\NumberUtils;
 use Carbon\Carbon;
-use EmizorIpx\ClientFel\Http\Resources\ItemResumeResource;
+use EmizorIpx\ClientFel\Http\Resources\ItemInvoiceResource;
+use EmizorIpx\ClientFel\Utils\NumberUtils;
 
-class ProductReport extends BaseReport implements ReportInterface {
+class ItemInvoiceReport extends BaseReport implements ReportInterface {
 
     protected $branch_code;
 
@@ -19,7 +19,6 @@ class ProductReport extends BaseReport implements ReportInterface {
     protected $company_id;
 
     protected $user_name;
-
 
     public function __construct( $company_id, $request, $columns, $user_name )
     {
@@ -49,7 +48,9 @@ class ProductReport extends BaseReport implements ReportInterface {
         return $query;
     }
 
-    public function generateReport () {
+
+    public function generateReport()
+    {
 
         $query_items = FelInvoiceRequest::where('company_id', $this->company_id)->where('estado', 'VALIDO');
 
@@ -57,36 +58,33 @@ class ProductReport extends BaseReport implements ReportInterface {
 
         $query_items = $this->addBranchFilter($query_items);
 
-        $items_array = $query_items->pluck('detalles');
+        $detalles = $query_items->pluck('detalles', 'cuf');
 
-        $items = ExportUtils::flatten_array($items_array);
+        $invoices = $query_items->select('cuf', 'fechaEmision', 'numeroFactura', 'codigoSucursal', 'nombreRazonSocial', 'numeroDocumento', 'montoTotal')->get();
 
-        $items_grouped = collect($items)->groupBy('codigoProducto')->all();
+        $invoices_grouped = collect($invoices)->groupBy('cuf');
 
-        $data = collect($items_grouped)->map( function ( $item, $key ) {
+        $items = collect( $detalles )->map( function( $detail, $key ) use ($invoices_grouped) {
 
-            \Log::debug("Key: " . $key);
+            $invoice_data = $invoices_grouped[$key];
+            
+            $joined = collect($invoice_data)->crossJoin($detail)->all();
 
-            $cantidad = collect($item)->sum('cantidad');
-            $subTotal = collect($item)->sum('subTotal');
-            $montoDescuento = collect($item)->sum('montoDescuento');
+            $detalle = collect($joined)->map( function ( $d ) {
 
-            \Log::debug("Cantidad Vendido: " . $cantidad);
+                $merged = array_merge(...collect($d)->toArray());
 
-            $item_m = [
-                'cantidad' => $cantidad,
-                'codigoProducto' => $key,
-                'descripcion' => $item[0]['descripcion'],
-                'precioUnitario' => $item[0]['precioUnitario'],
-                'montoDescuento' => $montoDescuento,
-                'subTotal' => $subTotal
-            ];
+                return $merged;
 
-            $item = $item_m;
+            })->all();
 
-            return $item;
+            \Log::debug("Invoice Joined: " . json_encode($detalle));
+
+            return $detalle;
 
         })->values();
+
+        $items = ExportUtils::flatten_array($items);
 
         return [
             "header" => [
@@ -95,11 +93,11 @@ class ProductReport extends BaseReport implements ReportInterface {
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],
             "totales" =>[
-                "montoTotalGeneral" => NumberUtils::number_format_custom(collect($data)->sum('subTotal'), 2)
+                "montoTotalGeneral" => NumberUtils::number_format_custom(collect($items)->sum('subTotal'), 2)
             ],
-            "items" => ItemResumeResource::collection($data)->resolve()
+            "items" => ItemInvoiceResource::collection($items)->resolve()
         ];
-
+        
     }
-    
+
 }
