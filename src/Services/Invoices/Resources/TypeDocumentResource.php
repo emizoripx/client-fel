@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\Alquileres\AlquileresResourc
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Clinicas\ClinicasResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialConsignacion\ComercialConsignacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion\ComercialExportacionResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionGnv\ComercializacionGnvResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburos\ComercializacionHidrocarburosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVentaBonificaciones\CompraVentaBonificacionesResource;
@@ -61,6 +62,9 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::COMERCIALIZACION_HIDROCARBUROS:
                 return new ComercializacionHidrocarburosResource ($this);
+                break;
+            case TypeDocumentSector::COMERCIALIZACION_GNV:
+                return new ComercializacionGnvResource ($this);
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS:
                 return new ServiciosBasicosResource($this);

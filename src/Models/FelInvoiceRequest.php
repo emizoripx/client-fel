@@ -528,8 +528,8 @@ class FelInvoiceRequest extends Model
             $new->company_id = $hashid->encode($this->company_id);
             $new->numeroFactura = $this->external_invoice_data['numeroFacturaOriginal'];
             $new->fechaEmision = $this->external_invoice_data['fechaEmisionOriginal'];
-            $new->montoTotal = $this-> external_invoice_data['montoTotalOriginal'] ;
-            $new->codigoControl = $this->external_invoice_data['codigoControl'];
+            $new->montoTotal = $this->external_invoice_data['montoTotalOriginal'] ;
+            $new->codigoControl = isset($this->external_invoice_data['codigoControl']) ?$this->external_invoice_data['codigoControl']:"";
             $new->typeDocument = 2;
             $new->codigoSucursal = $this->codigoSucursal;
             $new->detalles = (json_decode($this->attributes['detalles'], true))['original'];

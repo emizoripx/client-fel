@@ -15,6 +15,13 @@ class DebitoCreditoResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "numeroFactura" => $this->external_invoice_data['numeroFacturaOriginal'],
+            "facturaExterna" => $this->facturaExterna,
+            "descuentoFacturaOriginal" => 0,
+            "codigoControl" => "",
+            "fechaFacturaOriginal" => $this->external_invoice_data['fechaEmisionOriginal'],
+            "montoTotalFacturaOriginal" =>  round($this->external_invoice_data['montoTotalOriginal'], 2),
+            'detalleFacturaOriginal' => DetalleDebitoCreditoOriginalResource::collection(collect($this->detalles['original'])),
             "numeroNota" => $this->numeroFactura,
             "fechaEmision" => $this->fechaEmision,
             "nombreRazonSocial" => $this->nombreRazonSocial,
@@ -27,7 +34,7 @@ class DebitoCreditoResource extends JsonResource
             "montoTotalDevuelto" => round($this->montoTotal, 2),
             "montoDescuentoCreditoDebito" => round($this->montoDescuentoCreditoDebito, 2),
             "montoEfectivoCreditoDebito" => round($this->montoEfectivoCreditoDebito, 2),
-            'detalles' => DetalleDebitoCreditoResource::collection(collect($this->detalles)),
+            'detalles' => DetalleDebitoCreditoResource::collection(collect($this->detalles['debitado'])),
             "emailCliente" => $this->emailCliente,
             "codigoExcepcion" => $this->codigoExcepcion,
             "complemento" => $this->complemento,

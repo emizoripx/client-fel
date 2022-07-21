@@ -18,5 +18,17 @@ class InvoiceUtils {
         return  $literal_date;
 
     }
+    public static function getFechaEmisionLiteralFormato2( $fecha_emision = null ) {
+
+        $month = Carbon::parse( $fecha_emision)->format('F');
+        $date_emission = Carbon::parse($fecha_emision)->format('d \of F \of Y');
+
+        \Log::debug("Month Literal: " . $month);
+        $literal_date = str_replace($month, trans( 'texts.' . strtolower($month)), $date_emission);
+
+        $literal_date = str_replace('of', 'de', $literal_date);
+        return  $literal_date;
+
+    }
 
 }

@@ -41,6 +41,7 @@ class BaseTemplateResource extends JsonResource
             "isUnipersonalCompany" => isset($this->company) ? boolval($this->company->company_detail->is_uniper) : '',
             "razonSocialEmisor" => isset($this->company->company_detail->business_name) ? $this->company->company_detail->business_name : '',
             "company_name" => isset($this->entity->company->settings->name) ? $this->entity->company->settings->name : '',
+            "name" => isset($this->entity->company->settings->name) ? $this->entity->company->settings->name : '',
             "codigoSucursal" => isset( $fel_invoice->codigoSucursal ) ? $fel_invoice->codigoSucursal : '',
             "codigoPuntoVenta" => isset($fel_invoice->codigoPuntoVenta) ? $fel_invoice->codigoPuntoVenta : '',
             "direccion" => isset($branch) ? $branch->zona : '',
@@ -69,6 +70,9 @@ class BaseTemplateResource extends JsonResource
             "paymnetQr" => $this->getPaymentQR(),
             "displayBusinessName" => isset($this->company->company_detail->business_name) ? 1 : 0,
             "currencyShortCode" => "Bs",
+            "codigoMoneda" => $fel_invoice->codigoMoneda,
+            "usuario" => isset($fel_invoice->usuario) ? $fel_invoice->usuario : '',
+            "clientName" => isset($this->client->name) ? $this->client->name : '',
 
         ], $extras);
     }

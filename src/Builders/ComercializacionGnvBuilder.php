@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class ComercializacionHidrocarburosBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class ComercializacionGnvBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -48,8 +48,7 @@ class ComercializacionHidrocarburosBuilder extends BaseFelInvoiceBuilder impleme
                 "data_specific_by_sector" => [
                     "tipoEnvase" => $this->source_data['fel_data_parsed']["tipoEnvase"],
                     "placaVehiculo" => $this->source_data['fel_data_parsed']["placaVehiculo"],
-                    "codigoAutorizacionSC" => $this->source_data['fel_data_parsed']["codigoAutorizacionSC"],
-                    "observacion" => $this->source_data['fel_data_parsed']["observacion"],
+                    "montoVale" => $this->source_data['fel_data_parsed']["montoVale"],
                 ],
             ],
             $this->getDetailsAndTotals()
@@ -100,17 +99,11 @@ class ComercializacionHidrocarburosBuilder extends BaseFelInvoiceBuilder impleme
         }
         $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
 
-        \Log::debug("gift card  >>>" . round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) );
-
-        $montoTotalSujetoIva = $total * 0.70;
-        
-
-        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$montoTotalSujetoIva, $total,round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) , round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
-            "montoTotalSujetoIva" => $montoTotalSujetoIva ,
+            "montoTotalSujetoIva" => $total,
             "detalles" => $details
         ];
     }

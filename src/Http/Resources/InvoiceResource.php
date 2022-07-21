@@ -3,7 +3,11 @@
 namespace EmizorIpx\ClientFel\Http\Resources;
 
 use App\Utils\Traits\MakesHash;
+use EmizorIpx\ClientFel\Models\FelBranch;
+use EmizorIpx\ClientFel\Models\FelCaption;
+use Exception;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Throwable;
 
 class InvoiceResource extends JsonResource
 {
@@ -16,7 +20,20 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
-        
+        try{
+            $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
+
+        }catch (Throwable $ex) {
+            $number_literal = "";
+        }
+
+        $company_id = $this->decodePrimaryKey($this->company_id);
+        try{
+        $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
+        $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
+
+        $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
+        $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
         return [
             "id" => (int) $this->id,
             "ack_ticket" => $this->ack_ticket,
@@ -149,9 +166,13 @@ class InvoiceResource extends JsonResource
             "numeroContrato" => (string)$this->numeroContrato ?? "",
 
             // Comercialización Hidrocarburos
-            "placaVehiculo" => $this->placaVehiculo,
-            "tipoEnvase" => $this->tipoEnvase,
-            "montoTotalSujetoIvaLey317" => $this->montoTotalSujetoIvaLey317,
+            "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '',
+            "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '',
+            "codigoAutorizacionSC" => isset($this->data_specific_by_sector['codigoAutorizacionSC']) ? $this->data_specific_by_sector['codigoAutorizacionSC'] : '',
+            "observacion" => isset($this->data_specific_by_sector['observacion']) ? $this->data_specific_by_sector['observacion'] : '',
+
+            // Comercializacion Gnv
+            "montoVale" => isset($this->data_specific_by_sector['montoVale']) ? $this->data_specific_by_sector['montoVale'] : '',
 
             // added extra variable to customize template
             "extras" => $this->getExtras(),
@@ -168,7 +189,7 @@ class InvoiceResource extends JsonResource
             
             "numeroFacturaOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['numeroFacturaOriginal'] : null,
             "montoTotalOriginal" => isset($this->external_invoice_data) ? $this->external_invoice_data['montoTotalOriginal'] : null,
-            "codigoControl" =>  isset($this->external_invoice_data) ? $this->external_invoice_data['codigoControl'] : null,
+            "codigoControl" =>  isset($this->external_invoice_data) && isset($this->external_invoice_data['codigoControl']) ? $this->external_invoice_data['codigoControl'] : null,
             "debitoFiscalIva" =>    isset($this->debitoFiscalIva) ? $this->debitoFiscalIva : null,
             "creditoFiscalIva" =>   isset($this->creditoFiscalIva) ? $this->creditoFiscalIva : null,
             "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
@@ -182,6 +203,25 @@ class InvoiceResource extends JsonResource
             "condicionPago" => isset($this->data_specific_by_sector['condicionPago']) ? $this->data_specific_by_sector['condicionPago'] : '',
             "periodoEntrega" => isset($this->data_specific_by_sector['periodoEntrega']) ? $this->data_specific_by_sector['periodoEntrega'] : '',
             "montoIehd" => isset($this->data_specific_by_sector['montoIehd']) ?  (string)(round($this->data_specific_by_sector['montoIehd'], 2)) : '0.00',
+
+            //ADDITIONAL INFORMATION FROM INVOICE
+
+            "invoiceInfo"=> [
+                "titulo"=> "FACTURA",
+                "tipo_factura"=>"(".ucwords( strtolower($sector->tipoFactura) ).")",
+                "razon_social_emisor"=> isset($company->business_name) && !is_null($company->business_name) ? $company->business_name : '',
+                "nombre_sucursal"=> $branch->codigo == 0 ? "CASA MATRIZ":"Sucursal " . $branch->codigo,
+                "numero_punto_venta"=>"Punto de venta ".$this->codigoPuntoVenta,
+                "direccion_sucursal"=>isset($branch->zona) && !is_null($branch->zona) ? $branch->zona : "",
+                "telefono_sucursal"=> "Telefono: ".$branch->telefono,
+                "municipio"=> "$branch->municipio - Bolivia",
+                "monto_literal"=> "SON: ". $number_literal,
+                "leyenda_especifica"=> !empty($caption)? $caption->descripcion : "",
+                "leyenda_fija" => FelCaption::CAPTION_SIN,
+            ]
         ];
+    } catch(Throwable $ex) {
+        \Log::debug("error  file " . $ex->getFile(). " Line " . $ex->getLine(). " Message : " . $ex->getMessage() );
+    }
     }
 }

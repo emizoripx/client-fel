@@ -22,6 +22,8 @@ class DetalleFacturaComercialExportacionMineralesTemplateResource extends BaseDe
             "codigoNandina" => $this->codigoNandina,
             "cantidadExtraccion" => NumberUtils::number_format_custom((float) bcdiv($this->cantidadExtraccion,'1',5) ,5) ,
             "unidadMedidaExtraccion" => ucwords(strtolower( Unit::getUnitDescription($this->unidadMedidaExtraccion))),
+            "valorBruto" => isset($this->valorBruto) ? $this->valorBruto : '',
+            "alicuota" => isset($this->alicuota) ? $this->alicuota : ''
         ]);
 
     }

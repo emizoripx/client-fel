@@ -18,7 +18,8 @@ class DetalleFacturaComercialExportacionTemplateResource extends BaseDetalleTemp
         $common["subTotal"] = NumberUtils::number_format_custom( (float) $this->subTotal, 5);
 
         return array_merge($common, [
-            "codigoNandina" => $this->codigoNandina
+            "codigoNandina" => $this->codigoNandina,
+            "leyes" => isset($this->leyes) ? $this->leyes : ''
         ]);
 
     }

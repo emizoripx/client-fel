@@ -14,8 +14,20 @@ class DetalleExportacionMineralesResource extends JsonResource
      */
     public function toArray($request)
     {
+        $data_array = [];
+
+        if( isset($this->resource['valorBruto']) ){
+            $data_array['extras'] = [
+                'valorBruto' => $this->resource['valorBruto']
+            ];
+        }
+        if( isset($this->resource['alicuota']) ){
+            $data_array['extras'] = [
+                'alicuota' => $this->resource['alicuota']
+            ];
+        }
      
-        return [
+        return array_merge( $data_array, [
             "descripcionLeyes" => $this->resource['descripcionLeyes'],
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "codigoNandina" => $this->resource['codigoNandina'],
@@ -29,6 +41,6 @@ class DetalleExportacionMineralesResource extends JsonResource
             "unidadMedida" => $this->resource['unidadMedida'],
             "unidadMedidaExtraccion" => $this->resource['unidadMedidaExtraccion'],
             "montoDescuento" => $this->resource['montoDescuento'] ?? 0
-        ];
+        ]);
     }
 }

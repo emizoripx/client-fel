@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaClinicas\FacturaClinicasTempla
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacion\FacturaComercialExportacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionMinerales\FacturaComercialExportacionMineralesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacionServicios\FacturaComercialExportacionServiciosTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionGnv\FacturaComercializacionGnvTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\FacturaComercializacionHidrocarburosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\FacturaCompraVentaBonificacionesTemplateResource;
@@ -20,6 +21,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaServiciosBasicos\FacturaServic
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaInternaMinerales\FacturaVentaInternaMineralesTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaZonaFranca\FacturaZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaDebitoCredito\NotaDebitoCreditoTemplateResource;
 
@@ -40,6 +42,9 @@ class TemplatesUtils {
             case TypeDocumentSector::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION :
                 return FacturaExportacionLibreConsignacionTemplateResource::class;
                 break;
+            case TypeDocumentSector::ZONA_FRANCA :
+                return FacturaZonaFrancaTemplateResource::class;
+                break;
             case TypeDocumentSector::TASA_CERO :
                 return FacturaTasaCeroTemplateResource::class;
                 break;
@@ -48,6 +53,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::COMERCIALIZACION_HIDROCARBUROS :
                 return FacturaComercializacionHidrocarburosTemplateResource::class;
+                break;
+            case TypeDocumentSector::COMERCIALIZACION_GNV :
+                return FacturaComercializacionGnvTemplateResource::class;
                 break;
             case TypeDocumentSector::SERVICIOS_BASICOS :
                 return FacturaServiciosBasicosTemplateResource::class;

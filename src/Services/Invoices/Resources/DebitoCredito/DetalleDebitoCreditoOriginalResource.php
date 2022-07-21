@@ -1,10 +1,10 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\ComercialExportacion;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetalleComercialExportacionResource extends JsonResource
+class DetalleDebitoCreditoOriginalResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,25 +14,17 @@ class DetalleComercialExportacionResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data_array = []; 
-
-        if( isset($this->resource['leyes']) ){
-            $data_array['extras'] = [
-                'leyes' => $this->resource['leyes']
-            ];
-        }
-
-        return array_merge($data_array, [
+        return [
             "codigoProducto" => $this->resource['codigoProducto'],
-            "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "descripcion" => $this->resource['descripcion'],
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
+            "codigoActividadSin" => $this->resource['codigoActividadEconomica'],
             "cantidad" => $this->resource['cantidad'],
             "precioUnitario" => $this->resource['precioUnitario'],
             "subTotal" => $this->resource['subTotal'],
             "unidadMedida" => $this->resource['unidadMedida'],
-            "codigoNandina" => $this->resource['codigoNandina'],
-            "montoDescuento" => $this->resource['montoDescuento'] ?? 0
-        ]);
+            "montoDescuento" => $this->resource['montoDescuento'] ?? null,
+     
+        ];
     }
 }
