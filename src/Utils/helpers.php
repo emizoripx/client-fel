@@ -72,8 +72,8 @@ if(!function_exists('short_emission_date_to_literal')){
     }
 }
 
-if(!function_exists('match_data')){
-    function match_data($value, $options){
-        return FunctionUtils::match_value($value, $options);
-    }
-}
+// if(!function_exists('match_data')){
+//     function match_data($value, $options){
+//         return FunctionUtils::match_value($value, $options);
+//     }
+// }

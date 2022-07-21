@@ -9,9 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use AnourValar\Office\Drivers\PhpSpreadsheetDriver;
-use AnourValar\Office\Sheets\Parser;
-use AnourValar\Office\SheetsService;
+use EmizorIpx\OfficePhp74\Drivers\PhpSpreadsheetDriver;
+use EmizorIpx\OfficePhp74\Sheets\Parser;
+use EmizorIpx\OfficePhp74\SheetsService;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use Exception;
@@ -121,7 +121,7 @@ class GenerateReport implements ShouldQueue
             $init = microtime(true);
             $memory_usage = memory_get_usage();
             \Log::debug("Usage Memory: " . $memory_usage);
-            $service_export->generate($template_filename, $invoices)->saveAs( $report_name_path, \AnourValar\Office\Format::Xlsx);
+            $service_export->generate($template_filename, $invoices)->saveAs( $report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
 
             unlink($template_filename);
 
