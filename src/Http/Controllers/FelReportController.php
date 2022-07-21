@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Models\FelReportRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Http\Resources\ReportResource;
 use EmizorIpx\ClientFel\Jobs\GenerateReport;
 
 class FelReportController extends BaseController
@@ -86,6 +87,33 @@ class FelReportController extends BaseController
                 "message" => $ex->getMessage()
             ]);
 
+        }
+
+    }
+
+    public function index ( Request $request ) {
+
+        try {
+            $user = auth()->user();
+            $company = $user->company();
+
+            $reports = \DB::table('fel_report_requests')->join('users', 'fel_report_requests.user_id', '=', 'users.id')
+                        ->where('fel_report_requests.company_id', $company->id)
+                        ->select('fel_report_requests.company_id', 'fel_report_requests.entity', 'fel_report_requests.status', 'fel_report_requests.s3_filepath', 'fel_report_requests.report_date', 'fel_report_requests.registered_at', 'fel_report_requests.start_process_at', 'fel_report_requests.completed_at', 'users.first_name', 'users.last_name', 'fel_report_requests.user_id')
+                        ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => ReportResource::collection($reports)
+            ]);
+        } catch( Exception $ex ) {
+
+            \Log::debug("Ocurrio un error al obtener los reportes: " . $ex->getMessage() . ' File: ' . $ex->getFile() . ' Line: ' . $ex->getLine());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener reportes: ' . $ex->getMessage()
+            ]);
         }
 
     }

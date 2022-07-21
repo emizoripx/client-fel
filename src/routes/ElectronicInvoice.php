@@ -21,6 +21,7 @@ class ElectronicInvoice
 
             Route::prefix('reports')->group(function () {
                 
+                Route::get('/', 'FelReportController@index');
                 Route::post('generate', 'FelReportController@getGenerateReport');
 
             });
