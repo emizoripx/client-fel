@@ -72,6 +72,7 @@ class BaseTemplateResource extends JsonResource
             "currencyShortCode" => "Bs",
             "codigoMoneda" => $fel_invoice->codigoMoneda,
             "usuario" => isset($fel_invoice->usuario) ? $fel_invoice->usuario : '',
+            "clientName" => isset($this->client->name) ? $this->client->name : '',
 
         ], $extras);
     }
