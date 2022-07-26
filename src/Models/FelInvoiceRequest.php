@@ -379,6 +379,10 @@ class FelInvoiceRequest extends Model
     {
         $this->invoice_origin()->service()->deletePdf();
     }
+    public function touchPdf()
+    {
+        $this->invoice_origin()->service()->touchPdf();
+    }
 
     public function invoice_origin()
     {
