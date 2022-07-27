@@ -51,7 +51,7 @@ class InvoiceController extends BaseController
             \Log::debug("Update user assigned " . auth()->user()->id );
             $invoice->assigned_user_id = auth()->user()->id;
             $invoice->save();
-
+            $felInvoiceRequest->setEmittedByUser();
             $success = true;
             \DB::commit();
             \Log::debug("EMIT-INVOICE ==============> END TRANSACTION");
@@ -89,6 +89,7 @@ class InvoiceController extends BaseController
 
             $felInvoiceRequest->setAccessToken()->sendRevocateInvoiceToFel($request->input('codigo_motivo_anulacion'));
             $felInvoiceRequest->invoiceDateUpdatedAt();
+            $felInvoiceRequest->setRevocatedByUser();
             return response()->json([
                 'success' => true
             ]);

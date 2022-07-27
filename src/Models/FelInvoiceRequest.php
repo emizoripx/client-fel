@@ -541,5 +541,16 @@ class FelInvoiceRequest extends Model
         return [];
     }
 
+    public function setEmittedByUser()
+    {
+        $this->emitted_by = auth()->user() ? auth()->user()->id : null;
+        $this->save();
+    }
+
+    public function setRevocatedByUser()
+    {
+        $this->revocated_by = auth()->user() ? auth()->user()->id : null;
+        $this->save();
+    }
 
 }
