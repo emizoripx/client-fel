@@ -31,17 +31,20 @@ class InvoiceResource extends JsonResource
 
         $company_id = $this->decodePrimaryKey($this->company_id);
         try{
-            $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
-            $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
 
-            $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
-            $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
+        $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
+        $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
 
+        $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
+        $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
+   
 
             $main = [
                 "id" => (int) $this->id,
                 "ack_ticket" => $this->ack_ticket,
                 "company_id" => $this->company_id,
+                "emitted_by" => $this->encodePrimaryKey($this->emitted_by),
+                "revocated_by" => $this->encodePrimaryKey($this->revocated_by),
                 "id_origin" => $this->encodePrimaryKey($this->id_origin),
                 "codigoMetodoPago" => (string)$this->codigoMetodoPago,
                 "codigoLeyenda" => (string)$this->codigoLeyenda,
