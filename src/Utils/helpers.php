@@ -4,6 +4,7 @@ use EmizorIpx\ClientFel\Models\BitacoraLog;
 use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use EmizorIpx\ClientFel\Models\Parametric\Country;
 use EmizorIpx\ClientFel\Utils\Currencies;
+use EmizorIpx\ClientFel\Utils\FunctionUtils;
 use EmizorIpx\ClientFel\Utils\InvoiceUtils;
 use EmizorIpx\ClientFel\Utils\NumberToWord;
 
@@ -70,3 +71,9 @@ if(!function_exists('short_emission_date_to_literal')){
         return InvoiceUtils::getFechaEmisionLiteralFormato2( $fecha_emision);
     }
 }
+
+// if(!function_exists('match_data')){
+//     function match_data($value, $options){
+//         return FunctionUtils::match_value($value, $options);
+//     }
+// }
