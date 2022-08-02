@@ -23,12 +23,10 @@ class BaseConnection {
 
             if ($response['status'] != 'success' ) {
                 
-                if ($response['ms_error']) {
-                   
+                if( isset( $response['errors'] ) ) {
 
-                } elseif ($response['sin_errors']) {
-                   
-
+                    return $response['errors'];
+                    
                 }
             }
 

@@ -66,7 +66,18 @@ class BaseFelInvoiceBuilder {
             $client->complement = null;
         }
 
-        $this->input = array_merge($this->input ,[
+        $offline_data = [];
+        if( isset( $fel_data_parsed['cuf'] ) ) {
+            $offline_data = array_merge($offline_data, ['cuf' => $fel_data_parsed['cuf']]);
+            $offline_data = array_merge($offline_data, ['emission_type' => "Fuera de línea"]);
+            \Log::debug("Cufd: " . $fel_data_parsed['cuf']);
+        }
+
+        if( isset( $fel_data_parsed['fechaEmision'] ) ) {
+            $offline_data = array_merge($offline_data, ['fechaEmision' => $fel_data_parsed['fechaEmision']]);
+        }
+
+        $this->input = array_merge($this->input, $offline_data ,[
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
             "type_document_sector_id" => $fel_data_parsed['type_document_sector_id'],

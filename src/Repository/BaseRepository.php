@@ -207,6 +207,9 @@ class BaseRepository
                         // CLINICAS
                         "modalidadServicio" => !empty($fel_data["modalidadServicio"]) ? $fel_data["modalidadServicio"] : null,
 
+                        // Offline Data
+                        "cuf" => !empty($fel_data["cuf"]) ? $fel_data["cuf"] : null,
+
                     ];
                     break;
                 
