@@ -22,6 +22,10 @@ class ElectronicInvoice
                 
                 Route::get('invoice/{sectorDocument}/{branchCode}/{posCode}/get-cuis-cufd', 'FelCuisCufdController@getCuisCufd');
 
+                Route::post('event/{event_id}/end-offline', 'FelOfflineEventController@processEvent');
+
+                Route::post('event/{event_id}/close', 'FelOfflineEventController@closeEvent');
+
             });
 
         });

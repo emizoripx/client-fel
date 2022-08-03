@@ -15,6 +15,8 @@ class AddErrorsColumnToFelOfflineEventsTable extends Migration
     {
         Schema::table('fel_offline_events', function (Blueprint $table) {
             $table->text('errors')->nullable();
+            $table->text('fel_response')->nullable();
+            $table->text('fel_errors')->nullable();
         });
     }
 
@@ -27,6 +29,8 @@ class AddErrorsColumnToFelOfflineEventsTable extends Migration
     {
         Schema::table('fel_offline_events', function (Blueprint $table) {
             $table->dropColumn('errors');
+            $table->dropColumn('fel_response');
+            $table->dropColumn('fel_errors');
         });
     }
 }
