@@ -21,23 +21,41 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
+        try {
+            $invoice_info = [];
+            if ( in_array(auth()->user()->first()->id,[458,413])  ) {
+                try {
+                    $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
+                } catch (Throwable $ex) {
+                    $number_literal = "";
+                }
 
-        try{
-            $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
+                $company_id = $this->decodePrimaryKey($this->company_id);
 
-        }catch (Throwable $ex) {
-            $number_literal = "";
-        }
+                    $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
+                    $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
 
-        $company_id = $this->decodePrimaryKey($this->company_id);
-        try{
+                    $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
+                    $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
 
-        $branch = FelBranch::whereCompanyId($company_id)->whereCodigo($this->codigoSucursal)->first();
-        $sector = \DB::table('fel_sector_document_types')->whereCodigo($this->type_document_sector_id)->first();
 
-        $company = \DB::table('fel_company')->whereCompanyId($company_id)->select('id', 'business_name')->first();
-        $caption = FelCaption::whereCompanyId($company_id)->whereCodigo($this->codigoLeyenda)->first();
-   
+                    $invoice_info = (object)[
+                        "titulo" => "FACTURA",
+                        "tipo_factura" => "(" . ucwords(strtolower($sector->tipoFactura)) . ")",
+                        "razon_social_emisor" => isset($company->business_name) && !is_null($company->business_name) ? $company->business_name : '',
+                        "nombre_sucursal" => $branch->codigo == 0 ? "CASA MATRIZ" : "Sucursal " . $branch->codigo,
+                        "numero_punto_venta" => "Punto de venta " . $this->codigoPuntoVenta,
+                        "direccion_sucursal" => isset($branch->zona) && !is_null($branch->zona) ? $branch->zona : "",
+                        "telefono_sucursal" => "Telefono: " . $branch->telefono,
+                        "municipio" => "$branch->municipio - Bolivia",
+                        "monto_literal" => "SON: " . $number_literal,
+                        "leyenda_especifica" => !empty($caption) ? $caption->descripcion : "",
+                        "leyenda_fija" => FelCaption::CAPTION_SIN,
+                    ];
+            }
+
+        
+
 
             $main = [
                 "id" => (int) $this->id,
@@ -82,19 +100,7 @@ class InvoiceResource extends JsonResource
                 "extras" => $this->getExtras(),
                 "typeDocument" => $this->typeDocument,
                 "sector_document_type_id" => $this->type_document_sector_id ?? null,
-                "invoiceInfo" => [
-                    "titulo" => "FACTURA",
-                    "tipo_factura" => "(" . ucwords(strtolower($sector->tipoFactura)) . ")",
-                    "razon_social_emisor" => isset($company->business_name) && !is_null($company->business_name) ? $company->business_name : '',
-                    "nombre_sucursal" => $branch->codigo == 0 ? "CASA MATRIZ" : "Sucursal " . $branch->codigo,
-                    "numero_punto_venta" => "Punto de venta " . $this->codigoPuntoVenta,
-                    "direccion_sucursal" => isset($branch->zona) && !is_null($branch->zona) ? $branch->zona : "",
-                    "telefono_sucursal" => "Telefono: " . $branch->telefono,
-                    "municipio" => "$branch->municipio - Bolivia",
-                    "monto_literal" => "SON: " . $number_literal,
-                    "leyenda_especifica" => !empty($caption) ? $caption->descripcion : "",
-                    "leyenda_fija" => FelCaption::CAPTION_SIN,
-                ]
+                "invoiceInfo" => $invoice_info
             ];
 
 
@@ -538,19 +544,7 @@ class InvoiceResource extends JsonResource
 
                         //ADDITIONAL INFORMATION FROM INVOICE
 
-                        "invoiceInfo" => [
-                            "titulo" => "FACTURA",
-                            "tipo_factura" => "(" . ucwords(strtolower($sector->tipoFactura)) . ")",
-                            "razon_social_emisor" => isset($company->business_name) && !is_null($company->business_name) ? $company->business_name : '',
-                            "nombre_sucursal" => $branch->codigo == 0 ? "CASA MATRIZ" : "Sucursal " . $branch->codigo,
-                            "numero_punto_venta" => "Punto de venta " . $this->codigoPuntoVenta,
-                            "direccion_sucursal" => isset($branch->zona) && !is_null($branch->zona) ? $branch->zona : "",
-                            "telefono_sucursal" => "Telefono: " . $branch->telefono,
-                            "municipio" => "$branch->municipio - Bolivia",
-                            "monto_literal" => "SON: " . $number_literal,
-                            "leyenda_especifica" => !empty($caption) ? $caption->descripcion : "",
-                            "leyenda_fija" => FelCaption::CAPTION_SIN,
-                        ]
+                        "invoiceInfo" => $invoice_info
                     ];
                     break;
             }
