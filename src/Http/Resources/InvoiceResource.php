@@ -23,7 +23,7 @@ class InvoiceResource extends JsonResource
     {
         try {
             $invoice_info = [];
-            if ( in_array(auth()->user()->first()->id,[458,413])  ) {
+            if ( false  ) {
                 try {
                     $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
                 } catch (Throwable $ex) {
