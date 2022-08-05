@@ -94,9 +94,23 @@ class TypeDocumentSector
         27 => "Factura Regimen 7RG",
         28 => "Factura Comercial de Exportación de Servicios",
         29 => "Nota de Conciliación",
+        30 => "Boleto Aereo",
+        31 => "Factura De Suministro",
+        32 => "Factura ICE Zona Franca",
+        33 => "Factura Tasa Cero Bienes Capital",
         34 => "Factura Seguros",
         35 => "Factura compra venta bonificaciones",
+        36 => "Factura Prevalorada SDCF",
+        37 => "Factura De Comercialización De GNV",
         38 => "Factura De Hidrocarburos No Alcanzada IEHD",
+        39 => "Factura Comercializacion GN y GLP",
+        40 => "Factura De Servicios Básicos ZF",
+        41 => "Factura Compra Venta Tasas",
+        42 => "Factura Alquiler ZF",
+        43 => "Factura Comercial De Exportación Hidrocarburos",
+        44 => "Factura Importacion Comercializacion Lubricantes",
+        45 => "Factura Comercial De Exportacion Precio Venta",
+        46 => "Factura Sectores Educativo Zona Franca",
     ];
 
     public static function getInstanceByCode($code):string
