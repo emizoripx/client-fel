@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Jobs;
 
+use App\Models\Company;
 use EmizorIpx\ClientFel\Models\FelCufd;
 use EmizorIpx\ClientFel\Models\FelCuis;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
@@ -64,10 +65,10 @@ class AddOfflinePackage implements ShouldQueue
         $sectorDocument = SectorDocumentTypes::where('company_id', $company_id)->where('codigo', $this->fel_invoice->type_document_sector_id)->select('codigoSistema')->first();
         \Log::debug("SectorDOcument: " . json_encode($sectorDocument));
 
-        $cuis = FelCuis::where('company_id', $company_id)->where('branch_code', $branch->codigo)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $this->fel_invoice->codigoPuntoVenta == null ? null : $this->fel_invoice->codigoPuntoVenta )->first();
+        $cuis = FelCuis::where('company_id', $company_id)->where('branch_code', $branch->codigo)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $this->fel_invoice->codigoPuntoVenta == null ? null : $this->fel_invoice->codigoPuntoVenta )->orderBy('id', 'desc')->first();
 
         \Log::debug("Cuis: " . json_encode($cuis));
-        $cufd = FelCufd::where('company_id', $company_id)->where('branch_code', $branch->codigo)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $this->fel_invoice->codigoPuntoVenta == null ? null : $this->fel_invoice->codigoPuntoVenta )->first();
+        $cufd = FelCufd::where('company_id', $company_id)->where('branch_code', $branch->codigo)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $this->fel_invoice->codigoPuntoVenta == null ? null : $this->fel_invoice->codigoPuntoVenta )->orderBy('id', 'desc')->first();
         \Log::debug("Cufd: " . json_encode($cufd));
 
         $offline_event = $offline_event_service->getOrCreateOfflineEvent($company_id, $branch->id, $pos_id, $cufd->cufd, $cuis->cuis, $this->fel_invoice->fechaEmision);
@@ -77,9 +78,12 @@ class AddOfflinePackage implements ShouldQueue
         \Log::debug("Offline Package: " . json_encode($offline_event));
         \Log::debug("Offline Package: " . json_encode($offline_package));
 
+        $company_settings = Company::where('id', $company_id)->select('settings')->first();
+
         $this->fel_invoice->offline_package_id = $offline_package->id;
         $this->fel_invoice->cufd = $offline_event->cufd;
         $this->fel_invoice->cuis = $offline_event->cuis;
+        $this->fel_invoice->urlSin = "https://pilotosiat.impuestos.gob.bo/consulta/QR?nit=". $company_settings->settings->id_number ."&cuf=". $this->fel_invoice->cuf ."&numero=". $this->fel_invoice->numeroFactura ;
         $this->fel_invoice->save();
 
         $offline_package->quantity = $offline_package->quantity + 1;

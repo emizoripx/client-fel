@@ -59,7 +59,7 @@ class ProcessOfflineInvoices implements ShouldQueue
                 throw new Exception(" No se encontro un evento Pendiente con el ID: " . $this->offline_event_id);  
             }
 
-            $package_ids = FelOfflinePackage::where('offline_event_id', $this->offline_event_id)->pluck('type_document_code','id')->toArray();
+            $package_ids = FelOfflinePackage::where('offline_event_id', $this->offline_event_id)->where('state', FelOfflinePackage::PENDING_STATE)->pluck('type_document_code','id')->toArray();
 
             \Log::debug("Packages: " . json_encode($package_ids));
             if( count($package_ids) == 0 ) {
@@ -137,7 +137,7 @@ class ProcessOfflineInvoices implements ShouldQueue
                     \DB::table('fel_offline_packages')->where('id', $key)->update([
                         "fel_response" => json_encode( $response ),
                         "has_errors" => $errors,
-                        "state" => FelOfflinePackage::PROCESSED_STATE,
+                        "state" => $errors == true ? FelOfflinePackage::FAILED_STATE : FelOfflinePackage::PROCESSED_STATE,
                         "processed_at" => \Carbon\Carbon::now()->toDateTimeString(),
                     ]);
 

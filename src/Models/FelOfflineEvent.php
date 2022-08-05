@@ -11,6 +11,8 @@ class FelOfflineEvent extends Model
     const PENDING_STATE = 'PENDING';
 
     const PROCESSED_STATE = 'PROCESSED';
+
+    const FAILED_STATE = 'FAILED';
     
     protected $table = 'fel_offline_events';
 

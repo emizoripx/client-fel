@@ -122,6 +122,38 @@ class FelOfflineEventService extends BaseConnection
 
     }
 
+    public function getSignificantEventStatus () {
+
+        try {
+
+            if (empty($this->significant_event_code)) {
+                throw new ClientFelException("El access token es necesario");
+            }
+            \Log::debug("Send to : " . "/api/v1/fuera-de-linea/evento-significativo/$this->significant_event_code/status" );
+
+            $response = $this->client->request("GET", "/api/v1/fuera-de-linea/evento-significativo/$this->significant_event_code/status", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+
+            $parsed_response = json_decode( (string) $response->getBody(), true);
+
+            return $parsed_response;
+
+        } catch(RequestException $re) {
+            // \Log::debug("Request Exception: " . Psr7\Message::toString($re->getResponse()));
+            \Log::debug("Request Exception: " . $re->getResponse()->getBody());
+            $parsed_response = json_decode( (string) $re->getResponse()->getBody(), true);
+            
+            return $parsed_response;
+        }
+        catch (\Exception $ex) {
+
+            Log::error($ex->getMessage());
+            Log::error("Type Exception: " . gettype($ex));
+
+            throw new ClientFelException("Error en el envio de paquetes: " . $ex->getMessage());
+        }
+
+    }
+
     public function sendPackageToFel() {
 
         $this->checkParameters();

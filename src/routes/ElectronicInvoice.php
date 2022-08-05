@@ -26,6 +26,8 @@ class ElectronicInvoice
 
                 Route::post('event/{event_id}/close', 'FelOfflineEventController@closeEvent');
 
+                Route::get('event/{event_id}/status', 'FelOfflineEventController@getFelStatusEvent');
+
             });
 
         });

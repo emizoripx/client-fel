@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
+use EmizorIpx\ClientFel\Jobs\GetSignificantEventStatus;
 use EmizorIpx\ClientFel\Jobs\ProcessOfflineInvoices;
 use EmizorIpx\ClientFel\Models\FelClientToken;
 use EmizorIpx\ClientFel\Models\FelOfflineEvent;
@@ -66,6 +67,10 @@ class FelOfflineEventController extends Controller
             // Set packages with errors to Failed state
 
             if( !empty( $offline_packages ) && count($offline_packages) > 0 ){
+                
+                $offline_event->state = FelOfflineEvent::PENDING_STATE;
+                $offline_event->save();
+
                 return response()->json([
                     "success" => false,
                     "message" => "Existen Facturas con errores"
@@ -104,10 +109,12 @@ class FelOfflineEventController extends Controller
                 $offline_event->save();
 
                 $message = $response['data']['messages'];
+
+                GetSignificantEventStatus::dispatch( $offline_event )->delay( now()->addSeconds(60) );
             }
 
             return response()->json([   
-                'success' => true,
+                'success' => $response['status'] != 'success' ? false : true,
                 'message' => $message
             ]);
 
@@ -122,6 +129,19 @@ class FelOfflineEventController extends Controller
 
         }
 
+
+    }
+
+    public function getFelStatusEvent( Request $request, $event_id ) {
+        
+        $offline_event = FelOfflineEvent::where('id', $event_id)->first();
+
+        GetSignificantEventStatus::dispatch( $offline_event );
+
+        return response()->json([
+            "success" => true,
+            "message" => "Enviado a Obtener el estado del Evento"
+        ]);
 
     }
 
