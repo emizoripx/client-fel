@@ -106,7 +106,6 @@ class ItemInvoiceReport extends BaseReport implements ReportInterface {
 
             })->all();
 
-            \Log::debug("Invoice Joined: " . json_encode($detalle));
 
             return $detalle;
 

@@ -33,8 +33,7 @@ class FelReportController extends BaseController
 
             $custom_reports = $company->settings->custom_reports;
 
-            \Log::debug("Cutsom Reports: " . json_encode($custom_reports));
-
+            // \Log::debug("Cutsom Reports: " . json_encode($custom_reports));
 
             $report_type = null;
             if( count($custom_reports) > 1 ){
@@ -70,6 +69,7 @@ class FelReportController extends BaseController
                 "entity" => $report_type->entity,
                 "status" => 1,
                 "registered_at" => Carbon::now()->toDateTimeString(),
+                "user_id" =>$user->id,
             ]);
             
             GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user );
@@ -95,6 +95,7 @@ class FelReportController extends BaseController
 
         try {
             $user = auth()->user();
+
             $company = $user->company();
 
             $reports = \DB::table('fel_report_requests')->join('users', 'fel_report_requests.user_id', '=', 'users.id')
