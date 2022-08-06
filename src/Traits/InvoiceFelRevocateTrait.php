@@ -38,6 +38,8 @@ trait InvoiceFelRevocateTrait{
 
             $felInvoiceRequest->invoiceDateUpdatedAt();
 
+            $felInvoiceRequest->setRevocatedByUser();
+            
             $success = true;
 
             bitacora_info("FelInvoiceRequestRevocate", $success);
