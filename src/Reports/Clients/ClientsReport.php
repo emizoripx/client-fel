@@ -17,10 +17,10 @@ class ClientsReport extends BaseReport implements ReportInterface {
 
     protected $company_id;
 
-    protected $user_name;
+    protected $user;
 
 
-    public function __construct( $company_id, $request, $columns, $user_name )
+    public function __construct( $company_id, $request, $columns, $user )
     {
         $this->company_id = $company_id;
 
@@ -37,7 +37,7 @@ class ClientsReport extends BaseReport implements ReportInterface {
 
         $this->columns = $columns;
 
-        $this->user_name = $user_name;
+        $this->user = $user;
 
         parent::__construct($from, $to);
         
@@ -127,7 +127,7 @@ class ClientsReport extends BaseReport implements ReportInterface {
         return [
             "header" => [
                 "sucursal" => is_null($this->branch_code) ?  "Todos" : ($this->branch_code == 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code),
-                "usuario" => $this->user_name,
+                "usuario" => $this->user->name(),
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],
             "clients" => ClientReportResource::collection($clients)->resolve()
