@@ -110,7 +110,7 @@ class ProductReport extends BaseReport implements ReportInterface {
 
         return [
             "header" => [
-                "sucursal" => is_null($this->branch_code) ?  "Todos" : ($this->branch_code == 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code),
+                "sucursal" => $this->branch_desc,
                 "usuario" => $this->user->name(),
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],
