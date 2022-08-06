@@ -92,7 +92,7 @@ class GenerateReport implements ShouldQueue
 
             \Log::debug("Report Type: "  . $report_class);
             
-            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user->name());
+            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user);
 
             $invoices = $service_report->generateReport();
             $driver = new PhpSpreadsheetDriver();

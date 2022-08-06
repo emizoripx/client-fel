@@ -22,7 +22,9 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
     protected $company_id;
 
-    protected $user_name;
+    protected $user;
+
+    protected $branch_desc = 'Todos';
 
     const GROUP_BY_CLIENT = 'cliente';
 
@@ -30,7 +32,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
 
 
-    public function __construct( $company_id, $request, $columns, $user_name )
+    public function __construct( $company_id, $request, $columns, $user )
     {
         $this->company_id = $company_id;
 
@@ -47,7 +49,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
         $this->columns = $columns;
 
-        $this->user_name = $user_name;
+        $this->user = $user;
 
         parent::__construct($from, $to);
         
@@ -73,7 +75,26 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
         if( !is_null($this->branch_code) ) {
 
+            \Log::debug("Filter by Brach: " . $this->branch_code);
+
+            $this->branch_desc = "Sucursal " . $this->branch_code;
+
             return $query->where('fel_invoice_requests.codigoSucursal', $this->branch_code);
+
+        } elseif( count($branch_access = $this->user->getOnlyBranchAccess()) > 0 ) {
+
+            $branch_access = $this->user->getOnlyBranchAccess();
+
+            \Log::debug("Filter by Access Branch");
+
+            $branches_desc = [];
+            foreach ($branch_access as $value) {
+                array_push( $branch_access, $this->branch_desc . ($this->branch_desc == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
+            }
+
+            $this->branch_desc = implode(" - ", $branches_desc);
+
+            return $query->whereIn('fel_invoice_requests.codigoSucursal', $branch_access);
 
         }
 
@@ -183,6 +204,13 @@ class InvoiceReport extends BaseReport implements ReportInterface {
     public function generateReport() {
 
         $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id') ;
+        
+        if ($this->user && ! $this->user->hasPermission('view_invoice')) {
+
+            \Log::debug("Filter By User: " . $this->user->id);
+
+            $query_invoices = $query_invoices->where('invoices.user_id', '=', $this->user->id);
+        }
 
         $query_invoices = $this->addDateFilter($query_invoices);
 
@@ -220,8 +248,8 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
         return [
             "header" => [
-                "sucursal" => is_null($this->branch_code) ?  "Todos" : ($this->branch_code == 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code),
-                "usuario" => $this->user_name,
+                "sucursal" => $this->branch_desc,
+                "usuario" => $this->user->name(),
                 "fechaReporte" => Carbon::now()->toDateTimeString()
             ],
             "totales" =>[
