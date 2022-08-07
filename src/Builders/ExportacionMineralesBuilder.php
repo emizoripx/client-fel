@@ -121,6 +121,12 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
             if( isset($detail->alicuota) ) {
                 $new->alicuota = $detail->alicuota;
             }
+            if( isset($detail->lfotfRegalia) ) {
+                $new->lfotfRegalia = $detail->lfotfRegalia;
+            }
+            if( isset($detail->cotizacionRegalia) ) {
+                $new->cotizacionRegalia = $detail->cotizacionRegalia;
+            }
 
             if ($detail->discount > 0)
                 $new->montoDescuento = round(($detail->cost * $detail->quantity) - $detail->line_total,5);
