@@ -379,6 +379,10 @@ class FelInvoiceRequest extends Model
     {
         $this->invoice_origin()->service()->deletePdf();
     }
+    public function touchPdf()
+    {
+        $this->invoice_origin()->service()->touchPdf();
+    }
 
     public function invoice_origin()
     {
@@ -541,5 +545,16 @@ class FelInvoiceRequest extends Model
         return [];
     }
 
+    public function setEmittedByUser()
+    {
+        $this->emitted_by = auth()->user() ? auth()->user()->id : null;
+        $this->save();
+    }
+
+    public function setRevocatedByUser()
+    {
+        $this->revocated_by = auth()->user() ? auth()->user()->id : null;
+        $this->save();
+    }
 
 }

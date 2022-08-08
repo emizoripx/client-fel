@@ -18,6 +18,14 @@ class ElectronicInvoice
             Route::post('invoices/reversion-revocate', 'InvoiceController@reversionRevocate');
             Route::get('verify_nit/{NIT}', 'InvoiceController@verifynit');
 
+
+            Route::prefix('reports')->group(function () {
+                
+                Route::get('/', 'FelReportController@index');
+                Route::post('generate', 'FelReportController@getGenerateReport');
+
+            });
+
             Route::prefix('offline')->group(function () {
                 
                 Route::get('invoice/{sectorDocument}/{branchCode}/{posCode}/get-cuis-cufd', 'FelCuisCufdController@getCuisCufd');

@@ -18,9 +18,9 @@ class ParametricController extends BaseController
         try {
 
             $response = FelParametric::index($type, $request->company_id);
-            if (empty($parametrics)) {
+            if (empty($response)) {
 
-                $parametricService = new Parametric($request->access_token);
+                $parametricService = new Parametric($request->access_token, $request->host);
                 $parametricService->get($type);
 
                 FelParametric::create($type, $parametricService->getResponse(), $request->company_id);

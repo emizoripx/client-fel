@@ -17,17 +17,29 @@ class DetalleExportacionMineralesResource extends JsonResource
         $data_array = [];
 
         if( isset($this->resource['valorBruto']) ){
-            $data_array['extras'] = [
+            $data_array = array_merge($data_array, [
                 'valorBruto' => $this->resource['valorBruto']
-            ];
+            ]);
         }
         if( isset($this->resource['alicuota']) ){
-            $data_array['extras'] = [
+            $data_array = array_merge($data_array, [
                 'alicuota' => $this->resource['alicuota']
-            ];
+            ]);
         }
-     
-        return array_merge( $data_array, [
+
+        if( isset($this->resource['lfotfRegalia']) ){
+            $data_array = array_merge( $data_array, [
+                'lfotfRegalia' => $this->resource['lfotfRegalia']
+            ]);
+        }
+        if( isset($this->resource['cotizacionRegalia']) ){
+            $data_array = array_merge($data_array, [
+                'cotizacionRegalia' => $this->resource['cotizacionRegalia']
+            ]);
+        }
+
+        $extras = count($data_array) > 1 ? [ 'extras' => $data_array ] : [];
+        return array_merge( $extras  , [
             "descripcionLeyes" => $this->resource['descripcionLeyes'],
             "codigoProductoSin" => $this->resource['codigoProductoSin'],
             "codigoNandina" => $this->resource['codigoNandina'],

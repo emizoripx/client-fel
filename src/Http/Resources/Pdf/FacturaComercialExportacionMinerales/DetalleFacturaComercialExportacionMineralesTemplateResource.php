@@ -23,7 +23,9 @@ class DetalleFacturaComercialExportacionMineralesTemplateResource extends BaseDe
             "cantidadExtraccion" => NumberUtils::number_format_custom((float) bcdiv($this->cantidadExtraccion,'1',5) ,5) ,
             "unidadMedidaExtraccion" => ucwords(strtolower( Unit::getUnitDescription($this->unidadMedidaExtraccion))),
             "valorBruto" => isset($this->valorBruto) ? $this->valorBruto : '',
-            "alicuota" => isset($this->alicuota) ? $this->alicuota : ''
+            "alicuota" => isset($this->alicuota) ? $this->alicuota : '',
+            "lfotfRegalia" => isset($this->lfotfRegalia) ? $this->lfotfRegalia : '',
+            "cotizacionRegalia" => isset($this->cotizacionRegalia) ? $this->cotizacionRegalia : ''
         ]);
 
     }
