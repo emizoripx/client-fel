@@ -36,7 +36,7 @@ class GenerateReport implements ShouldQueue
 
     protected $user;
 
-    public $timeout = 300;
+    public $timeout = 600;
 
     /**
      * Create a new job instance.
