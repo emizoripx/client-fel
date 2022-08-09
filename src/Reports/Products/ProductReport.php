@@ -69,15 +69,33 @@ class ProductReport extends BaseReport implements ReportInterface {
         return $query;
     }
 
+
     public function generateReport () {
 
-        $query_items = FelInvoiceRequest::where('company_id', $this->company_id)->where('estado', 'VALIDO');
+        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->where('fel_invoice_requests.estado', 'VALIDO');
 
+        if ($this->user && ! $this->user->hasPermission('view_invoice')) {
+
+            \Log::debug("Filter By User: " . $this->user->id);
+            // Join with Invoices
+
+            $query_items = $query_items->where('invoices.user_id', '=', $this->user->id);
+        }
+        
         $query_items = $this->addDateFilter($query_items);
 
         $query_items = $this->addBranchFilter($query_items);
 
-        $items_array = $query_items->pluck('detalles');
+        // Has Permission
+
+        $items_array = $query_items->pluck('fel_invoice_requests.detalles');
+
+        $items_array_dec = json_decode($items_array);
+
+        $items_array = collect($items_array_dec)->map( function ( $detail ) {
+
+            return json_decode($detail, true);
+        })->all();
 
         $items = ExportUtils::flatten_array($items_array);
 
@@ -121,5 +139,6 @@ class ProductReport extends BaseReport implements ReportInterface {
         ];
 
     }
+
     
 }
