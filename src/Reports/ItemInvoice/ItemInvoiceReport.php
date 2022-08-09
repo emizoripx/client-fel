@@ -73,28 +73,31 @@ class ItemInvoiceReport extends BaseReport implements ReportInterface {
     public function generateReport()
     {
 
-        $query_items = FelInvoiceRequest::where('company_id', $this->company_id)->where('estado', 'VALIDO');
+        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->where('fel_invoice_requests.estado', 'VALIDO');
 
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 
             \Log::debug("Filter By User: " . $this->user->id);
+            // Join with Invoices
 
-            $query_items = $query_items->where('user_id', '=', $this->user->id);
+            $query_items = $query_items->where('invoices.user_id', '=', $this->user->id);
         }
 
         $query_items = $this->addDateFilter($query_items);
 
         $query_items = $this->addBranchFilter($query_items);
 
-        $detalles = $query_items->pluck('detalles', 'cuf');
+        $detalles = $query_items->pluck('fel_invoice_requests.detalles', 'fel_invoice_requests.cuf');
 
-        $invoices = $query_items->select('cuf', 'fechaEmision', 'numeroFactura', 'codigoSucursal', 'nombreRazonSocial', 'numeroDocumento', 'montoTotal')->get();
+        $invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.codigoSucursal', 'fel_invoice_requests.nombreRazonSocial', 'fel_invoice_requests.numeroDocumento', 'fel_invoice_requests.montoTotal')->get();
 
         $invoices_grouped = collect($invoices)->groupBy('cuf');
 
         $items = collect( $detalles )->map( function( $detail, $key ) use ($invoices_grouped) {
 
-            $invoice_data = $invoices_grouped[$key];
+            $invoice_data = json_decode(json_encode($invoices_grouped[$key]), true) ;
+            
+            $detail = json_decode($detail, true);
             
             $joined = collect($invoice_data)->crossJoin($detail)->all();
 
