@@ -69,8 +69,8 @@ class GenerateReport implements ShouldQueue
      */
     public function handle()
     {
-        
-        \Log::debug("GENERATE REPORT JOBS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT");
+        set_time_limit ( 180 );
+        \Log::debug("GENERATE REPORT JOBS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT >>>>>>> 10 html 2");
 
         try {
 
