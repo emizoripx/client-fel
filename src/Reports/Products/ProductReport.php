@@ -57,7 +57,7 @@ class ProductReport extends BaseReport implements ReportInterface {
 
             $branches_desc = [];
             foreach ($branch_access as $value) {
-                array_push( $branch_access, $this->branch_desc . ($this->branch_desc == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
+                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
             }
 
             $this->branch_desc = implode(" - ", $branches_desc);
