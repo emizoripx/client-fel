@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
+use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
@@ -17,6 +18,8 @@ class ExportUtils {
     const ITEMS_INVOICE_ENTITY = 'Items_Invoice';
 
     const CLIENTS_ENTITY = 'Clients';
+
+    const QUANTITY_ITEMS = 'Quantity';
 
 
     public static function saveFileLocal($name, $datetime, $content) {
@@ -61,6 +64,10 @@ class ExportUtils {
                 break;
             case static::CLIENTS_ENTITY:
                 return ClientsReport::class ;
+                break;
+
+            case static::QUANTITY_ITEMS:
+                return CosinCantidadReport::class;
                 break;
             
             default:
