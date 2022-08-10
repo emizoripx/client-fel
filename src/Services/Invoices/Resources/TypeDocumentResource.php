@@ -19,6 +19,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion\NotaConciliacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Prevalorada\PrevaloradaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativoZonaFranca\SectorEducativoZonaFrancaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ServiciosBasicos\ServiciosBasicosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones\TelecomunicacionesResource;
@@ -87,24 +88,26 @@ class TypeDocumentResource extends JsonResource
             case TypeDocumentSector::HOSPITALES_CLINICAS :
                 return new ClinicasResource($this);
                 break;
-            case TypeDocumentSector::DEBITO_CREDITO;
+            case TypeDocumentSector::DEBITO_CREDITO:
                 return new DebitoCreditoResource($this);
                 break;
-            case TypeDocumentSector::COMERCIAL_EXPORTACION_SERVICIOS ;
+            case TypeDocumentSector::COMERCIAL_EXPORTACION_SERVICIOS :
                 return new ExportacionServiciosResource($this);
                 break;
-            case TypeDocumentSector::NOTA_CONCILIACION ;
+            case TypeDocumentSector::NOTA_CONCILIACION :
                 return new NotaConciliacionResource($this);
                 break;
-            case TypeDocumentSector::SEGUROS;
+            case TypeDocumentSector::SEGUROS:
                 return new SegurosResource($this);
                 break;
-            case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES;
+            case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES:
                 return new CompraVentaBonificacionesResource($this);
                 break;
-            case TypeDocumentSector::HIDROCARBUROS_NO_IEHD ;
+            case TypeDocumentSector::HIDROCARBUROS_NO_IEHD :
                 return new HidrocarburosNoIehdResource($this);
                 break;
+            case TypeDocumentSector::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return new SectorEducativoZonaFrancaResource($this);
             default:
                 return new CompraVentaResource($this);
                 break;

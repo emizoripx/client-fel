@@ -15,6 +15,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\F
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaPrevalorada\FacturaPrevaloradaTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectorEducativoZonaFranca\FacturaSectorEducativoZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSeguros\FacturaSegurosTempateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaServiciosBasicos\FacturaServiciosBasicosTemplateResource;
@@ -94,6 +95,10 @@ class TemplatesUtils {
                 return FacturaSegurosTempateResource::class;
             case TypeDocumentSector::COMPRA_VENTA_BONIFICACIONES:
                 return FacturaCompraVentaBonificacionesTemplateResource::class;
+            
+            case TypeDocumentSector::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return FacturaSectorEducativoZonaFrancaTemplateResource::class;
+                break;
 
             default:
                 return FacturaCompraVentaTemplateResource::class;
