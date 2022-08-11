@@ -19,7 +19,7 @@ class ExportUtils {
 
     const CLIENTS_ENTITY = 'Clients';
 
-    const QUANTITY_ITEMS = 'Quantity';
+    const QUANTITY_ITEMS = 'Item_Cantidad';
 
 
     public static function saveFileLocal($name, $datetime, $content) {

@@ -2,8 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Reports\Invoices;
 
-use App\Models\Invoice;
-use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
+use App\Models\Product;
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 
@@ -69,7 +68,8 @@ class CosinCantidadReport extends BaseReport implements ReportInterface {
 
     public function generateReport()
     {
-        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->whereIn('fel_invoice_requests.estado', ['VALIDO', 'ANULADO']);
+        \Log::debug("Generar Reporte: ");
+        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->whereNotNull('cuf');
 
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 
@@ -82,9 +82,13 @@ class CosinCantidadReport extends BaseReport implements ReportInterface {
 
         $query_items = $this->addBranchFilter($query_items);
 
-        $detalles = $query_items->pluck('fel_invoice_requests.detalles', 'fel_invoice_requests.cuf');
+        $detalles = $query_items->pluck('invoices.line_items', 'fel_invoice_requests.cuf');
 
-        $query_invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.codigoCliente', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.nombreRazonSocial', 'invoices.balance as pagado', 'fel_invoice_requests.montoTotal', 'fel_invoice_requests.estado');
+
+        $query_invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.codigoCliente', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.nombreRazonSocial', 'invoices.balance as pagado', 'fel_invoice_requests.montoTotal', 'fel_invoice_requests.estado');
+
+        $query_invoices = $query_invoices->selectRaw('fel_invoice_requests.montoTotal - invoices.balance  as deuda');
+        $query_invoices = $query_invoices->selectRaw('DATE_FORMAT(fel_invoice_requests.fechaEmision, "%Y-%m-%d %H:%i:%s") as fechaEmision');
         
         \Log::debug("SQL QUERY INVOICES: " . $query_invoices->toSql() );
 
@@ -92,36 +96,33 @@ class CosinCantidadReport extends BaseReport implements ReportInterface {
 
         $invoices_grouped = collect($invoices)->groupBy('cuf');
 
-        \Log::debug("Detalle: " . json_encode($detalles));
 
-        \Log::debug("Factura: " . json_encode($invoices));
+        $products_keys = Product::where('company_id', $this->company_id)->select('id', \DB::raw('0 as default_value'))->get()->pluck('default_value', 'hashed_id'); 
         
-        \Log::debug("Factura Agrupado: " . json_encode($invoices_grouped));
+        \Log::debug("Factura Agrupado: " , [$products_keys]);
 
-        $items = collect( $detalles )->map( function( $detail, $key ) use ($invoices_grouped) {
+        $items = collect( $detalles )->map( function( $detail, $key ) use ($invoices_grouped, $products_keys) {
 
             $invoice_data = json_decode(json_encode($invoices_grouped[$key]), true) ;
             
             $detail = json_decode($detail, true);
             
-            $joined = collect($invoice_data)->crossJoin($detail)->all();
+            // $joined = collect($invoice_data)->crossJoin($detail)->all();
 
-            $detalle = collect($joined)->map( function ( $d ) {
+            $total_quantity = collect($detail)->sum('quantity');
 
-                $merged = array_merge(...collect($d)->toArray());
+            $detalle = collect($detail)->pluck('quantity', 'product_id')->all();
 
-                return $merged;
+            $merged = array_merge($invoice_data[0], collect($products_keys)->toArray(), $detalle, ['totalCantidad' => $total_quantity]);
 
-            })->all();
-
-
-            return $detalle;
+            return $merged;
 
         })->values();
 
-        
 
-        dd($invoices);
+        return [
+            "items" => collect($items)->toArray()
+        ];
     }
 
 }
