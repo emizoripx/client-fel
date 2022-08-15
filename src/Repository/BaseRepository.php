@@ -50,8 +50,8 @@ class BaseRepository
                         "complemento" =>isset($fel_data['complemento'])? $fel_data['complemento'] : null,
                         "fechaDeEmision" =>isset($fel_data['fechaDeEmision'])? $fel_data['fechaDeEmision'] : null,
                         "numeroFactura" => isset($fel_data['numeroFactura'])? $fel_data['numeroFactura'] : null,
-                        "activity_id" => $fel_data['codigoActividad'],
-                        "caption_id" => $fel_data['codigoLeyenda'],
+                        "activity_id" => isset($fel_data['codigoActividad']) ? $fel_data['codigoActividad']: 0,
+                        "caption_id" => isset($fel_data['codigoLeyenda']) ? $fel_data['codigoLeyenda'] : null,
                         "payment_method_id" => $fel_data['codigoMetodoPago'],
                         "tipo_cambio" => !empty($fel_data['tipoCambio']) ? $fel_data['tipoCambio'] : 1,
                         "codigo_moneda" => !empty($fel_data['codigoMoneda']) ? $fel_data['codigoMoneda'] : 1,
@@ -184,7 +184,7 @@ class BaseRepository
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
 
                         // typeDocument for different types of documents
-                        "typeDocument" =>!empty($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
+                        "typeDocument" =>isset($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
 
                         // seguros
                         "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : 0,
