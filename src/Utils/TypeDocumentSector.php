@@ -20,6 +20,7 @@ use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\PrevaloradaBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\SectorEducativoZonaFrancaBuilder;
 use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
@@ -63,6 +64,7 @@ class TypeDocumentSector
     const COMPRA_VENTA_BONIFICACIONES = 35;
     const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
+    const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -189,6 +191,9 @@ class TypeDocumentSector
             case static::HIDROCARBUROS_NO_IEHD :
                 return HidrocarburosNoIehdBuilder::class ;
                 break;
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA :
+                return SectorEducativoZonaFrancaBuilder::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -268,6 +273,10 @@ class TypeDocumentSector
                 break;
             case static::HIDROCARBUROS_NO_IEHD:
                 return 'hidrocarburo-noiehd';
+                break;
+
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return 'educativo-zona-franca';
                 break;
 
             default:
@@ -528,6 +537,9 @@ class TypeDocumentSector
                 break;
             case static::HIDROCARBUROS_NO_IEHD:
                 return 'FACTURA DE HIDROCARBUROS NO ALCANZADA IEHD';
+                break;
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return 'FACTURA SECTORES EDUCATIVO ZONA FRANCA';
                 break;
             
             
