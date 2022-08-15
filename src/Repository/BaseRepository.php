@@ -207,6 +207,9 @@ class BaseRepository
                         // CLINICAS
                         "modalidadServicio" => !empty($fel_data["modalidadServicio"]) ? $fel_data["modalidadServicio"] : null,
 
+                        //ALQUILERES
+                        "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null
+
                     ];
                     break;
                 

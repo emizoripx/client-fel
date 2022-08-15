@@ -88,6 +88,11 @@ class AlquileresBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuild
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
+            if( isset($detail->montoUFV) ) {
+
+                $new->montoUFV = $detail->montoUFV;
+            }
+
             $details[] = $new;
 
             $total += $new->subTotal;
