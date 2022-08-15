@@ -40,7 +40,7 @@ class CompraVentaResource extends JsonResource
             "tipoCambio" => $this->tipoCambio,
             "codigoMetodoPago" => $this->codigoMetodoPago,
             "numeroTarjeta" => $this->numeroTarjeta,
-            // "codigoLeyenda" => $this->codigoLeyenda,
+            "codigoLeyenda" => $this->codigoLeyenda,
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
