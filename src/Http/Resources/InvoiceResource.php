@@ -125,6 +125,7 @@ class InvoiceResource extends JsonResource
                         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
                         "tipoCambio" => round((float)$this->tipoCambio, 2),
                         "montoGiftCard" => (string)$this->montoGiftCard ?? null,
+                        "periodoFacturado" => $this->periodoFacturado ?? '',
                     ]);
                     
                 // case TypeDocumentSector::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:

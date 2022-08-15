@@ -68,7 +68,14 @@ trait InvoiceFelEmitTrait
 
     public function xml_file_path()
     {
-        $felInvoiceRequest = $this->fel_invoice->fresh();   
+        try {
+
+            $felInvoiceRequest = $this->fel_invoice->fresh();   
+
+        } catch( \Throwable $ex ) {
+            \Log::debug("No se pudo obtener el XML: " . $ex->getMessage());
+            return null;
+        }
         
         if (empty($felInvoiceRequest)) {
             return null;
