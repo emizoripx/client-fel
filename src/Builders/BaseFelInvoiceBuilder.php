@@ -74,7 +74,7 @@ class BaseFelInvoiceBuilder {
             #fel fata
             "codigoMetodoPago" => $fel_data_parsed['payment_method_id'],
             "numeroTarjeta" => $fel_data_parsed['numero_tarjeta'],
-            "codigoLeyenda" => isset($fel_data_parsed['caption_id']),
+            "codigoLeyenda" => $fel_data_parsed['caption_id'],
             "codigoActividad" => $fel_data_parsed['activity_id'],
             "codigoExcepcion" => $fel_data_parsed['codigoExcepcion'],
             #automatico
