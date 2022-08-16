@@ -84,10 +84,10 @@ class CosinCantidadReport extends BaseReport implements ReportInterface {
 
         $detalles = $query_items->pluck('invoices.line_items', 'fel_invoice_requests.cuf');
 
+        $select = \DB::raw('fel_invoice_requests.cuf, fel_invoice_requests.codigoCliente, fel_invoice_requests.numeroFactura, fel_invoice_requests.nombreRazonSocial, round(invoices.balance,2) as pagado, round(fel_invoice_requests.montoTotal,2) as montoTotal, fel_invoice_requests.estado');
+        $query_invoices = $query_items->select($select);
 
-        $query_invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.codigoCliente', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.nombreRazonSocial', 'invoices.balance as pagado', 'fel_invoice_requests.montoTotal', 'fel_invoice_requests.estado');
-
-        $query_invoices = $query_invoices->selectRaw('fel_invoice_requests.montoTotal - invoices.balance  as deuda');
+        $query_invoices = $query_invoices->selectRaw('round(fel_invoice_requests.montoTotal - invoices.balance, 2)  as deuda');
         $query_invoices = $query_invoices->selectRaw('DATE_FORMAT(fel_invoice_requests.fechaEmision, "%Y-%m-%d %H:%i:%s") as fechaEmision');
         
         \Log::debug("SQL QUERY INVOICES: " . $query_invoices->toSql() );
