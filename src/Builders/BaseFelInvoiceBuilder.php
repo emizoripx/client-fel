@@ -2,6 +2,7 @@
 namespace EmizorIpx\ClientFel\Builders;
 
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Models\FelCaption;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
@@ -65,6 +66,10 @@ class BaseFelInvoiceBuilder {
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
         }
+        $caption_id = null;
+        if ( is_null($fel_data_parsed['caption_id']) ) {
+            $caption_id = FelCaption::whereCompanyId($model->company_id)->orderBy(DB::raw('rand()'))->first()->id;
+        }
 
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
@@ -74,8 +79,8 @@ class BaseFelInvoiceBuilder {
             #fel fata
             "codigoMetodoPago" => $fel_data_parsed['payment_method_id'],
             "numeroTarjeta" => $fel_data_parsed['numero_tarjeta'],
-            "codigoLeyenda" => $fel_data_parsed['caption_id'],
-            "codigoActividad" => $fel_data_parsed['activity_id'],
+            "codigoLeyenda" => $caption_id,
+            "codigoActividad" => 1,
             "codigoExcepcion" => $fel_data_parsed['codigoExcepcion'],
             #automatico
             "numeroFactura" => $fel_data_parsed['numeroFactura'] ? $fel_data_parsed['numeroFactura'] : ($model->number ?? 0),
