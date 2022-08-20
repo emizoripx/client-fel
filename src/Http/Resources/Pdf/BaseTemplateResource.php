@@ -59,7 +59,7 @@ class BaseTemplateResource extends JsonResource
             "subTotal" => isset($fel_invoice->montoTotal) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional , 2) : '',
             "descuentoAdicional" => isset($fel_invoice->descuentoAdicional) ? NumberUtils::number_format_custom( (float) $fel_invoice->descuentoAdicional , 2) : '0.00',
             "leyendaSIN" => FelCaption::CAPTION_SIN,
-            "leyenda" => isset($fel_invoice->codigoLeyenda) ? FelCaption::getCaptionDescription($fel_invoice->codigoLeyenda) : '',
+            "leyenda" => "SIN LEYENDA",//isset($fel_invoice->codigoLeyenda) ? FelCaption::getCaptionDescription($fel_invoice->codigoLeyenda) : '',
             "leyendaSIN2" => isset($fel_invoice->emission_type) ? $fel_invoice->getLeyendaEmissionType() : '',
             "qrCode" => \QrCode::generate($fel_invoice->getUrlSin()),
             "environmentCode" => isset($this->company) ? $this->company->company_detail->production : '',
