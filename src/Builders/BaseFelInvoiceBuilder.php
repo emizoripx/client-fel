@@ -69,6 +69,8 @@ class BaseFelInvoiceBuilder {
         $caption_id = null;
         if ( is_null($fel_data_parsed['caption_id']) ) {
             $caption_id = FelCaption::whereCompanyId($model->company_id)->orderBy(\DB::raw('rand()'))->first()->codigo;
+        }else {
+            $caption_id = $fel_data_parsed['caption_id'];
         }
 
         $this->input = array_merge($this->input ,[
