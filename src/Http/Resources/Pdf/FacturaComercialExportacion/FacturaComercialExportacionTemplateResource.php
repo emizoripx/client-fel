@@ -33,7 +33,7 @@ class FacturaComercialExportacionTemplateResource extends BaseTemplateResource {
             "incotermDetalle" => $fel_invoice->incoterm_detalle,
             "direccionComprador" => $fel_invoice->direccionComprador,
             "puertoDestino" => $fel_invoice->puertoDestino,
-            "lugarDestino" => is_null($fel_invoice->lugarDestino) ? $fel_invoice->lugarDestino : '',
+            "lugarDestino" => !is_null($fel_invoice->lugarDestino) ? $fel_invoice->lugarDestino : '',
             "paisDestino" => $fel_invoice->paisDestino ? country($fel_invoice->paisDestino) : '',
             "monedaDescripcion" => strtoupper($fel_invoice->getExchangeDescription()),
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
