@@ -25,13 +25,23 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaInternaMinerales\FacturaV
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaZonaFranca\FacturaZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaDebitoCredito\NotaDebitoCreditoTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaEntrega\NotaEntregaTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaRecepcion\NotaRecepcionTemplateResource;
 
 class TemplatesUtils {
 
-    public static function getClassResourceByDocumentSector ( $document_sector ) {
+    public static function getClassResourceByDocumentSector ( $document_sector, $typeDocument = null ) {
 
         switch ($document_sector) {
             case TypeDocumentSector::COMPRA_VENTA:
+                if ( $typeDocument == Documents::NOTA_ENTREGA  ) {
+                    return NotaEntregaTemplateResource::class;
+                }
+
+                if ( $typeDocument == Documents::NOTA_RECEPCION  ) {
+                    return NotaRecepcionTemplateResource::class;
+                }
+                
                 return FacturaCompraVentaTemplateResource::class;
                 break;
             case TypeDocumentSector::ALQUILER_BIENES_INMUEBLES:
