@@ -17,6 +17,7 @@ class InvoiceController extends BaseController
 
     public function emit(Request $request)
     {
+        \Log::debug("################################################## FLUJO ============================================ INICIA EMISION DE FACTURA");
         \Log::debug("EMIT-FROM-PREFACTURA >>>>>>>>>>>>>>>>>");
         $success = false;
 
@@ -36,7 +37,7 @@ class InvoiceController extends BaseController
             $invoice = $felInvoiceRequest->invoice_origin();
             \Log::debug("EMIT-INVOICE ==============> START TRANSACTION");
             // begin a trasaction in case an error happend, rollback changes
-            \DB::beginTransaction();
+            
             // generate next number new emission invoice
             $invoice->service()->applyNumber()->save();
             // save number in felinvoicerequest 
@@ -53,12 +54,12 @@ class InvoiceController extends BaseController
             $invoice->save();
             $felInvoiceRequest->setEmittedByUser();
             $success = true;
-            \DB::commit();
+            
             \Log::debug("EMIT-INVOICE ==============> END TRANSACTION");
             fel_register_historial($felInvoiceRequest);
 
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id) ));
-
+            \Log::debug("################################################## FLUJO ============================================ FACTURA EMITIDA");
             return response()->json([
                 "success" => $success
             ]);
@@ -113,6 +114,29 @@ class InvoiceController extends BaseController
             $felInvoiceRequest->invoiceDateUpdatedAt();
             return response()->json([
                 'success' => true
+            ]);
+
+        } catch(ClientFelException $ex){
+            return response()->json([
+                'success' => false,
+                'msg' => $ex->getMessage()
+            ]);
+        }
+    }
+    public function getStatus(Request $request){
+        try{
+            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
+
+            if(!$felInvoiceRequest){
+                throw new ClientFelException("Factura no encontrada");
+            }
+            $final_status = $felInvoiceRequest->setAccessToken()->sendVerifyStatus();
+
+            if ($final_status)
+                $felInvoiceRequest->invoiceDateUpdatedAt();
+
+            return response()->json([
+                'success' => $final_status
             ]);
 
         } catch(ClientFelException $ex){

@@ -43,8 +43,6 @@ trait InvoiceFelEmitTrait
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
-            $felInvoiceRequest->touchPdf();
-
             $invoice = $felInvoiceRequest->invoice_origin();
 
             $invoice->service()->markSent()->save();
