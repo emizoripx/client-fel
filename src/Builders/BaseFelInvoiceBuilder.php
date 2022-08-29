@@ -1,6 +1,7 @@
 <?php
 namespace EmizorIpx\ClientFel\Builders;
 
+use App\Models\RecurringInvoice;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
@@ -66,6 +67,11 @@ class BaseFelInvoiceBuilder {
             $client->complement = null;
         }
 
+
+        if( $model instanceof RecurringInvoice ) {
+            $this->input['recurring_id_origin'] = $model->id;
+        }
+
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
@@ -115,6 +121,44 @@ class BaseFelInvoiceBuilder {
         } catch (\Throwable $th) {
             \Log::error("ERROR EN  " . $th->getMessage());
         }
+
+    }
+
+    public function getFelInvoiceFirst() {
+
+        $modelInvoice = $this->source_data['model'];
+
+        $fel_invoice = FelInvoiceRequest::where( function( $query ) use ( $modelInvoice ) {
+                        if( $modelInvoice instanceof RecurringInvoice ) {
+                            \Log::debug("Is Recurring Invoices >>>>>>>>>>>>>> ");
+                            return $query->where('recurring_id_origin', $modelInvoice->id);
+
+                        }
+                        
+                        return $query->where('id_origin', $modelInvoice->id);
+
+                    })->first();
+
+        return $fel_invoice;
+    }
+
+    public function getFelInvoiceFirstOrFail() {
+
+        $modelInvoice = $this->source_data['model'];
+
+        $fel_invoice = FelInvoiceRequest::where( function( $query ) use ( $modelInvoice ) {
+                    if( $modelInvoice instanceof RecurringInvoice ) {
+
+                        \Log::debug("Is Recurring Invoices >>>>>>>>>>>>>> ");
+                        return $query->where('recurring_id_origin', $modelInvoice->id);
+
+                    }
+                    
+                    return $query->where('id_origin', $modelInvoice->id);
+
+                })->firstOrFail();
+
+        return $fel_invoice;
 
     }
 

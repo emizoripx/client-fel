@@ -13,7 +13,9 @@ trait RecurringInvoiceServiceTrait {
 
         $company = $this->recurring_entity->company;
 
-        if( $company->settings->id_number == '347399028' && $this->recurring_entity->fel_invoice->type_document_sector_id = TypeDocumentSector::ALQUILER_BIENES_INMUEBLES ) {
+        \Log::debug("Sector Documents >>>>>>>>>>>>>>: " . $this->recurring_entity->fel_invoice->type_document_sector_id);
+        \Log::debug("NIT Company >>>>>>>>>>>>>>: " . $company->settings->id_number);
+        if( $company->settings->id_number == '347399028' && $this->recurring_entity->fel_invoice->type_document_sector_id == TypeDocumentSector::ALQUILER_BIENES_INMUEBLES ) {
 
             $last_day_month = Carbon::now()->endOfMonth()->format('Y-m-d');
 
