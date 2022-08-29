@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use stdClass;
 use Carbon\Carbon;
+use Throwable;
 
 class FelInvoiceRequest extends Model
 {
@@ -401,13 +402,19 @@ class FelInvoiceRequest extends Model
 
         $response = $invoice_service->getStatusByAckTicket();
 
-        if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
+        // if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
+        try{
 
             $this->saveStatusCode($response['codigoEstado']);
             $this->estado = $response['estado'];
             $this->save();
+
+        }catch (Throwable $th) {
+            \Log::debug("SEND VERIFY STATUS");
+            return [];
         }
-        return false;
+        // }
+        return $response;
         
     }
 

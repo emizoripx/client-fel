@@ -130,14 +130,11 @@ class InvoiceController extends BaseController
             if(!$felInvoiceRequest){
                 throw new ClientFelException("Factura no encontrada");
             }
-            $final_status = $felInvoiceRequest->setAccessToken()->sendVerifyStatus();
+            $response = $felInvoiceRequest->setAccessToken()->sendVerifyStatus();
 
-            if ($final_status)
-                $felInvoiceRequest->invoiceDateUpdatedAt();
+            $felInvoiceRequest->invoiceDateUpdatedAt();
 
-            return response()->json([
-                'success' => $final_status
-            ]);
+            return response()->json($response);
 
         } catch(ClientFelException $ex){
             return response()->json([

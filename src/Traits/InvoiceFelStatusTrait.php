@@ -16,14 +16,12 @@ trait InvoiceFelStatusTrait
         $felInvoiceRequest = $this->fel_invoice;
 
         try {
-            \Log::debug('Model');
-            \Log::debug($felInvoiceRequest);
 
             if (is_null($felInvoiceRequest) || is_null($felInvoiceRequest->cuf)) {
                 return -1;
             }
 
-            return $felInvoiceRequest->setAccessToken()->sendVerifyStatus();
+            $felInvoiceRequest->setAccessToken()->sendVerifyStatus();
          
         } catch (ClientFelException $ex) {
 
