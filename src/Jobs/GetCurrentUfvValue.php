@@ -101,7 +101,7 @@ class GetCurrentUfvValue implements ShouldQueue
 
         }
 
-        $ufv_value = round($response[0]['val_ufv'], 5);
+        $ufv_value = number_format($response[0]['val_ufv'], 5);
 
         \Log::debug("Valor UFV Obtenido: " . $ufv_value);
 
