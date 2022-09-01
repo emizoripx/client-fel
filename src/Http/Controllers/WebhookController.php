@@ -19,6 +19,7 @@ class WebhookController extends BaseController
 
     public function callback(Request $request)
     {
+        sleep(2);
         \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK *******************************************************');
         \Log::debug($request->all());
         $data = [
