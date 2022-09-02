@@ -44,6 +44,7 @@ class BaseRepository
                     break;
                 case 'invoice':
                     $this->fel_data_parsed = [
+                        "facturaTicket" => isset($fel_data['facturaTicket']) ? $fel_data['facturaTicket'] : null,
                         "nombreRazonSocial" =>isset($fel_data['nombreRazonSocial'])? $fel_data['nombreRazonSocial'] : null,
                         "codigoTipoDocumentoIdentidad" =>isset($fel_data['codigoTipoDocumentoIdentidad'])? $fel_data['codigoTipoDocumentoIdentidad'] : null,
                         "numeroDocumento" =>isset($fel_data['numeroDocumento'])? $fel_data['numeroDocumento'] : null,
