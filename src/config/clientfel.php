@@ -96,6 +96,12 @@ return [
     'callback_url_whatsapp' => env('WHATSAPP_CALLBACK', ''),
     /**
      * 
+     * BCB Host
+     * 
+     */
+    'bcb_host' => env('BCB_HOST', 'https://www.bcb.gob.bo'),
+    /**
+     * 
      * Whatsapp Callback URL
      * 
      */

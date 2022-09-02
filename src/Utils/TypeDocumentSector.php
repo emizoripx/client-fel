@@ -400,9 +400,7 @@ class TypeDocumentSector
         }
     }
 
-    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false ){
-
-        
+    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false, $typeDocument = null ){
    
         $template = \DB::table('fel_templates')
                         ->where('company_id', $company_id)
@@ -411,16 +409,38 @@ class TypeDocumentSector
                         ->first();
 
         if( empty($template) ){
+
+            if ( $typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
+                return "templates/general/" . $document_sector . "/default_delivered_note.blade.php";
+            }
+            if ( $typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
+                return "templates/general/" . $document_sector . "/default_received_note.blade.php";
+            }
+
             if ($thermal_printer_format) 
                 return "templates/general/" . $document_sector . "/default_rollo.blade.php";
+
             return "templates/general/". $document_sector . "/default.blade.php";
         }
+
+         
+        if ($typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
+            //TODO: check if exists
+            $split = explode(".blade.php", $template->blade_resource);
+            return $split[0] . "_delivered_note.blade.php";
+        } 
+
+        if ($typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
+            //TODO: check if exists
+            $split = explode(".blade.php", $template->blade_resource);
+            return $split[0] . "_received_note.blade.php";
+        } 
 
         if ($thermal_printer_format) {
             //TODO: check if exists
             $split = explode(".blade.php", $template->blade_resource);
             return $split[0] . "_rollo.blade.php";
-        } 
+        }
 
         return $template->blade_resource;
 

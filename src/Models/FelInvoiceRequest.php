@@ -59,6 +59,11 @@ class FelInvoiceRequest extends Model
                 $query->prefactura_number = $next_number;
             }
 
+            if ($query->typeDocument == 2 || $query->typeDocument == 3) {
+                $next_number = self::nextNumber($query->company_id,'order');
+                $query->document_number = $next_number;
+            }
+
             if ($query->typeDocument == 1) {
                 $next_number = self::nextNumber($query->company_id,'planilla');
                 $query->document_number = $next_number;

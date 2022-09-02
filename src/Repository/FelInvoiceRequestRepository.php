@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Repository;
 
+use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Builders\FelInvoiceBuilder;
 use EmizorIpx\ClientFel\Http\Resources\InvoiceResource;
 use EmizorIpx\ClientFel\Models\FelClient;
@@ -54,7 +55,17 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         try {
             // This will only process PREFACTURAS
-            $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->whereNull('cuf')->first();
+            $invoice_request = FelInvoiceRequest::where( function( $query ) use ( $model ) {
+                
+                        if( $model instanceof RecurringInvoice ) {
+                            \Log::debug("Is Recurring Invoices >>>>>>>>>>>>>> ");
+                            return $query->where('recurring_id_origin', $model->id);
+
+                        }
+                        
+                        return $query->where('id_origin', $model->id);
+
+                    })->whereNull('cuf')->first();
 
 
             if (!is_null($invoice_request)) {
@@ -173,7 +184,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
     public static function completeDataInvoiceRecurringRequest($invoice)
     {
         
-        $fel_invoice = FelInvoiceRequest::whereIdOrigin($invoice->recurring_id)->first();
+        $fel_invoice = FelInvoiceRequest::where('recurring_id_origin', $invoice->recurring_id)->first();
         \Log::debug("invoice resources completing data : " . json_encode(new InvoiceResource($fel_invoice)));
         //Fix, using same number of recurring invoice
         $fel_invoice->numeroFactura = 0;
