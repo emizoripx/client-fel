@@ -66,6 +66,11 @@ class BaseFelInvoiceBuilder {
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
         }
+        $extras = isset($fel_data_parsed['extras']) ? $fel_data_parsed['extras'] : [];
+
+        if ( isset($fel_data_parsed['facturaTicket'])  && !empty($fel_data_parsed['facturaTicket']) )  {
+            $extras["facturaTicket"] = $fel_data_parsed['facturaTicket'];
+        }
 
 
         if( $model instanceof RecurringInvoice ) {
@@ -90,7 +95,7 @@ class BaseFelInvoiceBuilder {
             "codigoPuntoVenta" => $fel_data_parsed['codigoPuntoVenta'],
             "codigoSucursal" => $fel_data_parsed['codigoSucursal'],
             "usuario" => trim($user->first_name . " " . $user->last_name) != "" ? trim($user->first_name . " " . $user->last_name) : "Usuario Genérico",
-            "extras" => json_encode($fel_data_parsed['extras']),
+            "extras" => json_encode($extras),
             "codigoMoneda" => $fel_data_parsed['codigo_moneda'],
             //clientdata
             "nombreRazonSocial" => is_null($fel_data_parsed['nombreRazonSocial']) ?  $client->business_name : $fel_data_parsed['nombreRazonSocial'],
