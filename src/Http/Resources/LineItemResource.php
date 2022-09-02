@@ -49,6 +49,9 @@ class LineItemResource extends JsonResource
             "montoFinal" =>  isset($this->montoFinal) ? $this->montoFinal : "0",
             "montoIehd" =>  isset($this->montoIehd) ? $this->montoIehd : "0",
             "montoUFV" =>  isset($this->montoUFV) ? $this->montoUFV : 0,
+            "rango" =>  isset($this->rango) ? $this->rango : "",
+            "cantidadEntrega" =>  isset($this->cantidadEntrega) ? $this->cantidadEntrega : 0,
+            "cantidadDevuelto" =>  isset($this->cantidadDevuelto) ? $this->cantidadDevuelto : 0,
             "subtotalOriginal" =>  isset($this->subtotalOriginal) ? $this->subtotalOriginal : "0",
         ];
     }

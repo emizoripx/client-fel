@@ -20,12 +20,12 @@ class ExportacionServiciosBuilder extends BaseFelInvoiceBuilder implements FelIn
     public function prepare(): FelInvoiceRequest
     {
         if ($this->source_data['update']){
-            $modelFelInvoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->first();
+            $modelFelInvoice = $this->getFelInvoiceFirst();
 
             if($modelFelInvoice->codigoEstado != 690){
                 $this->fel_invoice = $modelFelInvoice; 
             } else{
-                $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
+                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
             }
             
         }

@@ -208,7 +208,11 @@ class BaseRepository
                         "modalidadServicio" => !empty($fel_data["modalidadServicio"]) ? $fel_data["modalidadServicio"] : null,
 
                         //ALQUILERES
-                        "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null
+                        "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null,
+
+                        // TICKETS
+                        "turno" => !empty($fel_data['turno']) ? $fel_data["turno"] : null,
+                        "idFacturaOriginal" => !empty($fel_data['idFacturaOriginal']) ? $fel_data["idFacturaOriginal"] : null
 
                     ];
                     break;

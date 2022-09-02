@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Http\Resources;
 use App\Utils\Traits\MakesHash;
 use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\ClientFel\Models\FelCaption;
+use EmizorIpx\ClientFel\Utils\Documents;
 use Exception;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -107,7 +108,15 @@ class InvoiceResource extends JsonResource
 
             switch ($this->type_document_sector_id) {
                 case TypeDocumentSector::COMPRA_VENTA:
-                    return array_merge($main, [
+
+                    $array_data = [];
+                    if( $this->typeDocument == Documents::NOTA_RECEPCION ) {
+                        $array_data = [
+                            "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
+                        ];
+                    }
+
+                    return array_merge($main, $array_data , [
                         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
                         "tipoCambio" => round((float)$this->tipoCambio, 2),
                         "montoGiftCard" => (string)$this->montoGiftCard ?? null,

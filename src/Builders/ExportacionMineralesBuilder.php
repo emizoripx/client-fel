@@ -22,7 +22,7 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
         \Log::debug("ingresando ya con la data : " . json_encode($this->source_data['fel_data_parsed']));
         if ($this->source_data['update'])
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
+            $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
         else
             $this->fel_invoice = new FelInvoiceRequest();
 

@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class NotaEntregaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -20,19 +20,13 @@ class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements 
     public function prepare(): FelInvoiceRequest
     {
         if ($this->source_data['update']){
-            $modelFelInvoice = $this->getFelInvoiceFirst();
 
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
+            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
             
+        } else{
+            
+            $this->fel_invoice = new FelInvoiceRequest();
         }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
 
         return $this->fel_invoice;
     }
@@ -41,9 +35,13 @@ class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements 
     {
         $input = array_merge(
             $this->input,[
-                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
-                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
-                "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "codigoMetodoPago" => 1,
+                "numeroTarjeta" => null,
+                "codigoLeyenda" => 1,
+                "codigoActividad" => 1,
+                "codigoPuntoVenta" => 0,
+                "codigoMoneda" => 1,
+                "type_invoice_id" => 1
             ],
             $this->getDetailsAndTotals()
         );
@@ -79,12 +77,12 @@ class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements 
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,5);
+            $new->subTotal = round((float)$detail->line_total,2);
             $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
+            $new->rango = $detail->rango;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
@@ -92,19 +90,13 @@ class CompraVentaBonificacionesBuilder extends BaseFelInvoiceBuilder implements 
 
             $total += $new->subTotal;
         }
-        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
 
-        \Log::debug("gift card  >>>" . round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) );
-        
-        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['montoGiftCard'], 2);
-        
-
-        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$totalsujetoiva, $total,round($this->source_data['fel_data_parsed']['montoGiftCard'], 2) , round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
+        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([ $total]));
         return [
-            "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
+            "tipoCambio" => 1,
             "montoTotal" => $total,
-            "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
-            "montoTotalSujetoIva" => $totalsujetoiva ,
+            "montoTotalMoneda" => $total,
+            "montoTotalSujetoIva" => 0 ,
             "detalles" => $details
         ];
     }
