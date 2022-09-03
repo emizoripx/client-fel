@@ -22,10 +22,10 @@ class ExportUtils {
     const QUANTITY_ITEMS = 'Item_Cantidad';
 
 
-    public static function saveFileLocal($name, $datetime, $content) {
+    public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
         // Here we use the date for unique filename - This is the filename for the View
-        $viewfilename = $name."-".hash('sha1', $datetime . md5(rand(1, 1000))).".xlsx";
+        $viewfilename = $name."-".hash('sha1', $datetime . md5(rand(1, 1000))). ( $is_pdf ? '.blade.php' : ".xlsx" );
 
         // Full path with filename
         $fullfilename = storage_path("app/templates/$viewfilename");
