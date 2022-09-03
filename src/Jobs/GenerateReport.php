@@ -13,7 +13,9 @@ use EmizorIpx\OfficePhp74\Drivers\PhpSpreadsheetDriver;
 use EmizorIpx\OfficePhp74\Sheets\Parser;
 use EmizorIpx\OfficePhp74\SheetsService;
 use Carbon\Carbon;
+use App\Utils\HostedPDF\NinjaPdf;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
+use Illuminate\Support\Facades\View;
 use Exception;
 
 class GenerateReport implements ShouldQueue
@@ -35,6 +37,8 @@ class GenerateReport implements ShouldQueue
     protected $report_record_id;
 
     protected $user;
+
+    protected $type_file_pdf = false;
 
     public $timeout = 600;
 
@@ -95,6 +99,20 @@ class GenerateReport implements ShouldQueue
             $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user);
 
             $invoices = $service_report->generateReport();
+
+            $user_settings = $this->user->company_user->settings;
+
+            \Log::debug("User Settings TYpe: " . gettype($user_settings));
+            \Log::debug("User Settings: " . json_encode($user_settings));
+
+            if( isset($user_settings) && isset($user_settings->report_enable_pdf_type) && $user_settings->report_enable_pdf_type == 1 && $this->entity == ExportUtils::ITEMS_ENTITY ) {
+
+                $this->type_file_pdf = true;
+
+                $this->template_path = str_replace('.xlsx', '.blade.php', $this->template_path);
+
+            }
+
             $driver = new PhpSpreadsheetDriver();
             $parser = new Parser();
             $service_export = new SheetsService($driver, $parser);
@@ -103,7 +121,7 @@ class GenerateReport implements ShouldQueue
             
             $content = file_get_contents($this->template_path);
             
-            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content);
+            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
             
             \Log::debug("File Template Path: " . $template_filename );
 
@@ -115,13 +133,28 @@ class GenerateReport implements ShouldQueue
             }
 
 
-            $filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))).".xlsx";
+            $filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))). ( $this->type_file_pdf ? ".pdf" : ".xlsx");
             $report_name_path = storage_path("app/report/$filename");
+            // Check pdf generate
 
             $init = microtime(true);
             $memory_usage = memory_get_usage();
             \Log::debug("Usage Memory: " . $memory_usage);
-            $service_export->generate($template_filename, $invoices)->saveAs( $report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
+
+            if( $this->type_file_pdf ) {
+
+                $render_template = View::file( $template_filename, ['data_report' => $invoices ])->render();
+
+                $pdf_data = (new NinjaPdf())->build($render_template, $report_name_path, 'reporte.pdf', true);
+
+                file_put_contents($report_name_path, $pdf_data);
+
+            } else {
+
+                $service_export->generate($template_filename, $invoices)->saveAs( $report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
+
+            }
+
 
             unlink($template_filename);
 
