@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
+use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
 use Exception;
 
@@ -20,6 +21,8 @@ class ExportUtils {
     const CLIENTS_ENTITY = 'Clients';
 
     const QUANTITY_ITEMS = 'Item_Cantidad';
+
+    const ORDER_ITEMS = 'Order_Items';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -68,6 +71,10 @@ class ExportUtils {
 
             case static::QUANTITY_ITEMS:
                 return CosinCantidadReport::class;
+                break;
+            
+            case static::ORDER_ITEMS:
+                return ItemsReport::class ;
                 break;
             
             default:

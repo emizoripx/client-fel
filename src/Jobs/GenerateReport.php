@@ -113,6 +113,12 @@ class GenerateReport implements ShouldQueue
 
             }
 
+            if( strpos($this->template_path, 'blade.php') != false ) {
+                
+                $this->type_file_pdf = true;
+
+            }
+
             $driver = new PhpSpreadsheetDriver();
             $parser = new Parser();
             $service_export = new SheetsService($driver, $parser);
