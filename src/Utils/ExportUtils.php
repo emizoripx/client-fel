@@ -6,6 +6,8 @@ use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
+use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
+use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
 use Exception;
 
@@ -21,11 +23,15 @@ class ExportUtils {
 
     const QUANTITY_ITEMS = 'Item_Cantidad';
 
+    const ORDER_ITEMS = 'Order_Items';
 
-    public static function saveFileLocal($name, $datetime, $content) {
+    const ITEMS_TURNS = 'Items_Turno';
+
+
+    public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
         // Here we use the date for unique filename - This is the filename for the View
-        $viewfilename = $name."-".hash('sha1', $datetime . md5(rand(1, 1000))).".xlsx";
+        $viewfilename = $name."-".hash('sha1', $datetime . md5(rand(1, 1000))). ( $is_pdf ? '.blade.php' : ".xlsx" );
 
         // Full path with filename
         $fullfilename = storage_path("app/templates/$viewfilename");
@@ -68,6 +74,14 @@ class ExportUtils {
 
             case static::QUANTITY_ITEMS:
                 return CosinCantidadReport::class;
+                break;
+            
+            case static::ORDER_ITEMS:
+                return ItemsReport::class ;
+                break;
+
+            case static::ITEMS_TURNS:
+                return ItemTurnsReport::class;
                 break;
             
             default:

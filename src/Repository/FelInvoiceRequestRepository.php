@@ -14,6 +14,7 @@ use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
 use Hashids\Hashids;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class FelInvoiceRequestRepository extends BaseRepository implements RepoInterface
@@ -188,6 +189,12 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         \Log::debug("invoice resources completing data : " . json_encode(new InvoiceResource($fel_invoice)));
         //Fix, using same number of recurring invoice
         $fel_invoice->numeroFactura = 0;
+
+        $extras = $fel_invoice->getExtras();
+        $extras->facturaTicket = Str::uuid();
+
+        $fel_invoice->extras = $extras;
+
         return [
             'felData' => new InvoiceResource($fel_invoice)
         ];

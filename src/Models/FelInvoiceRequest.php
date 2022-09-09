@@ -73,20 +73,34 @@ class FelInvoiceRequest extends Model
 
     public static function nextNumber($company_id, $document = "prefactura")
     {
-        
+        $data_number_document = 1;
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $company_id = $hashid->decode($company_id);
 
-        $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->first();
+        \DB::transaction(function () use ($company_id, &$data_number_document, $document) {
+            // Some database updates
+            \Log::debug("NEXT NUMBER ======================== STEP 1");
+            $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->lockForUpdate()->first();
+            \Log::debug("NEXT NUMBER ======================== STEP 2");
+            if ($data!=null) {
+                $data_number_document = $data->{$document . '_number_counter'};
+                \Log::debug("NEXT NUMBER ======================== STEP 3");
+                \DB::table('fel_company')->where('id',$data->id)->update([
+                    $document . '_number_counter' => $data_number_document + 1
+                ]);
+                \Log::debug("NEXT NUMBER ======================== STEP 4");
+                \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->{$document . '_number_counter'} );    
+            } else {
+                \Log::debug("NEXT NUMBER ======================== STEP 5");
+                \Log::debug("$document NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
+                \Log::debug("NEXT NUMBER ======================== STEP 6");
+            }
+            return true;
+        });
+      
 
+        return $data_number_document;
         
-        if ($data!=null) {
-            $data->increment($document.'_number_counter');
-            \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->prefactura_number_counter );    
-            return $data->{$document."_number_counter"};
-        }
-        \Log::debug("PREFACTURA NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
-        return 1;
     }
 
     public function getNumeroFacturaAttribute()
