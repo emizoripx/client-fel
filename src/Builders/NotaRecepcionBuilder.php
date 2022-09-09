@@ -30,7 +30,9 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
     public function processInput(): FelInvoiceRequest
     {
         // find origin invoice
-        $invoice_origin = FelInvoiceRequest::whereId( $this->source_data['fel_data_parsed']["idFacturaOriginal"] )->first();
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        $id_origin = $hashid->decode($this->source_data['fel_data_parsed']["idFacturaOriginal"])[0];
+        $invoice_origin = FelInvoiceRequest::where('id_origin', $id_origin )->first();
 
         $input = array_merge(
             $this->input,
