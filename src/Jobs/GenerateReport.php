@@ -100,7 +100,7 @@ class GenerateReport implements ShouldQueue
 
             $invoices = $service_report->generateReport();
 
-            $user_settings = $this->user->company_user->settings;
+            $user_settings = $this->user->token()->cu->settings;
 
             \Log::debug("User Settings TYpe: " . gettype($user_settings));
             \Log::debug("User Settings: " . json_encode($user_settings));
