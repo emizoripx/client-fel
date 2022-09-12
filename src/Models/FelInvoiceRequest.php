@@ -60,7 +60,7 @@ class FelInvoiceRequest extends Model
             }
 
             if ($query->typeDocument == 2 || $query->typeDocument == 3) {
-                $next_number = self::nextNumber($query->company_id,'order');
+                $next_number = empty($query->factura_original_id) ? self::nextNumber($query->company_id,'order') : $query->document_number;
                 $query->document_number = $next_number;
             }
 

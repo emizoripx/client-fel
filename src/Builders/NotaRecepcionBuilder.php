@@ -40,6 +40,7 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
                 "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
                 "extras" => json_encode(["turno" => $invoice_origin->getVariableExtra('turno')]),
                 "codigoMetodoPago" => 1,
+                "document_number" => $invoice_origin->document_number,
                 "numeroTarjeta" => null,
                 "codigoLeyenda" => 1,
                 "codigoActividad" => 1,
