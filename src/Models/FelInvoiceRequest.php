@@ -433,6 +433,9 @@ class FelInvoiceRequest extends Model
             return [];
         }
         // }
+        if ( !empty($response) && isset($response['errores']) ){
+            $response['errores'] = json_encode($response['errores']);
+        }
         return $response;
         
     }
