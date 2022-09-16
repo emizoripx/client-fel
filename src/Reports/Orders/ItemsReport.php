@@ -139,7 +139,7 @@ class ItemsReport extends BaseReport implements ReportInterface {
             $item_m = [
                 'cantidad' => $cantidad,
                 'codigoProducto' => $key,
-                'descripcion' => $item[0]['descripcion'],
+                'descripcion' => explode('-',$item[0]['descripcion'])[0],
                 'precioUnitario' => $item[0]['precioUnitario'],
                 'montoDescuento' => $montoDescuento,
                 'subTotal' => $subTotal
