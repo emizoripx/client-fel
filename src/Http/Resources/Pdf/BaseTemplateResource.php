@@ -46,6 +46,7 @@ class BaseTemplateResource extends JsonResource
             "codigoPuntoVenta" => isset($fel_invoice->codigoPuntoVenta) ? $fel_invoice->codigoPuntoVenta : '',
             "direccion" => isset($branch) ? $branch->zona : '',
             "telefono" => isset($branch) ? $branch->telefono : '',
+            "telefonoCliente" => isset($fel_invoice->telefonoCliente) ? $fel_invoice->telefonoCliente : '',
             "municipio" => isset($branch) ? $branch->municipio : '',
             "nitEmisor" => isset($this->company) ? $this->company->settings->id_number : '',
             "numeroFactura" => isset($fel_invoice->numeroFactura) ? $fel_invoice->numeroFactura : '',
