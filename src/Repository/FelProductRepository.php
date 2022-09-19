@@ -5,6 +5,7 @@ use App\Factory\ProductFactory;
 use App\Repositories\ProductRepository;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
+use EmizorIpx\ClientFel\Models\Parametric\Unit;
 use EmizorIpx\ClientFel\Repository\Interfaces\RepoInterface;
 use Exception;
 
@@ -136,7 +137,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             "codigo_producto_sin" => $this->fel_data_parsed['product_sin_id'],
             "codigo_actividad_economica" => $this->fel_data_parsed['activity_id'],
             "codigo_unidad" => $this->fel_data_parsed['unit_id'],
-            "nombre_unidad" => $this->fel_data_parsed['unit_name'],
+            "nombre_unidad" => strtoupper(Unit::getUnitDescription($this->fel_data_parsed['unit_id'])),
             "codigo_nandina" => $this->fel_data_parsed['codigo_nandina'],
             "created_at" => Carbon::now()
         ];
@@ -173,9 +174,9 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             throw new Exception('unit_code requerido');
         }
 
-        if( !isset($data['unit_name']) ) {
-            throw new Exception('unit_name requerido');
-        }
+        // if( !isset($data['unit_name']) ) {
+        //     throw new Exception('unit_name requerido');
+        // }
 
         if( !isset($data['sin_product_code']) ) {
             throw new Exception('sin_product_code requerido');
@@ -188,7 +189,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
 
         return [
             "codigo_unidad"                 => $data['unit_code'],
-            "nombre_unidad"                 => $data['unit_name'],
+            "nombre_unidad"                 => isset($data['unit_name']) ? $data['unit_name'] : '',
             "codigo_actividad_economica"    => $data['activity_code'],
             "codigo_producto_sin"           => $data['sin_product_code'],
             "codigoNandina"                 => isset($data['nandina_code']) ? $data['nandina_code'] : '' ,

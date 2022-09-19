@@ -54,7 +54,7 @@ class StoreOrderRequest extends Request
         $rules['line_items.*.activity_code'] = 'required|string';
         $rules['line_items.*.sin_product_code'] = 'required|string';
         $rules['line_items.*.unit_code'] = 'required|integer';
-        $rules['line_items.*.unit_name'] = 'required|string';
+        $rules['line_items.*.unit_name'] = 'nullable|string';
         $rules['line_items.*.price'] = 'required|numeric';
         $rules['line_items.*.quantity'] = 'required|integer';
 
