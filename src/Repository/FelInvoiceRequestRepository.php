@@ -216,7 +216,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             
             $item_array = array_merge($item, [
                 'product_key' => $product->product_key,
-                'notes' => $product->notes,
+                'notes' =>  $product->product_key . ' - ' .  $product->notes,
                 'cost' => round( $item['price'], 2),
                 'product_id' => $hashid->encode($product->id),
                 'codigo_producto' => $product_sync->codigo_producto
