@@ -228,19 +228,37 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         $data['line_items'] = $line_items;
         $settings = AccountPrepagoBags::where('company_id', $company->id)->first()->settings;
-        
-        
-        if( !isset($company->settings->default_client) ){
-            
-            throw new Exception('No se configuró un cliente por defecto');
-            
+
+        $client_id = null;
+
+        if( isset($data['id_number']) && !empty($data['id_number']) ) {
+            // For order with client assigned
+
+            $client = FelClient::where('document_number', $data['id_number'])->first();
+
+            $client_id = $client->id_origin;
+
+            \Log::debug("Client ID with NIT: " . $client_id);
+
+        } else {
+            // For order without client assigned
+
+            if( !isset($company->settings->default_client) ){
+                
+                throw new Exception('No se configuró un cliente por defecto');
+                
+            }
+            $hashid = new Hashids(config('ninja.hash_salt'), 10);
+    
+            $client_id = $hashid->decode($company->settings->default_client)[0]; //Settings client ID default
+    
+            \Log::debug("Client ID Default: " . $client_id);
+
+
         }
-        $hashid = new Hashids(config('ninja.hash_salt'), 10);
-
-        $data['client_id'] = $hashid->decode($company->settings->default_client)[0]; //Settings client ID default
-
-        \Log::debug("Client ID Default: " . $data['client_id']);
-
+        
+        // Added Cliente ID to Invoice
+        $data['client_id'] = $client_id;
 
         if ( !empty($settings) ) {
 
