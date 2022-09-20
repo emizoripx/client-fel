@@ -38,8 +38,8 @@ class OrderTransformer extends EntityTransformer
     use MakesHash;
 
     protected $defaultIncludes = [
-        'invitations',
-        'documents',
+        // 'invitations',
+        // 'documents',
     ];
 
     protected $availableIncludes = [
@@ -102,14 +102,15 @@ class OrderTransformer extends EntityTransformer
 
     public function transform(Invoice $invoice)
     {
+        $extras = isset($invoice->fel_invoice) ? $invoice->fel_invoice->getExtras() : [];
         return [
             'id' => $this->encodePrimaryKey($invoice->id),
             'user_id' => $this->encodePrimaryKey($invoice->user_id),
-            'assigned_user_id' => $this->encodePrimaryKey($invoice->assigned_user_id),
+            // 'assigned_user_id' => $this->encodePrimaryKey($invoice->assigned_user_id),
             'amount' => (float) $invoice->amount,
-            'balance' => (float) $invoice->balance,
+            // 'balance' => (float) $invoice->balance,
             'client_id' => (string) $this->encodePrimaryKey($invoice->client_id),
-            'status_id' => (string) ($invoice->status_id ?: 1),
+            // 'status_id' => (string) ($invoice->status_id ?: 1),
             'created_at' => (int) $invoice->created_at,
             'updated_at' => (int) $invoice->updated_at,
             'archived_at' => (int) $invoice->deleted_at,
@@ -132,13 +133,15 @@ class OrderTransformer extends EntityTransformer
             // 'sin_status' => $invoice->fel_invoice ? $invoice->fel_invoice->estado : '',
             // 'codigoEstado' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoEstado : null, 
             // 'sin_errors' => $invoice->fel_invoice ? $invoice->fel_invoice->errores : '',
-            'sector_document_type_id' => $invoice->fel_invoice ? $invoice->fel_invoice->sector_document_type_id : '',
+            'order_id' => isset($extras->order_id) ? $extras->order_id : '',
+            'orders' => isset($extras->orders) ? $extras->orders : '',
+            // 'sector_document_type_id' => $invoice->fel_invoice ? $invoice->fel_invoice->sector_document_type_id : '',
             'payment_method_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoMetodoPago : '',
-            'numeroFactura' => $invoice->fel_invoice ? $invoice->fel_invoice->numeroFactura : '',
-            'nombreRazonSocial' => $invoice->fel_invoice ? $invoice->fel_invoice->nombreRazonSocial : '',
-            'codigoTipoDocumentoIdentidad' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoTipoDocumentoIdentidad : '',
-            'codigoMoneda' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoMoneda : '',
-            'tipoCambio' => $invoice->fel_invoice ? $invoice->fel_invoice->tipoCambio : '',
+            // 'numeroFactura' => $invoice->fel_invoice ? $invoice->fel_invoice->numeroFactura : '',
+            'client_bussines_name' => $invoice->fel_invoice ? $invoice->fel_invoice->nombreRazonSocial : '',
+            'identity_type_document_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoTipoDocumentoIdentidad : '',
+            'currency_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoMoneda : '',
+            'exchange_rate' => $invoice->fel_invoice ? (float)  $invoice->fel_invoice->tipoCambio : '',
             // 'felData' => $invoice->fel_invoice ? new InvoiceResource($invoice->fel_invoice) : null
             // EMIZOR-INVOICE-END
 

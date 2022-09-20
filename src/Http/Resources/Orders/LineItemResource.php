@@ -23,7 +23,7 @@ class LineItemResource extends JsonResource
             "quantity" => !empty($this->quantity) ? (float) $this->quantity : 0,
             "discount" => !empty($this->discount) ? (int) $this->discount : 0,
             "product_key" => !empty($this->product_key) ? (string) $this->product_key : "",
-            "cost" => !empty($this->cost) ? (float) $this->cost : 0,
+            "price" => !empty($this->cost) ? (float) $this->cost : 0,
             "nandina" => !empty($this->codigoNandina) ? (string) $this->codigoNandina : "",
             "product_code" => isset($this->codigo_producto) ? $this->codigo_producto : "",
         ];
