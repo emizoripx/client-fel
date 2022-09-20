@@ -16,6 +16,7 @@ use App\Http\ValidationRules\Invoice\UniqueInvoiceNumberRule;
 use App\Models\Company;
 use App\Utils\Traits\CleanLineItems;
 use App\Utils\Traits\MakesHash;
+use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\CheckBranchCode;
 // EMIZOR-INVOICE-INSERT
 use EmizorIpx\ClientFel\Http\ValidationRules\Invoice\InvoiceRules;
 // EMIZOR-INVOICE-END
@@ -43,8 +44,12 @@ class StoreOrderRequest extends Request
 
         $rules['client_id'] = 'nullable|exists:clients,id,company_id,'.$this->company->id;
         $rules['user_id'] = 'required|string';
+        $rules['branch_code'] = ['required','integer', new CheckBranchCode($this->branch_code, $this->company->id ) ];
         $rules['public_notes'] = 'nullable|string';
         $rules['private_notes'] = 'nullable|string';
+        $rules['id_number'] = 'nullable|string';
+        $rules['order_id'] = 'required|string';
+        $rules['orders'] = 'required|string';
         $rules['terms'] = 'nullable|string';
         $rules['is_amount_discount'] = 'nullable|boolean';
         $rules['line_items'] = 'required|array';

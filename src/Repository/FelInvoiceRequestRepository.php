@@ -271,8 +271,13 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
                         'felData' => [
                             "codigoActividad" => $settings_change->activity_id,
                             "codigoLeyenda" => $settings_change->caption_id,
+                            "codigo_sucursal" => isset($data['branch_code']) ? $data['branch_code'] : 0,
                             "codigoMetodoPago" => $settings_change->payment_method_id,
-                            "extras" => ['facturaTicket' => Str::uuid()]
+                            "extras" => [
+                                'facturaTicket' => Str::uuid(),
+                                "order_id" => $data['order_id'],
+                                "orders" => $data['orders'],
+                            ]
                         ]
                     ]);
                 } 
