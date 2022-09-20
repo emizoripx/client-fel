@@ -411,38 +411,38 @@ class TypeDocumentSector
         if( empty($template) ){
 
             if ( $typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
-                return "templates/general/" . $document_sector . "/default_delivered_note.blade.php";
+                return ["templates/general/" . $document_sector . "/default_delivered_note.blade.php",false];
             }
             if ( $typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
-                return "templates/general/" . $document_sector . "/default_received_note.blade.php";
+                return ["templates/general/" . $document_sector . "/default_received_note.blade.php", false];
             }
 
             if ($thermal_printer_format) 
-                return "templates/general/" . $document_sector . "/default_rollo.blade.php";
+                return ["templates/general/" . $document_sector . "/default_rollo.blade.php", false];
 
-            return "templates/general/". $document_sector . "/default.blade.php";
+            return ["templates/general/". $document_sector . "/default.blade.php", false];
         }
 
          
         if ($typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
             //TODO: check if exists
             $split = explode(".blade.php", $template->blade_resource);
-            return $split[0] . "_delivered_note.blade.php";
+            return [$split[0] . "_delivered_note.blade.php", false];
         } 
 
         if ($typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
             //TODO: check if exists
             $split = explode(".blade.php", $template->blade_resource);
-            return $split[0] . "_received_note.blade.php";
+            return [$split[0] . "_received_note.blade.php", false];
         } 
 
         if ($thermal_printer_format) {
             //TODO: check if exists
             $split = explode(".blade.php", $template->blade_resource);
-            return $split[0] . "_rollo.blade.php";
+            return [$split[0] . "_rollo.blade.php", false];
         }
 
-        return $template->blade_resource;
+        return [$template->blade_resource, $template->footer_custom == 1 ? true : false];
 
     }
 
