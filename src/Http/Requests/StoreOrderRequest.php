@@ -52,6 +52,7 @@ class StoreOrderRequest extends Request
         $rules['orders'] = 'required|string';
         $rules['terms'] = 'nullable|string';
         $rules['is_amount_discount'] = 'nullable|boolean';
+        $rules['discount'] = 'nullable|numeric';
         $rules['line_items'] = 'required|array';
         $rules['line_items.*.product_code'] = 'required|string';
         $rules['line_items.*.product_key'] = 'required|string';
