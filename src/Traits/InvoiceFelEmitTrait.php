@@ -22,8 +22,8 @@ trait InvoiceFelEmitTrait
 
 
         if (empty($this->invoice->fel_invoice)) {
-            bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->numeroFactura . " does not exist yet in table FEL_INVOICE_REQUEST.");
-            throw new ClientFelException(" La Factura #" . $this->invoice->numeroFactura . " no cuenta con datos necesarios para emitirse.");
+            bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->number . " does not exist yet in table FEL_INVOICE_REQUEST.");
+            throw new ClientFelException(" La Factura #" . $this->invoice->number . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
 
@@ -33,9 +33,7 @@ trait InvoiceFelEmitTrait
             if ($felInvoiceRequest->codigoEstado != null || $felInvoiceRequest->cuf != null){
                 return $this;
             }
-            
-            // generate next number new emission invoice
-            $this->invoice->service()->applyNumber()->save();
+          
             // save number in felinvoicerequest 
             $felInvoiceRequest->setNumeroFactura($this->invoice->number);
             // reload changes in model

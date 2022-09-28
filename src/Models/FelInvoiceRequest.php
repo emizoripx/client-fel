@@ -423,11 +423,17 @@ class FelInvoiceRequest extends Model
 
         // if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
         try{
-
+            $estadoAntiguo = $this->estado;
             $this->saveStatusCode($response['codigoEstado']);
             $this->estado = $response['estado'];
             $this->save();
 
+
+            if ( $estadoAntiguo == "ANULACION EN ESPERA") {
+                // REMOVE PDF WHEN REVOCATIO IS WAITIN
+                \Log::debug("\n\n\n\n\n removing PDF cause is waiting\n\n\n");
+                 $this->deletePdf();   
+            }
         }catch (Throwable $th) {
             \Log::debug("SEND VERIFY STATUS");
             return [];
