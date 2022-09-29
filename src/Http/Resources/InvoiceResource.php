@@ -111,8 +111,11 @@ class InvoiceResource extends JsonResource
 
                     $array_data = [];
                     if( $this->typeDocument == Documents::NOTA_RECEPCION ) {
+                        $delivered_origin = $this->invoice_origin();
                         $array_data = [
                             "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
+                            "numeroFacturaOriginal" => isset($delivered_origin) ? (string) $this->document_number : null,
+                            "fechaEmisionOriginal" => isset($delivered_origin) ? (string) $this->created_at : null,
                         ];
                     }
 
