@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use App\Models\DateFormat;
+use App\Models\RecurringInvoice;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Carbon\Carbon;
 
@@ -14,7 +15,7 @@ class FunctionUtils {
 
     }
 
-    public static function updateAddicionalData( $feldata ) {
+    public static function updateAddicionalData( $feldata, $frequency_id = null ) {
         
         $fel_data_temp = $feldata['felData']->resolve();
 
@@ -31,6 +32,17 @@ class FunctionUtils {
                 $fel_data_temp['periodoFacturado'] = trans( 'texts.' . strtolower(DateFormat::$months_of_the_years[$date->month - 1 ])) . ' - ' . $date->year ;
 
                 break;
+            
+            case TypeDocumentSector::SECTORES_EDUCATIVOS:
+                if ( $frequency_id == RecurringInvoice::FREQUENCY_MONTHLY ) {
+
+                    $date = Carbon::now();
+    
+                    \Log::debug("Periodo Update to : " . trans( 'texts.' . strtolower(DateFormat::$months_of_the_years[$date->month - 1 ]))  . ' - ' . $date->year);
+    
+                    $fel_data_temp['periodoFacturado'] = trans( 'texts.' . strtolower(DateFormat::$months_of_the_years[$date->month - 1 ])) . ' - ' . $date->year ;
+
+                }
             
             default:
                 \Log::debug("Return FEL Data Default");
