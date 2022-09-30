@@ -11,6 +11,7 @@ class BaseConnection {
         $data['base_uri'] = $host;
         $data['headers']['Accept'] = 'application/json';
         $data['headers']['Content-Type'] = 'application/json';
+        $data['headers']['emizor-header'] = 'emizor-host';
 
         $this->client = new Client($data);
     }
