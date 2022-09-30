@@ -55,8 +55,14 @@ class InvoiceResource extends JsonResource
                         "leyenda_fija" => FelCaption::CAPTION_SIN,
                     ];
             }
-
-        
+            $cuf = $this->cuf;
+            $codigoEstado = $this->codigoEstado;
+            if (is_numeric($this->numeroFactura)) {
+                if (is_null($this->cuf)) {
+                    $cuf = "CUF-TEMPORAL";
+                    $codigoEstado=999;
+                } 
+            }
 
 
             $main = [
@@ -85,9 +91,9 @@ class InvoiceResource extends JsonResource
                 "usuario" => $this->usuario,
                 "created_at" => $this->created_at,
                 "updated_at" => $this->updated_at,
-                "cuf" => $this->cuf,
+                "cuf" => $cuf,
                 "sin_status" => $this->estado,
-                "codigoEstado" => $this->codigoEstado,
+                "codigoEstado" => $codigoEstado,
                 "sin_errors" => $this->errores,
                 "emission_type" => $this->emission_type,
                 "codigoTipoFactura" => (int) $this->type_invoice_id,

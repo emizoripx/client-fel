@@ -92,12 +92,21 @@ class Invoices extends BaseConnection
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $parsed_response;
+        } catch(\GuzzleHttp\Exception\ConnectException $con){
+            
+            Log::error($con->getMessage());
+            if (strpos( $con->getMessage(), "Failed to connect" ) !== false) {
+                throw new ClientFelException("Problemas de conexión. No se pudo emitir la factura, volver a intentar");    
+            }else {
+                throw new ClientFelException("Error en la creación de la factura: " . $con->getMessage());
+            }
+
         } catch (\Exception $ex) {
 
             Log::error($ex->getMessage());
 
             throw new ClientFelException("Error en la creación de la factura: " . $ex->getResponse()->getBody());
-        }
+        };
     }
 
     public function checkParameters()

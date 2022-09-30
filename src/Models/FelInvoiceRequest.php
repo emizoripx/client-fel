@@ -54,7 +54,7 @@ class FelInvoiceRequest extends Model
     {
         parent::boot();
         static::creating(function ($query) {
-            if( $query->typeDocument == 0 ){
+            if( $query->typeDocument == 0 && request()->input('should_emit') == 'false' ){
                 $next_number = self::nextNumber($query->company_id);
                 $query->prefactura_number = $next_number;
             }
@@ -73,6 +73,7 @@ class FelInvoiceRequest extends Model
 
     public static function nextNumber($company_id, $document = "prefactura")
     {
+        
         $data_number_document = 1;
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $company_id = $hashid->decode($company_id);
@@ -341,7 +342,9 @@ class FelInvoiceRequest extends Model
                      'urlSin' => $res['urlSin'], 
                      'ack_ticket' => $res['ack_ticket'],
                      'emission_type' => $res['emission_type_code'] == 2 ? "Fuera de línea" : "En línea", 
-                     'fechaEmision' => Carbon::parse($res['fechaEmision'])->toDateTimeString() 
+                     'fechaEmision' => Carbon::parse($res['fechaEmision'])->toDateTimeString(), 
+                     'codigoEstado' =>$res['codigoEstado'], 
+                     'estado' =>$res['codigoEstado'] == 690 || $res['codigoEstado'] == 908 ? "VALIDO" : ($res['codigoEstado'] == 902 ? "INVALIDO": "" ), 
                     ]);
         \Log::debug("################################################## FLUJO ============================================ RESPUESTA GUARADA EN LA BASE DE DATOS");
         \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($res['fechaEmision'])->toDateString()]);
@@ -627,5 +630,11 @@ class FelInvoiceRequest extends Model
         $this->revocated_by = auth()->user() ? auth()->user()->id : null;
         $this->save();
     }
+
+    public function isEmitted()
+    {
+        return !is_null($this->cuf); // if there is no cuf was not emitted yet
+    }
+
 
 }

@@ -116,6 +116,7 @@ class BaseFelInvoiceBuilder {
             "emailCliente" => $client_email_first_invitation != "" ? $client_email_first_invitation : null,
             "telefonoCliente" => $model->client->phone,
             "typeDocument" => $fel_data_parsed['typeDocument'],
+            "factura_ticket" => $fel_data_parsed['facturaTicket'],
         ]);
         
     }
