@@ -60,14 +60,11 @@ class InvoiceController extends BaseController
 
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id) ));
             \Log::debug("################################################## FLUJO ============================================ FACTURA EMITIDA");
-            return response()->json([
-                "success" => $success
-            ]);
-
+            return redirect('api/v1/invoices/'. $request->input('id_origin'));
         } catch (ClientFelException $ex) {
             
             fel_register_historial($felInvoiceRequest, $ex->getMessage());
-
+            // return redirect('api/v1/invoices/' . $request->input('id_origin'));
             return response()->json([
                 "success" => false,
                 "msg" => $ex->getMessage()
@@ -93,12 +90,14 @@ class InvoiceController extends BaseController
             return response()->json([
                 'success' => true
             ]);
+            // return redirect('api/v1/invoices/' . $request->input('id_origin'));
 
         } catch(ClientFelException $ex){
             return response()->json([
                 'success' => false,
                 'msg' => $ex->getMessage()
             ]);
+            // return redirect('api/v1/invoices/' . $request->input('id_origin'));
         }
     }
     public function reversionRevocate(Request $request){
