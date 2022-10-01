@@ -319,6 +319,16 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         
+        \Log::debug("VERIFICANDO factura TIcket   ", [$this->getVariableExtra("facturaTicket")]);
+
+        if ($this->getVariableExtra("facturaTicket") == "") {
+            \Log::debug("generear factira Ticket");
+            $bytes = random_bytes(20);
+            $new_extras = $this->getExtras();
+            $new_extras->facturaTicket = bin2hex($bytes);
+            $this->extras = json_encode($new_extras);
+        }
+
         $invoice_service = new Invoices($this->host);
 
         $invoice_service->setAccessToken($this->access_token);

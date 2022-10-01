@@ -65,8 +65,7 @@ class InvoiceController extends BaseController
             ]);
 
         } catch (ClientFelException $ex) {
-            \Log::debug("Rollback number emit invoice");
-            \DB::rollback();
+            
             fel_register_historial($felInvoiceRequest, $ex->getMessage());
 
             return response()->json([
