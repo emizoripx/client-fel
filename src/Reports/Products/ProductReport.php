@@ -72,7 +72,7 @@ class ProductReport extends BaseReport implements ReportInterface {
 
     public function generateReport () {
 
-        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->where('fel_invoice_requests.estado', 'VALIDO');
+        $query_items = \DB::table('invoices')->join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')->where('fel_invoice_requests.company_id', $this->company_id)->where('fel_invoice_requests.codigoEstado', 690);
 
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 

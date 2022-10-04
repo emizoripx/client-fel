@@ -203,7 +203,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
     public function generateReport() {
 
-        $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id')->where('fel_invoice_requests.estado', 'VALIDO') ;
+        $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id')->where('fel_invoice_requests.codigoEstado', 690) ;
         
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 
