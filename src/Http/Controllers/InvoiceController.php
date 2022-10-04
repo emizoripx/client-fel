@@ -39,14 +39,20 @@ class InvoiceController extends BaseController
             // begin a trasaction in case an error happend, rollback changes
             
             // generate next number new emission invoice
-            $invoice->service()->applyNumber()->save();
+            if ($invoice->number == 0) {
+                \Log::debug("\n\n\n\n\n ASIGNANDO VALOR desde PREFACTURA EMIT =================invoice_number is set up cause number is not assigned \n\n\n\n\n\n");
+                // generate next number new emission invoice
+                $invoice->service()->applyNumber()->save();
+            } else {
+                \Log::debug(" \n\n\n\n =============Number is assigned  " . $invoice->number . " \n\n\n\n\n\n");
+            }
             // save number in felinvoicerequest 
             $felInvoiceRequest->setNumeroFactura($invoice->number);
             // reload changes in model
             $felInvoiceRequest = $felInvoiceRequest->fresh();
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
             // $felInvoiceRequest->invoiceDateUpdatedAt();
-            // $felInvoiceRequest->deletePdf();
+            $felInvoiceRequest->deletePdf();
             $invoice->service()->markSent()->save();
 
             \Log::debug("Update user assigned " . auth()->user()->id );
