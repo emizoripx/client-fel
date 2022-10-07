@@ -54,7 +54,7 @@ class FelInvoiceRequest extends Model
     {
         parent::boot();
         static::creating(function ($query) {
-            if( ( $query->typeDocument == 0 && request()->input('should_emit') == 'false') || is_null($query->recurring_id_origin) ){
+            if( $query->typeDocument == 0 && request()->input('should_emit') == 'false' ){
                 $next_number = self::nextNumber($query->company_id);
                 $query->prefactura_number = $next_number;
             }
