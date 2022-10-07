@@ -80,21 +80,20 @@ class FelInvoiceRequest extends Model
 
         \DB::transaction(function () use ($company_id, &$data_number_document, $document) {
             // Some database updates
-            \Log::debug("NEXT NUMBER ======================== STEP 1");
+            
             $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->lockForUpdate()->first();
-            \Log::debug("NEXT NUMBER ======================== STEP 2");
+            
             if ($data!=null) {
                 $data_number_document = $data->{$document . '_number_counter'};
-                \Log::debug("NEXT NUMBER ======================== STEP 3");
+            
                 \DB::table('fel_company')->where('id',$data->id)->update([
                     $document . '_number_counter' => $data_number_document + 1
                 ]);
-                \Log::debug("NEXT NUMBER ======================== STEP 4");
                 \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->{$document . '_number_counter'} );    
             } else {
-                \Log::debug("NEXT NUMBER ======================== STEP 5");
+
                 \Log::debug("$document NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
-                \Log::debug("NEXT NUMBER ======================== STEP 6");
+                
             }
             return true;
         });
@@ -439,6 +438,9 @@ class FelInvoiceRequest extends Model
             $estadoAntiguo = $this->estado;
             $this->saveStatusCode($response['codigoEstado']);
             $this->estado = $response['estado'];
+            if (!empty($response) && isset($response['errores'])) {
+                $this->errores = $response['errores'];
+            }
             $this->save();
 
 
