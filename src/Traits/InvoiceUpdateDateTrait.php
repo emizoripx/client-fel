@@ -18,7 +18,8 @@ trait InvoiceUpdateDateTrait{
         
         if(!is_null($invoice)){
             
-            $invoice->touch();
+            $invoice->updated_at = Carbon::now()->toDateTimeString();
+            $invoice->saveQuietly();
         }
 
     }
