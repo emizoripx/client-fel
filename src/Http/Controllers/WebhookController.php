@@ -3,14 +3,8 @@
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Models\Company;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
-use EmizorIpx\ClientFel\Models\FelInvoiceStatusHistorial;
 use EmizorIpx\ClientFel\Traits\InvoiceValidateStateTrait;
-use EmizorIpx\ClientFel\Utils\InvoiceStates;
-use EmizorIpx\ClientFel\Utils\Log;
-use EmizorIpx\PrepagoBags\Models\FelCompanyDocumentSector;
-use EmizorIpx\PrepagoBags\Services\AccountPrepagoBagService;
 use Illuminate\Http\Request;
 
 class WebhookController extends BaseController
@@ -19,6 +13,7 @@ class WebhookController extends BaseController
 
     public function callback(Request $request)
     {
+        sleep(2);
         $data = [
             'package_id' => $request->input('package_id', null),
             'ack_ticket' => $request->input('ack_ticket', null),
