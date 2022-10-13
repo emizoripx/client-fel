@@ -405,6 +405,16 @@ class FelInvoiceRequest extends Model
         $invoice_service->setCuf($this->cuf);
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
+        \Log::debug("VERIFICANDO factura TIcket en update   ", [$this->getVariableExtra("facturaTicket")]);
+
+        if ($this->getVariableExtra("facturaTicket") == "") {
+            \Log::debug("generear factira Ticket");
+            $bytes = random_bytes(20);
+            $new_extras = $this->getExtras();
+            $new_extras->facturaTicket = bin2hex($bytes);
+            $this->extras = json_encode($new_extras);
+        }
+        
         $invoice_service->buildData($this);
 
         $invoice_service->updateInvoice();
