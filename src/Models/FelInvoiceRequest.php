@@ -349,6 +349,7 @@ class FelInvoiceRequest extends Model
             ->whereId($this->id)
             ->update(['cuf'=> $res['cuf'],
                      'urlSin' => $res['urlSin'], 
+                     'xml_url' => $res['xml_url'], 
                      'ack_ticket' => $res['ack_ticket'],
                      'emission_type' => $res['emission_type_code'] == 2 ? "Fuera de línea" : "En línea", 
                      'fechaEmision' => Carbon::parse($res['fechaEmision'])->toDateTimeString(), 
@@ -658,5 +659,19 @@ class FelInvoiceRequest extends Model
         return !is_null($this->cuf); // if there is no cuf was not emitted yet
     }
 
+    public function savePolicyCnc()
+    {
+        if ( !is_null($this->getVariableExtra('poliza')) ) {
+            \DB::table('policies_invoices')
+            ->insert(
+                [
+                    'policy_code'=> $this->getVariableExtra('poliza'),
+                    'fel_invoice_request_id' =>$this->id,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+        }        
+    }
 
 }

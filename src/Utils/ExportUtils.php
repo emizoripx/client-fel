@@ -5,6 +5,8 @@ namespace EmizorIpx\ClientFel\Utils;
 use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
@@ -26,6 +28,10 @@ class ExportUtils {
     const ORDER_ITEMS = 'Order_Items';
 
     const ITEMS_TURNS = 'Items_Turno';
+
+    const INRA_RESUMEN = 'Inra_Resumen';
+
+    const INRA_TOTALES = 'Inra_Totales';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -82,6 +88,14 @@ class ExportUtils {
 
             case static::ITEMS_TURNS:
                 return ItemTurnsReport::class;
+                break;
+            
+            case static::INRA_RESUMEN:
+                return InraResumenIngresosReport::class;
+                break;
+            
+            case static::INRA_TOTALES:
+                return InraTotalesReport::class;
                 break;
             
             default:

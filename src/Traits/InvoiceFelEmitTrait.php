@@ -46,6 +46,8 @@ trait InvoiceFelEmitTrait
             $invoice->service()->markSent()->save();
 
             $felInvoiceRequest->setEmittedByUser();
+
+            $felInvoiceRequest->savePolicyCnc();
             
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user() ? auth()->user()->id : null)));
 

@@ -32,6 +32,7 @@ class ClientFelServiceProvider extends ServiceProvider
     {
         # ROUTES
         $this->loadRoutesFrom(__DIR__ . "/routes/Bitacora.php");
+        $this->loadRoutesFrom(__DIR__ . "/routes/Agencias.php");
 
         #FACTORIES
         $this->loadFactoriesFrom(__DIR__ . '/database/factories');

@@ -81,6 +81,16 @@ class BaseFelInvoiceBuilder {
             $extras["facturaTicket"] = $fel_data_parsed['facturaTicket'];
         }
 
+        if ( isset($fel_data_parsed['id_agencia'])  && !empty($fel_data_parsed['id_agencia']) )  {
+            $extras["id_agencia"] = $fel_data_parsed['id_agencia'];
+        }
+        if ( isset($fel_data_parsed['agencia'])  && !empty($fel_data_parsed['agencia']) )  {
+            $extras["agencia"] = $fel_data_parsed['agencia'];
+        }
+        if ( isset($fel_data_parsed['poliza'])  && !empty($fel_data_parsed['poliza']) )  {
+            $extras["poliza"] = $fel_data_parsed['poliza'];
+        }
+
 
 
         if( $model instanceof RecurringInvoice ) {

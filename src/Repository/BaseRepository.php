@@ -210,6 +210,9 @@ class BaseRepository
 
                         //ALQUILERES
                         "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null,
+                        "agencia" => !empty($fel_data['agencia']) ? $fel_data["agencia"] : null,
+                        "id_agencia" => !empty($fel_data['id_agencia']) ? $fel_data["id_agencia"] : null,
+                        "poliza" => !empty($fel_data['poliza']) ? $fel_data["poliza"] : null,
 
                         // TICKETS
                         "turno" => !empty($fel_data['turno']) ? $fel_data["turno"] : null,
