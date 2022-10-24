@@ -115,22 +115,22 @@ class InraTotalesReport extends BaseReport implements ReportInterface
 
         $items = ExportUtils::flatten_array($items);
 
-        $area1 = collect($items)->where('custom_value1', '=', '103')->groupBy('codigo_producto')->map(function ($item) {
+        $area1 = collect($items)->where('custom_value1', '=', 'SANEAMIENTO')->groupBy('codigo_producto')->map(function ($item) {
             $new_value = $item[0];
             $new_value['quantity'] = $item->sum('quantity');
             return [$new_value];
         })->flatten(1);
-        $area2 = collect($items)->where('custom_value1', '=', '1435')->groupBy('codigo_producto')->map(function ($item) {
+        $area2 = collect($items)->where('custom_value1', '=', 'CATASTRO')->groupBy('codigo_producto')->map(function ($item) {
             $new_value = $item[0];
             $new_value['quantity'] = $item->sum('quantity');
             return [$new_value];
         })->flatten(1);
-        $area3 = collect($items)->where('custom_value1', '=', '180')->groupBy('codigo_producto')->map(function ($item) {
+        $area3 = collect($items)->where('custom_value1', '=', 'ADMINISTRATIVO')->groupBy('codigo_producto')->map(function ($item) {
             $new_value = $item[0];
             $new_value['quantity'] = $item->sum('quantity');
             return [$new_value];
         })->flatten(1);
-        $area4 = collect($items)->where('custom_value1', '=', '191,5')->groupBy('codigo_producto')->map(function ($item) {
+        $area4 = collect($items)->where('custom_value1', '=', 'JURIDICA')->groupBy('codigo_producto')->map(function ($item) {
             $new_value = $item[0];
             $new_value['quantity'] = $item->sum('quantity');
             return [$new_value];
