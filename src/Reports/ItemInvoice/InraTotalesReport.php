@@ -146,7 +146,7 @@ class InraTotalesReport extends BaseReport implements ReportInterface
                 "to" => date('Y-m-d', $this->to_date) . " 23:59:59",
             ],
             "totales" => [
-                "montoTotalGeneral" => NumberUtils::number_format_custom(collect($items)->sum('subTotal'), 2)
+                "montoTotalGeneral" => NumberUtils::number_format_custom(collect($items)->sum('line_total'), 2)
             ],
             "area1" => ItemInraResumenResource::collection($area1)->resolve(),
             "area2" => ItemInraResumenResource::collection($area2)->resolve(),
