@@ -21,7 +21,8 @@ class ItemInraResumenResource extends JsonResource
         return [
             "area" => $this->resource['custom_value1'],
             "codigo_area" => $this->resource['custom_value2'],
-            "denominacion" => $this->resource['notes'],
+            "denominacion" => $this->resource['product_key'],
+            "descripcion" => $this->resource['notes'],
             "codigoProducto" => $this->resource['codigo_producto'],
             "numeroFactura" => $this->resource['numeroFactura'],
             "fechaEmision" => $this->resource['fechaEmision'],
