@@ -661,17 +661,17 @@ class FelInvoiceRequest extends Model
 
     public function savePolicyCnc()
     {
-        if ( !is_null($this->getVariableExtra('poliza')) ) {
-            \DB::table('policies_invoices')
-            ->insert(
-                [
-                    'policy_code'=> $this->getVariableExtra('poliza'),
-                    'fel_invoice_request_id' =>$this->id,
-                    'created_at' => \Carbon\Carbon::now(),
-                    'updated_at' => \Carbon\Carbon::now()
-                ]
-            );
-        }        
+        // if ( !is_null($this->getVariableExtra('poliza')) ) {
+        //     \DB::table('policies_invoices')
+        //     ->insert(
+        //         [
+        //             'policy_code'=> $this->getVariableExtra('poliza'),
+        //             'fel_invoice_request_id' =>$this->id,
+        //             'created_at' => \Carbon\Carbon::now(),
+        //             'updated_at' => \Carbon\Carbon::now()
+        //         ]
+        //     );
+        // }        
     }
 
 }
