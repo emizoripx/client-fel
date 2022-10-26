@@ -115,7 +115,7 @@ class InraTotalesReport extends BaseReport implements ReportInterface
 
         $items = ExportUtils::flatten_array($items);
 
-        $area1 = collect($items)->where('custom_value1', '=', 'SANEAMIENTO')->groupBy('codigo_producto')->map(function ($item) {
+        $area1 = collect($items)->where('custom_value1', '=', 'SANNEAMIENTO')->groupBy('codigo_producto')->map(function ($item) {
             $new_value = $item[0];
             $new_value['quantity'] = $item->sum('quantity');
             return [$new_value];

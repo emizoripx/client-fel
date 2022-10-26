@@ -116,7 +116,7 @@ class InraResumenIngresosReport extends BaseReport implements ReportInterface
 
         $items = ExportUtils::flatten_array($items);
 
-        $area1 = collect($items)->where('custom_value1', '=' , 'SANEAMIENTO');
+        $area1 = collect($items)->where('custom_value1', '=' , 'SANNEAMIENTO');
         $area2 = collect($items)->where('custom_value1', '=' , 'CATASTRO');
         $area3 = collect($items)->where('custom_value1', '=' , 'ADMINISTRATIVO');
         $area4 = collect($items)->where('custom_value1', '=' , 'JURIDICA');
