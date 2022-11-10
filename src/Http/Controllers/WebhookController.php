@@ -73,7 +73,7 @@ class WebhookController extends BaseController
             }
 
             if (!empty($invoice)) {
-                $invoiceUpdate = FelInvoiceRequest::whereId($invoice->id)->select('id', 'cuf', 'codigoEstado', 'estado', 'urlSin', 'emission_type', 'xml_url', 'direccion', 'ack_ticket')->first();
+                $invoiceUpdate = FelInvoiceRequest::whereId($invoice->id)->select('id', 'id_origin','cuf', 'codigoEstado', 'estado', 'urlSin', 'emission_type', 'xml_url', 'direccion', 'ack_ticket')->first();
                 \Log::debug('WEBHOOK-CONTROLLER =====> ACTUALIZANDO factura....');
                 $invoiceUpdate->cuf = $data['cuf'];
                 $invoiceUpdate->estado = in_array($data['status_code'],[908,690]) ? "VALIDA" : ( $data['status_code'] == 902 ? "INVALIDA": ( in_array($data['status_code'], [691, 905]) ? "ANULADA":"" ));
@@ -83,6 +83,7 @@ class WebhookController extends BaseController
                 $invoiceUpdate->xml_url = $data['xml_url'];
                 $invoiceUpdate->direccion = $data['direccion'];
                 $invoiceUpdate->save();
+                $invoiceUpdate->touchPdf();
             }
             \Log::debug('WEBHOOK-CONTROLLER FIN CALLBACK INVOICE *******************************************************');
 
