@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Jobs;
 
+use League\Csv\Writer;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -17,6 +18,7 @@ use App\Utils\HostedPDF\NinjaPdf;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use Illuminate\Support\Facades\View;
 use Exception;
+use SplTempFileObject;
 
 class GenerateReport implements ShouldQueue
 {
@@ -40,14 +42,22 @@ class GenerateReport implements ShouldQueue
 
     protected $type_file_pdf = false;
 
+    protected $type_format_report = "template";
+
     public $timeout = 600;
+
+    protected $invoices = null;
+
+    protected $report_name_path = "";
+
+    protected $file_name = "";                                                                                                                                                                                                                                                                                                                      
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user )
+    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template" )
     {
         $this->request = collect($request);
 
@@ -64,6 +74,8 @@ class GenerateReport implements ShouldQueue
         $this->report_record_id = $report_record_id;
 
         $this->user = $user;
+
+        $this->type_format_report = $type_format_report;
     }
 
     /**
@@ -98,7 +110,7 @@ class GenerateReport implements ShouldQueue
             
             $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user);
 
-            $invoices = $service_report->generateReport();
+            $this->invoices = $service_report->generateReport();
 
             $user_settings = $this->user->token()->cu->settings;
 
@@ -118,62 +130,24 @@ class GenerateReport implements ShouldQueue
                 $this->type_file_pdf = true;
 
             }
+    
+            switch ($this->type_format_report) {
 
-            $driver = new PhpSpreadsheetDriver();
-            $parser = new Parser();
-            $service_export = new SheetsService($driver, $parser);
+                case 'csv':
+                    $this->processCsvFormat();
+                    break;
 
-            \Log::debug("Template Path: " . $this->template_path );
-            
-            $content = file_get_contents($this->template_path);
-            
-            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
-            
-            \Log::debug("File Template Path: " . $template_filename );
-
-            
-
-            if( ! is_dir(storage_path('app/report')) ) {
-                \Log::debug("Create diretory report");
-                mkdir(storage_path('app/report'));
+                default:
+                    $this->processTemplateFormat();
+                    break;
             }
-
-
-            $filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))). ( $this->type_file_pdf ? ".pdf" : ".xlsx");
-            $report_name_path = storage_path("app/report/$filename");
-            // Check pdf generate
-
-            $init = microtime(true);
-            $memory_usage = memory_get_usage();
-            \Log::debug("Usage Memory: " . $memory_usage);
-
-            if( $this->type_file_pdf ) {
-
-                $render_template = View::file( $template_filename, ['data_report' => $invoices ])->render();
-
-                $pdf_data = (new NinjaPdf())->build($render_template, $report_name_path, 'reporte.pdf', true);
-
-                file_put_contents($report_name_path, $pdf_data);
-
-            } else {
-
-                $service_export->generate($template_filename, $invoices)->saveAs( $report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
-
-            }
-
-
-            unlink($template_filename);
-
-            $memory_usage1 = memory_get_usage();
-            \Log::debug("Usage Memory: " . $memory_usage1);
-            \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
 
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'status' => 3,
                 'report_date' => Carbon::now()->toDateString(),
             ]);
 
-            UploadReport::dispatch( $this->company_nit, $this->entity, $report_name_path, $filename, $this->report_record_id );
+            UploadReport::dispatch( $this->company_nit, $this->entity, $this->report_name_path, $this->filename, $this->report_record_id );
 
         
         } catch ( Exception $ex ) {
@@ -194,5 +168,74 @@ class GenerateReport implements ShouldQueue
         ]);
         // Notification::route('mail', 'remberto.molina@emizor.com')->notify( new GetStatusInvoiceFailed($this->invoice, $exception->getFile() , $exception->getLine(), $exception->getMessage()) );
 
+    }
+
+    public function processTemplateFormat()
+    {
+        $driver = new PhpSpreadsheetDriver();
+        $parser = new Parser();
+        $service_export = new SheetsService($driver, $parser);
+
+        \Log::debug("Template Path: " . $this->template_path);
+
+        $content = file_get_contents($this->template_path);
+
+        $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
+
+        \Log::debug("File Template Path: " . $template_filename);
+
+
+        if (!is_dir(storage_path('app/report'))) {
+            \Log::debug("Create diretory report");
+            mkdir(storage_path('app/report'));
+        }
+
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ($this->type_file_pdf ? ".pdf" : ".xlsx");
+        $this->report_name_path = storage_path("app/report/$this->filename");
+        // Check pdf generate
+
+        $init = microtime(true);
+        $memory_usage = memory_get_usage();
+        \Log::debug("Usage Memory: " . $memory_usage);
+
+
+        if ($this->type_file_pdf) {
+
+            $render_template = View::file($template_filename, ['data_report' => $this->invoices])->render();
+
+            $pdf_data = (new NinjaPdf())->build($render_template, $this->report_name_path, 'reporte.pdf', true);
+
+            file_put_contents($this->report_name_path, $pdf_data);
+        } else {
+
+            $service_export->generate($template_filename, $this->invoices)->saveAs($this->report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
+        }
+
+        unlink($template_filename);
+
+        $memory_usage1 = memory_get_usage();
+        \Log::debug("Usage Memory: " . $memory_usage1);
+        \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
+
+    }
+    public function processCsvFormat()
+    {
+        $init = microtime(true);
+        $memory_usage = memory_get_usage();
+        \Log::debug("Usage Memory: " . $memory_usage);
+
+        $writer = Writer::createFromFileObject(new SplTempFileObject()); //the CSV file will be created using a temporary File
+        $writer->setDelimiter(","); //the delimiter will be the tab character
+        $writer->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
+        $writer->setOutputBOM(Writer::BOM_UTF8);
+        $writer->insertOne($this->invoices['header']);
+        $writer->insertAll(json_decode( json_encode($this->invoices['invoices'],false),true));
+        $csvContent = $writer->getContent();
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".csv";
+        $this->report_name_path = storage_path("app/report/$this->filename");
+        file_put_contents($this->report_name_path, $csvContent);
+        $memory_usage1 = memory_get_usage();
+        \Log::debug("Usage Memory: " . $memory_usage1);
+        \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
     }
 }
