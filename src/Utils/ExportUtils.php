@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
+use EmizorIpx\ClientFel\Reports\Invoices\ComprobanteDiarioUnslpReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
@@ -36,6 +37,8 @@ class ExportUtils {
 
     const REGISTER_SALES = 'Registro_Ventas';
 
+    const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';
+
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -63,7 +66,7 @@ class ExportUtils {
 
 
     public static function getClassReport ( $entity ) {
-
+        \Log::debug("ENTIDAD  ====> . " . $entity);
         switch ($entity) {
 
             case static::INVOICE_ENTITY:
@@ -104,8 +107,13 @@ class ExportUtils {
             case static::REGISTER_SALES:
                 return RegisterSalesReport::class;
                 break;
+
+            case static::COMPROBANTE_DIARIO_CUSTOM1:
+                return ComprobanteDiarioUnslpReport::class;
+                break;
             
             default:
+            \Log::debug("ingresando a este reporte");
                 new Exception('Reporte no soportado');
                 break;
         }

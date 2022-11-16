@@ -39,11 +39,11 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
         \DB::statement(\DB::raw("set @counter := 0"));
         $query_invoices = \DB::table('fel_invoice_requests')
                         ->where('fel_invoice_requests.company_id', $this->company_id)
-                        ->whereIn('fel_invoice_requests.codigoEstado', [690,908,905,691]);  
+                        ->whereNotNull('fel_invoice_requests.codigoEstado')
+                        ->whereNotNull('fel_invoice_requests.cuf');   
         $query_invoices = $this->addDateFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
 
-        $invoices = $query_invoices->get();
 
         return [
             "header" => [
@@ -71,7 +71,7 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
                 "CODIGO DE CONTROL",
                 "TIPO DE VENTA"
             ],
-            "invoices" => $invoices->toArray()
+            "invoices" => $query_invoices
         ];
     }
 }

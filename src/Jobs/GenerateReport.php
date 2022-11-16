@@ -229,7 +229,28 @@ class GenerateReport implements ShouldQueue
         $writer->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $writer->setOutputBOM(Writer::BOM_UTF8);
         $writer->insertOne($this->invoices['header']);
-        $writer->insertAll(json_decode( json_encode($this->invoices['invoices'],false),true));
+        if ($this->entity == ExportUtils::REGISTER_SALES){
+
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                
+                $writer->insertOne((array) $record);
+            }
+        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
+            $mensualidad_code = 1001;
+            $matricula_code = 1002;
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                $detail_collect = collect(json_decode($record->detalles, true));
+                unset($record->detalles);
+                $total_quantity_matricula = $detail_collect->where('codigoProducto', $matricula_code)->sum('subTotal');
+                $total_quantity_mensualidad = $detail_collect->where('codigoProducto', $mensualidad_code)->sum('subTotal');
+                $total_quantity_otros_ingresos = $detail_collect->whereNotIn('codigoProducto', [$mensualidad_code, $matricula_code])->sum('subTotal');
+                $merged = array_merge((array)$record, ['matricula' => $total_quantity_matricula, 'mensualidad' => $total_quantity_mensualidad, "otros_ingresos" => $total_quantity_otros_ingresos]);
+                $writer->insertOne( $merged);
+            }
+        
+        } else {
+            $writer->insertAll(json_decode(json_encode($this->invoices['invoices']), true));
+        }
         $csvContent = $writer->getContent();
         $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".csv";
         $this->report_name_path = storage_path("app/report/$this->filename");
