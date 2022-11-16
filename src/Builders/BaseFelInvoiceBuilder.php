@@ -91,7 +91,9 @@ class BaseFelInvoiceBuilder {
             $extras["poliza"] = $fel_data_parsed['poliza'];
         }
 
-
+        if (isset($model->due_date) && !is_null($model->due_date)) {
+            $extras["fechaVencimiento"] = $model->due_date;
+        }
 
         if( $model instanceof RecurringInvoice ) {
             $this->input['recurring_id_origin'] = $model->id;
