@@ -50,14 +50,16 @@ class GenerateReport implements ShouldQueue
 
     protected $report_name_path = "";
 
-    protected $file_name = "";                                                                                                                                                                                                                                                                                                                      
+    protected $file_name = "";  
+
+    protected $headers_csv = [];                                                                                                                                                                                                                                                                                                                      
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template" )
+    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template", $headers_csv=[] )
     {
         $this->request = collect($request);
 
@@ -76,6 +78,8 @@ class GenerateReport implements ShouldQueue
         $this->user = $user;
 
         $this->type_format_report = $type_format_report;
+
+        $this->headers_csv = $headers_csv;
     }
 
     /**
@@ -108,7 +112,7 @@ class GenerateReport implements ShouldQueue
 
             \Log::debug("Report Type: "  . $report_class);
             
-            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user);
+            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user, $this->headers_csv);
 
             $this->invoices = $service_report->generateReport();
 

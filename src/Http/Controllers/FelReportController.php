@@ -72,7 +72,18 @@ class FelReportController extends BaseController
                 "user_id" =>$user->id,
             ]);
             
-            GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user, isset($report_type->type_format_report)? $report_type->type_format_report:"template" );
+            GenerateReport::dispatch(
+                $request->all(), 
+                $company->id, 
+                $company->settings->id_number, 
+                $report_type->entity, 
+                $report_type->columns, 
+                $report_type->template, 
+                $report_record->id, 
+                $user, 
+                isset($report_type->type_format_report)? $report_type->type_format_report:"template",
+                isset($report_type->headers_csv)? $report_type->headers_csv:[],
+             );
 
             return response()->json([
                 "success" => true,

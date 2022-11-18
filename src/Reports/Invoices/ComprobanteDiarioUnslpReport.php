@@ -14,8 +14,10 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
 
     protected $company_id;
 
+    protected $headers_csv;
 
-    public function __construct($company_id, $request)
+
+    public function __construct($company_id, $request, $columns, $user, $headers_csv)
     {
         $this->company_id = $company_id;
 
@@ -23,7 +25,7 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
 
         $from = $request->has('from_date') ? $request->get('from_date') : null;
         $to = $request->has('to_date') ? $request->get('to_date') : null;
-
+        $this->headers_csv = $headers_csv;
         parent::__construct($from, $to);
     }
 
@@ -51,15 +53,7 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
       
 
         return [
-            "header" => [
-                "Fecha",
-                "Nro_Factura",
-                "Carrera",
-                "Alumno",
-                "Matricula",
-                "Mensualidad",
-                "OtrosIngresos",
-            ],
+            "header" => $this->headers_csv,
             "invoices" => $query_invoices
         ];
     }
