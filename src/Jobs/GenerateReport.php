@@ -241,7 +241,7 @@ class GenerateReport implements ShouldQueue
             }
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
             $mensualidad_code = 1001;
-            $matricula_code = 1002;
+            $matricula_code = 1000;
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 $detail_collect = collect(json_decode($record->detalles, true));
                 unset($record->detalles);
