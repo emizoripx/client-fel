@@ -70,6 +70,8 @@ class EmitTerminalPreinvoices implements ShouldQueue
 
                     \Log::debug("Emit Invoice Number: " . $invoice->numeroFactura);
 
+                    $invoice = $invoice->service()->applyNumber()->save();
+
                     $invoice->service()->emit('true');
 
                 } catch ( ClientFelException $cex ) {
