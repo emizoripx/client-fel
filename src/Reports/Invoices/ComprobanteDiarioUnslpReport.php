@@ -29,7 +29,7 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
 
     public function addSelectColumns($query)
     {
-        $query->selectRaw('fel_invoice_requests.id,fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, group_settings.name,fel_invoice_requests.nombreEstudiante,fel_invoice_requests.detalles');
+        $query->selectRaw('fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, group_settings.name,fel_invoice_requests.nombreEstudiante,fel_invoice_requests.detalles');
         
         return $query;
     }
