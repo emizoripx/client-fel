@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
@@ -38,6 +39,8 @@ class ExportUtils {
     const REGISTER_SALES = 'Registro_Ventas';
 
     const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';
+
+    const DAILY_MOVEMENTS = 'Movimiento_diario';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -110,6 +113,9 @@ class ExportUtils {
 
             case static::COMPROBANTE_DIARIO_CUSTOM1:
                 return ComprobanteDiarioUnslpReport::class;
+                break;
+            case static::DAILY_MOVEMENTS:
+                return ItemInvoiceDailyMovementReport::class;
                 break;
             
             default:
