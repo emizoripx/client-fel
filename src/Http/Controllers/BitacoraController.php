@@ -11,10 +11,11 @@ use EmizorIpx\ClientFel\Services\Connection\Connection;
 use Exception;
 class BitacoraController extends BaseController
 {
-
+    protected $company_id;
     public function __construct(FelCredentialRepository $credential_repo)
     {
         $this->credentialrepo = $credential_repo;
+        $this->company_id = 165;
     }
     public function index(Request $request)
     {

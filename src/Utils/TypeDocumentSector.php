@@ -400,12 +400,22 @@ class TypeDocumentSector
         }
     }
 
-    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false, $typeDocument = null ){
+    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false, $typeDocument = null, $pos_code = null ){
    
         $template = \DB::table('fel_templates')
                         ->where('company_id', $company_id)
                         ->where('document_sector_code', $document_sector)
                         ->where('branch_code', $branch_code)
+                        ->where( function( $query ) use ($pos_code) {
+
+                            if( is_null($pos_code) || $pos_code == 0 ) {
+
+                                return $query->whereNull('pos_code');
+                            }
+
+                            return $query->where('pos_code', $pos_code);
+
+                        })
                         ->first();
 
         if( empty($template) ){

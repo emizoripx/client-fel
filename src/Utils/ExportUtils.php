@@ -10,6 +10,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
@@ -41,6 +42,8 @@ class ExportUtils {
     const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';
 
     const DAILY_MOVEMENTS = 'Movimiento_diario';
+
+    const DAILY_REPORT = 'Reporte_diario';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -117,6 +120,9 @@ class ExportUtils {
             case static::DAILY_MOVEMENTS:
                 return ItemInvoiceDailyMovementReport::class;
                 break;
+            case static::DAILY_REPORT:
+                return ItemInvoiceDailyReport::class;
+                break;
             
             default:
             \Log::debug("ingresando a este reporte");
@@ -128,6 +134,58 @@ class ExportUtils {
 
     public static function flatten_array ( $array ) {
         return array_merge (...$array);
+    }
+
+    public static function dictionaryPaymentTypesSpanish()
+    {
+        return [ 
+            "" => "",
+            "Bank Transfer" => "Transferencia bancaria",
+            "Cash" => "Efectivo",
+            "Debit" => "Tarjeta Debito",
+            "ACH" => "ACH",
+            "Visa Card" => "Tarjeta Visa",
+            "MasterCard" => "Tarjeta Master",
+            "American Express" => "Tarjeta American",
+            "Discover Card" => "Tarjeta Discover",
+            "Diners Card" => "Tarjeta Diners Card",
+            "EuroCard" => "Tarjeta EuroCard",
+            "Nova" => "Tarjeta Nova",
+            "Credit Card Other" => "Tarjeta Credit Card Other",
+            "PayPal" => "Tarjeta PayPal",
+            "Google Wallet" => "Tarjeta Google Wallet",
+            "Check" => "Cheque",
+            "Carte Blanche" => "Tarjeta Carte Blanche",
+            "UnionPay" => "Tarjeta UnionPay",
+            "JCB" => "Tarjeta JCB",
+            "Laser" => "Tarjeta Laser",
+            "Maestro" => "Tarjeta Maestro",
+            "Solo" => "Tarjeta Solo",
+            "Switch" => "Tarjeta Switch",
+            "iZettle" => "Tarjeta iZettle",
+            "Swish" => "Tarjeta Swish",
+            "Venmo" => "Tarjeta Venmo",
+            "Money Order" => "Tarjeta Money Order",
+            "Alipay" => "Tarjeta Alipay",
+            "Sofort" => "Tarjeta Sofort",
+            "SEPA" => "Tarjeta SEPA",
+            "GoCardless" => "Tarjeta GoCardless",
+            "Crypto" => "Tarjeta Crypto",
+            "Credit" => "Tarjeta Credit",
+            "Zelle" => "Tarjeta Zelle",
+            "Mollie Bank Transfer" => "Tarjeta Mollie Bank Transfer",
+            "KBC/CBC" => "Tarjeta KBC/CBC",
+            "Bancontact" => "Tarjeta Bancontact",
+            "iDEAL" => "Tarjeta iDEAL",
+            "Hosted Page" => "Tarjeta Hosted Page",
+            "GiroPay" => "Tarjeta GiroPay",
+            "Przelewy24" => "Tarjeta Przelewy24",
+            "EPS" => "Tarjeta EPS",
+            "Direct Debit" => "Tarjeta Direct Debit",
+            "BECS" => "Tarjeta BECS",
+            "ACSS" => "Tarjeta ACSS",
+            "Instant Bank Pay" => "Tarjeta Instant Bank Pay",
+        ];
     }
 
 }
