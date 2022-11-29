@@ -277,6 +277,7 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
                                 'facturaTicket' => Str::uuid(),
                                 "order_id" => $data['order_id'],
                                 "orders" => $data['orders'],
+                                "business" => isset($data['business']) ? $data['business'] : '',
                             ]
                         ]
                     ]);

@@ -46,6 +46,7 @@ class OrderController extends BaseController
         try {
             $inputData = FelInvoiceRequestRepository::completeOrderDataRequest($request->all(), $company, $user_id);
             $request->replace($inputData);
+            request()->replace($inputData);
 
             \Log::debug("User id: " . $request->user_id);
             \Log::debug("User ID: " . $user_id);
