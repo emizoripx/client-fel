@@ -236,6 +236,10 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
             $client = FelClient::where('document_number', $data['id_number'])->first();
 
+            if( ! $client ) {
+                 throw new Exception('El Cliente con numero de documento ' . $data['id_number'] . ' no esta registrado.');
+            }
+
             $client_id = $client->id_origin;
 
             \Log::debug("Client ID with NIT: " . $client_id);
