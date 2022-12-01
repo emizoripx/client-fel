@@ -12,6 +12,7 @@ use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBonificacionesBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
+use EmizorIpx\ClientFel\Builders\EngarrafadorasBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
@@ -65,6 +66,7 @@ class TypeDocumentSector
     const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
     const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
+    const ENGARRAFADORAS = 51;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -113,6 +115,7 @@ class TypeDocumentSector
         44 => "Factura Importacion Comercializacion Lubricantes",
         45 => "Factura Comercial De Exportacion Precio Venta",
         46 => "Factura Sectores Educativo Zona Franca",
+        51 => "Factura Engarrafadoras",
     ];
 
     public static function getInstanceByCode($code):string
@@ -193,6 +196,9 @@ class TypeDocumentSector
                 break;
             case static::SECTOR_EDUCATIVO_ZONA_FRANCA :
                 return SectorEducativoZonaFrancaBuilder::class;
+                break;
+            case static::ENGARRAFADORAS :
+                return EngarrafadorasBuilder::class;
                 break;
             
             default:
@@ -277,6 +283,9 @@ class TypeDocumentSector
 
             case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
                 return 'educativo-zona-franca';
+                break;
+            case static::ENGARRAFADORAS:
+                return 'engarrafadora';
                 break;
 
             default:
@@ -392,6 +401,9 @@ class TypeDocumentSector
                 break;
             case static::COMPRA_VENTA_BONIFICACIONES:
                 return 'compra-venta-bonificaciones';
+                break;
+            case static::ENGARRAFADORAS:
+                return 'engarrafadora';
                 break;
 
             default:
@@ -570,6 +582,9 @@ class TypeDocumentSector
                 break;
             case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
                 return 'FACTURA SECTORES EDUCATIVO ZONA FRANCA';
+                break;
+            case static::ENGARRAFADORAS:
+                return 'FACTURA ENGARRAFADORAS';
                 break;
             
             

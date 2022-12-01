@@ -11,6 +11,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\ComercializacionHidrocarburo
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVentaBonificaciones\CompraVentaBonificacionesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\Engarrafadoras\EngarrafadorasResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosIehd\HidrocarburosIehdResource;
@@ -112,6 +113,8 @@ class TypeDocumentResource extends JsonResource
                 break;
             case TypeDocumentSector::SECTOR_EDUCATIVO_ZONA_FRANCA:
                 return new SectorEducativoZonaFrancaResource($this);
+            case TypeDocumentSector::ENGARRAFADORAS:
+                return new EngarrafadorasResource($this);
             default:
                 return new CompraVentaResource($this);
                 break;
