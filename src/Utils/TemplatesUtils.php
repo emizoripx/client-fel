@@ -11,6 +11,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionGnv\FacturaCom
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\FacturaComercializacionHidrocarburosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\FacturaCompraVentaBonificacionesTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaEngarrafadoras\FacturaEngarrafadorasTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
@@ -108,6 +109,9 @@ class TemplatesUtils {
             
             case TypeDocumentSector::SECTOR_EDUCATIVO_ZONA_FRANCA:
                 return FacturaSectorEducativoZonaFrancaTemplateResource::class;
+                break;
+            case TypeDocumentSector::ENGARRAFADORAS:
+                return FacturaEngarrafadorasTemplateResource::class;
                 break;
 
             default:
