@@ -138,7 +138,7 @@ class OrderTransformer extends EntityTransformer
             // 'sector_document_type_id' => $invoice->fel_invoice ? $invoice->fel_invoice->sector_document_type_id : '',
             'payment_method_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoMetodoPago : '',
             // 'numeroFactura' => $invoice->fel_invoice ? $invoice->fel_invoice->numeroFactura : '',
-            'client_bussines_name' => $invoice->fel_invoice ? $invoice->fel_invoice->nombreRazonSocial : '',
+            'client_business_name' => $invoice->fel_invoice ? $invoice->fel_invoice->nombreRazonSocial : '',
             'identity_type_document_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoTipoDocumentoIdentidad : '',
             'currency_code' => $invoice->fel_invoice ? $invoice->fel_invoice->codigoMoneda : '',
             'exchange_rate' => $invoice->fel_invoice ? (float)  $invoice->fel_invoice->tipoCambio : '',
