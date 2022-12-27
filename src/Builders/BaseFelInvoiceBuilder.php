@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelCaption;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
+use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
 use Exception;
 
@@ -140,6 +141,21 @@ class BaseFelInvoiceBuilder {
             $model = $this->source_data['model'];
     
             $model->amount = $fel_invoice_request->montoTotal;
+
+            if( $fel_invoice_request->type_document_sector_id == TypeDocumentSector::PRODUCTOS_ALCANZADOS_ICE ) {
+
+                $items = $model->line_items;
+
+                foreach ($items as $item) {
+                    
+                    $item->line_total = $item->line_total + $item->montoIceEspecifico + $item->montoIcePorcentual;
+                    $item->gross_line_total = $item->line_total;
+                }
+
+                \Log::debug("Items: " . json_encode($items));
+
+                $model->line_items = $items;
+            }
     
             $model->saveQuietly();
             

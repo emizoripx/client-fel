@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use CompraVentaPdfBuilder;
+use EmizorIpx\ClientFel\Builders\AlcanzadaIceBuilder;
 use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ClinicasBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
@@ -200,6 +201,9 @@ class TypeDocumentSector
             case static::ENGARRAFADORAS :
                 return EngarrafadorasBuilder::class;
                 break;
+            case static::PRODUCTOS_ALCANZADOS_ICE :
+                return AlcanzadaIceBuilder ::class;
+                break;
             
             default:
                 return CompraVentaBuilder::class;
@@ -286,6 +290,9 @@ class TypeDocumentSector
                 break;
             case static::ENGARRAFADORAS:
                 return 'engarrafadora';
+                break;
+            case static::PRODUCTOS_ALCANZADOS_ICE:
+                return 'alcanzada-ice';
                 break;
 
             default:

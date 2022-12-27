@@ -553,6 +553,10 @@ class InvoiceResource extends JsonResource
                         "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
                         "montoTotalConciliado" =>   isset($this->montoTotal) ? $this->montoTotal : null,
 
+                        // ICE
+                        "montoIceEspecifico" =>   isset($this->montoIceEspecifico) ? $this->montoIceEspecifico : null,
+                        "montoIcePorcentual" =>   isset($this->montoIcePorcentual) ? $this->montoIcePorcentual : null,
+
                         // HIDROCARBUROS
 
                         "ciudad" => isset($this->data_specific_by_sector['ciudad']) ? $this->data_specific_by_sector['ciudad'] : '',
