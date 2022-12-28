@@ -43,9 +43,11 @@ class AlcanzadaIceBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBui
             $this->input,[
                 "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
-                "montoIceEspecifico" => round($this->source_data['fel_data_parsed']['montoIceEspecifico'],2),
-                "montoIcePorcentual" => round($this->source_data['fel_data_parsed']['montoIcePorcentual'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "data_specific_by_sector" => [
+                    "montoIceEspecifico" => round($this->source_data['fel_data_parsed']['montoIceEspecifico'],2),
+                    "montoIcePorcentual" => round($this->source_data['fel_data_parsed']['montoIcePorcentual'],2),
+                ]
             ],
             $this->getDetailsAndTotals()
         );

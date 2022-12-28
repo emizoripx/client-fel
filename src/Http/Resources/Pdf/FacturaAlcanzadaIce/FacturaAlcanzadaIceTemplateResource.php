@@ -24,8 +24,8 @@ class FacturaAlcanzadaIceTemplateResource extends BaseTemplateResource {
             "currencyShortCode" => "Bs",
             "tipoCambio" => isset($fel_invoice->tipoCambio) ? NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2) : '',
             "montoTotalMoneda" => isset($fel_invoice->montoTotalMoneda) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotalMoneda, 2) : '',
-            "montoIceEspecifico" => isset($fel_invoice->montoIceEspecifico) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoIceEspecifico, 2) : '',
-            "montoIcePorcentual" => isset($fel_invoice->montoIcePorcentual) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoIcePorcentual, 2) : '',
+            "montoIceEspecifico" => isset($fel_invoice->data_specific_by_sector['montoIceEspecifico']) ? NumberUtils::number_format_custom( (float) $fel_invoice->data_specific_by_sector['montoIceEspecifico'], 2) : '',
+            "montoIcePorcentual" => isset($fel_invoice->data_specific_by_sector['montoIcePorcentual']) ? NumberUtils::number_format_custom( (float) $fel_invoice->data_specific_by_sector['montoIcePorcentual'], 2) : '',
             "montoTotalMonedaLiteral" => to_word((float)( $fel_invoice->montoTotalMoneda), 2, $fel_invoice->codigoMoneda) ,
         ]);
         

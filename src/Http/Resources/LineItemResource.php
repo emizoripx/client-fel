@@ -54,14 +54,14 @@ class LineItemResource extends JsonResource
             "cantidadDevuelto" =>  isset($this->cantidadDevuelto) ? $this->cantidadDevuelto : 0,
             "subtotalOriginal" =>  isset($this->subtotalOriginal) ? $this->subtotalOriginal : "0",
 
-            "marcaIce" =>  isset($this->marcaIce) ? $this->marcaIce : "0",
-            "alicuotaIva" =>  isset($this->alicuotaIva) ? $this->alicuotaIva : "0",
-            "precioNetoVentaIce" =>  isset($this->precioNetoVentaIce) ? $this->precioNetoVentaIce : "0",
-            "alicuotaEspecifica" =>  isset($this->alicuotaEspecifica) ? $this->alicuotaEspecifica : "0",
-            "alicuotaPorcentual" =>  isset($this->alicuotaPorcentual) ? $this->alicuotaPorcentual : "0",
-            "montoIceEspecifico" =>  isset($this->montoIceEspecifico) ? $this->montoIceEspecifico : "0",
-            "montoIcePorcentual" =>  isset($this->montoIcePorcentual) ? $this->montoIcePorcentual : "0",
-            "cantidadIce" =>  isset($this->cantidadIce) ? $this->cantidadIce : "0",
+            "marcaIce" =>  isset($this->marcaIce) ? $this->marcaIce : 0,
+            "alicuotaIva" =>  isset($this->alicuotaIva) ? $this->alicuotaIva : 0,
+            "precioNetoVentaIce" =>  isset($this->precioNetoVentaIce) ? $this->precioNetoVentaIce : 0,
+            "alicuotaEspecifica" =>  isset($this->alicuotaEspecifica) ? $this->alicuotaEspecifica : 0,
+            "alicuotaPorcentual" =>  isset($this->alicuotaPorcentual) ? $this->alicuotaPorcentual : 0,
+            "montoIceEspecifico" =>  isset($this->montoIceEspecifico) ? $this->montoIceEspecifico : 0,
+            "montoIcePorcentual" =>  isset($this->montoIcePorcentual) ? $this->montoIcePorcentual : 0,
+            "cantidadIce" =>  isset($this->cantidadIce) ? $this->cantidadIce : 0,
         ];
     }
 }
