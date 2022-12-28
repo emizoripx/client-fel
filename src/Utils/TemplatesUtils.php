@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaAlcanzadaIce\FacturaAlcanzadaIceTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaAlquileres\FacturaAlquileresTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaClinicas\FacturaClinicasTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercialExportacion\FacturaComercialExportacionTemplateResource;
@@ -112,6 +113,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::ENGARRAFADORAS:
                 return FacturaEngarrafadorasTemplateResource::class;
+                break;
+            case TypeDocumentSector::PRODUCTOS_ALCANZADOS_ICE:
+                return FacturaAlcanzadaIceTemplateResource::class;
                 break;
 
             default:
