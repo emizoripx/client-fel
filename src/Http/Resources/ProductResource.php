@@ -17,7 +17,17 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $additional_data = [];
+
+        if( isset($this->additional_data)){
+
+            foreach ($this->additional_data as $key => $value) {
+                $additional_data[$key] = $value;
+            }
+        }
+
+
+        return array_merge($additional_data, [
             "codigoNandina" => $this->codigo_nandina,
             "codigo_actividad_economica" => (string) $this->codigo_actividad_economica,
             "codigo" => $this->codigo_producto,
@@ -28,6 +38,6 @@ class ProductResource extends JsonResource
             "id_origin" => $this->encodePrimaryKey($this->id_origin),
             "company_id" => $this->company_id,
             "id" => (int)$this->id,
-        ];
+        ]);
     }
 }

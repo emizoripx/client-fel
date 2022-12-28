@@ -23,7 +23,8 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             $this->setEntity('product');
             $this->parseFelData($fel_data);
 
-            
+            $additional_data = [];
+
             $input = [
                 "company_id" => $model->company_id,
                 "id_origin" => $model->id,
@@ -35,6 +36,27 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
                 "codigo_nandina" => $this->fel_data_parsed['codigo_nandina'],
                 "created_at" => Carbon::now()
             ];
+
+            if( !is_null($this->fel_data_parsed['marcaIce']) ){
+                $additional_data = array_merge($additional_data, ['marcaIce' => $this->fel_data_parsed['marcaIce'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['alicuotaEspecifica']) ){
+                $additional_data = array_merge($additional_data, ['alicuotaEspecifica' => $this->fel_data_parsed['alicuotaEspecifica'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['alicuotaPorcentual']) ){
+                $additional_data = array_merge($additional_data, ['alicuotaPorcentual' => $this->fel_data_parsed['alicuotaPorcentual'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['cantidadIce']) ){
+                $additional_data = array_merge($additional_data, ['cantidadIce' => $this->fel_data_parsed['cantidadIce'] ]);
+            }
+
+            if( ! empty($additional_data) ) {
+                $input = array_merge( $input, [
+                    'additional_data' => $additional_data
+                ] );
+            }
+
+            \Log::debug("Create Products: " . json_encode($additional_data));
 
             FelSyncProduct::create($input);
 
@@ -52,6 +74,8 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
 
             $this->setEntity('product');
             $this->parseFelData($fel_data);
+
+            $additional_data = [];
         
             $input = [
                 "codigo_producto" => $this->fel_data_parsed['codigo_producto'],
@@ -62,6 +86,25 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
                 "nombre_unidad" => $this->fel_data_parsed['unit_name'],
                 "updated_at" => Carbon::now()
             ];
+
+            if( !is_null($this->fel_data_parsed['marcaIce']) ){
+                $additional_data = array_merge($additional_data, ['marcaIce' => $this->fel_data_parsed['marcaIce'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['alicuotaEspecifica']) ){
+                $additional_data = array_merge($additional_data, ['alicuotaEspecifica' => $this->fel_data_parsed['alicuotaEspecifica'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['alicuotaPorcentual']) ){
+                $additional_data = array_merge($additional_data, ['alicuotaPorcentual' => $this->fel_data_parsed['alicuotaPorcentual'] ]);
+            }
+            if( !is_null($this->fel_data_parsed['cantidadIce']) ){
+                $additional_data = array_merge($additional_data, ['cantidadIce' => $this->fel_data_parsed['cantidadIce'] ]);
+            }
+
+            if( !empty($additional_data) ) {
+                $input = array_merge( $input, [
+                    'additional_data' => $additional_data
+                ] );
+            }
 
                 $product = FelSyncProduct::where('id_origin',$model->id)->first();
                 

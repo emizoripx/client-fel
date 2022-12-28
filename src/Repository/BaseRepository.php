@@ -40,6 +40,10 @@ class BaseRepository
                         "product_sin_id"    => $fel_data['codigo_producto_sin'],
                         "codigo_nandina" => !empty($fel_data['codigoNandina']) ? $fel_data['codigoNandina'] : "",
                         "codigo_producto" => !empty($fel_data['codigo']) ? $fel_data['codigo'] : "",
+                        "marcaIce" => !empty($fel_data['marcaIce']) ? $fel_data['marcaIce'] : null,
+                        "alicuotaEspecifica" => !empty($fel_data['alicuotaEspecifica']) ? $fel_data['alicuotaEspecifica'] : null,
+                        "alicuotaPorcentual" => !empty($fel_data['alicuotaPorcentual']) ? $fel_data['alicuotaPorcentual'] : null,
+                        "cantidadIce" => !empty($fel_data['cantidadIce']) ? $fel_data['cantidadIce'] : null,
                     ];
                     break;
                 case 'invoice':
