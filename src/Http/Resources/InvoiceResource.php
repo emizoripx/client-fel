@@ -554,8 +554,8 @@ class InvoiceResource extends JsonResource
                         "montoTotalConciliado" =>   isset($this->montoTotal) ? $this->montoTotal : null,
 
                         // ICE
-                        "montoIceEspecifico" =>   isset($this->data_specific_by_sector['montoIceEspecifico']) ? $this->data_specific_by_sector['montoIceEspecifico'] : null,
-                        "montoIcePorcentual" =>   isset($this->data_specific_by_sector['montoIcePorcentual']) ? $this->data_specific_by_sector['montoIcePorcentual'] : null,
+                        "montoIceEspecifico" =>   isset($this->data_specific_by_sector['montoIceEspecifico']) ? (string) $this->data_specific_by_sector['montoIceEspecifico'] : '',
+                        "montoIcePorcentual" =>   isset($this->data_specific_by_sector['montoIcePorcentual']) ? (string) $this->data_specific_by_sector['montoIcePorcentual'] : '',
 
                         // HIDROCARBUROS
 
