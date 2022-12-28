@@ -17,6 +17,10 @@ class FelSyncProduct extends Model
     use DecodeHashIds;
     protected $guarded = [];
 
+    protected $casts = [
+        'additional_data' => 'array'
+    ];
+
     protected static function newFactory(){
         return FelSyncProductFactory::new();
     }
