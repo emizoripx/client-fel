@@ -6,7 +6,7 @@ use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use Carbon\Carbon;
-use EmizorIpx\ClientFel\Http\Resources\ItemInraResumenResource;
+use EmizorIpx\ClientFel\Http\Resources\ItemInraTotalsResource;
 use EmizorIpx\ClientFel\Utils\NumberUtils;
 
 class InraTotalesReport extends BaseReport implements ReportInterface
@@ -158,10 +158,10 @@ class InraTotalesReport extends BaseReport implements ReportInterface
             "totales" => [
                 "montoTotalGeneral" => NumberUtils::number_format_custom(collect($items)->sum('line_total'), 2)
             ],
-            "area1" => ItemInraResumenResource::collection($area1)->resolve(),
-            "area2" => ItemInraResumenResource::collection($area2)->resolve(),
-            "area3" => ItemInraResumenResource::collection($area3)->resolve(),
-            "area4" => ItemInraResumenResource::collection($area4)->resolve(),
+            "area1" => ItemInraTotalsResource::collection($area1)->resolve(),
+            "area2" => ItemInraTotalsResource::collection($area2)->resolve(),
+            "area3" => ItemInraTotalsResource::collection($area3)->resolve(),
+            "area4" => ItemInraTotalsResource::collection($area4)->resolve(),
         ];
     }
 }
