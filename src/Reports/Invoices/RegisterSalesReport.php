@@ -29,7 +29,7 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
 
     public function addSelectColumns($query)
     {
-        $query->selectRaw('(@counter := @counter +1) as num,"2" as especificaciones, fechaEmision,numeroFactura,cuf,numeroDocumento,complemento,nombreRazonSocial,round(montoTotal-descuentoAdicional,2) as importeTotal,"0.00" as importeIce,"0.00" as importeIEHD, "0.00" as importeIPJ,"0.00" as tasas,"0.00" as otros,"0.00" as exportaciones,"0.00" as tasaCero,round(montoTotal-descuentoAdicional,2) as subTotal, descuentoAdicional,round(montoGiftCard,2) as montoGiftCard, round(montoTotalSujetoIva,2) as baseCreditoFiscal,round(montoTotalSujetoIva*0.13,2) as debitoFiscal, if(codigoEstado=690 ||  codigoEstado=908,"V","A") as estado, "" as codigo_control, "0" as tipoVenta');
+        $query->selectRaw('(@counter := @counter +1) as num,"2" as especificaciones, fechaEmision,numeroFactura,cuf,numeroDocumento,complemento,nombreRazonSocial,round(montoTotal,2) as importeTotal,"0.00" as importeIce,"0.00" as importeIEHD, "0.00" as importeIPJ,"0.00" as tasas,"0.00" as otros,"0.00" as exportaciones,"0.00" as tasaCero,round(montoTotal,2) as subTotal, descuentoAdicional,round(montoGiftCard,2) as montoGiftCard, round(montoTotalSujetoIva,2) as baseCreditoFiscal,round(montoTotalSujetoIva*0.13,2) as debitoFiscal, if(codigoEstado=690 ||  codigoEstado=908,"V","A") as estado, "" as codigo_control, "0" as tipoVenta');
         
         return $query;
     }
