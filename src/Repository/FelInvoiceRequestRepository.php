@@ -215,8 +215,8 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
             \Log::debug("Product ID Hash: " . $hashid->encode($product->id));
             
             $item_array = array_merge($item, [
-                'product_key' => $product->product_key,
-                'notes' =>  $product->product_key . ' - ' .  $product->notes,
+                'product_key' => $item['product_key'],
+                'notes' => empty($item['notes']) ? $item['product_key'] : ($item['product_key'] . ' - ' .  $item['notes']),
                 'cost' => round( $item['price'], 2),
                 'product_id' => $hashid->encode($product->id),
                 'codigo_producto' => $product_sync->codigo_producto
