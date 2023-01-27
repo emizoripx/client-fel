@@ -30,7 +30,7 @@ class ItemInraResumenResource extends JsonResource
             "numeroDocumento" => $this->resource['numeroDocumento'],
             "cantidad" => $this->resource['quantity'],
             "precioUnitario" => round($this->resource['cost'], 2),
-            "subTotal" => round((float)($this->resource['cost'] * $this->resource['quantity']), 2),
+            "subTotal" => round((float)($this->resource['subtotal_prop']), 2),
         ];
     }
 }

@@ -90,7 +90,7 @@ class InraTotalesReport extends BaseReport implements ReportInterface
 
         $detalles = $query_items->pluck('invoices.line_items', 'fel_invoice_requests.cuf');
 
-        $invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.codigoSucursal', 'fel_invoice_requests.nombreRazonSocial', 'fel_invoice_requests.numeroDocumento', 'fel_invoice_requests.montoTotal')->get();
+        $invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.codigoSucursal', 'fel_invoice_requests.nombreRazonSocial', 'fel_invoice_requests.numeroDocumento','fel_invoice_requests.montoTotal', 'fel_invoice_requests.descuentoAdicional')->get();
 
         $invoices_grouped = collect($invoices)->groupBy('cuf');
 

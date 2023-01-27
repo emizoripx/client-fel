@@ -674,4 +674,18 @@ class FelInvoiceRequest extends Model
         }        
     }
 
+
+    public function getEmailAgency()
+    {
+        $id_agencia = $this->getVariableExtra('id_agencia');
+
+        if (!is_null($id_agencia)) {
+            $agency = \DB::table("agencies")->find($id_agencia);
+            if ($agency && isset($agency->email)) {
+                return $agency->email;
+            }
+        }
+        return null;
+    }
+
 }

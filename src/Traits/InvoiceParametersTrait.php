@@ -11,6 +11,11 @@ trait InvoiceParametersTrait {
         return $this->hasOne(FelInvoiceRequest::class,'id_origin', 'id')->withTrashed();
     }
 
+    public function getEmailAgency()
+    {
+        return $this->fel_invoice()->getEmailAgency();
+    }
+
     public function includeFelData(){
         $invoice = $this->fel_invoice;
 
