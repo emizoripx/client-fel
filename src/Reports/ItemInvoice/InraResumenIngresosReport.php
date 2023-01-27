@@ -91,7 +91,7 @@ class InraResumenIngresosReport extends BaseReport implements ReportInterface
 
         $detalles = $query_items->pluck('invoices.line_items', 'fel_invoice_requests.cuf');
 
-        $invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.codigoSucursal', 'fel_invoice_requests.nombreRazonSocial', 'fel_invoice_requests.numeroDocumento', 'fel_invoice_requests.montoTotal')->get();
+        $invoices = $query_items->select('fel_invoice_requests.cuf', 'fel_invoice_requests.fechaEmision', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.codigoSucursal', 'fel_invoice_requests.nombreRazonSocial', 'fel_invoice_requests.numeroDocumento','fel_invoice_requests.montoTotal', 'fel_invoice_requests.descuentoAdicional')->get();
 
         $invoices_grouped = collect($invoices)->groupBy('cuf');
 
@@ -115,6 +115,12 @@ class InraResumenIngresosReport extends BaseReport implements ReportInterface
         })->values();
 
         $items = ExportUtils::flatten_array($items);
+
+        $items =  collect($items)->map(function ($item) {
+            $item['descuento_prop'] = $item['descuentoAdicional'] / ($item['montoTotal'] + $item['descuentoAdicional']) * $item['line_total'];
+            $item['subtotal_prop'] = $item['line_total'] - $item['descuento_prop'];
+            return $item;
+        });
 
         $area1 = collect($items)->where('custom_value1', '=' , 'SANNEAMIENTO');
         $area2 = collect($items)->where('custom_value1', '=' , 'CATASTRO');
