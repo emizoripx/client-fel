@@ -19,7 +19,8 @@ class AgencyController extends BaseController
        $data = \DB::table('agencies')
         ->when($search, function($query) use($search) {
                 $query->orWhere('name','like',"%$search%")
-                    ->orWhere('nit', 'like', "%$search%");
+                    ->orWhere('nit', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
         })->paginate();
         
         return new AgencyCustomCollectionResource($data);
@@ -41,7 +42,8 @@ class AgencyController extends BaseController
     {
         $agency = \DB::table('agencies')->insert([
             'name' => request()->name,
-            'nit' => request()->nit
+            'nit' => request()->nit,
+            'email' => request()->email,
         ]);
         return response()->json($agency,200);
     }
@@ -51,7 +53,8 @@ class AgencyController extends BaseController
         ->whereId($id)
         ->update([
             'name' => request()->name,
-            'nit' => request()->nit
+            'nit' => request()->nit,
+            'email' => request()->email,
         ]);
         return response()->json($agency,200);
     }

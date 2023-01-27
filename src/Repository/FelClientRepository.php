@@ -34,6 +34,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
           "codigoExcepcion" => $this->fel_data_parsed['codigoExcepcion'],
           "company_id" => $model->company_id
         ];
+        $input["search_field"] = implode(" ", [$input['document_number'], $input['business_name'], $model->id_number, $model->name]);
 
 
 
@@ -59,6 +60,7 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
         "complement" => $this->fel_data_parsed['complement'],
       ];
+      $input["search_field"] = implode(" ", [$input['document_number'], $input['business_name'], $model->id_number, $model->name]);
 
       $client = FelClient::where("id_origin", $model->id)->first();
 
