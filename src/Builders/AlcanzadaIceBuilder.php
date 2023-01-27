@@ -105,7 +105,7 @@ class AlcanzadaIceBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBui
 
             $total += $new->subTotal;
         }
-        $total = round($this->source_data['fel_data_parsed']['montoTotal'], 2);
+        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
 
         
         $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['montoIceEspecifico'], 2) - round($this->source_data['fel_data_parsed']['montoIcePorcentual'], 2);
