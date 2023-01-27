@@ -17,7 +17,8 @@ class AgencyCollectionResource extends JsonResource
         $result = [
             'id' => $this->id,
             'name' => $this->name,
-            'nit' => $this->nit
+            'nit' => $this->nit,
+            'email' => $this->email
         ];
       
         return $result;
