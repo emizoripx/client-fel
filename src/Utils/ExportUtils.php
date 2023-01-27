@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Utils;
 use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
 use EmizorIpx\ClientFel\Reports\Invoices\ComprobanteDiarioUnslpReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
+use EmizorIpx\ClientFel\Reports\Invoices\IngresosDiarioBioReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
@@ -44,6 +45,8 @@ class ExportUtils {
     const DAILY_MOVEMENTS = 'Movimiento_diario';
 
     const DAILY_REPORT = 'Reporte_diario';
+
+    const DAILY_REPORT_BIO = 'Ingresos_Diarios';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -122,6 +125,9 @@ class ExportUtils {
                 break;
             case static::DAILY_REPORT:
                 return ItemInvoiceDailyReport::class;
+                break;
+            case static::DAILY_REPORT_BIO:
+                return IngresosDiarioBioReport::class;
                 break;
             
             default:
