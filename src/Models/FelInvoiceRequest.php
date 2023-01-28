@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use stdClass;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Jobs\BiocenterStatusNotification;
 use Throwable;
 
 class FelInvoiceRequest extends Model
@@ -459,6 +460,9 @@ class FelInvoiceRequest extends Model
                 // REMOVE PDF WHEN REVOCATIO IS WAITIN
                 \Log::debug("\n\n\n\n\n removing PDF cause is waiting\n\n\n");
                  $this->deletePdf();   
+            }
+            if( $estadoAntiguo != $this->estado ) {
+                BiocenterStatusNotification::dispatch($this->invoice_origin());
             }
         }catch (Throwable $th) {
             \Log::debug("SEND VERIFY STATUS");

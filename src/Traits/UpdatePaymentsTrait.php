@@ -6,6 +6,7 @@ use App\Factory\PaymentFactory;
 use App\Models\Invoice;
 use App\Repositories\CreditRepository;
 use App\Repositories\PaymentRepository;
+use EmizorIpx\ClientFel\Jobs\BiocenterStatusNotification;
 
 trait UpdatePaymentsTrait {
 
@@ -78,6 +79,8 @@ trait UpdatePaymentsTrait {
             $payment = $payment_repo->save($data, PaymentFactory::create( auth()->user()->company()->id, auth()->user()->id ));
 
             \Log::debug("New Payment Created ID: " . $payment->id);
+
+            BiocenterStatusNotification::dispatch($new_invoice, $payment);
 
         }
 
