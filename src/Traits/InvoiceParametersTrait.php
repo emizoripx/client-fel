@@ -13,7 +13,7 @@ trait InvoiceParametersTrait {
 
     public function getEmailAgency()
     {
-        return $this->fel_invoice()->getEmailAgency();
+        return $this->fel_invoice()->first()->getEmailAgency();
     }
 
     public function includeFelData(){
