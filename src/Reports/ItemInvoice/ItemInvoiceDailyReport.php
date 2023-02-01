@@ -111,7 +111,7 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
 
         $detalles = $query_items->pluck('fel_invoice_requests.detalles', 'fel_invoice_requests.id');
 
-        $invoices = $query_items->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por pagar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'))->get();
+        $invoices = $query_items->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'))->get();
 
         $invoices_grouped = collect($invoices)->groupBy('id');
         
@@ -147,16 +147,16 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
         collect($items)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
             if ($key != "")
                 $totales[] = ["name" => $key, "monto" => $item->sum('montoTotal')];
-            $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por pagar')->sum('montoTotal');
+            $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por cobrar')->sum('montoTotal');
         });
-        $totales[] = ["name"=>"Por pagar", "monto"=> $not_payed];
+        $totales[] = ["name"=>"Por cobrar", "monto"=> $not_payed];
 
         return [
             "header" => [
                 "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
                 "desde" => date('Y-m-d', $this->from) . " 00:00:00",
                 "hasta" => date('Y-m-d', $this->to) . " 23:59:59",
-                "fechaReporte" => Carbon::now()->toDateTimeString(),
+                "fechaReporte" => Carbon::now()->format("Y-m-d"),
                 "usuario" => $this->user->name(),
                 "sucursal" => $this->branch_desc,
             ],
