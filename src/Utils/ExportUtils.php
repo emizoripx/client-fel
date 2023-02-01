@@ -16,6 +16,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
+use EmizorIpx\ClientFel\Reports\Products\UNSDLPProductReport;
 use Exception;
 
 class ExportUtils {
@@ -47,6 +48,8 @@ class ExportUtils {
     const DAILY_REPORT = 'Reporte_diario';
 
     const DAILY_REPORT_BIO = 'Ingresos_Diarios';
+
+    const ITEMS_REPORT_UNSDL = 'Reporte_Cajeros';
 
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
@@ -128,6 +131,9 @@ class ExportUtils {
                 break;
             case static::DAILY_REPORT_BIO:
                 return IngresosDiarioBioReport::class;
+                break;
+            case static::ITEMS_REPORT_UNSDL:
+                return UNSDLPProductReport::class;
                 break;
             
             default:
