@@ -14,7 +14,7 @@ class AddSearchColumnFelClients extends Migration
     public function up()
     {
         Schema::table('fel_clients', function (Blueprint $table) {
-            $table->string('search_fields')->nullable();
+            $table->string('search_fields',250)->nullable();
             $table->index(['company_id','search_fields']);
         });
     }

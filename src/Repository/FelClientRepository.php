@@ -34,9 +34,11 @@ class FelClientRepository extends BaseRepository implements RepoInterface
           "codigoExcepcion" => $this->fel_data_parsed['codigoExcepcion'],
           "company_id" => $model->company_id
         ];
-        $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->id_number, $model->name]);
-
-
+        $group_name = "";
+        if (isset($model->group_settings) && !is_null($model->group_settings->name)) {
+          $group_name = $model->group_settings->name;
+        }
+        $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->number, $model->name, $group_name]);
 
         FelClient::create($input);
       } catch (Exception $ex) {
@@ -60,7 +62,11 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
         "complement" => $this->fel_data_parsed['complement'],
       ];
-      $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->id_number, $model->name]);
+      $group_name = "";
+      if (isset($model->group_settings) && !is_null($model->group_settings->name)) {
+        $group_name = $model->group_settings->name;
+      }
+      $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->number, $model->name, $group_name]);
 
       $client = FelClient::where("id_origin", $model->id)->first();
 

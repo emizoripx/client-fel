@@ -131,6 +131,15 @@ class BaseFelInvoiceBuilder {
             "typeDocument" => $fel_data_parsed['typeDocument'],
             "factura_ticket" => $fel_data_parsed['facturaTicket'],
         ]);
+        $group_name = "";
+        if (isset($model->client->group_settings) && !is_null($model->client->group_settings->name)) {
+            $group_name = $model->client->group_settings->name;
+        }
+        $client_name = "";
+        if ($model->client->name != $this->input['nombreRazonSocial']) {
+            $client_name = $model->client->name;
+        }
+        $this->input['search_fields'] = implode(" ", [Carbon::parse($this->input['fechaEmision'])->format("Y-m-d"), $this->input['nombreRazonSocial'], $this->input['numeroDocumento'],$this->input['codigoCliente'], $group_name, $client_name ]);
         
     }
 
