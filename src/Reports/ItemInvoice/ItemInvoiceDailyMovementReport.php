@@ -199,7 +199,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         $not_payed = 0.00;
         collect($items)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
             if ($key != "")
-                $totales[] = ["name" => $key, "monto" => $item->sum('subTotal')];
+                $totales[] = ["name" => $key, "monto" => $item->sum('subTotal') - ($item->pluck("descuentoAdicional"))[0]];
             $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por cobrar')->sum('subTotal');
         });
         $totales[] = ["name"=>"Por cobrar", "monto"=> $not_payed];
