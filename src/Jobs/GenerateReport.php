@@ -242,12 +242,15 @@ class GenerateReport implements ShouldQueue
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
             $mensualidad_code = 1001;
             $matricula_code = 1000;
+            $diplomado_code = 1019;
+            $postgrado_code = 1018;
+            $carnet_u_code = 1016;
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 $detail_collect = collect(json_decode($record->detalles, true));
                 unset($record->detalles);
                 $total_quantity_matricula = $detail_collect->where('codigoProducto', $matricula_code)->sum('subTotal');
-                $total_quantity_mensualidad = $detail_collect->where('codigoProducto', $mensualidad_code)->sum('subTotal');
-                $total_quantity_otros_ingresos = $detail_collect->whereNotIn('codigoProducto', [$mensualidad_code, $matricula_code])->sum('subTotal');
+                $total_quantity_mensualidad = $detail_collect->whereNotIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code, $matricula_code])->sum('subTotal');
+                $total_quantity_otros_ingresos = $detail_collect->whereIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code])->sum('subTotal');
                 $merged = array_merge((array)$record, ['matricula' => $total_quantity_matricula, 'mensualidad' => $total_quantity_mensualidad, "otros_ingresos" => $total_quantity_otros_ingresos]);
                 $writer->insertOne( $merged);
             }
