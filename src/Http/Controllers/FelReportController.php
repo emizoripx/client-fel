@@ -71,7 +71,10 @@ class FelReportController extends BaseController
                 "registered_at" => Carbon::now()->toDateTimeString(),
                 "user_id" =>$user->id,
             ]);
-            
+            $request_array = $request->all();
+            $request_array['revocated_zero'] = isset($report_type->revocated_zero) ? $report_type->revocated_zero : false;
+            $request->replace($request_array);
+
             GenerateReport::dispatch(
                 $request->all(), 
                 $company->id, 

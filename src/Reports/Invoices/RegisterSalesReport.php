@@ -14,6 +14,8 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
 
     protected $company_id;
 
+    protected $revocated_zero;
+
 
     public function __construct($company_id, $request)
     {
@@ -21,6 +23,7 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
 
         $this->type_document = $request->has('type_document') ? $request->get('type_document') : null;
 
+        $this->revocated_zero = $request->has('revocated_zero') ? $request->get('revocated_zero') : false;
         $from = $request->has('from_date') ? $request->get('from_date') : null;
         $to = $request->has('to_date') ? $request->get('to_date') : null;
 
@@ -29,7 +32,12 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
 
     public function addSelectColumns($query)
     {
-        $query->selectRaw('(@counter := @counter +1) as num,"2" as especificaciones, fechaEmision,numeroFactura,cuf,numeroDocumento,complemento,nombreRazonSocial,round(montoTotal+descuentoAdicional+montoGiftCard,2) as importeTotal,"0.00" as importeIce,"0.00" as importeIEHD, "0.00" as importeIPJ,"0.00" as tasas,"0.00" as otros,"0.00" as exportaciones,"0.00" as tasaCero,round(montoTotal,2) as subTotal, descuentoAdicional,round(montoGiftCard,2) as montoGiftCard, round(montoTotalSujetoIva,2) as baseCreditoFiscal,round(montoTotalSujetoIva*0.13,2) as debitoFiscal, if(codigoEstado=690 ||  codigoEstado=908,"V","A") as estado, "" as codigo_control, "0" as tipoVenta');
+  
+        if ( $this->revocated_zero ) {
+            $query->selectRaw('(@counter := @counter +1) as num,"2" as especificaciones, fechaEmision,numeroFactura,cuf,numeroDocumento,complemento,nombreRazonSocial, if(codigoEstado=690 ||  codigoEstado=908,round(montoTotal+descuentoAdicional+montoGiftCard,2),"0.00") as importeTotal, "0.00" as importeIce,"0.00" as importeIEHD, "0.00" as importeIPJ,"0.00" as tasas,"0.00" as otros,"0.00" as exportaciones,"0.00" as tasaCero, if(codigoEstado=690 ||  codigoEstado=908,round(montoTotal,2),"0.00") as subTotal, if(codigoEstado=690 ||  codigoEstado=908,descuentoAdicional,"0.00") as descuentoAdicional, if(codigoEstado=690 ||  codigoEstado=908,round(montoGiftCard,2),"0.00") as montoGiftCard, if(codigoEstado=690 ||  codigoEstado=908,round(montoTotalSujetoIva,2),"0.00") as baseCreditoFiscal, if(codigoEstado=690 ||  codigoEstado=908,round(montoTotalSujetoIva*0.13,2),"0.00") as debitoFiscal, if(codigoEstado=690 ||  codigoEstado=908,"V","A") as estado, "" as codigo_control, "0" as tipoVenta');
+        } else {
+            $query->selectRaw('(@counter := @counter +1) as num,"2" as especificaciones, fechaEmision,numeroFactura,cuf,numeroDocumento,complemento,nombreRazonSocial,round(montoTotal+descuentoAdicional+montoGiftCard,2) as importeTotal,"0.00" as importeIce,"0.00" as importeIEHD, "0.00" as importeIPJ,"0.00" as tasas,"0.00" as otros,"0.00" as exportaciones,"0.00" as tasaCero,round(montoTotal,2) as subTotal, descuentoAdicional,round(montoGiftCard,2) as montoGiftCard, round(montoTotalSujetoIva,2) as baseCreditoFiscal,round(montoTotalSujetoIva*0.13,2) as debitoFiscal, if(codigoEstado=690 ||  codigoEstado=908,"V","A") as estado, "" as codigo_control, "0" as tipoVenta');
+        }
         
         return $query;
     }
