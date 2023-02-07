@@ -576,6 +576,9 @@ class InvoiceResource extends JsonResource
                         "cantidadMenores" => isset($this->cantidadMenores) ? (int) $this->cantidadMenores : 0,
                         "cantidadMayores" => isset($this->cantidadMayores) ? (int) $this->cantidadMayores : 0,
                         "fechaIngresoHospedaje" => isset($this->fechaIngresoHospedaje) ? $this->fechaIngresoHospedaje : null,
+
+
+                        "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '', 
                     ];
                     break;
             }

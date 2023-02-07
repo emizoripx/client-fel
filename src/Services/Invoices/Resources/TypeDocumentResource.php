@@ -25,6 +25,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativoZonaFranca\Se
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ServiciosBasicos\ServiciosBasicosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones\TelecomunicacionesResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\Turismo\TurismoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMinerales\VentaMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ZonaFranca\ZonaFrancaResource;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
@@ -120,6 +121,9 @@ class TypeDocumentResource extends JsonResource
 
             case TypeDocumentSector::PRODUCTOS_ALCANZADOS_ICE:
                 return new AlcanzadaIceResource($this);
+
+            case TypeDocumentSector::SERVICIO_TURISTICO_HOSPEDAJE:
+                return new TurismoResource($this);
 
             default:
                 return new CompraVentaResource($this);

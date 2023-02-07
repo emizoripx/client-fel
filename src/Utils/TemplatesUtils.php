@@ -24,6 +24,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSeguros\FacturaSegurosTempateR
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaServiciosBasicos\FacturaServiciosBasicosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTurismo\FacturaTurismoTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaInternaMinerales\FacturaVentaInternaMineralesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaZonaFranca\FacturaZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemplateResource;
@@ -121,6 +122,10 @@ class TemplatesUtils {
             case TypeDocumentSector::HOTELES:
                 return FacturaHotelesTemplateResource::class;
                 break;
+            case TypeDocumentSector::SERVICIO_TURISTICO_HOSPEDAJE:
+                return FacturaTurismoTemplateResource::class;
+                break;
+
 
             default:
                 return FacturaCompraVentaTemplateResource::class;
