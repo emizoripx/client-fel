@@ -84,7 +84,7 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
-            $new->detalleHuespedes = $detail->detalleHuespedes;
+            $new->detalleHuespedes = json_decode(json_encode($detail->detalleHuespedes), true);
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
@@ -94,6 +94,10 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
+
+            if( isset( $detail->codigoTipoHabitacion ) ){
+                $new->codigoTipoHabitacion = $detail->codigoTipoHabitacion;
+            }
 
             $details[] = $new;
 

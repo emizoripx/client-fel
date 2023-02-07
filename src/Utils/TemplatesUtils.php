@@ -16,6 +16,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaEngarrafadoras\FacturaEngarraf
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHoteles\FacturaHotelesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaPrevalorada\FacturaPrevaloradaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectorEducativoZonaFranca\FacturaSectorEducativoZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
@@ -116,6 +117,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::PRODUCTOS_ALCANZADOS_ICE:
                 return FacturaAlcanzadaIceTemplateResource::class;
+                break;
+            case TypeDocumentSector::HOTELES:
+                return FacturaHotelesTemplateResource::class;
                 break;
 
             default:
