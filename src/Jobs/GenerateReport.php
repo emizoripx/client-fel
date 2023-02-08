@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Utils\HostedPDF\NinjaPdf;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use Illuminate\Support\Facades\View;
+use Spatie\SimpleExcel\SimpleExcelWriter;
 use Exception;
 use SplTempFileObject;
 
@@ -140,6 +141,9 @@ class GenerateReport implements ShouldQueue
                 case 'csv':
                     $this->processCsvFormat();
                     break;
+                case 'xlsx':
+                    $this->processExcelFormat();
+                    break;
 
                 default:
                     $this->processTemplateFormat();
@@ -262,6 +266,55 @@ class GenerateReport implements ShouldQueue
         $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".csv";
         $this->report_name_path = storage_path("app/report/$this->filename");
         file_put_contents($this->report_name_path, $csvContent);
+        $memory_usage1 = memory_get_usage();
+        \Log::debug("Usage Memory: " . $memory_usage1);
+        \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
+    }
+
+    public function processExcelFormat() {
+
+        $init = microtime(true);
+        $memory_usage = memory_get_usage();
+
+        \Log::debug("Usage Memory: " . $memory_usage);
+
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".xlsx";
+        $this->report_name_path = storage_path("app/report/$this->filename");
+
+        $writer = SimpleExcelWriter::create($this->report_name_path);
+
+        $writer->addHeader($this->invoices['header']);
+
+        if ($this->entity == ExportUtils::REGISTER_SALES){
+
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                
+                $writer->addRow((array) $record);
+            }
+        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
+            $mensualidad_code = 1001;
+            $matricula_code = 1000;
+            $diplomado_code = 1019;
+            $postgrado_code = 1018;
+            $carnet_u_code = 1016;
+            $counter = 0;
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                $counter ++;
+                $detail_collect = collect(json_decode($record->detalles, true));
+                unset($record->detalles);
+                $total_quantity_matricula = $detail_collect->where('codigoProducto', $matricula_code)->sum('subTotal');
+                $total_quantity_mensualidad = $detail_collect->whereNotIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code, $matricula_code])->sum('subTotal');
+                $total_quantity_otros_ingresos = $detail_collect->whereIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code])->sum('subTotal');
+                $merged = array_merge((array)$record, ['matricula' => $total_quantity_matricula, 'mensualidad' => $total_quantity_mensualidad, "otros_ingresos" => $total_quantity_otros_ingresos]);
+                $writer->addRow( $merged);
+            }
+
+            \Log::debug("Counter >>>>>>>>>>>>>>>> all: " . $counter);
+        
+        } else {
+            // $writer->insertAll(json_decode(json_encode($this->invoices['invoices']), true));
+        }
+
         $memory_usage1 = memory_get_usage();
         \Log::debug("Usage Memory: " . $memory_usage1);
         \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
