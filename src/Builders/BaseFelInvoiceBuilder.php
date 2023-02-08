@@ -70,7 +70,7 @@ class BaseFelInvoiceBuilder {
             $client->complement = null;
         }
 
-        if ($modal->company_id == 568) { // change made for coteor
+        if ($modal->company_id == 177) { // change made for hospital la paz
             $fel_client_data = [
                 "type_document_id" => $fel_data_parsed['codigoTipoDocumentoIdentidad'],
                 "document_number" => $fel_data_parsed['numeroDocumento'],

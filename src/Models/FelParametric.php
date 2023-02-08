@@ -145,14 +145,14 @@ class FelParametric
                 $query = FelCaption::whereCompanyId($company_id)->whereDisabled(0)->orderBy('descripcion');
                 break;
             case TypeParametrics::MONEDAS:
-                if ( $company_id == 568 ){
+                if ( $company_id == 193 ){//made for coteor
                     $query = Currency::whereIn('codigo',[1,2])->orderBy('descripcion');
                 }else {
                     $query = Currency::orderBy('descripcion');
                 }
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
-                if ($company_id == 568) {
+                if ($company_id == 193) {//made for coteor
                     $query = PaymentMethod::whereIn('codigo', [1, 3, 7, 8])->orderBy('descripcion');
                 } else {
                     $query = PaymentMethod::orderBy('descripcion');
