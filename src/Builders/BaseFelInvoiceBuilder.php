@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelCaption;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
+use EmizorIpx\ClientFel\Repository\FelClientRepository;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
 use Exception;
@@ -67,6 +68,18 @@ class BaseFelInvoiceBuilder {
             $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 4;
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
+        }
+
+        if ($modal->company_id == 568) { // change made for coteor
+            $fel_client_data = [
+                "type_document_id" => $fel_data_parsed['codigoTipoDocumentoIdentidad'],
+                "document_number" => $fel_data_parsed['numeroDocumento'],
+                "business_name" => $fel_data_parsed['nombreRazonSocial'],
+                "complement" => $fel_data_parsed['complemento'] ?? null,
+            ];
+       
+            $felrepo = app(FelClientRepository::class);
+            $felrepo->update($fel_client_data, $model->client);
         }
 
         $caption_id = null;
