@@ -145,10 +145,18 @@ class FelParametric
                 $query = FelCaption::whereCompanyId($company_id)->whereDisabled(0)->orderBy('descripcion');
                 break;
             case TypeParametrics::MONEDAS:
-                $query = Currency::orderBy('descripcion');
+                if ( $company_id == 568 ) { // COTEOR IN PRODUCTION
+                    $query = Currency::whereIn('codigo',[1,2])->orderBy('descripcion');
+                }else {
+                    $query = Currency::orderBy('descripcion');
+                }
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
-                $query = PaymentMethod::orderBy('descripcion');
+                if ($company_id == 568) { // COTEOR IN PRODUCTION
+                    $query = PaymentMethod::whereIn('codigo', [1, 3, 7, 8])->orderBy('descripcion');
+                } else {
+                    $query = PaymentMethod::orderBy('descripcion');
+                }
                 break;
             case TypeParametrics::PAISES:
                 $query = Country::orderBy('descripcion');
@@ -200,6 +208,8 @@ class FelParametric
                 break;
             
             case TypeParametrics::MONEDAS:
+                // TODO: find another way to do it
+                
                 $currencies = Currency::first();
                 return is_null($currencies);
 

@@ -175,6 +175,9 @@ class BaseRepository
                         "cantidadMenores" => !empty($fel_data["cantidadMenores"]) ? $fel_data["cantidadMenores"] : null,
                         "fechaIngresoHospedaje" => !empty($fel_data["fechaIngresoHospedaje"]) ? $fel_data["fechaIngresoHospedaje"] : null,
 
+                        //Turismo
+                        "razonSocialOperadorTurismo" => !empty($fel_data["razonSocialOperadorTurismo"]) ? $fel_data["razonSocialOperadorTurismo"] : null,
+
                         // Comercializacion Hidrocarburos
                         "placaVehiculo" => !empty($fel_data["placaVehiculo"]) ? $fel_data["placaVehiculo"] : null,
                         "tipoEnvase" => !empty($fel_data["tipoEnvase"]) ? $fel_data["tipoEnvase"] : null,

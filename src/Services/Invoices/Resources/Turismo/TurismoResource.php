@@ -1,11 +1,11 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Turismo;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
-class HotelesResource extends JsonResource
+class TurismoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -34,7 +34,7 @@ class HotelesResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            'detalles' => DetalleHotelesResource::collection(collect($this->detalles)),
+            'detalles' => DetalleTurismoResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
@@ -45,7 +45,8 @@ class HotelesResource extends JsonResource
             "cantidadMayores" => $this->cantidadMayores ,
             "cantidadMenores" => $this->cantidadMenores ,
             "fechaIngresoHospedaje" => substr(Carbon::parse($this->fechaIngresoHospedaje)->format('Y-m-d\TH:i:s.u'), 0, -3),
-            "extras" => json_decode($this->extras)
+            "extras" => json_decode($this->extras),
+            "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '', 
         ];
     }
 }

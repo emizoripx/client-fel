@@ -41,8 +41,8 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->number, $model->name, $group_name]);
 
         FelClient::create($input);
-      } catch (Exception $ex) {
-        bitacora_error("FelClientRepository:create", $ex->getMessage());
+      } catch (\Throwable $ex) {
+        bitacora_error("FelClientRepository:create", $ex->getMessage() . " Line : " . $ex->getLine() . " File: " .$ex->getFile());
       }
     }
   }
@@ -73,8 +73,8 @@ class FelClientRepository extends BaseRepository implements RepoInterface
       if (!is_null($client)) {
         $client->update($input);
       }
-    } catch (Exception $ex) {
-      bitacora_error("FelClientRepository:update", $ex->getMessage());
+    } catch (\Throwable $ex) {
+      bitacora_error("FelClientRepository:update", $ex->getMessage() . " Line : " . $ex->getLine() . " File: " . $ex->getFile());
     }
   }
   public function delete($model)

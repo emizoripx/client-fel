@@ -568,7 +568,17 @@ class InvoiceResource extends JsonResource
 
                         //ADDITIONAL INFORMATION FROM INVOICE
 
-                        "invoiceInfo" => $invoice_info
+                        "invoiceInfo" => $invoice_info,
+
+                        //HOTELES
+                        "cantidadHuespedes" => isset($this->cantidadHuespedes) ? (int) $this->cantidadHuespedes : 0,
+                        "cantidadHabitaciones" => isset($this->cantidadHabitaciones) ? (int) $this->cantidadHabitaciones : 0,
+                        "cantidadMenores" => isset($this->cantidadMenores) ? (int) $this->cantidadMenores : 0,
+                        "cantidadMayores" => isset($this->cantidadMayores) ? (int) $this->cantidadMayores : 0,
+                        "fechaIngresoHospedaje" => isset($this->fechaIngresoHospedaje) ? $this->fechaIngresoHospedaje : null,
+
+
+                        "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '', 
                     ];
                     break;
             }
