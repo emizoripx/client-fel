@@ -27,6 +27,7 @@ use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
+use EmizorIpx\ClientFel\Builders\TurismoBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ZonaFrancaBuilder;
 
@@ -204,6 +205,10 @@ class TypeDocumentSector
             case static::PRODUCTOS_ALCANZADOS_ICE :
                 return AlcanzadaIceBuilder ::class;
                 break;
+            case static::SERVICIO_TURISTICO_HOSPEDAJE :
+                return TurismoBuilder::class;
+                break;
+            
             
             default:
                 return CompraVentaBuilder::class;
@@ -294,6 +299,10 @@ class TypeDocumentSector
             case static::PRODUCTOS_ALCANZADOS_ICE:
                 return 'alcanzada-ice';
                 break;
+            case static::SERVICIO_TURISTICO_HOSPEDAJE:
+                return 'turismo';
+                break;
+
 
             default:
                 return 'compra-venta';

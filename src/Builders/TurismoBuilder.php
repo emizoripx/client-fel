@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class TurismoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -49,6 +49,9 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
                 "cantidadMayores" => $this->source_data['fel_data_parsed']['cantidadMayores'],
                 "cantidadMenores" => $this->source_data['fel_data_parsed']['cantidadMenores'],
                 "fechaIngresoHospedaje" => $this->source_data['fel_data_parsed']['fechaIngresoHospedaje'],
+                "data_specific_by_sector" => [
+                    "razonSocialOperadorTurismo" => $this->source_data['fel_data_parsed']['razonSocialOperadorTurismo']
+                ],
 
             ],
             $this->getDetailsAndTotals()
@@ -125,3 +128,4 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
         return $this->fel_invoice;
     }
 }
+

@@ -1,10 +1,10 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles;
+namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Turismo;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetalleHotelesResource extends JsonResource
+class DetalleTurismoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

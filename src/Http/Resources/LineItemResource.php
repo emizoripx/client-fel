@@ -62,6 +62,7 @@ class LineItemResource extends JsonResource
             "montoIceEspecifico" =>  isset($this->montoIceEspecifico) ? $this->montoIceEspecifico : 0,
             "montoIcePorcentual" =>  isset($this->montoIcePorcentual) ? $this->montoIcePorcentual : 0,
             "cantidadIce" =>  isset($this->cantidadIce) ? $this->cantidadIce : 0,
+            "detalleHuespedes" => isset($this->detalleHuespedes) ? $this->detalleHuespedes : ""
         ];
     }
 }
