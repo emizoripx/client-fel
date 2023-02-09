@@ -24,6 +24,7 @@ class DetalleTurismoResource extends JsonResource
             "subTotal" => round($this->resource['subTotal'], 2),
             "montoDescuento" => !empty($this->resource['montoDescuento']) ? round($this->resource['montoDescuento'], 2) : null,
             "unidadMedida" => $this->resource['unidadMedida'],
+            "codigoTipoHabitacion" => isset($this->resource['codigoTipoHabitacion']) ? $this->resource['codigoTipoHabitacion'] : null,
             "detalleHuespedes" => json_decode($this->resource['detalleHuespedes']),
         ];
     }
