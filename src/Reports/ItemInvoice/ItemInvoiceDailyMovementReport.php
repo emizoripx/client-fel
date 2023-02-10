@@ -104,7 +104,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         ->whereNotNull('fel_invoice_requests.cuf')
         ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
         ->whereNotBetween('paymentables.created_at', [$from, $to])
-        ->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+        ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
 
         $emittend_payed = \DB::table('fel_invoice_requests')
         ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
@@ -115,7 +115,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
             ->whereBetween('paymentables.created_at', [$from, $to])
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
 
         $payed = \DB::table('fel_invoice_requests')
         ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
@@ -126,7 +126,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereNotBetween('fel_invoice_requests.fechaEmision', [$from, $to])
             ->whereBetween('paymentables.created_at', [$from, $to])
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
 
         $debts = \DB::table('fel_invoice_requests')
         ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
@@ -137,7 +137,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
             ->whereNull('paymentables.created_at')
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
         $emitted = $this->addBranchFilter($emitted);
         $emittend_payed = $this->addBranchFilter($emittend_payed);
         $payed = $this->addBranchFilter($payed);
@@ -194,13 +194,49 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         })->values();
 
         $items = ExportUtils::flatten_array($items);
-        
+
+        $invoice_date = null;
+        $invoice_number = null;
+        $tipoPago = null;
+
+        $items_changed = collect($items)->map(function ($item, $key) use (&$invoice_date, &$invoice_number, &$tipoPago) {
+
+            if (in_array($item['codigoEstado'], [905, 691])) {
+                $item['montoTotal'] = 0;
+            }
+
+            if (($invoice_date == $item['fechaEmision']) && ($invoice_number == $item['numeroFactura'])) {
+
+                $item['montoTotal'] = 0;
+                $item['estado'] = "";
+                $item['numeroFactura'] = "";
+                $item['fechaEmision'] = "";
+                $item['codigoEstado'] = "";
+                $item['descuentoAdicional'] = "";
+                if ($tipoPago == $item['tipoPago']) {
+                    $item['tipoPago'] = "";
+                    $item['fechaPago'] = "";
+                }
+                $tipoPago = $item['tipoPago'];
+                $item['usuario'] = "";
+            } else {
+
+                $invoice_date = $item['fechaEmision'];
+
+                $invoice_number = $item['numeroFactura'];
+
+                $tipoPago = $item['tipoPago'];
+            }
+
+            return $item;
+        });
+
         $totales = [];
         $not_payed = 0.00;
-        collect($items)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
+        collect($items_changed)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
             if ($key != "")
-                $totales[] = ["name" => $key, "monto" => $item->sum('subTotal') - ($item->pluck("descuentoAdicional"))[0]];
-            $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por cobrar')->sum('subTotal');
+                $totales[] = ["name" => $key, "monto" => $item->sum('montoTotal')];
+            $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por cobrar')->sum('montoTotal');
         });
         $totales[] = ["name"=>"Por cobrar", "monto"=> $not_payed];
 
@@ -215,7 +251,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
                 "nombreUsuario" => $this->all_users || is_null($this->user_selected) ? "TODOS": $this->user_selected->user->name()
             ],
             "totales" => $totales,
-            "items" => ItemInvoiceDailyMovementResource::collection($items)->resolve()
+            "items" => ItemInvoiceDailyMovementResource::collection($items_changed)->resolve()
         ];
         
     }

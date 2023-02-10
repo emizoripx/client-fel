@@ -30,7 +30,9 @@ class ItemInvoiceDailyMovementResource extends JsonResource
             "codigoProducto" => $this->resource['codigoProducto'],
             "descripcion" => $this->resource['descripcion'],
             "usuario" => $this->resource['usuario'],
-            "montoTotal" => $this->resource['estado'] != 'ANULADO' ?  round($this->resource['montoTotal'], 2) :0,
+            "subTotal" => $this->resource['estado'] != 'ANULADO' ?  round((float)$this->resource['montoTotal'] + (float)$this->resource['descuentoAdicional'], 2) :0,
+            "descuentoAdicional" => round((float)$this->resource['descuentoAdicional'], 2),
+            "montoTotal" => $this->resource['estado'] != 'ANULADO' ?  round((float)$this->resource['montoTotal'], 2) :0,
             "poliza" => $this->resource['poliza'],
             "agencia" => $this->resource['agencia'],
         ];
