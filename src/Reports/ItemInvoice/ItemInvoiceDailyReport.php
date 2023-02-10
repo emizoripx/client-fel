@@ -111,7 +111,7 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
 
         $detalles = $query_items->pluck('fel_invoice_requests.detalles', 'fel_invoice_requests.id');
 
-        $invoices = $query_items->selectRaw(\DB::raw('fel_invoice_requests.id, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'))->get();
+        $invoices = $query_items->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado,fel_invoice_requests.descuentoAdicional, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'))->get();
 
         $invoices_grouped = collect($invoices)->groupBy('id');
         
@@ -142,9 +142,44 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
 
         $items = ExportUtils::flatten_array($items);
 
+        $invoice_date = null;
+        $invoice_number = null;
+        $tipoPago = null;
+
+        $items_changed = collect($items)->map(function ($item, $key) use (&$invoice_date, &$invoice_number, &$tipoPago) {
+
+            if (in_array($item['codigoEstado'], [905, 691])) {
+                $item['montoTotal'] = 0;
+            }
+
+            if (($invoice_date == $item['fechaEmision']) && ($invoice_number == $item['numeroFactura'])) {
+
+                $item['montoTotal'] = 0;
+                $item['estado'] = "";
+                $item['numeroFactura'] = "";
+                $item['fechaEmision'] = "";
+                $item['codigoEstado'] = "";
+                $item['descuentoAdicional'] = "";
+                if ($tipoPago == $item['tipoPago']) {
+                    $item['tipoPago'] = "";
+                    $item['fechaPago'] = "";
+                }
+                $tipoPago = $item['tipoPago'];
+                $item['usuario'] = "";
+            } else {
+
+                $invoice_date = $item['fechaEmision'];
+
+                $invoice_number = $item['numeroFactura'];
+
+                $tipoPago = $item['tipoPago'];
+            }
+
+            return $item;
+        });
         $totales = [];
         $not_payed = 0.00;
-        collect($items)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
+        collect($items_changed)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed) {
             if ($key != "")
                 $totales[] = ["name" => $key, "monto" => $item->sum('montoTotal')];
             $not_payed = (float)$not_payed + (float)$item->where('estado', 'Por cobrar')->sum('montoTotal');
@@ -161,7 +196,7 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
                 "sucursal" => $this->branch_desc,
             ],
             "totales" => $totales,
-            "items" => ItemInvoiceDailyMovementResource::collection($items)->resolve()
+            "items" => ItemInvoiceDailyMovementResource::collection($items_changed)->resolve()
         ];
         
     }
