@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Jobs;
 
+use Illuminate\Support\Facades\Blade;
 use League\Csv\Writer;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use Illuminate\Bus\Queueable;
@@ -131,7 +132,7 @@ class GenerateReport implements ShouldQueue
             }
 
             if( strpos($this->template_path, 'blade.php') != false ) {
-                
+                info("DATOS DEL TEMPLATE  => " . $this->template_path);
                 $this->type_file_pdf = true;
 
             }
@@ -188,11 +189,6 @@ class GenerateReport implements ShouldQueue
 
         $content = file_get_contents($this->template_path);
 
-        $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
-        // $template_filename = storage_path('reports/daily_movement_report_template.xlsx');
-        \Log::debug("File Template Path: " . $template_filename);
-
-
         if (!is_dir(storage_path('app/report'))) {
             \Log::debug("Create diretory report");
             mkdir(storage_path('app/report'));
@@ -206,20 +202,23 @@ class GenerateReport implements ShouldQueue
         $memory_usage = memory_get_usage();
         \Log::debug("Usage Memory: " . $memory_usage);
 
-
+        
         if ($this->type_file_pdf) {
-
-            $render_template = View::file($template_filename, ['data_report' => $this->invoices])->render();
+            // $content = file_get_contents(storage_path('reports/daily_movement_payment_report_template.blade.php'));
+            $render_template = Blade::render($content, $this->invoices);
 
             $pdf_data = (new NinjaPdf())->build($render_template, $this->report_name_path, 'reporte.pdf', true);
 
             file_put_contents($this->report_name_path, $pdf_data);
         } else {
+            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
+            // $template_filename = storage_path('reports/daily_movement_report_template.xlsx');
+            \Log::debug("File Template Path: " . $template_filename);
 
             $service_export->generate($template_filename, $this->invoices)->saveAs($this->report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
         }
-
-        unlink($template_filename);
+        if (isset($template_filename))
+            unlink($template_filename);
 
         $memory_usage1 = memory_get_usage();
         \Log::debug("Usage Memory: " . $memory_usage1);

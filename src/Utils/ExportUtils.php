@@ -12,6 +12,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReportPayments;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
@@ -51,6 +52,8 @@ class ExportUtils {
 
     const ITEMS_REPORT_UNSDL = 'Reporte_Cajeros';
 
+    const DAILY_MOVEMENTS_PAYMENTS = 'Movimiento_diario_pagos';
+
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -78,7 +81,7 @@ class ExportUtils {
 
 
     public static function getClassReport ( $entity ) {
-        \Log::debug("ENTIDAD  ====> . " . $entity);
+        \Log::debug("ENTIDAD  ====> " . $entity . "  ==>  " . static::DAILY_MOVEMENTS_PAYMENTS);
         switch ($entity) {
 
             case static::INVOICE_ENTITY:
@@ -134,6 +137,9 @@ class ExportUtils {
                 break;
             case static::ITEMS_REPORT_UNSDL:
                 return UNSDLPProductReport::class;
+                break;
+            case static::DAILY_MOVEMENTS_PAYMENTS:
+                return ItemInvoiceDailyReportPayments::class;
                 break;
             
             default:
