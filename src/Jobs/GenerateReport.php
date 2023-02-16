@@ -205,7 +205,10 @@ class GenerateReport implements ShouldQueue
         
         if ($this->type_file_pdf) {
             // $content = file_get_contents(storage_path('reports/daily_movement_payment_report_template.blade.php'));
-            $render_template = Blade::render($content, $this->invoices);
+            if ($this->entity == ExportUtils::DAILY_MOVEMENTS_PAYMENTS)
+                $render_template = Blade::render($content, $this->invoices);
+            else
+                $render_template = Blade::render($content, ['data_report' => $this->invoices]);
 
             $pdf_data = (new NinjaPdf())->build($render_template, $this->report_name_path, 'reporte.pdf', true);
 
