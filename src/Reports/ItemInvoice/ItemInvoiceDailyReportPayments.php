@@ -232,7 +232,7 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
             return $item;
         });
 
-        $item_summary = FelSyncProduct::leftJoin('products', 'products.id', 'fel_sync_products.id_origin')->where('fel_sync_products.company_id', 165)->select(\DB::raw('codigo_producto, 0 as amount, notes'))->get();
+        $item_summary = FelSyncProduct::leftJoin('products', 'products.id', 'fel_sync_products.id_origin')->where('fel_sync_products.company_id', $this->company_id)->select(\DB::raw('codigo_producto, 0 as amount, notes'))->get();
         $item_summary = collect($item_summary)->groupBy('codigo_producto');
 
         collect($items_changed)->groupBy('codigoProducto')->each(function ($item, $key) use (&$item_summary) {
