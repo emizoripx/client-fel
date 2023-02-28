@@ -42,7 +42,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "mermaValor" => NumberUtils::number_format_custom( (float) $fel_invoice->mermaValor, 2),
             "kilosNetosSecos" => NumberUtils::number_format_custom( (float) $fel_invoice->kilosNetosSecos, 2),
             "kilosSecos" => NumberUtils::number_format_custom( (float) ($fel_invoice->kilosNetosHumedos- $fel_invoice->humedadValor), 2),
-
+            "numeroContrato" => $fel_invoice->numeroContrato,
             "subTotalLiteral" => to_word( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2, $fel_invoice->codigoMoneda),
             "subTotalBs" => NumberUtils::number_format_custom((float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio, 2, 1),
             "subTotalBsLiteral" => to_word( (float) (collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal') * $fel_invoice->tipoCambio), 2, 1),

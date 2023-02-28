@@ -89,7 +89,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
             $branches_desc = [];
             foreach ($branch_access as $value) {
-                array_push( $branch_access, $this->branch_desc . ($this->branch_desc == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
+                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
             }
 
             $this->branch_desc = implode(" - ", $branches_desc);
@@ -203,7 +203,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
     public function generateReport() {
 
-        $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id') ;
+        $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id')->where('fel_invoice_requests.codigoEstado', 690) ;
         
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 

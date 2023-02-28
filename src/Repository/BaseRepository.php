@@ -40,18 +40,23 @@ class BaseRepository
                         "product_sin_id"    => $fel_data['codigo_producto_sin'],
                         "codigo_nandina" => !empty($fel_data['codigoNandina']) ? $fel_data['codigoNandina'] : "",
                         "codigo_producto" => !empty($fel_data['codigo']) ? $fel_data['codigo'] : "",
+                        "marcaIce" => !empty($fel_data['marcaIce']) ? $fel_data['marcaIce'] : null,
+                        "alicuotaEspecifica" => !empty($fel_data['alicuotaEspecifica']) ? $fel_data['alicuotaEspecifica'] : null,
+                        "alicuotaPorcentual" => !empty($fel_data['alicuotaPorcentual']) ? $fel_data['alicuotaPorcentual'] : null,
+                        "cantidadIce" => !empty($fel_data['cantidadIce']) ? $fel_data['cantidadIce'] : null,
                     ];
                     break;
                 case 'invoice':
                     $this->fel_data_parsed = [
+                        "facturaTicket" => isset($fel_data['facturaTicket']) ? $fel_data['facturaTicket'] : null,
                         "nombreRazonSocial" =>isset($fel_data['nombreRazonSocial'])? $fel_data['nombreRazonSocial'] : null,
                         "codigoTipoDocumentoIdentidad" =>isset($fel_data['codigoTipoDocumentoIdentidad'])? $fel_data['codigoTipoDocumentoIdentidad'] : null,
                         "numeroDocumento" =>isset($fel_data['numeroDocumento'])? $fel_data['numeroDocumento'] : null,
                         "complemento" =>isset($fel_data['complemento'])? $fel_data['complemento'] : null,
                         "fechaDeEmision" =>isset($fel_data['fechaDeEmision'])? $fel_data['fechaDeEmision'] : null,
                         "numeroFactura" => isset($fel_data['numeroFactura'])? $fel_data['numeroFactura'] : null,
-                        "activity_id" => $fel_data['codigoActividad'],
-                        "caption_id" => $fel_data['codigoLeyenda'],
+                        "activity_id" => isset($fel_data['codigoActividad']) ? $fel_data['codigoActividad']: 0,
+                        "caption_id" => isset($fel_data['codigoLeyenda']) ? $fel_data['codigoLeyenda'] : null,
                         "payment_method_id" => $fel_data['codigoMetodoPago'],
                         "tipo_cambio" => !empty($fel_data['tipoCambio']) ? $fel_data['tipoCambio'] : 1,
                         "codigo_moneda" => !empty($fel_data['codigoMoneda']) ? $fel_data['codigoMoneda'] : 1,
@@ -170,6 +175,9 @@ class BaseRepository
                         "cantidadMenores" => !empty($fel_data["cantidadMenores"]) ? $fel_data["cantidadMenores"] : null,
                         "fechaIngresoHospedaje" => !empty($fel_data["fechaIngresoHospedaje"]) ? $fel_data["fechaIngresoHospedaje"] : null,
 
+                        //Turismo
+                        "razonSocialOperadorTurismo" => !empty($fel_data["razonSocialOperadorTurismo"]) ? $fel_data["razonSocialOperadorTurismo"] : null,
+
                         // Comercializacion Hidrocarburos
                         "placaVehiculo" => !empty($fel_data["placaVehiculo"]) ? $fel_data["placaVehiculo"] : null,
                         "tipoEnvase" => !empty($fel_data["tipoEnvase"]) ? $fel_data["tipoEnvase"] : null,
@@ -184,7 +192,7 @@ class BaseRepository
                         "otrosDatos" => !empty($fel_data["otrosDatos"]) ? json_decode($fel_data["otrosDatos"]) : [],
 
                         // typeDocument for different types of documents
-                        "typeDocument" =>!empty($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
+                        "typeDocument" =>isset($fel_data["typeDocument"]) ? $fel_data["typeDocument"] : 0,
 
                         // seguros
                         "ajusteAfectacionIva" => !empty($fel_data["ajusteAfectacionIva"]) ? $fel_data["ajusteAfectacionIva"] : 0,
@@ -207,8 +215,18 @@ class BaseRepository
                         // CLINICAS
                         "modalidadServicio" => !empty($fel_data["modalidadServicio"]) ? $fel_data["modalidadServicio"] : null,
 
-                        // Offline Data
-                        "cuf" => !empty($fel_data["cuf"]) ? $fel_data["cuf"] : null,
+                        "montoIceEspecifico" => !empty($fel_data["montoIceEspecifico"]) ? $fel_data["montoIceEspecifico"] : null,
+                        "montoIcePorcentual" => !empty($fel_data["montoIcePorcentual"]) ? $fel_data["montoIcePorcentual"] : null,
+
+                        //ALQUILERES
+                        "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null,
+                        "agencia" => !empty($fel_data['agencia']) ? $fel_data["agencia"] : null,
+                        "id_agencia" => !empty($fel_data['id_agencia']) ? $fel_data["id_agencia"] : null,
+                        "poliza" => !empty($fel_data['poliza']) ? $fel_data["poliza"] : null,
+
+                        // TICKETS
+                        "turno" => !empty($fel_data['turno']) ? $fel_data["turno"] : null,
+                        "idFacturaOriginal" => !empty($fel_data['idFacturaOriginal']) ? $fel_data["idFacturaOriginal"] : null
 
                     ];
                     break;

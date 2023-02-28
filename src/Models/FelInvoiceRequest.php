@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use stdClass;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Jobs\BiocenterStatusNotification;
+use Throwable;
 
 class FelInvoiceRequest extends Model
 {
@@ -53,9 +55,14 @@ class FelInvoiceRequest extends Model
     {
         parent::boot();
         static::creating(function ($query) {
-            if( $query->typeDocument == 0 ){
+            if( $query->typeDocument == 0 && request()->input('should_emit') == 'false' ){
                 $next_number = self::nextNumber($query->company_id);
                 $query->prefactura_number = $next_number;
+            }
+
+            if ($query->typeDocument == 2 || $query->typeDocument == 3) {
+                $next_number = empty($query->factura_original_id) ? self::nextNumber($query->company_id,'order') : $query->document_number;
+                $query->document_number = $next_number;
             }
 
             if ($query->typeDocument == 1) {
@@ -68,19 +75,33 @@ class FelInvoiceRequest extends Model
     public static function nextNumber($company_id, $document = "prefactura")
     {
         
+        $data_number_document = 1;
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $company_id = $hashid->decode($company_id);
 
-        $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->first();
+        \DB::transaction(function () use ($company_id, &$data_number_document, $document) {
+            // Some database updates
+            
+            $data = AccountPrepagoBags::whereCompanyId($company_id)->select('id',$document.'_number_counter')->lockForUpdate()->first();
+            
+            if ($data!=null) {
+                $data_number_document = $data->{$document . '_number_counter'};
+            
+                \DB::table('fel_company')->where('id',$data->id)->update([
+                    $document . '_number_counter' => $data_number_document + 1
+                ]);
+                \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->{$document . '_number_counter'} );    
+            } else {
 
+                \Log::debug("$document NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
+                
+            }
+            return true;
+        });
+      
+
+        return $data_number_document;
         
-        if ($data!=null) {
-            $data->increment($document.'_number_counter');
-            \Log::debug("COMPANY=". $data->id. " >>>>>>>>>>>>>>>>>> NEXT-NUMBER-". strtoupper($document) ." = ". $data->prefactura_number_counter );    
-            return $data->{$document."_number_counter"};
-        }
-        \Log::debug("PREFACTURA NEXT-NUMBER FROM COMPANY: $company_id >>>>>>>>>>>>>>>>>> 1" );
-        return 1;
     }
 
     public function getNumeroFacturaAttribute()
@@ -298,6 +319,16 @@ class FelInvoiceRequest extends Model
             throw new ClientFelException($ex->getMessage());
         }
         
+        \Log::debug("VERIFICANDO factura TIcket   ", [$this->getVariableExtra("facturaTicket")]);
+
+        if ($this->getVariableExtra("facturaTicket") == "") {
+            \Log::debug("generear factira Ticket");
+            $bytes = random_bytes(20);
+            $new_extras = $this->getExtras();
+            $new_extras->facturaTicket = bin2hex($bytes);
+            $this->extras = json_encode($new_extras);
+        }
+
         $invoice_service = new Invoices($this->host);
 
         $invoice_service->setAccessToken($this->access_token);
@@ -306,22 +337,36 @@ class FelInvoiceRequest extends Model
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
         $invoice_service->buildData($this);
+        \Log::debug("################################################## FLUJO ============================================ ENVIANDO AL FEL LA FACTURA");
         try{
             $invoice_service->sendToFel();
         } catch (Exception $ex) {
             throw new ClientFelException($ex->getMessage());
         }
-        \Log::debug("RESPONSE FEL ===========> " . json_encode( $invoice_service->getResponse() ));
-        $emission_type_literal =  $invoice_service->getResponse()['emission_type_code'] == 2 ? "Fuera de línea" : "En línea";
-        \DB::table("fel_invoice_requests")->whereId($this->id)->update(['cuf'=> $invoice_service->getResponse()['cuf'], 'urlSin' => $invoice_service->getResponse()['urlSin'], 'emission_type' => $emission_type_literal, 'fechaEmision' => Carbon::parse($invoice_service->getResponse()['fechaEmision'])->toDateTimeString() ]);
-        \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($invoice_service->getResponse()['fechaEmision'])->toDateString()]);
+        $res = $invoice_service->getResponse();
+        \Log::debug("RESPONSE FEL ===========> " . json_encode( $res ));
         
+        \DB::table("fel_invoice_requests")
+            ->whereId($this->id)
+            ->update(['cuf'=> $res['cuf'],
+                     'urlSin' => $res['urlSin'], 
+                     'xml_url' => $res['xml_url'], 
+                     'ack_ticket' => $res['ack_ticket'],
+                     'emission_type' => $res['emission_type_code'] == 2 ? "Fuera de línea" : "En línea", 
+                     'fechaEmision' => Carbon::parse($res['fechaEmision'])->toDateTimeString(), 
+                     'codigoEstado' =>$res['codigoEstado'], 
+                     'estado' =>$res['codigoEstado'] == 690 || $res['codigoEstado'] == 908 ? "VALIDO" : ($res['codigoEstado'] == 902 ? "INVALIDO": "" ), 
+                    ]);
+        \Log::debug("################################################## FLUJO ============================================ RESPUESTA GUARADA EN LA BASE DE DATOS");
+        \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($res['fechaEmision'])->toDateString()]);
+        $this->invoiceDateUpdatedAt();
         $account = $this->felCompany();
         if(!$account->checkIsPostpago()){
             $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
         } else {
             $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
         }
+        \Log::debug("################################################## FLUJO ============================================ FIN ENVIANDO AL FEL LA FACTURA");
     }
 
 
@@ -362,6 +407,16 @@ class FelInvoiceRequest extends Model
         $invoice_service->setCuf($this->cuf);
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
+        \Log::debug("VERIFICANDO factura TIcket en update   ", [$this->getVariableExtra("facturaTicket")]);
+
+        if ($this->getVariableExtra("facturaTicket") == "") {
+            \Log::debug("generear factira Ticket");
+            $bytes = random_bytes(20);
+            $new_extras = $this->getExtras();
+            $new_extras->facturaTicket = bin2hex($bytes);
+            $this->extras = json_encode($new_extras);
+        }
+        
         $invoice_service->buildData($this);
 
         $invoice_service->updateInvoice();
@@ -373,6 +428,52 @@ class FelInvoiceRequest extends Model
 
         $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->saveUrlSin($invoice['urlSin']?? null)->save();
 
+    }
+
+    public function sendVerifyStatus()
+    {
+        \Log::debug("LA FACTURA ESTA CON ESTADO : " . $this->codigoEstado);
+        // if ( in_array($this->codigoEstado,[908,690,902,904]) ) {
+        //     \Log::debug("SALTANDO LA CONSULTA DEL ESTADO POR QUE TIENE EL ESTADO =======================: " . $this->codigoEstado);
+        //     return true;
+        // }
+            
+        $invoice_service = new Invoices($this->host);
+
+        $invoice_service->setAccessToken($this->access_token);
+        $invoice_service->setAckTicket($this->ack_ticket);
+
+        $response = $invoice_service->getStatusByAckTicket();
+
+        // if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
+        try{
+            $estadoAntiguo = $this->estado;
+            $this->saveStatusCode($response['codigoEstado']);
+            $this->estado = $response['estado'];
+            if (!empty($response) && isset($response['errores'])) {
+                $this->errores = $response['errores'];
+            }
+            $this->save();
+
+
+            if ( $estadoAntiguo == "ANULACION EN ESPERA") {
+                // REMOVE PDF WHEN REVOCATIO IS WAITIN
+                \Log::debug("\n\n\n\n\n removing PDF cause is waiting\n\n\n");
+                 $this->deletePdf();   
+            }
+            if( $estadoAntiguo != $this->estado ) {
+                BiocenterStatusNotification::dispatch($this->invoice_origin());
+            }
+        }catch (Throwable $th) {
+            \Log::debug("SEND VERIFY STATUS");
+            return [];
+        }
+        // }
+        if ( !empty($response) && isset($response['errores']) ){
+            $response['errores'] = json_encode($response['errores']);
+        }
+        return $response;
+        
     }
 
     public function deletePdf()
@@ -555,6 +656,40 @@ class FelInvoiceRequest extends Model
     {
         $this->revocated_by = auth()->user() ? auth()->user()->id : null;
         $this->save();
+    }
+
+    public function isEmitted()
+    {
+        return !is_null($this->cuf); // if there is no cuf was not emitted yet
+    }
+
+    public function savePolicyCnc()
+    {
+        if ( $this->getVariableExtra('poliza') != "" ) {
+            \DB::table('policies_invoices')
+            ->insert(
+                [
+                    'policy_code'=> $this->getVariableExtra('poliza'),
+                    'fel_invoice_request_id' =>$this->id,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now()
+                ]
+            );
+        }        
+    }
+
+
+    public function getEmailAgency()
+    {
+        $id_agencia = $this->getVariableExtra('id_agencia');
+
+        if (!is_null($id_agencia)) {
+            $agency = \DB::table("agencies")->find($id_agencia);
+            if ($agency && isset($agency->email)) {
+                return $agency->email;
+            }
+        }
+        return null;
     }
 
 }

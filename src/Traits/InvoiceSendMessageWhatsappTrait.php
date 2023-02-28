@@ -14,15 +14,16 @@ use Exception;
 
 trait InvoiceSendMessageWhatsappTrait {
 
-    public function sendMessageWhatsapp(){
+    public function sendMessageWhatsapp( $key_contact = null ){
 
         \Log::debug("Contact Send >>>>>>>>>>>>>>>>>>>>> ");
-        $contact_key = request('contact_key');
-        $phone_number = request('numero_telefono');
+        $contact_key = is_null($key_contact) ? request('contact_key') : $key_contact;
+        $phone_number = is_null($key_contact) ? request('numero_telefono') : null;
 
         $client_contact = ClientContact::where('contact_key', $contact_key)->first();
 
         \Log::debug("Contact >>>>>>>>>>>>>>>>>>>>> " . json_encode($client_contact));
+        \Log::debug("Contact >>>>>>>>>>>>>>>>>>>>> " . $client_contact->id);
 
         try {
 
@@ -30,7 +31,7 @@ trait InvoiceSendMessageWhatsappTrait {
                 'company_id' => $client_contact->company_id,
                 'client_contact_id' => $client_contact->id,
                 'invoice_id' => $this->id,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user() ? auth()->user()->id : $this->user_id
             ]);
 
 
@@ -38,7 +39,7 @@ trait InvoiceSendMessageWhatsappTrait {
             if( ! isset($phone_number)){
                 if($client_contact->phone != null){
                     \Log::debug(">>>>>>>>>>>>>>>>>>>>>>>>>> ");
-                    $phone_number = $client_contact->phone;
+                    $phone_number = "591" . $client_contact->phone;
 
                 } else {
                     \Log::debug("No se encontró un número de teléfono");

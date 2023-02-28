@@ -92,12 +92,21 @@ class Invoices extends BaseConnection
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $parsed_response;
+        } catch(\GuzzleHttp\Exception\ConnectException $con){
+            
+            Log::error($con->getMessage());
+            if (strpos( $con->getMessage(), "Failed to connect" ) !== false) {
+                throw new ClientFelException("Problemas de conexión. No se pudo emitir la factura, volver a intentar");    
+            }else {
+                throw new ClientFelException("Error en la creación de la factura: " . $con->getMessage());
+            }
+
         } catch (\Exception $ex) {
 
             Log::error($ex->getMessage());
 
             throw new ClientFelException("Error en la creación de la factura: " . $ex->getResponse()->getBody());
-        }
+        };
     }
 
     public function checkParameters()
@@ -226,6 +235,30 @@ class Invoices extends BaseConnection
         }
     }
 
+    public function getStatusByAckTicket()
+    {
+        \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>####################################");
+        if (empty($this->ack_ticket)) {
+            \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>####################################  1");
+            throw new ClientFelException("Es necesario el ackticket para obtener los detalles de la factura");
+        }
+
+        try {
+            \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>####################################  2");
+            \Log::debug("Send to : " . "/api/v1/facturas/$this->ack_ticket/status");
+            $response = $this->client->request('GET', "/api/v1/facturas/$this->ack_ticket/status", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $parsed_response = $this->parse_response($response);
+            $this->setResponse($parsed_response);
+            \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  --------------------------");
+            return $parsed_response;
+        } catch (\Exception $ex) {
+            \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>####################################  3");
+            Log::error($ex->getMessage());
+
+            throw new ClientFelException("Error al obtener estado de la factura: " . $ex->getMessage());
+        }
+    }
+
     public function getInvoiceByAckTicket()
     {
         if ( empty($this->ack_ticket) ) {
@@ -340,6 +373,22 @@ class Invoices extends BaseConnection
         
         try {
             $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $parsed_response = $this->parse_response($response);
+            $this->setResponse($parsed_response);
+            return $this->parse_response($response);
+        } catch (MaintenanceModeException $ex) {
+            Log::error($ex->getMessage());
+            throw new ClientFelException("El servicio FEL está en mantenimiento, espere por favor.");
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+            throw new ClientFelException("Error al validar el NIT");
+        }
+    }
+
+    public function verifyStatus()
+    {
+        try {
+            $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $this->parse_response($response);

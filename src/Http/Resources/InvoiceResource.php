@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Http\Resources;
 use App\Utils\Traits\MakesHash;
 use EmizorIpx\ClientFel\Models\FelBranch;
 use EmizorIpx\ClientFel\Models\FelCaption;
+use EmizorIpx\ClientFel\Utils\Documents;
 use Exception;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,7 +24,8 @@ class InvoiceResource extends JsonResource
     {
         try {
             $invoice_info = [];
-            if ( false  ) {
+            
+            if ( isset(request()->pos_info)  &&  request()->pos_info == 'true' ) {
                 try {
                     $number_literal = to_word((float)($this->montoTotal - $this->montoGiftCard), 2, 1);
                 } catch (Throwable $ex) {
@@ -53,8 +55,14 @@ class InvoiceResource extends JsonResource
                         "leyenda_fija" => FelCaption::CAPTION_SIN,
                     ];
             }
-
-        
+            $cuf = $this->cuf;
+            $codigoEstado = $this->codigoEstado;
+            if (is_numeric($this->numeroFactura)) {
+                if (is_null($this->cuf)) {
+                    $cuf = "CUF-TEMPORAL";
+                    $codigoEstado=999;
+                } 
+            }
 
 
             $main = [
@@ -67,7 +75,7 @@ class InvoiceResource extends JsonResource
                 "codigoMetodoPago" => (string)$this->codigoMetodoPago,
                 "codigoLeyenda" => (string)$this->codigoLeyenda,
                 "codigoActividad" => (string)$this->codigoActividad,
-                "numeroFactura" => (string) $this->numeroFactura,
+                "numeroFactura" => $this->typeDocument == 0 ? (string) $this->numeroFactura : (string) $this->document_number,
                 "fechaEmision" => $this->fechaEmision,
                 "nombreRazonSocial" => $this->nombreRazonSocial,
                 "codigoTipoDocumentoIdentidad" => (string)$this->codigoTipoDocumentoIdentidad,
@@ -83,10 +91,10 @@ class InvoiceResource extends JsonResource
                 "usuario" => $this->usuario,
                 "created_at" => $this->created_at,
                 "updated_at" => $this->updated_at,
-                "cuf" => $this->cuf,
+                "cuf" => $cuf,
                 "sin_status" => $this->estado,
-                "codigoEstado" => $this->codigoEstado,
-                "sin_errors" => $this->errores,
+                "codigoEstado" => $codigoEstado,
+                "sin_errors" => ( !empty($this->errores) && isset($this->errores)) ? json_encode($this->errores) : '',
                 "emission_type" => $this->emission_type,
                 "codigoTipoFactura" => (int) $this->type_invoice_id,
                 "codigo_sucursal" => (string)$this->codigoSucursal,
@@ -106,7 +114,18 @@ class InvoiceResource extends JsonResource
 
             switch ($this->type_document_sector_id) {
                 case TypeDocumentSector::COMPRA_VENTA:
-                    return array_merge($main, [
+
+                    $array_data = [];
+                    if( $this->typeDocument == Documents::NOTA_RECEPCION ) {
+                        $delivered_origin = $this->invoice_origin();
+                        $array_data = [
+                            "idFacturaOriginal" => (string)$this->factura_original_id_hashed,
+                            "numeroFacturaOriginal" => isset($delivered_origin) ? (string) $this->document_number : null,
+                            "fechaEmisionOriginal" => isset($delivered_origin) ? (string) $this->created_at : null,
+                        ];
+                    }
+
+                    return array_merge($main, $array_data , [
                         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
                         "tipoCambio" => round((float)$this->tipoCambio, 2),
                         "montoGiftCard" => (string)$this->montoGiftCard ?? null,
@@ -124,6 +143,7 @@ class InvoiceResource extends JsonResource
                         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
                         "tipoCambio" => round((float)$this->tipoCambio, 2),
                         "montoGiftCard" => (string)$this->montoGiftCard ?? null,
+                        "periodoFacturado" => $this->periodoFacturado ?? '',
                     ]);
                     
                 // case TypeDocumentSector::COMERCIAL_EXPORTACION_LIBRE_CONSIGNACION:
@@ -380,7 +400,7 @@ class InvoiceResource extends JsonResource
                         "codigoMetodoPago" => (string)$this->codigoMetodoPago,
                         "codigoLeyenda" => (string)$this->codigoLeyenda,
                         "codigoActividad" => (string)$this->codigoActividad,
-                        "numeroFactura" => (string) $this->numeroFactura,
+                        "numeroFactura" => $this->typeDocument == 0 ? (string) $this->numeroFactura : (string) $this->document_number,
                         "fechaEmision" => $this->fechaEmision,
                         "nombreRazonSocial" => $this->nombreRazonSocial,
                         "codigoTipoDocumentoIdentidad" => (string)$this->codigoTipoDocumentoIdentidad,
@@ -401,7 +421,7 @@ class InvoiceResource extends JsonResource
                         "cuf" => $this->cuf,
                         "sin_status" => $this->estado,
                         "codigoEstado" => $this->codigoEstado,
-                        "sin_errors" => $this->errores,
+                        "sin_errors" => (!empty($this->errores) && isset($this->errores)) ? json_encode($this->errores) : '',
                         "direccionComprador" => $this->direccionComprador,
                         "concentradoGranel" => $this->concentradoGranel,
                         "origen" => $this->origen,
@@ -533,6 +553,10 @@ class InvoiceResource extends JsonResource
                         "fechaEmisionOriginal" =>   isset($this->external_invoice_data) ? $this->external_invoice_data['fechaEmisionOriginal'] : null,
                         "montoTotalConciliado" =>   isset($this->montoTotal) ? $this->montoTotal : null,
 
+                        // ICE
+                        "montoIceEspecifico" =>   isset($this->data_specific_by_sector['montoIceEspecifico']) ? (string) $this->data_specific_by_sector['montoIceEspecifico'] : '',
+                        "montoIcePorcentual" =>   isset($this->data_specific_by_sector['montoIcePorcentual']) ? (string) $this->data_specific_by_sector['montoIcePorcentual'] : '',
+
                         // HIDROCARBUROS
 
                         "ciudad" => isset($this->data_specific_by_sector['ciudad']) ? $this->data_specific_by_sector['ciudad'] : '',
@@ -544,7 +568,17 @@ class InvoiceResource extends JsonResource
 
                         //ADDITIONAL INFORMATION FROM INVOICE
 
-                        "invoiceInfo" => $invoice_info
+                        "invoiceInfo" => $invoice_info,
+
+                        //HOTELES
+                        "cantidadHuespedes" => isset($this->cantidadHuespedes) ? (int) $this->cantidadHuespedes : 0,
+                        "cantidadHabitaciones" => isset($this->cantidadHabitaciones) ? (int) $this->cantidadHabitaciones : 0,
+                        "cantidadMenores" => isset($this->cantidadMenores) ? (int) $this->cantidadMenores : 0,
+                        "cantidadMayores" => isset($this->cantidadMayores) ? (int) $this->cantidadMayores : 0,
+                        "fechaIngresoHospedaje" => isset($this->fechaIngresoHospedaje) ? $this->fechaIngresoHospedaje : null,
+
+
+                        "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '', 
                     ];
                     break;
             }

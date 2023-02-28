@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class HotelesResource extends JsonResource
 {
@@ -15,17 +16,6 @@ class HotelesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "direccionComprador" => $this->direccionComprador,
-            "ruex" => $this->ruex,
-            "nim" => $this->nim,
-            "concentradoGranel" => $this->concentradoGranel,
-            "origen" => $this->origen,
-            "puertoTransito" => $this->puertoTransito,
-            "puertoDestino" => $this->puertoDestino,
-            "paisDestino" => $this->paisDestino,
-            "incoterm" => $this->incoterm,
-            "tipoCambioANB" => $this->tipoCambioANB,
-            "numeroLote" => $this->numeroLote,
             "fechaEmision"=> $this->fechaEmision,
             "codigoMoneda" => $this->codigoMoneda,
             "montoTotalMoneda" => round($this->montoTotalMoneda, 2),
@@ -54,7 +44,7 @@ class HotelesResource extends JsonResource
             "cantidadHabitaciones" => $this->cantidadHabitaciones ,
             "cantidadMayores" => $this->cantidadMayores ,
             "cantidadMenores" => $this->cantidadMenores ,
-            "fechaIngresoHospedaje" => $this->fechaIngresoHospedaje ,
+            "fechaIngresoHospedaje" => substr(Carbon::parse($this->fechaIngresoHospedaje)->format('Y-m-d\TH:i:s.u'), 0, -3),
             "extras" => json_decode($this->extras)
         ];
     }

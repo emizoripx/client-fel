@@ -10,6 +10,16 @@ use Illuminate\Routing\Controller;
 class ProductController extends Controller
 {
 
+    public function checkCode(Request $request)
+    {
+        $code = $request->get('code', null);
+
+        if (!is_null($code) && \DB::table('fel_sync_products')->where('company_id', $request->company_id)->where('codigo_producto', $code)->exists()) {
+            return response()->json(["message" => "El código de producto ya fue registrado"], 400);
+        }
+        return response()->json(["data" => ["message" => "El código de producto esta disponible, no se registró."]], 200);
+    }
+
     public function homologate(Request $request)
     {
 

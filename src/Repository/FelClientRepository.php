@@ -34,12 +34,15 @@ class FelClientRepository extends BaseRepository implements RepoInterface
           "codigoExcepcion" => $this->fel_data_parsed['codigoExcepcion'],
           "company_id" => $model->company_id
         ];
-
-
+        $group_name = "";
+        if (isset($model->group_settings) && !is_null($model->group_settings->name)) {
+          $group_name = $model->group_settings->name;
+        }
+        $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->number, $model->name, $group_name]);
 
         FelClient::create($input);
-      } catch (Exception $ex) {
-        bitacora_error("FelClientRepository:create", $ex->getMessage());
+      } catch (\Throwable $ex) {
+        bitacora_error("FelClientRepository:create", $ex->getMessage() . " Line : " . $ex->getLine() . " File: " .$ex->getFile());
       }
     }
   }
@@ -59,14 +62,19 @@ class FelClientRepository extends BaseRepository implements RepoInterface
         "document_number" => $this->fel_data_parsed['document_number'] ?? "0",
         "complement" => $this->fel_data_parsed['complement'],
       ];
+      $group_name = "";
+      if (isset($model->group_settings) && !is_null($model->group_settings->name)) {
+        $group_name = $model->group_settings->name;
+      }
+      $input["search_fields"] = implode(" ", [$input['document_number'], $input['business_name'], $model->number, $model->name, $group_name]);
 
       $client = FelClient::where("id_origin", $model->id)->first();
 
       if (!is_null($client)) {
         $client->update($input);
       }
-    } catch (Exception $ex) {
-      bitacora_error("FelClientRepository:update", $ex->getMessage());
+    } catch (\Throwable $ex) {
+      bitacora_error("FelClientRepository:update", $ex->getMessage() . " Line : " . $ex->getLine() . " File: " . $ex->getFile());
     }
   }
   public function delete($model)

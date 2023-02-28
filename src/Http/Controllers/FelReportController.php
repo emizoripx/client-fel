@@ -71,8 +71,22 @@ class FelReportController extends BaseController
                 "registered_at" => Carbon::now()->toDateTimeString(),
                 "user_id" =>$user->id,
             ]);
-            
-            GenerateReport::dispatch($request->all(), $company->id, $company->settings->id_number, $report_type->entity, $report_type->columns, $report_type->template, $report_record->id, $user );
+            $request_array = $request->all();
+            $request_array['revocated_zero'] = isset($report_type->revocated_zero) ? $report_type->revocated_zero : false;
+            $request->replace($request_array);
+
+            GenerateReport::dispatch(
+                $request->all(), 
+                $company->id, 
+                $company->settings->id_number, 
+                $report_type->entity, 
+                $report_type->columns, 
+                $report_type->template, 
+                $report_record->id, 
+                $user, 
+                isset($report_type->type_format_report)? $report_type->type_format_report:"template",
+                isset($report_type->headers_csv)? $report_type->headers_csv:[],
+             );
 
             return response()->json([
                 "success" => true,
@@ -100,6 +114,13 @@ class FelReportController extends BaseController
 
             $reports = \DB::table('fel_report_requests')->join('users', 'fel_report_requests.user_id', '=', 'users.id')
                         ->where('fel_report_requests.company_id', $company->id)
+                        ->where( function( $query ) use ($user) {
+                            if( ! $user->isAdmin() ) {
+                                return $query->where('user_id', $user->id);
+                            }
+
+                            return $query;
+                        })
                         ->select('fel_report_requests.company_id', 'fel_report_requests.entity', 'fel_report_requests.status', 'fel_report_requests.s3_filepath', 'fel_report_requests.report_date', 'fel_report_requests.registered_at', 'fel_report_requests.start_process_at', 'fel_report_requests.completed_at', 'users.first_name', 'users.last_name', 'fel_report_requests.user_id')
                         ->orderBy('fel_report_requests.created_at', 'DESC')
                         ->get();

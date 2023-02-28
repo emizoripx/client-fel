@@ -20,12 +20,13 @@ class AlquileresBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuild
     public function prepare(): FelInvoiceRequest
     {
         if ($this->source_data['update']){
-            $modelFelInvoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->first();
+            
+            $modelFelInvoice = $this->getFelInvoiceFirst();
 
             if($modelFelInvoice->codigoEstado != 690){
                 $this->fel_invoice = $modelFelInvoice; 
             } else{
-                $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
+                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
             }
             
         }
@@ -87,6 +88,11 @@ class AlquileresBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuild
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
+
+            if( isset($detail->montoUFV) ) {
+
+                $new->montoUFV = $detail->montoUFV;
+            }
 
             $details[] = $new;
 

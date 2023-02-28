@@ -52,8 +52,9 @@ class WebhookTemplate extends BaseController {
 
                         $arr = (array) $item;
 
-                        $arr_temp = array_merge($arr, [ 'company_id' =>  $company_id, 'branch_code' => $item['codigoSucursal'], 'updated_at' => Carbon::now()->toDateTimeString() ]);
+                        $arr_temp = array_merge($arr, [ 'company_id' =>  $company_id, 'branch_code' => $item['codigoSucursal'], 'pos_code' => $item['codigoPuntoVenta'], 'updated_at' => Carbon::now()->toDateTimeString() ]);
                         unset($arr_temp['codigoSucursal']);
+                        unset($arr_temp['codigoPuntoVenta']);
 
                         return $arr_temp;
                     })->all();
@@ -64,7 +65,8 @@ class WebhookTemplate extends BaseController {
 
                 }
 
-                \DB::table('fel_templates')->upsert($array_templates, ['document_sector_code', 'company_id', 'branch_code'], ['display_name', 'blade_resource', 'updated_at']);
+
+                \DB::table('fel_templates')->upsert($array_templates, ['document_sector_code', 'company_id', 'branch_code', 'pos_code'], ['display_name', 'blade_resource', 'pos_code', 'updated_at']);
 
             } catch (\Throwable $th) {
                 \Log::debug("errors in update templates " . $th->getMessage());

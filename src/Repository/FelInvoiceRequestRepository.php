@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Repository;
 
+use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Builders\FelInvoiceBuilder;
 use EmizorIpx\ClientFel\Http\Resources\InvoiceResource;
 use EmizorIpx\ClientFel\Models\FelClient;
@@ -13,6 +14,7 @@ use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
 use Hashids\Hashids;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class FelInvoiceRequestRepository extends BaseRepository implements RepoInterface
@@ -54,7 +56,17 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
         try {
             // This will only process PREFACTURAS
-            $invoice_request = FelInvoiceRequest::whereIdOrigin($model->id)->whereNull('cuf')->first();
+            $invoice_request = FelInvoiceRequest::where( function( $query ) use ( $model ) {
+                
+                        if( $model instanceof RecurringInvoice ) {
+                            \Log::debug("Is Recurring Invoices >>>>>>>>>>>>>> ");
+                            return $query->where('recurring_id_origin', $model->id);
+
+                        }
+                        
+                        return $query->where('id_origin', $model->id);
+
+                    })->whereNull('cuf')->first();
 
 
             if (!is_null($invoice_request)) {
@@ -160,7 +172,8 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
                         'felData' => [
                             "codigoActividad" => $settings_change->activity_id,
                             "codigoLeyenda" => $settings_change->caption_id,
-                            "codigoMetodoPago" => $settings_change->payment_method_id
+                            "codigoMetodoPago" => $settings_change->payment_method_id,
+                            "extras" => ['facturaTicket' => Str::uuid()]
                         ]
                     ]);
                 } 
@@ -170,13 +183,130 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
         }
         return $data;
     }
+
+    public static function completeOrderDataRequest ($data, $company, $user_id){
+
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+
+        $line_items = [];
+
+        foreach($data['line_items'] as $item) {
+            // $product_id_decode = $hashid->decode($item['product_id']);
+            if( !isset($item['product_code']) ) {
+                throw new Exception('product_code requerido');
+            }
+            $product_code = $item['product_code'];
+
+            \Log::debug("Product Code : " . $product_code);
+            
+            $product_sync = DB::table('fel_sync_products')->where('company_id', $company->id)->where('codigo_producto', $product_code)->first();
+
+            \Log::debug("Product Sync: " . json_encode($product_sync));
+
+            if( !$product_sync ) {
+                \Log::debug("No se encontro el producto");
+                $product_repo = new FelProductRepository();
+                $product_sync = $product_repo->createProduct($item, $company->id, $user_id);
+                \Log::debug("Se registro el nuevo producto");
+            }
+
+            $product = DB::table('products')->where('id', $product_sync->id_origin)->first();
+
+            \Log::debug("Product ID Hash: " . $hashid->encode($product->id));
+            
+            $item_array = array_merge($item, [
+                'product_key' => $item['product_key'],
+                'notes' => empty($item['notes']) ? $item['product_key'] : ($item['product_key'] . ' - ' .  $item['notes']),
+                'cost' => round( $item['price'], 2),
+                'product_id' => $hashid->encode($product->id),
+                'codigo_producto' => $product_sync->codigo_producto
+            ]);
+            
+            array_push($line_items, $item_array);
+            
+        }
+
+        $data['line_items'] = $line_items;
+        $settings = AccountPrepagoBags::where('company_id', $company->id)->first()->settings;
+
+        $client_id = null;
+
+        if( isset($data['id_number']) && !empty($data['id_number']) ) {
+            // For order with client assigned
+
+            $client = FelClient::where('document_number', $data['id_number'])->first();
+
+            if( ! $client ) {
+                 throw new Exception('El Cliente con numero de documento ' . $data['id_number'] . ' no esta registrado.');
+            }
+
+            $client_id = $client->id_origin;
+
+            \Log::debug("Client ID with NIT: " . $client_id);
+
+        } else {
+            // For order without client assigned
+
+            if( !isset($company->settings->default_client) ){
+                
+                throw new Exception('No se configuró un cliente por defecto');
+                
+            }
+            $hashid = new Hashids(config('ninja.hash_salt'), 10);
+    
+            $client_id = $hashid->decode($company->settings->default_client)[0]; //Settings client ID default
+    
+            \Log::debug("Client ID Default: " . $client_id);
+
+
+        }
+        
+        // Added Cliente ID to Invoice
+        $data['client_id'] = $client_id;
+
+        if ( !empty($settings) ) {
+
+            $settings_array = json_decode( $settings); 
+            
+            foreach($settings_array as $settings_change) {
+                
+                if ($settings_change->codigo == "1") {
+                   return array_merge($data, [
+                        'felData' => [
+                            "codigoActividad" => $settings_change->activity_id,
+                            "codigoLeyenda" => $settings_change->caption_id,
+                            "codigo_sucursal" => isset($data['branch_code']) ? $data['branch_code'] : 0,
+                            "codigoMetodoPago" => $settings_change->payment_method_id,
+                            "extras" => [
+                                'facturaTicket' => Str::uuid(),
+                                "order_id" => $data['order_id'],
+                                "orders" => $data['orders'],
+                                "business" => isset($data['business']) ? $data['business'] : '',
+                            ]
+                        ]
+                    ]);
+                } 
+            }
+
+            
+        }
+        return $data;
+
+    }
+
     public static function completeDataInvoiceRecurringRequest($invoice)
     {
         
-        $fel_invoice = FelInvoiceRequest::whereIdOrigin($invoice->recurring_id)->first();
+        $fel_invoice = FelInvoiceRequest::where('recurring_id_origin', $invoice->recurring_id)->first();
         \Log::debug("invoice resources completing data : " . json_encode(new InvoiceResource($fel_invoice)));
         //Fix, using same number of recurring invoice
         $fel_invoice->numeroFactura = 0;
+
+        $extras = $fel_invoice->getExtras();
+        $extras->facturaTicket = Str::uuid();
+
+        $fel_invoice->extras = $extras;
+
         return [
             'felData' => new InvoiceResource($fel_invoice)
         ];

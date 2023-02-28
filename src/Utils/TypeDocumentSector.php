@@ -3,6 +3,7 @@
 namespace EmizorIpx\ClientFel\Utils;
 
 use CompraVentaPdfBuilder;
+use EmizorIpx\ClientFel\Builders\AlcanzadaIceBuilder;
 use EmizorIpx\ClientFel\Builders\AlquileresBuilder;
 use EmizorIpx\ClientFel\Builders\ClinicasBuilder;
 use EmizorIpx\ClientFel\Builders\ComercialConsignacionBuilder;
@@ -12,6 +13,7 @@ use EmizorIpx\ClientFel\Builders\ComercializacionHidrocarburosBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBonificacionesBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
+use EmizorIpx\ClientFel\Builders\EngarrafadorasBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
@@ -20,10 +22,12 @@ use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\PrevaloradaBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
+use EmizorIpx\ClientFel\Builders\SectorEducativoZonaFrancaBuilder;
 use EmizorIpx\ClientFel\Builders\SegurosBuilder;
 use EmizorIpx\ClientFel\Builders\ServiciosBasicosBuilder;
 use EmizorIpx\ClientFel\Builders\TasaCeroBuilder;
 use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
+use EmizorIpx\ClientFel\Builders\TurismoBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ZonaFrancaBuilder;
 
@@ -63,6 +67,8 @@ class TypeDocumentSector
     const COMPRA_VENTA_BONIFICACIONES = 35;
     const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
+    const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
+    const ENGARRAFADORAS = 51;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -111,6 +117,7 @@ class TypeDocumentSector
         44 => "Factura Importacion Comercializacion Lubricantes",
         45 => "Factura Comercial De Exportacion Precio Venta",
         46 => "Factura Sectores Educativo Zona Franca",
+        51 => "Factura Engarrafadoras",
     ];
 
     public static function getInstanceByCode($code):string
@@ -189,6 +196,19 @@ class TypeDocumentSector
             case static::HIDROCARBUROS_NO_IEHD :
                 return HidrocarburosNoIehdBuilder::class ;
                 break;
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA :
+                return SectorEducativoZonaFrancaBuilder::class;
+                break;
+            case static::ENGARRAFADORAS :
+                return EngarrafadorasBuilder::class;
+                break;
+            case static::PRODUCTOS_ALCANZADOS_ICE :
+                return AlcanzadaIceBuilder ::class;
+                break;
+            case static::SERVICIO_TURISTICO_HOSPEDAJE :
+                return TurismoBuilder::class;
+                break;
+            
             
             default:
                 return CompraVentaBuilder::class;
@@ -269,6 +289,20 @@ class TypeDocumentSector
             case static::HIDROCARBUROS_NO_IEHD:
                 return 'hidrocarburo-noiehd';
                 break;
+
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return 'educativo-zona-franca';
+                break;
+            case static::ENGARRAFADORAS:
+                return 'engarrafadora';
+                break;
+            case static::PRODUCTOS_ALCANZADOS_ICE:
+                return 'alcanzada-ice';
+                break;
+            case static::SERVICIO_TURISTICO_HOSPEDAJE:
+                return 'turismo';
+                break;
+
 
             default:
                 return 'compra-venta';
@@ -384,6 +418,9 @@ class TypeDocumentSector
             case static::COMPRA_VENTA_BONIFICACIONES:
                 return 'compra-venta-bonificaciones';
                 break;
+            case static::ENGARRAFADORAS:
+                return 'engarrafadora';
+                break;
 
             default:
                 return 'compra-venta';
@@ -391,29 +428,59 @@ class TypeDocumentSector
         }
     }
 
-    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false ){
-
-        
+    public static function getTemplateByDocumentSector( $document_sector, $company_id, $branch_code = null, $thermal_printer_format = false, $typeDocument = null, $pos_code = null ){
    
         $template = \DB::table('fel_templates')
                         ->where('company_id', $company_id)
                         ->where('document_sector_code', $document_sector)
                         ->where('branch_code', $branch_code)
+                        ->where( function( $query ) use ($pos_code) {
+
+                            if( is_null($pos_code) || $pos_code == 0 ) {
+
+                                return $query->whereNull('pos_code');
+                            }
+
+                            return $query->where('pos_code', $pos_code);
+
+                        })
                         ->first();
 
         if( empty($template) ){
+
+            if ( $typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
+                return ["templates/general/" . $document_sector . "/default_delivered_note.blade.php",false];
+            }
+            if ( $typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
+                return ["templates/general/" . $document_sector . "/default_received_note.blade.php", false];
+            }
+
             if ($thermal_printer_format) 
-                return "templates/general/" . $document_sector . "/default_rollo.blade.php";
-            return "templates/general/". $document_sector . "/default.blade.php";
+                return ["templates/general/" . $document_sector . "/default_rollo.blade.php", false];
+
+            return ["templates/general/". $document_sector . "/default.blade.php", false];
         }
+
+         
+        if ($typeDocument && $typeDocument == Documents::NOTA_ENTREGA ) {
+            //TODO: check if exists
+            $split = explode(".blade.php", $template->blade_resource);
+            return [$split[0] . "_delivered_note.blade.php", false];
+        } 
+
+        if ($typeDocument && $typeDocument == Documents::NOTA_RECEPCION ) {
+            //TODO: check if exists
+            $split = explode(".blade.php", $template->blade_resource);
+            return [$split[0] . "_received_note.blade.php", false];
+        } 
 
         if ($thermal_printer_format) {
             //TODO: check if exists
             $split = explode(".blade.php", $template->blade_resource);
-            return $split[0] . "_rollo.blade.php";
-        } 
+            return [$split[0] . "_rollo.blade.php", false];
+        }
 
-        return $template->blade_resource;
+        return [$template->blade_resource, $template->footer_custom == 1 ? true : false];
 
     }
 
@@ -528,6 +595,12 @@ class TypeDocumentSector
                 break;
             case static::HIDROCARBUROS_NO_IEHD:
                 return 'FACTURA DE HIDROCARBUROS NO ALCANZADA IEHD';
+                break;
+            case static::SECTOR_EDUCATIVO_ZONA_FRANCA:
+                return 'FACTURA SECTORES EDUCATIVO ZONA FRANCA';
+                break;
+            case static::ENGARRAFADORAS:
+                return 'FACTURA ENGARRAFADORAS';
                 break;
             
             

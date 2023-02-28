@@ -20,12 +20,12 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
     public function prepare(): FelInvoiceRequest
     {
         if ($this->source_data['update']){
-            $modelFelInvoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->first();
+            $modelFelInvoice = $this->getFelInvoiceFirst();
 
             if($modelFelInvoice->codigoEstado != 690){
                 $this->fel_invoice = $modelFelInvoice; 
             } else{
-                $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
+                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
             }
             
         }
@@ -84,7 +84,7 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
             $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
-            $new->detalleHuespedes = $detail->detalleHuespedes;
+            $new->detalleHuespedes = json_decode(json_encode($detail->detalleHuespedes), true);
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
@@ -95,6 +95,12 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
+            if( isset( $detail->codigoTipoHabitacion ) ){
+                \Log::debug("Enter to Codigo Hanitación: >>>>>>>>>>>> " . $detail->codigoTipoHabitacion);
+                $new->codigoTipoHabitacion = $detail->codigoTipoHabitacion;
+            }
+
+            \Log::debug("Detail: " . json_encode($new));
             $details[] = $new;
 
             $total += $new->subTotal;

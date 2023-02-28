@@ -22,8 +22,8 @@ trait InvoiceFelEmitTrait
 
 
         if (empty($this->invoice->fel_invoice)) {
-            bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->numeroFactura . " does not exist yet in table FEL_INVOICE_REQUEST.");
-            throw new ClientFelException(" La Factura #" . $this->invoice->numeroFactura . " no cuenta con datos necesarios para emitirse.");
+            bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->number . " does not exist yet in table FEL_INVOICE_REQUEST.");
+            throw new ClientFelException(" La Factura #" . $this->invoice->number . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
 
@@ -33,9 +33,7 @@ trait InvoiceFelEmitTrait
             if ($felInvoiceRequest->codigoEstado != null || $felInvoiceRequest->cuf != null){
                 return $this;
             }
-            
-            // generate next number new emission invoice
-            $this->invoice->service()->applyNumber()->save();
+          
             // save number in felinvoicerequest 
             $felInvoiceRequest->setNumeroFactura($this->invoice->number);
             // reload changes in model
@@ -43,13 +41,13 @@ trait InvoiceFelEmitTrait
 
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
 
-            $felInvoiceRequest->touchPdf();
-
             $invoice = $felInvoiceRequest->invoice_origin();
 
             $invoice->service()->markSent()->save();
 
             $felInvoiceRequest->setEmittedByUser();
+
+            $felInvoiceRequest->savePolicyCnc();
             
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user() ? auth()->user()->id : null)));
 
@@ -68,7 +66,14 @@ trait InvoiceFelEmitTrait
 
     public function xml_file_path()
     {
-        $felInvoiceRequest = $this->fel_invoice->fresh();   
+        try {
+
+            $felInvoiceRequest = $this->fel_invoice->fresh();   
+
+        } catch( \Throwable $ex ) {
+            \Log::debug("No se pudo obtener el XML: " . $ex->getMessage());
+            return null;
+        }
         
         if (empty($felInvoiceRequest)) {
             return null;

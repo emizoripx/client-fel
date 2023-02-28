@@ -19,6 +19,7 @@ class NotaConciliacionTemplateResource extends BaseTemplateResource {
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
             "creditoFiscalIva" => NumberUtils::number_format_custom( (float) $fel_invoice->creditoFiscalIva , 2),
+            "debitoFiscalIva" => NumberUtils::number_format_custom( (float) $fel_invoice->debitoFiscalIva, 2),
             "detalles" => isset($fel_invoice->detalles['conciliado']) ? DetalleNotaConciliacionTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles['conciliado'])))->resolve() : DetalleNotaConciliacionTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
         ]);
 
