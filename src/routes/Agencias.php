@@ -8,5 +8,4 @@ Route::group([ 'namespace' => "\EmizorIpx\ClientFel\Http\Controllers", "prefix"=
     Route::get("/{id}", "AgencyController@show");
     Route::put("/{id}", "AgencyController@update");
     Route::post("/", "AgencyController@store");
-    Route::post("/", "AgencyController@store");
 });

@@ -21,6 +21,7 @@ use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Console\Commands\DataDummy;
 use EmizorIpx\ClientFel\Console\Commands\UpdateLangCommand;
 use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
+use EmizorIpx\ClientFel\Http\Middleware\CheckSobodaycomCategory;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSuperAdmin;
 use EmizorIpx\ClientFel\Http\Middleware\ValidateSpecialCodes;
 use EmizorIpx\ClientFel\Providers\ClientFelEventServiceProvider;
@@ -33,6 +34,7 @@ class ClientFelServiceProvider extends ServiceProvider
         # ROUTES
         $this->loadRoutesFrom(__DIR__ . "/routes/Bitacora.php");
         $this->loadRoutesFrom(__DIR__ . "/routes/Agencias.php");
+        $this->loadRoutesFrom(__DIR__ . "/routes/Sobodaycom.php");
 
         #FACTORIES
         $this->loadFactoriesFrom(__DIR__ . '/database/factories');
@@ -60,6 +62,7 @@ class ClientFelServiceProvider extends ServiceProvider
         $router->aliasMiddleware('check_settings', CheckSettings::class);
         $router->aliasMiddleware('check_auth_admin', CheckSuperAdmin::class);
         $router->aliasMiddleware('validate_special_codes', ValidateSpecialCodes::class);
+        $router->aliasMiddleware('check_sobodaycom_category', CheckSobodaycomCategory::class);
 
 
         # OBSERVERS
