@@ -70,6 +70,18 @@ class BaseFelInvoiceBuilder {
             $client->complement = null;
         }
 
+        // OFFLINE DATA
+        $offline_data = [];
+        if( isset( $fel_data_parsed['cuf'] ) ) {
+            $offline_data = array_merge($offline_data, ['cuf' => $fel_data_parsed['cuf']]);
+            $offline_data = array_merge($offline_data, ['emission_type' => "Fuera de línea"]);
+            \Log::debug("Cufd: " . $fel_data_parsed['cuf']);
+        }
+
+        if( isset( $fel_data_parsed['fechaEmision'] ) ) {
+            $offline_data = array_merge($offline_data, ['fechaEmision' => $fel_data_parsed['fechaEmision']]);
+        }
+
         if ($model->company_id == 540) { // change made for hospital la paz in PROD
             $fel_client_data = [
                 "type_document_id" => $fel_data_parsed['codigoTipoDocumentoIdentidad'],
@@ -113,7 +125,7 @@ class BaseFelInvoiceBuilder {
             $this->input['recurring_id_origin'] = $model->id;
         }
 
-        $this->input = array_merge($this->input ,[
+        $this->input = array_merge($this->input , $offline_data, [
             "id_origin" => $model->id,
             "company_id" => $model->company_id,
             "type_document_sector_id" => $fel_data_parsed['type_document_sector_id'],

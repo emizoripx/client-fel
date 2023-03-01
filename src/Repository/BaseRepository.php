@@ -218,6 +218,9 @@ class BaseRepository
                         "montoIceEspecifico" => !empty($fel_data["montoIceEspecifico"]) ? $fel_data["montoIceEspecifico"] : null,
                         "montoIcePorcentual" => !empty($fel_data["montoIcePorcentual"]) ? $fel_data["montoIcePorcentual"] : null,
 
+                        // Offline Data
+                        "cuf" => !empty($fel_data["cuf"]) ? $fel_data["cuf"] : null,
+
                         //ALQUILERES
                         "valorUFV" => !empty($fel_data['valorUFV']) ? $fel_data["valorUFV"] : null,
                         "agencia" => !empty($fel_data['agencia']) ? $fel_data["agencia"] : null,

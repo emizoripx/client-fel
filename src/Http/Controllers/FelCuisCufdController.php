@@ -24,7 +24,10 @@ class FelCuisCufdController extends Controller
             $sectorDocument = SectorDocumentTypes::where('company_id', $company_id)->where('codigo', $sectorDocumentCode)->select('codigoSistema')->first();
     
             if( empty($sectorDocument) ) {
-                throw new Exception('No se encontró en Documento Sector #' . $sectorDocumentCode);
+                return response()->json([
+                    "success" => false,
+                    "msg" => 'No se encontró en Documento Sector #' . $sectorDocumentCode,
+                 ], 404);
             }
 
             $pos_code = $pos_code == 0 ? null : $pos_code;
@@ -32,13 +35,19 @@ class FelCuisCufdController extends Controller
             $cuis = FelCuis::where('company_id', $company_id)->where('branch_code', $branch_code)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $pos_code )->first();
 
             if( empty($cuis) ) {
-                throw new Exception('No se encontro un CUIS');
+                return response()->json([
+                    "success" => false,
+                    "msg" => 'No se encontro un CUIS',
+                 ], 404);
             }
 
             $cufd = FelCufd::where('company_id', $company_id)->where('branch_code', $branch_code)->where('system_code', $sectorDocument->codigoSistema)->where('pos_code', $pos_code )->first();
 
             if( empty($cufd) ) {
-                throw new Exception('No se encontro un CUFD');
+                return response()->json([
+                    "success" => false,
+                    "msg" => 'No se encontro un CUFD',
+                 ], 404);
             }
 
             return response()->json([

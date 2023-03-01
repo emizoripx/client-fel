@@ -2,6 +2,8 @@
 
 namespace EmizorIpx\ClientFel\Http\Controllers;
 
+use EmizorIpx\ClientFel\Http\Resources\FelOfflineEventCollectionResource;
+use EmizorIpx\ClientFel\Http\Resources\FelOfflineEventResource;
 use EmizorIpx\ClientFel\Jobs\GetSignificantEventStatus;
 use EmizorIpx\ClientFel\Jobs\ProcessOfflineInvoices;
 use EmizorIpx\ClientFel\Models\FelClientToken;
@@ -15,7 +17,17 @@ use Illuminate\Routing\Controller;
 class FelOfflineEventController extends Controller
 {
     
-    
+    public function index(){
+
+        $company_id = auth()->user()->getCompany()->id;
+
+        $events = FelOfflineEvent::where('company_id', $company_id)->orderBy('id', 'desc')->paginate(10);
+
+        return response()->json(array_merge([
+            'success' => true
+        ],  (new FelOfflineEventCollectionResource($events))->resolve()));
+
+    }
 
     public function processEvent( Request $request,  $event_id ){
 
