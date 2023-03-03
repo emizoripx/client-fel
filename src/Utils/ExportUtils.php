@@ -2,6 +2,7 @@
 
 namespace EmizorIpx\ClientFel\Utils;
 
+use EmizorIpx\ClientFel\Reports\Clients\BioClientsReport;
 use EmizorIpx\ClientFel\Reports\Clients\ClientsReport;
 use EmizorIpx\ClientFel\Reports\Invoices\ComprobanteDiarioUnslpReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
@@ -54,6 +55,7 @@ class ExportUtils {
 
     const DAILY_MOVEMENTS_PAYMENTS = 'Movimiento_diario_pagos';
 
+    const BIO_CLIENTS_REPORT = 'Reporte_Clientes';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -140,6 +142,10 @@ class ExportUtils {
                 break;
             case static::DAILY_MOVEMENTS_PAYMENTS:
                 return ItemInvoiceDailyReportPayments::class;
+                break;
+
+            case static::BIO_CLIENTS_REPORT:
+                return BioClientsReport::class;
                 break;
             
             default:
