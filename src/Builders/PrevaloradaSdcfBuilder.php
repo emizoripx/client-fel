@@ -41,7 +41,6 @@ class PrevaloradaSdcfBuilder extends BaseFelInvoiceBuilder implements FelInvoice
     {
         $input = array_merge(
             $this->input,[
-                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "nombreRazonSocial" => 'S/N', 
                 "codigoCliente" => 'N/A', 
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
@@ -93,7 +92,7 @@ class PrevaloradaSdcfBuilder extends BaseFelInvoiceBuilder implements FelInvoice
 
             $total += $new->subTotal;
         }
-        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
+        $total = $total; 
         
 
         \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$total,round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
