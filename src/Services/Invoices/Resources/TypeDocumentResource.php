@@ -20,6 +20,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosNoIehd\Hidrocar
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Hoteles\HotelesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\NotaConciliacion\NotaConciliacionResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Prevalorada\PrevaloradaResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\PrevaloradaSdcf\PrevaloradaSdcfResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativo\SectorEducativoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\SectorEducativoZonaFranca\SectorEducativoZonaFrancaResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Seguros\SegurosResource;
@@ -124,6 +125,9 @@ class TypeDocumentResource extends JsonResource
 
             case TypeDocumentSector::SERVICIO_TURISTICO_HOSPEDAJE:
                 return new TurismoResource($this);
+
+            case TypeDocumentSector::PREVALORADA_SDCF:
+                return new PrevaloradaSdcfResource($this);
 
             default:
                 return new CompraVentaResource($this);

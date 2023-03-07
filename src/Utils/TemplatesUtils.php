@@ -18,6 +18,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\Fa
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHoteles\FacturaHotelesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaPrevalorada\FacturaPrevaloradaTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaPrevaloradaSdcf\FacturaPrevaloradaSdcfTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectorEducativoZonaFranca\FacturaSectorEducativoZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSectoresEducativos\FacturaSectoresEducativosTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaSeguros\FacturaSegurosTempateResource;
@@ -125,6 +126,10 @@ class TemplatesUtils {
             case TypeDocumentSector::SERVICIO_TURISTICO_HOSPEDAJE:
                 return FacturaTurismoTemplateResource::class;
                 break;
+            case TypeDocumentSector::PREVALORADA_SDCF:
+                return FacturaPrevaloradaSdcfTemplateResource::class;
+                break;
+
 
 
             default:
