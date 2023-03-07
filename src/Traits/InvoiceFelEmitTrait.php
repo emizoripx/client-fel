@@ -28,14 +28,9 @@ trait InvoiceFelEmitTrait
         }
 
         try {
-
-            
-            if ($felInvoiceRequest->codigoEstado != null || $felInvoiceRequest->cuf != null){
-                return $this;
-            }
           
             // save number in felinvoicerequest 
-            $felInvoiceRequest->setNumeroFactura($this->invoice->number);
+            $felInvoiceRequest->setNumeroFactura();
             // reload changes in model
             $felInvoiceRequest = $felInvoiceRequest->fresh();
 

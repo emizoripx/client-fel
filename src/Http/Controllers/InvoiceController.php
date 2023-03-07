@@ -37,17 +37,8 @@ class InvoiceController extends BaseController
             $invoice = $felInvoiceRequest->invoice_origin();
             \Log::debug("EMIT-INVOICE ==============> START TRANSACTION");
             // begin a trasaction in case an error happend, rollback changes
-            
-            // generate next number new emission invoice
-            if ($invoice->number == 0) {
-                \Log::debug("\n\n\n\n\n ASIGNANDO VALOR desde PREFACTURA EMIT =================invoice_number is set up cause number is not assigned \n\n\n\n\n\n");
-                // generate next number new emission invoice
-                $invoice->service()->applyNumber()->save();
-            } else {
-                \Log::debug(" \n\n\n\n =============Number is assigned  " . $invoice->number . " \n\n\n\n\n\n");
-            }
             // save number in felinvoicerequest 
-            $felInvoiceRequest->setNumeroFactura($invoice->number);
+            $felInvoiceRequest->setNumeroFactura();
             // reload changes in model
             $felInvoiceRequest = $felInvoiceRequest->fresh();
             $felInvoiceRequest->setAccessToken()->sendInvoiceToFel();
@@ -110,27 +101,6 @@ class InvoiceController extends BaseController
 
         }
     }
-    public function reversionRevocate(Request $request){
-        try{
-            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
-
-            if(!$felInvoiceRequest){
-                throw new ClientFelException("Factura no encontrada");
-            }
-
-            $felInvoiceRequest->setAccessToken()->sendReversionRevocateInvoiceToFel();
-            $felInvoiceRequest->invoiceDateUpdatedAt();
-            return response()->json([
-                'success' => true
-            ]);
-
-        } catch(ClientFelException $ex){
-            return response()->json([
-                'success' => false,
-                'msg' => $ex->getMessage()
-            ]);
-        }
-    }
     public function getStatus(Request $request){
         try{
             $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
@@ -190,7 +160,7 @@ class InvoiceController extends BaseController
 
     public function verifynit(Request $request,$nit)
     {
-        
+        info("ingresando aca a validar el nit  " . $request->company_name);
         if ( !is_numeric($nit) ) {
             return response()->json([
                 "success" => false,
@@ -201,24 +171,31 @@ class InvoiceController extends BaseController
 
         $success = false;
         try {
-            
-            $invoice_service = new Invoices($request->host);
-            $invoice_service->setAccessToken($request->access_token);
+            $invoice_service = new Invoices($request->host, $request->access_token);
             $invoice_service->validateNit($nit);
 
-            $response = $invoice_service->getResponse();
-            \Log::debug($response);
-            
+            if ($invoice_service->isSuccessful()) {
+                $response = $invoice_service->getResponse();
+                \Log::debug($response);
 
-            if ($response['codigo'] == 986) {
-                $success = true;
+
+                if ($response['codigo'] == 986) {
+                    $success = true;
+                }
+
+                return response()->json([
+                    "success" => $success,
+                    "message" => $response['descripcion'],
+                    "codigo" => $response['codigo']
+                ]);
+            } else {
+                return response()->json([
+                    "success" => false,
+                    "message" => $invoice_service->getErrors()[0]['description'],
+                    "codigo" => 994
+                ]);
             }
-
-            return response()->json([
-                "success" => $success,
-                "message" => $response['descripcion'],
-                "codigo" => $response['codigo']
-            ]);
+           
         } catch (ClientFelException $ex) {
             return response()->json([
                "success" => false,

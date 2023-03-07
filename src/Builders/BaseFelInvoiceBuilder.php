@@ -158,7 +158,7 @@ class BaseFelInvoiceBuilder {
 
     public  function changeOriginalTotal( FelInvoiceRequest $fel_invoice_request)
     {
-        \Log::debug("ingresando a recalculate totals");
+
         try {
             $model = $this->source_data['model'];
     
@@ -174,14 +174,12 @@ class BaseFelInvoiceBuilder {
                     $item->gross_line_total = $item->line_total;
                 }
 
-                \Log::debug("Items: " . json_encode($items));
+
 
                 $model->line_items = $items;
             }
     
             $model->saveQuietly();
-            
-            \Log::debug("se registro existosamente el recalculo de los totales");
 
 
         } catch (\Throwable $th) {
