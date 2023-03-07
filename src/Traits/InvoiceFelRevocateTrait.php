@@ -57,46 +57,4 @@ trait InvoiceFelRevocateTrait{
         }
     }
 
-
-    public function reversionRevocate(){
-        $success = false;
-
-        $felInvoiceRequest = $this->fel_invoice;
-
-        
-
-        try {
-
-            if(is_null($felInvoiceRequest->getDeletedAt())){
-                throw new ClientFelException(json_encode(["errors" => ["La factura no fue anulada"]]));
-            }
-            
-            if(is_null($felInvoiceRequest->cuf)){
-                $felInvoiceRequest->restoreInvoice();
-                return;
-            }
-
-
-            $felInvoiceRequest->setAccessToken()->sendReversionRevocateInvoiceToFel();
-
-            $felInvoiceRequest->invoiceDateUpdatedAt();
-
-            $success = true;
-
-
-            event(new InvoiceWasReversionRevoked($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
-
-            bitacora_info("FelInvoiceRequest:ReversionRevocate", $success);
-
-
-            fel_register_historial($felInvoiceRequest);
-
-        } catch (ClientFelException $ex) {
-            bitacora_error("FelInvoiceRequest:ReversionRevocate", "Error al desanular Factura ".$ex->getMessage());
-
-            fel_register_historial($felInvoiceRequest, $ex->getMessage());
-
-            throw new Exception($ex->getMessage());
-        }
-    }
 }
