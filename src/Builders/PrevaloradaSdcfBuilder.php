@@ -8,7 +8,7 @@ use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 use stdClass;
 
-class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
+class PrevaloradaSdcfBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
 {
     protected $fel_invoice;
 
@@ -21,8 +21,9 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
     {
         if ($this->source_data['update']){
             $modelFelInvoice = $this->getFelInvoiceFirst();
+
             if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice;
+                $this->fel_invoice = $modelFelInvoice; 
             } else{
                 $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
             }
@@ -40,12 +41,13 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
     {
         $input = array_merge(
             $this->input,[
-                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
-                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
+                "nombreRazonSocial" => 'S/N', 
+                "codigoCliente" => 'N/A', 
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
             ],
             $this->getDetailsAndTotals()
         );
+
         $this->fel_invoice->fill($input);
         
         return $this->fel_invoice;
@@ -90,15 +92,15 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
 
             $total += $new->subTotal;
         }
-        $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
+        $total = $total; 
         
-        $totalsujetoiva = $total - round($this->source_data['fel_data_parsed']['montoGiftCard'], 2);
-        
+
+        \Log::debug("TOTAL:>>>>>>>>>>>>>> " .json_encode([$total,round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2)]));
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
             "montoTotal" => $total,
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
-            "montoTotalSujetoIva" => $totalsujetoiva ,
+            "montoTotalSujetoIva" => 0 ,
             "detalles" => $details
         ];
     }

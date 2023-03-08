@@ -21,6 +21,7 @@ use EmizorIpx\ClientFel\Builders\HidrocarburosNoIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\PrevaloradaBuilder;
+use EmizorIpx\ClientFel\Builders\PrevaloradaSdcfBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoBuilder;
 use EmizorIpx\ClientFel\Builders\SectorEducativoZonaFrancaBuilder;
 use EmizorIpx\ClientFel\Builders\SegurosBuilder;
@@ -65,6 +66,7 @@ class TypeDocumentSector
     const NOTA_CONCILIACION = 29;
     const SEGUROS = 34;
     const COMPRA_VENTA_BONIFICACIONES = 35;
+    const PREVALORADA_SDCF = 36;
     const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
     const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
@@ -208,6 +210,9 @@ class TypeDocumentSector
             case static::SERVICIO_TURISTICO_HOSPEDAJE :
                 return TurismoBuilder::class;
                 break;
+            case static::PREVALORADA_SDCF :
+                return PrevaloradaSdcfBuilder::class; 
+                break;
             
             
             default:
@@ -301,6 +306,9 @@ class TypeDocumentSector
                 break;
             case static::SERVICIO_TURISTICO_HOSPEDAJE:
                 return 'turismo';
+                break;
+            case static::PREVALORADA_SDCF:
+                return 'prevalorada-sdcf';
                 break;
 
 

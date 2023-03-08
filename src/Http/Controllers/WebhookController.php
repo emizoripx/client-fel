@@ -82,12 +82,15 @@ class WebhookController extends BaseController
                 $invoiceUpdate->emission_type =  $data['emission_type'] == 1  ?"En línea" : "Fuera de línea";
                 $invoiceUpdate->xml_url = $data['xml_url'];
                 $invoiceUpdate->direccion = $data['direccion'];
+                $invoiceUpdate->package_id = $data['package_id'];
+                $invoiceUpdate->uuid_package = $data['uuid_package'];
+                $invoiceUpdate->index_package = $data['index_package'];
                 $invoiceUpdate->save();
                 $invoiceUpdate->touchPdf();
             }
             \Log::debug('WEBHOOK-CONTROLLER FIN CALLBACK INVOICE *******************************************************');
 
-        }
+        // }
 
-    // }
+    }
 }

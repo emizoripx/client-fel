@@ -306,74 +306,89 @@ class FelInvoiceRequest extends Model
 
     public function sendInvoiceToFel(){
 
-        try {
 
-            // $prepagoBagService = new AccountPrepagoBagService();
-
-            $detailCompanyDocumentSector = $this->felCompany()->service()->controlPrepagoBag($this->type_document_sector_id);
-            
-            // $prepagoBagService->controlPrepagoBag($this->prepagoAccount(), $this->type_document_sector_id);
-            
-        } catch (PrepagoBagsException $ex) {
-            Log::debug('Fel Error');
-            throw new ClientFelException($ex->getMessage());
-        }
-        
         \Log::debug("VERIFICANDO factura TIcket   ", [$this->getVariableExtra("facturaTicket")]);
 
         if ($this->getVariableExtra("facturaTicket") == "") {
-            \Log::debug("generear factira Ticket");
+            \Log::debug("generear factura Ticket");
             $bytes = random_bytes(20);
             $new_extras = $this->getExtras();
             $new_extras->facturaTicket = bin2hex($bytes);
             $this->extras = json_encode($new_extras);
         }
 
-        $invoice_service = new Invoices($this->host);
-
-        $invoice_service->setAccessToken($this->access_token);
-
-
-        $invoice_service->setBranchNumber($this->codigoSucursal);
-
-        $invoice_service->buildData($this);
-        \Log::debug("################################################## FLUJO ============================================ ENVIANDO AL FEL LA FACTURA");
+        if (is_null($this->factura_ticket)) {
+            $this->factura_ticket = $this->getVariableExtra("facturaTicket");
+            $this->save();
+        }
         try{
+            $invoice_service = new Invoices($this->host, $this->access_token);
+            $invoice_service->buildData($this);
             $invoice_service->sendToFel();
-        } catch (Exception $ex) {
-            throw new ClientFelException($ex->getMessage());
-        }
-        $res = $invoice_service->getResponse();
-        \Log::debug("RESPONSE FEL ===========> " . json_encode( $res ));
-        
-        \DB::table("fel_invoice_requests")
-            ->whereId($this->id)
-            ->update(['cuf'=> $res['cuf'],
-                     'urlSin' => $res['urlSin'], 
-                     'xml_url' => $res['xml_url'], 
-                     'ack_ticket' => $res['ack_ticket'],
-                     'emission_type' => $res['emission_type_code'] == 2 ? "Fuera de línea" : "En línea", 
-                     'fechaEmision' => Carbon::parse($res['fechaEmision'])->toDateTimeString(), 
-                     'codigoEstado' =>$res['codigoEstado'], 
-                     'estado' =>$res['codigoEstado'] == 690 || $res['codigoEstado'] == 908 ? "VALIDO" : ($res['codigoEstado'] == 902 ? "INVALIDO": "" ), 
+
+            if ($invoice_service->isSuccessful()) {
+                $invoice_service->getDetails($this->factura_ticket);
+
+                if ($invoice_service->isSuccessful()) { 
+
+                    $result = (array)$invoice_service->getResponse();
+                    \DB::table("fel_invoice_requests")
+                        ->whereId($this->id)
+                        ->update([
+                            'cuf' => $result['cuf'],
+                            'urlSin' => $result['urlSin'],
+                            'xml_url' => $result['xml_url'],
+                            'ack_ticket' => $result['ack_ticket'],
+                            'package_id' => $result['package_id'],
+                            'uuid_package' => $result['uuid_package'],
+                            'index_package' => $result['index_package'],
+                            'emission_type' => isset($result['tipoEmision']['codigo']) ? ( $result['tipoEmision']['codigo'] == 2 ? "Fuera de línea" : "En línea") : "En línea",
+                            'fechaEmision' => Carbon::parse($result['fechaEmision'])->toDateTimeString(),
+                            'codigoEstado' => $result['codigoEstado'],
+                            'errores' => $result['errores'],
+                        ]);
+
+                    \DB::table('invoices')->whereId($this->id_origin)->update(['date' => Carbon::parse($result['fechaEmision'])->toDateString()]);
+                    $this->invoiceDateUpdatedAt();
+
+                // $account = $this->felCompany();
+                // if (!$account->checkIsPostpago()) {
+                //     $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
+                // } else {
+                //     $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
+                // }
+                }else {
+                    \DB::table("fel_invoice_requests")
+                    ->whereId($this->id)
+                    ->update([
+                        'errores' => $invoice_service->getErrors()
                     ]);
-        \Log::debug("################################################## FLUJO ============================================ RESPUESTA GUARADA EN LA BASE DE DATOS");
-        \DB::table('invoices')->whereId($this->id_origin)->update([ 'date' => Carbon::parse($res['fechaEmision'])->toDateString()]);
-        $this->invoiceDateUpdatedAt();
-        $account = $this->felCompany();
-        if(!$account->checkIsPostpago()){
-            $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
-        } else {
-            $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
+                }
+
+            } else {
+
+                \DB::table("fel_invoice_requests")
+                    ->whereId($this->id)
+                    ->update([
+                        'errores' => $invoice_service->getErrors()
+                    ]);
+            }
+
+        } catch (Exception $ex) {
+            info("ERROR EXCEPTION FELINVOICEREQUEST >>>>>>> message : " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine() );
+            \DB::table("fel_invoice_requests")
+                ->whereId($this->id)
+                ->update([
+                    'errores' => ['code'=>9999, "description"=>"Error inesperado, consulte con su administrador"]
+                ]);
+            bitacora_error("FelInvoiceRequest:sentofel", $ex->getMessage());
         }
-        \Log::debug("################################################## FLUJO ============================================ FIN ENVIANDO AL FEL LA FACTURA");
+
     }
 
-
     public function sendRevocateInvoiceToFel($codigoMotivoAnulacion){
-        $invoice_service = new Invoices($this->host);
+        $invoice_service = new Invoices($this->host, $this->access_token);
 
-        $invoice_service->setAccessToken($this->access_token);
         $invoice_service->setCuf($this->cuf);
         $invoice_service->setRevocationReasonCode($codigoMotivoAnulacion);
 
@@ -383,28 +398,12 @@ class FelInvoiceRequest extends Model
         $invoice = $invoice_service->getInvoiceByCuf();
 
         $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
-    }
 
-    public function sendReversionRevocateInvoiceToFel(){
-        $invoice_service = new Invoices($this->host);
-
-        $invoice_service->setAccessToken($this->access_token);
-        $invoice_service->setCuf($this->cuf);
-
-        $invoice_service->reversionRevocateInvoice();
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-        $invoice = $invoice_service->getInvoiceByCuf();
-
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-
-        $this->saveState($invoice['estado'])->save();
     }
 
     public function sendUpdateInvoiceToFel(){
-        $invoice_service = new Invoices($this->host);
 
-        $invoice_service->setAccessToken($this->access_token);
-        $invoice_service->setCuf($this->cuf);
+        $invoice_service = new Invoices($this->host, $this->access_token);
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
         \Log::debug("VERIFICANDO factura TIcket en update   ", [$this->getVariableExtra("facturaTicket")]);
@@ -416,63 +415,111 @@ class FelInvoiceRequest extends Model
             $new_extras->facturaTicket = bin2hex($bytes);
             $this->extras = json_encode($new_extras);
         }
+        if ( is_null($this->factura_ticket) ) {
+            $this->factura_ticket = $this->getVariableExtra("facturaTicket");
+            $this->save();
+        }
         
         $invoice_service->buildData($this);
 
-        $invoice_service->updateInvoice();
+        if ($invoice_service->isSuccessful()) {
+            $invoice_service->getDetails($this->factura_ticket);
 
-        $invoice_service->setCuf($invoice_service->getResponse()['cuf']);
+            if ($invoice_service->isSuccessful()) {
 
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-        $invoice = $invoice_service->getInvoiceByCuf();
+                $result = (array)$invoice_service->getResponse();
+                \DB::table("fel_invoice_requests")
+                ->whereId($this->id)
+                    ->update([
+                        'cuf' => $result['cuf'],
+                        'urlSin' => $result['urlSin'],
+                        'xml_url' => $result['xml_url'],
+                        'ack_ticket' => $result['ack_ticket'],
+                        'package_id' => $result['package_id'],
+                        'uuid_package' => $result['uuid_package'],
+                        'index_package' => $result['index_package'],
+                        'emission_type' => isset($result['tipoEmision']['codigo']) ? ($result['tipoEmision']['codigo'] == 2 ? "Fuera de línea" : "En línea") : "En línea",
+                        'fechaEmision' => Carbon::parse($result['fechaEmision'])->toDateTimeString(),
+                        'codigoEstado' => $result['codigoEstado'],
+                        'errores' => $result['errores'],
+                    ]);
 
-        $this->saveState($invoice['estado'])->saveCuf($invoice_service->getResponse()['cuf'])->saveEmisionDate($invoice['fechaEmision'])->saveUrlSin($invoice['urlSin']?? null)->save();
+                \DB::table('invoices')->whereId($this->id_origin)->update(['date' => Carbon::parse($result['fechaEmision'])->toDateString()]);
+                $this->invoiceDateUpdatedAt();
 
+                // $account = $this->felCompany();
+                // if (!$account->checkIsPostpago()) {
+                //     $detailCompanyDocumentSector->reduceNumberInvoice()->setCounter()->save();
+                // } else {
+                //     $detailCompanyDocumentSector->setPostpagoCounter()->setCounter()->save();
+                // }
+            } else {
+                \DB::table("fel_invoice_requests")
+                ->whereId($this->id)
+                    ->update([
+                        'errores' => $invoice_service->getErrors()
+                    ]);
+            }
+        } else {
+
+            \DB::table("fel_invoice_requests")
+            ->whereId($this->id)
+                ->update([
+                    'errores' => $invoice_service->getErrors()
+                ]);
+        }
     }
 
     public function sendVerifyStatus()
     {
         \Log::debug("LA FACTURA ESTA CON ESTADO : " . $this->codigoEstado);
+
+        // if (  in_array($this->codigoEstado,[690, 908]) && is_null($this->revocation_reason_code)  ) {
+        //     return true;
+        // }
         // if ( in_array($this->codigoEstado,[908,690,902,904]) ) {
         //     \Log::debug("SALTANDO LA CONSULTA DEL ESTADO POR QUE TIENE EL ESTADO =======================: " . $this->codigoEstado);
         //     return true;
         // }
             
-        $invoice_service = new Invoices($this->host);
+        $invoice_service = new Invoices($this->host, $this->access_token);
+        
+        $invoice_service->getStatus($this->factura_ticket);
 
-        $invoice_service->setAccessToken($this->access_token);
-        $invoice_service->setAckTicket($this->ack_ticket);
+        if ($invoice_service->isSuccessful()) {
+            // if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
+                $response = $invoice_service->getResponse();
+            try {
+                $estadoAntiguo = $this->estado;
+                $this->saveStatusCode($response['codigoEstado']);
+                $this->estado = $response['estado'];
+                if (!empty($response) && isset($response['errores'])) {
+                    $this->errores = $response['errores'];
+                }
+                $this->save();
 
-        $response = $invoice_service->getStatusByAckTicket();
 
-        // if ( in_array($response['codigoEstado'],[908,690,902,904, 691, 906]) ) {
-        try{
-            $estadoAntiguo = $this->estado;
-            $this->saveStatusCode($response['codigoEstado']);
-            $this->estado = $response['estado'];
-            if (!empty($response) && isset($response['errores'])) {
-                $this->errores = $response['errores'];
+                if ($estadoAntiguo == "ANULACION EN ESPERA") {
+                    // REMOVE PDF WHEN REVOCATIO IS WAITIN
+                    \Log::debug("\n\n\n\n\n removing PDF cause is waiting\n\n\n");
+                    $this->deletePdf();
+                }
+                if ($estadoAntiguo != $this->estado) {
+                    BiocenterStatusNotification::dispatch($this->invoice_origin());
+                }
+
+                if (!empty($response) && isset($response['errores'])) {
+                    $response['errores'] = json_encode($response['errores']);
+                }
+                return $response;
+            }catch (Throwable $th) {
+                \Log::debug("SEND VERIFY STATUS");
+                return [];
             }
-            $this->save();
-
-
-            if ( $estadoAntiguo == "ANULACION EN ESPERA") {
-                // REMOVE PDF WHEN REVOCATIO IS WAITIN
-                \Log::debug("\n\n\n\n\n removing PDF cause is waiting\n\n\n");
-                 $this->deletePdf();   
-            }
-            if( $estadoAntiguo != $this->estado ) {
-                BiocenterStatusNotification::dispatch($this->invoice_origin());
-            }
-        }catch (Throwable $th) {
-            \Log::debug("SEND VERIFY STATUS");
-            return [];
+        }else {
+            info("errors in get status   " , $invoice_service->getErrors());
+            return ["codigoEstado" => 902,"estado" => $this->estado,"errores" => $this->errores];
         }
-        // }
-        if ( !empty($response) && isset($response['errores']) ){
-            $response['errores'] = json_encode($response['errores']);
-        }
-        return $response;
         
     }
 
@@ -537,14 +584,15 @@ class FelInvoiceRequest extends Model
         return  $date;
     }
 
-    public function setNumeroFactura($number)
+    public function setNumeroFactura()
     {
         // condition to detect if  numeroFactura still doest not have value,
         // check if contains "Pre", this is because, in an above method there is a mutator that changes value in case is 0
         if ($this->numeroFactura == 0 ||  strpos( $this->numeroFactura,"Pre") === 0) {
-            $this->numeroFactura = $number;
+            $this->numeroFactura = InvoiceGeneratorNumber::nextNumber($this->getCompanyIdDecoded(), $this->codigoSucursal, $this->codigoPuntoVenta, $this->type_document_sector_id, false);
             $this->save();
         }
+
     }
 
     public function getExtras()
@@ -605,6 +653,12 @@ class FelInvoiceRequest extends Model
         }
             
         return $arr;
+    }
+
+    public function getCompanyIdDecoded()
+    {
+        $hashid = new Hashids(config('ninja.hash_salt'), 10);
+        return $hashid->decode($this->company_id)[0];
     }
 
     public function getBranchByCode()

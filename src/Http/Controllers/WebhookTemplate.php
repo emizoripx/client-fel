@@ -31,22 +31,13 @@ class WebhookTemplate extends BaseController {
 
             try{
 
-                $doc_sector_codes = collect( $templates )->pluck('document_sector_code')->all();
-
-                $branch_codes = collect( $templates )->pluck('codigoSucursal')->all();
-
-                \Log::debug("Doc sector ", [$doc_sector_codes]);
-                \Log::debug("Branch sector ", [$branch_codes]);
-
                 \Log::debug("WEBHOOK TEMPLATE ITERATING COMPANIES");
                 foreach ($companies as $company) {
                     $company_id = $company->company_id;
                     \Log::debug("WEBHOOK TEMPLATE COMPANY : " . $company_id);
                     // \Log::debug("WEBHOOK TEMPLATE COMPANY, templates : " , $templates);
 
-                    \DB::table('fel_templates')->where('company_id', $company_id)->where( function ($query) use ($branch_codes, $doc_sector_codes) {
-                        $query->whereNotIn('branch_code', $branch_codes)->orWhereNotIn('document_sector_code', $doc_sector_codes);
-                    })->delete();
+                    \DB::table('fel_templates')->where('company_id', $company_id)->delete();
 
                     $array_parsed = collect( $templates )->map( function( $item ) use ($company_id) {
 

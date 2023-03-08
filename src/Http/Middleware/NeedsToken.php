@@ -31,6 +31,7 @@ class NeedsToken
                 $companyId = $company->id;
 
             } else {
+                $company = auth()->user()->company();
                 $companyId = auth()->user()->company()->id;
             }
 
@@ -48,6 +49,7 @@ class NeedsToken
         $request_array['access_token'] = $client_token->getAccessToken();
         $request_array['host'] = $client_token->getHost();
         $request_array['company_id'] = $companyId;
+        $request_array['company_name'] = $company->settings->name;
         $request->replace($request_array);
 
         return $next($request);
