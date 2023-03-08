@@ -31,16 +31,6 @@ class WebhookTemplate extends BaseController {
 
             try{
 
-                $doc_sector_codes = collect( $templates )->pluck('document_sector_code')->all();
-
-                $branch_codes = collect( $templates )->pluck('codigoSucursal')->all();
-
-                $pos_codes = collect( $templates )->pluck('codigoPuntoVenta')->all();
-
-                \Log::debug("Doc sector ", [$doc_sector_codes]);
-                \Log::debug("Branch sector ", [$branch_codes]);
-                \Log::debug("Pos Codes", [$pos_codes]); 
-
                 \Log::debug("WEBHOOK TEMPLATE ITERATING COMPANIES");
                 foreach ($companies as $company) {
                     $company_id = $company->company_id;
