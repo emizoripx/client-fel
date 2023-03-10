@@ -30,7 +30,7 @@ trait InvoiceFelEmitTrait
         try {
           
             // save number in felinvoicerequest 
-            $felInvoiceRequest->setNumeroFactura();
+            $felInvoiceRequest->setNumeroFactura($this->invoice->number);
             // reload changes in model
             $felInvoiceRequest = $felInvoiceRequest->fresh();
 

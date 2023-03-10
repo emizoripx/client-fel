@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Reports\ItemInvoice;
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
+use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 
@@ -88,7 +89,6 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
     }
 
 
-
     public function generateReport()
     {
 
@@ -96,39 +96,87 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
         $to = date("Y-m-d", $this->to_date) . " 23:59:59";
 
         $emitted = \DB::table('fel_invoice_requests')
-        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
-        ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
+            ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
+            ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
+            ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
-            ->selectRaw(\DB::raw('fel_invoice_requests.codigoMetodoPago, fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", "PAGADO" ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->whereNotBetween('paymentables.created_at', [$from, $to])
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
 
+        $emittend_payed = \DB::table('fel_invoice_requests')
+            ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
+            ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
+            ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
+            ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->whereNotNull('fel_invoice_requests.cuf')
+            ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
+            ->whereBetween('paymentables.created_at', [$from, $to])
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+
+        $payed = \DB::table('fel_invoice_requests')
+            ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
+            ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
+            ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
+            ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->whereNotNull('fel_invoice_requests.cuf')
+            ->whereNotBetween('fel_invoice_requests.fechaEmision', [$from, $to])
+            ->whereBetween('paymentables.created_at', [$from, $to])
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+
+        $debts = \DB::table('fel_invoice_requests')
+            ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
+            ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
+            ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
+            ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->whereNotNull('fel_invoice_requests.cuf')
+            ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
+            ->whereNull('paymentables.created_at')
+            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
         $emitted = $this->addBranchFilter($emitted);
+        $emittend_payed = $this->addBranchFilter($emittend_payed);
+        $payed = $this->addBranchFilter($payed);
+        $debts = $this->addBranchFilter($debts);
         \Log::debug("ALL USERS STATUS VARIABLE : " . $this->all_users);
         if (!$this->all_users) {
 
             if (!is_null($this->user_selected)) {
                 \Log::debug("using user select _id : " . $this->user_selected->user_id);
                 $emitted = $emitted->where('invoices.user_id', '=', $this->user_selected->user_id);
+                $emittend_payed = $emittend_payed->where('invoices.user_id', '=', $this->user_selected->user_id);
+                $payed = $payed->where('invoices.user_id', '=', $this->user_selected->user_id);
+                $debts = $debts->where('invoices.user_id', '=', $this->user_selected->user_id);
             } else if ($this->user && !$this->user->hasPermission('view_invoice')) {
 
                 \Log::debug("Filter By User: " . $this->user->id);
 
                 $emitted = $emitted->where('invoices.user_id', '=', $this->user->id);
+                $emittend_payed = $emittend_payed->where('invoices.user_id', '=', $this->user->id);
+                $payed = $payed->where('invoices.user_id', '=', $this->user->id);
+                $debts = $debts->where('invoices.user_id', '=', $this->user->id);
             }
         }
-        $query_items = $emitted->get();
+        $query_items = $debts->union($emitted)
+            ->union($emittend_payed)
+            ->union($payed)
+            ->get();
 
         $detalles = $query_items->pluck('detalles', 'id');
 
         $invoices_grouped = collect($query_items)->groupBy('id');
-        $dictionary_payment_types = \DB::table('fel_payment_methods')->pluck('descripcion', 'codigo');
+        $dictionary_payment_types = ExportUtils::dictionaryPaymentTypesSpanish();
         $items = collect($detalles)->map(function ($detail, $key) use ($invoices_grouped, $dictionary_payment_types) {
 
             $invoice_data = json_decode(json_encode($invoices_grouped[$key]), true);
 
             $detail = json_decode($detail, true);
 
-            $invoice_data[0]['codigoMetodoPago'] = $dictionary_payment_types[$invoice_data[0]['codigoMetodoPago']];
+            $invoice_data[0]['tipoPago'] = $dictionary_payment_types[$invoice_data[0]['tipoPago']];
             $joined = collect($invoice_data)->crossJoin($detail)->all();
 
             $detalle = collect($joined)->map(function ($d) {
@@ -146,14 +194,13 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
 
         $invoice_date = null;
         $invoice_number = null;
-        $codigoMetodoPago = null;
-
+        $tipoPago = null;
         $q_revocated_invoices = 0;
         $q_revocated_invoices = collect($items)->groupBy('numeroFactura')->filter(function ($it, $k) {
             return in_array($it[0]['codigoEstado'], [691, 905]);
         })->count();
 
-        $items_changed = collect($items)->map(function ($item, $key) use (&$invoice_date, &$invoice_number, &$codigoMetodoPago) {
+        $items_changed = collect($items)->map(function ($item, $key) use (&$invoice_date, &$invoice_number, &$tipoPago) {
 
             if (in_array($item['codigoEstado'], [905, 691])) {
                 $item['montoTotal'] = 0;
@@ -167,11 +214,11 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
                 $item['fechaEmision'] = "";
                 $item['codigoEstado'] = "";
                 $item['descuentoAdicional'] = "";
-                if ($codigoMetodoPago == $item['codigoMetodoPago']) {
-                    $item['codigoMetodoPago'] = "";
+                if ($tipoPago == $item['tipoPago']) {
+                    $item['tipoPago'] = "";
                     $item['fechaPago'] = "";
                 }
-                $codigoMetodoPago = $item['codigoMetodoPago'];
+                $tipoPago = $item['tipoPago'];
                 $item['usuario'] = "";
             } else {
 
@@ -179,12 +226,11 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
 
                 $invoice_number = $item['numeroFactura'];
 
-                $codigoMetodoPago = $item['codigoMetodoPago'];
+                $tipoPago = $item['tipoPago'];
             }
 
             return $item;
         });
-
 
         $item_summary = FelSyncProduct::leftJoin('products', 'products.id', 'fel_sync_products.id_origin')->where('fel_sync_products.company_id', $this->company_id)->select(\DB::raw('codigo_producto, 0 as amount, notes'))->get();
         $item_summary = collect($item_summary)->groupBy('codigo_producto');
@@ -216,8 +262,8 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
         $totales = [];
         $total = 0;
         $not_payed = 0.00;
-        collect($items_changed)->groupBy('codigoMetodoPago')->map(function ($item, $key) use (&$totales, &$not_payed, &$total) {
-            if ($key != "") {
+        collect($items_changed)->groupBy('tipoPago')->map(function ($item, $key) use (&$totales, &$not_payed, &$total) {
+            if ($key != ""){
                 $totales[] = ["name" => $key, "monto" => $item->sum('montoTotal')];
                 $total += $item->sum('montoTotal');
             }
@@ -226,11 +272,11 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
         $totales[] = ["name" => "Por cobrar", "monto" => $not_payed];
 
         return [
-            "items_array" => $items_array,
+            "items_array" =>$items_array,
             "company_name" => \App\Models\Company::find($this->company_id)->settings->name,
             "additional_data" => null,
             "username" => $this->user->name(),
-            "date" => date("d/m/Y", $this->from),
+            "date" => date("d/m/Y",$this->from),
             "totals" => $totales,
             "total" => $total,
             "literal" => to_word((float)($total), 2, 1),

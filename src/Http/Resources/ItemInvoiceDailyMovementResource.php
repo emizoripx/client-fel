@@ -25,7 +25,7 @@ class ItemInvoiceDailyMovementResource extends JsonResource
             "codigoCliente" => $this->resource['codigoCliente'],
             "numeroDocumento" => $this->resource['numeroDocumento'],
             "nombreRazonSocial" => $this->resource['nombreRazonSocial'],
-            "tipoPago" => $this->resource['tipoPago'],
+            "tipoPago" => $this->resource['codigoMetodoPago'],
             "fechaPago" => $this->resource['fechaPago'],
             "codigoProducto" => $this->resource['codigoProducto'],
             "descripcion" => $this->resource['descripcion'],

@@ -110,7 +110,7 @@ class FelInvoiceRequest extends Model
             return "Planilla " . $this->attributes['document_number'];
         }
 
-        if ( $this->attributes['numeroFactura'] == 0 ) {
+        if ( $this->attributes['numeroFactura'] == 0 && !is_null($this->attributes['prefactura_number']) ) {
             return "Pre-factura " . $this->attributes['prefactura_number'];
         }
         return $this->attributes['numeroFactura'];
@@ -307,7 +307,7 @@ class FelInvoiceRequest extends Model
     public function sendInvoiceToFel(){
 
 
-        \Log::debug("VERIFICANDO factura TIcket   ", [$this->getVariableExtra("facturaTicket")]);
+        \Log::debug("Verificando factura Ticket   ", [$this->getVariableExtra("facturaTicket")]);
 
         if ($this->getVariableExtra("facturaTicket") == "") {
             \Log::debug("generear factura Ticket");
@@ -584,12 +584,40 @@ class FelInvoiceRequest extends Model
         return  $date;
     }
 
-    public function setNumeroFactura()
+    public function setNumeroFactura($numeroFacturaFromInvoice = null)
     {
+
         // condition to detect if  numeroFactura still doest not have value,
         // check if contains "Pre", this is because, in an above method there is a mutator that changes value in case is 0
+        info('ANTES  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LEVEL INVOICE NUMBER GENERATION =======================> ' . $this->numeroFactura);
         if ($this->numeroFactura == 0 ||  strpos( $this->numeroFactura,"Pre") === 0) {
-            $this->numeroFactura = InvoiceGeneratorNumber::nextNumber($this->getCompanyIdDecoded(), $this->codigoSucursal, $this->codigoPuntoVenta, $this->type_document_sector_id, false);
+
+            info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LEVEL INVOICE NUMBER GENERATION =======================> ' );
+            $obj = \DB::table('fel_company')->where('id', $this->getCompanyIdDecoded())->select('level_invoice_number_generation')->first();
+            
+            if (empty($obj)) 
+                return 1;
+
+            info('LEVEL INVOICE NUMBER GENERATION =======================> ' . $obj->level_invoice_number_generation);
+
+            switch ($obj->level_invoice_number_generation) {
+                case 0:
+                    $numeroFactura = !is_null($numeroFacturaFromInvoice) ? $numeroFacturaFromInvoice : 1;
+                    break;
+                case 1:
+                    $numeroFactura = InvoiceGeneratorNumber::nextNumber($this->getCompanyIdDecoded(), $this->codigoSucursal);
+                    break;
+                case 2:
+                    $numeroFactura = InvoiceGeneratorNumber::nextNumber($this->getCompanyIdDecoded(), $this->codigoSucursal, $this->codigoPuntoVenta);
+                    break;
+                case 3:
+                    $numeroFactura = InvoiceGeneratorNumber::nextNumber($this->getCompanyIdDecoded(), $this->codigoSucursal, $this->codigoPuntoVenta, $this->type_document_sector_id);
+                    break;
+                default:
+                    $numeroFactura = 1;
+                    break;
+            }
+            $this->numeroFactura = $numeroFactura;
             $this->save();
         }
 
