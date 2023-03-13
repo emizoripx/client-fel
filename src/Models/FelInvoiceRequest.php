@@ -389,15 +389,35 @@ class FelInvoiceRequest extends Model
     public function sendRevocateInvoiceToFel($codigoMotivoAnulacion){
         $invoice_service = new Invoices($this->host, $this->access_token);
 
-        $invoice_service->setCuf($this->cuf);
         $invoice_service->setRevocationReasonCode($codigoMotivoAnulacion);
 
-        $invoice_service->revocateInvoice();
+        $invoice_service->revocateInvoice($this->factura_ticket);
 
-        // $invoice = $invoice_service->getInvoiceByAckTicket();
-        $invoice = $invoice_service->getInvoiceByCuf();
+        if ($invoice_service->isSuccessful()) {
+            $invoice_service->getDetails($this->factura_ticket);
 
-        $this->saveState($invoice['estado'])->saveRevocationReasonCode($codigoMotivoAnulacion)->save();
+            if ($invoice_service->isSuccessful()) {
+                $result = (array)$invoice_service->getResponse();
+                \DB::table("fel_invoice_requests")
+                    ->whereId($this->id)
+                    ->update([
+                        'cuf' => $result['cuf'],
+                        'urlSin' => $result['urlSin'],
+                        'xml_url' => $result['xml_url'],
+                        'ack_ticket' => $result['ack_ticket'],
+                        'package_id' => $result['package_id'],
+                        'uuid_package' => $result['uuid_package'],
+                        'index_package' => $result['index_package'],
+                        'emission_type' => isset($result['tipoEmision']['codigo']) ? ($result['tipoEmision']['codigo'] == 2 ? "Fuera de línea" : "En línea") : "En línea",
+                        'fechaEmision' => Carbon::parse($result['fechaEmision'])->toDateTimeString(),
+                        'codigoEstado' => $result['codigoEstado'],
+                        'errores' => $result['errores'],
+                    ]);
+
+                \DB::table('invoices')->whereId($this->id_origin)->update(['date' => Carbon::parse($result['fechaEmision'])->toDateString()]);
+                $this->invoiceDateUpdatedAt();
+            }
+        }
 
     }
 

@@ -117,7 +117,7 @@ Class FelConnection
             $response = $this->client->get($endpoint, $headers, $options);
 
         if ($method == "DELETE")
-            $response = $this->client->delete($endpoint, $headers,$data, $options);
+            $response = $this->client->request("DELETE",$endpoint,["json" => $data]);
 
         // $response = $this->client->send($request);
         info("REQUEST BY " . request()->company_name . " >>> SENT >>> [$method]" . $endpoint);
@@ -183,10 +183,10 @@ Class FelConnection
         };
     }
 
-    public function revocate($ticket)
+    public function revocate($ticket, $revocationCode)
     {
         try {
-            $this->handleRequest("DELETE", "/api/v1/facturas/$ticket/anular?unique_code",array("codigoMotivoAnulacion" => 1));
+            $this->handleRequest("DELETE", "/api/v1/facturas/$ticket/anular?unique_code",array("codigoMotivoAnulacion" => $revocationCode));
         }catch (\Exception $ex) {
             info("REVOCATE >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
