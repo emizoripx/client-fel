@@ -16,8 +16,6 @@ trait InvoiceFelRevocateTrait{
         $felInvoiceRequest = $this->fel_invoice;
 
         try {
-            \Log::debug('Model');
-            \Log::debug($felInvoiceRequest);
 
             if(is_null($felInvoiceRequest) || is_null($felInvoiceRequest->cuf)){
                 return;
@@ -28,7 +26,7 @@ trait InvoiceFelRevocateTrait{
             }
             
             $codigoMotivoAnulacion = request('codigo_motivo_anulacion');
-            \Log::debug('Codigo Motivo Anulación '. request('codigo_motivo_anulacion'));
+            
 
             if(!isset($codigoMotivoAnulacion)){
                 throw new ClientFelException(json_encode(["errors"=>["Código Motivo de Anulación es requerido"]]));

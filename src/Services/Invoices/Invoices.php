@@ -185,45 +185,14 @@ class Invoices extends FelConnection
         $this->revocationReasonCode = $code;
     }
 
-    public function revocateInvoice()
+    public function revocateInvoice($factura_ticket)
     {
-
-        try {
-            // $api_service = 'REVOCATE-INVOICE';
-            // $idrequest = $this->saveRequest($api_service);
-            $this->client->revocate($this->ack_ticket);
-            $this->successful = $this->client->isSuccessful();
-
-            if ($this->successful) {
-                $this->response = $this->client->getResponse();
-            } else {
-                $this->response = $this->client->getErrors();
-            }
-            // $this->saveResponse($idrequest, $this->client->getStatusCodeResponse(), $api_service);
-        } catch (\Exception $ex) {
-            info("ERROR REVOCATE >>>  " . $ex->getMessage());
-            $this->response = array("Ocurrio un error inesperado ");
-        }
+        $this->revocate($factura_ticket, $this->revocationReasonCode );
     }
 
     public function reversionRevocateInvoice(){
 
-        if(empty($this->cuf)){
-            throw new ClientFelException("Es necesario el cuf para revertir anulación la factura");
-        }
-
-        try {
-            \Log::debug("Send to : " ."/api/v1/facturas/$this->cuf/revertir-anulacion");
-            $response = $this->client->request('DELETE', "/api/v1/facturas/$this->cuf/revertir-anulacion", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
-
-            return $this->parse_response($response);
-        } catch (RequestException $ex) {
-
-            Log::error("Log Service reversion");
-            Log::error([json_decode($ex->getResponse()->getBody())]);
-            
-            throw new Exception($ex->getResponse()->getBody());
-        }
+        
     }
 
     public function updateInvoice($factura_ticket){
