@@ -613,7 +613,7 @@ class FelInvoiceRequest extends Model
         if ($this->numeroFactura == 0 ||  strpos( $this->numeroFactura,"Pre") === 0) {
 
             info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LEVEL INVOICE NUMBER GENERATION =======================> ' );
-            $obj = \DB::table('fel_company')->where('id', $this->getCompanyIdDecoded())->select('level_invoice_number_generation')->first();
+            $obj = \DB::table('fel_company')->where('company_id', $this->getCompanyIdDecoded())->select('level_invoice_number_generation')->first();
             
             if (empty($obj)) 
                 return 1;

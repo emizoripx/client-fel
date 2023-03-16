@@ -19,7 +19,9 @@ class Sobodaycom {
         $data = $this->request->only(['category','search']);
 
         if (empty($data['search']) || is_null($data['search']) ) {
-            $data = \DB::table('sobodaycom_categories')->paginate();    
+            $data = \DB::table('sobodaycom_categories')
+            ->where('category', $data['category'])
+            ->paginate();    
         }else {
             $data = \DB::table('sobodaycom_categories')
             ->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '") and category = "' . $data['category'].'"')
