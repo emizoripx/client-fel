@@ -75,6 +75,7 @@ class BaseTemplateResource extends JsonResource
             "usuario" => isset($fel_invoice->usuario) ? $fel_invoice->usuario : '',
             "clientName" => isset($this->client->name) ? $this->client->name : '',
             "direccionCliente" => isset($this->client->address1) ? $this->client->address1 : '',
+            "customValue1" => isset($this->client->custom_value1) ? $this->client->custom_value1 : '',
 
         ], $extras);
     }
