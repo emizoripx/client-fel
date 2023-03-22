@@ -15,6 +15,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReportPayments;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterReportCoteor;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
@@ -42,6 +43,8 @@ class ExportUtils {
     const INRA_TOTALES = 'Inra_Totales';
 
     const REGISTER_SALES = 'Registro_Ventas';
+
+    const REGISTER_REPORT_COTEOR = 'Registro_reporte_coteor';
 
     const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';
 
@@ -123,6 +126,10 @@ class ExportUtils {
 
             case static::REGISTER_SALES:
                 return RegisterSalesReport::class;
+                break;
+
+            case static::REGISTER_REPORT_COTEOR:
+                return RegisterReportCoteor::class;
                 break;
 
             case static::COMPROBANTE_DIARIO_CUSTOM1:
