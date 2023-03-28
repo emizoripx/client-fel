@@ -78,7 +78,7 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
             \Log::debug("From Date: " . $from);
             \Log::debug("To Date: " . $to);
 
-            return $query->whereBetween('fel_invoice_requests.created_at', [$from, $to]);
+            return $query->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to]);
         } else {
             return $query;
         }
