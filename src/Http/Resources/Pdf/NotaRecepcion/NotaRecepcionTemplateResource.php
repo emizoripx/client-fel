@@ -49,7 +49,7 @@ class NotaRecepcionTemplateResource extends JsonResource
             "municipio" => isset($branch) ? $branch->municipio : '',
             "nitEmisor" => isset($this->company) ? $this->company->settings->id_number : '',
             "numeroFactura" => isset($fel_invoice->document_number) ? $fel_invoice->document_number : '',
-            "fechaCreacionNotFormat" => $fel_invoice->created_at,
+            "fechaCreacionNotFormat" => $fel_invoice->fechaEmision,
             "numeroDocumento" => isset($fel_invoice->numeroDocumento) ? $fel_invoice->numeroDocumento : '',
             "complemento" => isset($fel_invoice->complemento) ? $fel_invoice->complemento : '' ,
             "nombreRazonSocial" => isset($fel_invoice->nombreRazonSocial) ? $fel_invoice->nombreRazonSocial : '',
