@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Contracts\FelInvoiceBuilderInterface;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
+use Carbon\Carbon;
 use stdClass;
 
 class NotaEntregaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
@@ -33,6 +34,8 @@ class NotaEntregaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
 
     public function processInput(): FelInvoiceRequest
     {
+        $this->input['fechaEmision'] = Carbon::parse($this->input['fechaEmision'])->toDateTimeString();
+
         $input = array_merge(
             $this->input,[
                 "codigoMetodoPago" => 1,

@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Contracts\FelInvoiceBuilderInterface;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
+use Carbon\Carbon;
 use stdClass;
 
 class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderInterface
@@ -33,6 +34,8 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
         $id_origin = $hashid->decode($this->source_data['fel_data_parsed']["idFacturaOriginal"])[0];
         $invoice_origin = FelInvoiceRequest::where('id_origin', $id_origin )->first();
+
+        $this->input['fechaEmision'] = Carbon::parse($this->input['fechaEmision'])->toDateTimeString();
 
         $input = array_merge(
             $this->input,
