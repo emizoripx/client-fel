@@ -32,7 +32,7 @@ class RegisterReportCoteor extends BaseReport implements ReportInterface
 
     public function addSelectColumns($query)
     {
-        return $query->selectRaw('(@counter := @counter +1) as num, codigoCliente,cuf, nombreRazonSocial, numeroFactura, detalles, montoTotal, date_format( fechaEmision , "%d/%m/%Y" ) as fecha, concat(users.first_name, " ", users.last_name) as nombreUsuario , if(codigoEstado=690 ||  codigoEstado=908,"VALIDA","ANULADA") as estado');
+        return $query->selectRaw('(@counter := @counter +1) as num, codigoCliente,cuf, nombreRazonSocial, numeroFactura, detalles, montoTotal, date_format( fechaEmision , "%d/%m/%Y" ) as fecha, concat(users.first_name, " ", users.last_name) as nombreUsuario , if(codigoEstado=690 ||  codigoEstado=908,"VALIDA","ANULADA") as estado, invoices.public_notes, invoices.private_notes');
     }
 
     public function generateReport()
@@ -40,6 +40,7 @@ class RegisterReportCoteor extends BaseReport implements ReportInterface
         \DB::statement(\DB::raw("set @counter := 0"));
         $query_invoices = \DB::table('fel_invoice_requests')
                         ->leftJoin('users','users.id','fel_invoice_requests.emitted_by')
+                        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
                         ->where('fel_invoice_requests.company_id', $this->company_id)
                         ->whereNotNull('fel_invoice_requests.codigoEstado')
                         ->whereNotNull('fel_invoice_requests.cuf');
@@ -82,7 +83,10 @@ class RegisterReportCoteor extends BaseReport implements ReportInterface
                 "Monto Total",
                 "Fecha Emisión",
                 "Emitido Por",
-                "Estado SIN"
+                "Estado SIN",
+                "CUF",
+                "Nota Pública",
+                "Nota Privada",
             ],
             "invoices" => RegisterReportCoteorResource::collection($items)->resolve()
         ];

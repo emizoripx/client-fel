@@ -28,6 +28,9 @@ class RegisterReportCoteorResource extends JsonResource
             "fechaEmision" => $this->resource['fecha'],
             "nombreUsuario" => $this->resource['nombreUsuario'],
             "estado" => $this->resource['estado'],
+            "cuf" => $this->resource['cuf'],
+            "notaPublica" => $this->resource['public_notes'],
+            "notaPrivada" => $this->resource['private_notes'],
         ];
     }
 }
