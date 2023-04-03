@@ -78,7 +78,7 @@ class WebhookController extends BaseController
                 $invoiceUpdate->cuf = $data['cuf'];
                 $invoiceUpdate->estado = in_array($data['status_code'],[908,690]) ? "VALIDA" : ( $data['status_code'] == 902 ? "INVALIDA": ( in_array($data['status_code'], [691, 905]) ? "ANULADA":"" ));
                 $invoiceUpdate->codigoEstado = $data['status_code'];
-                $invoiceUpdate->urlSin = $data['urlSin'];
+                $invoiceUpdate->urlSin = isset($data['urlSin']) ? $data['urlSin'] . "&t=2" : "";
                 $invoiceUpdate->emission_type =  $data['emission_type'] == 1  ?"En línea" : "Fuera de línea";
                 $invoiceUpdate->xml_url = $data['xml_url'];
                 $invoiceUpdate->direccion = $data['direccion'];
