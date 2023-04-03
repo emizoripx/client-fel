@@ -76,6 +76,7 @@ class BaseTemplateResource extends JsonResource
             "clientName" => isset($this->client->name) ? $this->client->name : '',
             "direccionCliente" => isset($this->client->address1) ? $this->client->address1 : '',
             "customValue1" => isset($this->client->custom_value1) ? $this->client->custom_value1 : '',
+            "codigoPostal" => isset($this->client->postal_code) ? $this->client->postal_code : '',
 
         ], $extras);
     }
