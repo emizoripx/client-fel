@@ -336,7 +336,7 @@ class FelInvoiceRequest extends Model
                         ->whereId($this->id)
                         ->update([
                             'cuf' => $result['cuf'],
-                            'urlSin' => $result['urlSin'],
+                            'urlSin' => isset($result['urlSin']) ? $result['urlSin'] . "&t=2" : "",
                             'xml_url' => $result['xml_url'],
                             'ack_ticket' => $result['ack_ticket'],
                             'package_id' => $result['package_id'],
@@ -402,7 +402,7 @@ class FelInvoiceRequest extends Model
                     ->whereId($this->id)
                     ->update([
                         'cuf' => $result['cuf'],
-                        'urlSin' => $result['urlSin'],
+                        'urlSin' => isset($result['urlSin']) ? $result['urlSin'] . "&t=2" : "",
                         'xml_url' => $result['xml_url'],
                         'ack_ticket' => $result['ack_ticket'],
                         'package_id' => $result['package_id'],
@@ -452,7 +452,7 @@ class FelInvoiceRequest extends Model
                 ->whereId($this->id)
                     ->update([
                         'cuf' => $result['cuf'],
-                        'urlSin' => $result['urlSin'],
+                        'urlSin' => isset($result['urlSin']) ? $result['urlSin'] . "&t=2" : "",
                         'xml_url' => $result['xml_url'],
                         'ack_ticket' => $result['ack_ticket'],
                         'package_id' => $result['package_id'],
