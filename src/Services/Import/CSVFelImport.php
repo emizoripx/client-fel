@@ -59,7 +59,11 @@ class CSVFelImport
                     "codigo_actividad_economica"    => $data['product.fel_data.codigo_actividad_economica'],
                     "codigo_producto_sin"           => $data['product.fel_data.codigo_producto_sin'],
                     "codigoNandina"                 => $data['product.fel_data.codigo_nandina'],
-                    "codigo"                        => $data['product.fel_data.codigo']
+                    "codigo"                        => $data['product.fel_data.codigo'],
+                    "cantidadIce"                   => $data['product.fel_data.litros_por_item'],
+                    "marcaIce"                      => $data['product.fel_data.tiene_ice'],
+                    "alicuotaEspecifica"            => $data['product.fel_data.ice_especifico'],
+                    "alicuotaPorcentual"            => $data['product.fel_data.ice_porcentual'],
                 ];
 
                 break;
