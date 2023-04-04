@@ -21,6 +21,7 @@ class RegisterReportCoteorResource extends JsonResource
         return [
             "num" => $this->resource['num'],
             "codigoCliente" => $this->resource['codigoCliente'],
+            "numeroDocumento" => $this->resource['numeroDocumento'],
             "nombreRazonSocial" => $this->resource['nombreRazonSocial'],
             "numeroFactura" => $this->resource['numeroFactura'],
             "codigoProducto" => $this->resource['codigoProducto'],
