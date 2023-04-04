@@ -52,7 +52,7 @@ class CSVFelImport
 
         switch ($entity_type) {
             case 'product':
-                \Log::debug("Prepare Data");
+                \Log::debug("Prepare Data Products");
                 return [
                     "codigo_unidad"                 => $data['product.fel_data.codigo_unidad'],
                     "nombre_unidad"                 => $data['product.fel_data.nombre_unidad'],
@@ -60,10 +60,10 @@ class CSVFelImport
                     "codigo_producto_sin"           => $data['product.fel_data.codigo_producto_sin'],
                     "codigoNandina"                 => $data['product.fel_data.codigo_nandina'],
                     "codigo"                        => $data['product.fel_data.codigo'],
-                    "cantidadIce"                   => $data['product.fel_data.litros_por_item'],
-                    "marcaIce"                      => $data['product.fel_data.tiene_ice'],
-                    "alicuotaEspecifica"            => $data['product.fel_data.ice_especifico'],
-                    "alicuotaPorcentual"            => $data['product.fel_data.ice_porcentual'],
+                    "cantidadIce"                   => isset($data['product.fel_data.litros_por_item']) ? $data['product.fel_data.litros_por_item'] : "",
+                    "marcaIce"                      => isset($data['product.fel_data.tiene_ice']) ? $data['product.fel_data.tiene_ice'] : 0,
+                    "alicuotaEspecifica"            => isset($data['product.fel_data.ice_especifico']) ? $data['product.fel_data.ice_especifico'] : "0.00",
+                    "alicuotaPorcentual"            => isset($data['product.fel_data.ice_porcentual']) ? $data['product.fel_data.ice_porcentual'] : "0.00",
                 ];
 
                 break;
