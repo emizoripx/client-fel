@@ -60,10 +60,10 @@ class CSVFelImport
                     "codigo_producto_sin"           => $data['product.fel_data.codigo_producto_sin'],
                     "codigoNandina"                 => $data['product.fel_data.codigo_nandina'],
                     "codigo"                        => $data['product.fel_data.codigo'],
-                    "cantidadIce"                   => isset($data['product.fel_data.litros_por_item']) ? $data['product.fel_data.litros_por_item'] : "",
-                    "marcaIce"                      => isset($data['product.fel_data.tiene_ice']) ? $data['product.fel_data.tiene_ice'] : 0,
-                    "alicuotaEspecifica"            => isset($data['product.fel_data.ice_especifico']) ? $data['product.fel_data.ice_especifico'] : "0.00",
-                    "alicuotaPorcentual"            => isset($data['product.fel_data.ice_porcentual']) ? $data['product.fel_data.ice_porcentual'] : "0.00",
+                    "cantidadIce"                   => isset($data['product.fel_data.litros_por_item']) ? floatval($data['product.fel_data.litros_por_item']) : 0.00,
+                    "marcaIce"                      => isset($data['product.fel_data.tiene_ice']) ? intval($data['product.fel_data.tiene_ice']) : 0,
+                    "alicuotaEspecifica"            => isset($data['product.fel_data.ice_especifico']) ? floatval($data['product.fel_data.ice_especifico']) : 0.00,
+                    "alicuotaPorcentual"            => isset($data['product.fel_data.ice_porcentual']) ? floatval($data['product.fel_data.ice_porcentual']) : 0.00,
                 ];
 
                 break;
