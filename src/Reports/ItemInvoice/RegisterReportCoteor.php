@@ -32,7 +32,7 @@ class RegisterReportCoteor extends BaseReport implements ReportInterface
 
     public function addSelectColumns($query)
     {
-        return $query->selectRaw('(@counter := @counter +1) as num, codigoCliente,cuf, nombreRazonSocial, numeroFactura, detalles, montoTotal, date_format( fechaEmision , "%d/%m/%Y" ) as fecha, concat(users.first_name, " ", users.last_name) as nombreUsuario , if(codigoEstado=690 ||  codigoEstado=908,"VALIDA","ANULADA") as estado, invoices.public_notes, invoices.private_notes');
+        return $query->selectRaw('(@counter := @counter +1) as num, codigoCliente,cuf, nombreRazonSocial, numeroFactura, detalles, montoTotal, date_format( fechaEmision , "%d/%m/%Y" ) as fecha, concat(users.first_name, " ", users.last_name) as nombreUsuario , if(codigoEstado=690 ||  codigoEstado=908,"VALIDA","ANULADA") as estado, invoices.public_notes, invoices.private_notes, numeroDocumento');
     }
 
     public function generateReport()
@@ -77,6 +77,7 @@ class RegisterReportCoteor extends BaseReport implements ReportInterface
             "header" => [
                 "Nº",
                 "Código Cliente",
+                "Número de Documento",
                 "Nombre Razón Social",
                 "Nro Factura",
                 "SERVICIO/PRODUCTO",

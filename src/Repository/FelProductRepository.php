@@ -38,7 +38,7 @@ class FelProductRepository extends BaseRepository implements RepoInterface{
             ];
 
             if( !is_null($this->fel_data_parsed['marcaIce']) ){
-                $additional_data = array_merge($additional_data, ['marcaIce' => $this->fel_data_parsed['marcaIce'] ]);
+                $additional_data = array_merge($additional_data, ['marcaIce' => intval($this->fel_data_parsed['marcaIce'])]);
             }
             if( !is_null($this->fel_data_parsed['alicuotaEspecifica']) ){
                 $additional_data = array_merge($additional_data, ['alicuotaEspecifica' => $this->fel_data_parsed['alicuotaEspecifica'] ]);

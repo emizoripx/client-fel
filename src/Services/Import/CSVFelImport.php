@@ -52,14 +52,18 @@ class CSVFelImport
 
         switch ($entity_type) {
             case 'product':
-                \Log::debug("Prepare Data");
+                \Log::debug("Prepare Data Products");
                 return [
                     "codigo_unidad"                 => $data['product.fel_data.codigo_unidad'],
                     "nombre_unidad"                 => $data['product.fel_data.nombre_unidad'],
                     "codigo_actividad_economica"    => $data['product.fel_data.codigo_actividad_economica'],
                     "codigo_producto_sin"           => $data['product.fel_data.codigo_producto_sin'],
                     "codigoNandina"                 => $data['product.fel_data.codigo_nandina'],
-                    "codigo"                        => $data['product.fel_data.codigo']
+                    "codigo"                        => $data['product.fel_data.codigo'],
+                    "cantidadIce"                   => isset($data['product.fel_data.litros_por_item']) ? floatval($data['product.fel_data.litros_por_item']) : 0.00,
+                    "marcaIce"                      => isset($data['product.fel_data.tiene_ice']) ? intval($data['product.fel_data.tiene_ice']) : 0,
+                    "alicuotaEspecifica"            => isset($data['product.fel_data.ice_especifico']) ? floatval($data['product.fel_data.ice_especifico']) : 0.00,
+                    "alicuotaPorcentual"            => isset($data['product.fel_data.ice_porcentual']) ? floatval($data['product.fel_data.ice_porcentual']) : 0.00,
                 ];
 
                 break;
