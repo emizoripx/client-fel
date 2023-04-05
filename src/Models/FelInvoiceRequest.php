@@ -370,7 +370,8 @@ class FelInvoiceRequest extends Model
                 \DB::table("fel_invoice_requests")
                     ->whereId($this->id)
                     ->update([
-                        'errores' => $invoice_service->getErrors()
+                        'errores' => $invoice_service->getErrors(),
+                        'codigoEstado' => 902,
                     ]);
             }
 

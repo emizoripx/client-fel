@@ -90,11 +90,11 @@ class AlcanzadaIceBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBui
             $new->marcaIce = $detail->marcaIce;
             $new->alicuotaIva = $detail->alicuotaIva;
             $new->precioNetoVentaIce = $detail->precioNetoVentaIce;
-            $new->alicuotaEspecifica = $detail->alicuotaEspecifica;
-            $new->alicuotaPorcentual = $detail->alicuotaPorcentual;
-            $new->montoIceEspecifico = $detail->montoIceEspecifico;
-            $new->montoIcePorcentual = $detail->montoIcePorcentual;
-            $new->cantidadIce = $detail->cantidadIce;
+            $new->alicuotaEspecifica = isset($detail->alicuotaEspecifica) ? $detail->alicuotaEspecifica : 0;
+            $new->alicuotaPorcentual = isset($detail->alicuotaPorcentual) ? $detail->alicuotaPorcentual : 0;
+            $new->montoIceEspecifico = isset($detail->montoIceEspecifico) ? $detail->montoIceEspecifico : 0;
+            $new->montoIcePorcentual = isset($detail->montoIcePorcentual) ? $detail->montoIcePorcentual : 0;
+            $new->cantidadIce = isset($detail->cantidadIce) ? $detail->cantidadIce : 0;
 
             if ($detail->discount > 0)
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
