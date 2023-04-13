@@ -160,7 +160,7 @@ class UNSDLPProductReport extends BaseReport implements ReportInterface {
                 "sucursal" => $this->branch_desc,
                 "usuario" => $this->all_users ? 'Todos' : $this->user_selected->user->name() ,
                 "by_usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString()
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString()
             ],
             "totales" =>[
                 "montoTotalGeneral" => NumberUtils::number_format_custom(collect($data)->sum('subTotal'), 2)

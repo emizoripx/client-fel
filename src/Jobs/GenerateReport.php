@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\View;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 use Exception;
 use SplTempFileObject;
+use OpenSpout\Common\Entity\Style\Style;
 
 class GenerateReport implements ShouldQueue
 {
@@ -91,13 +92,14 @@ class GenerateReport implements ShouldQueue
      */
     public function handle()
     {
-        set_time_limit ( 780 );
+        set_time_limit ( 980 );
+        ini_set('memory_limit', '256M');
         \Log::debug("GENERATE REPORT JOBS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT >>>>>>> 10 html 2");
 
         try {
 
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
-                'start_process_at' => Carbon::now()->toDateTimeString(),
+                'start_process_at' => Carbon::now()->timezone('America/La_Paz')->toDateTimeString(),
                 'status' => 2,
                 'user_id' => $this->user->id,
                 'request_parameters' => json_encode([
@@ -153,7 +155,7 @@ class GenerateReport implements ShouldQueue
 
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'status' => 3,
-                'report_date' => Carbon::now()->toDateString(),
+                'report_date' => Carbon::now()->timezone('America/La_Paz')->toDateString(),
             ]);
 
             UploadReport::dispatch( $this->company_nit, $this->entity, $this->report_name_path, $this->filename, $this->report_record_id );
@@ -194,7 +196,7 @@ class GenerateReport implements ShouldQueue
             mkdir(storage_path('app/report'));
         }
 
-        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ($this->type_file_pdf ? ".pdf" : ".xlsx");
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->timezone('America/La_Paz')->toDateTimeString() . md5(rand(1, 1000))) . ($this->type_file_pdf ? ".pdf" : ".xlsx");
         $this->report_name_path = storage_path("app/report/$this->filename");
         // Check pdf generate
 
@@ -214,7 +216,7 @@ class GenerateReport implements ShouldQueue
 
             file_put_contents($this->report_name_path, $pdf_data);
         } else {
-            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->toDateTimeString(), $content, $this->type_file_pdf);
+            $template_filename = ExportUtils::saveFileLocal('templateReport', Carbon::now()->timezone('America/La_Paz')->toDateTimeString(), $content, $this->type_file_pdf);
             // $template_filename = storage_path('reports/daily_movement_report_template.xlsx');
             \Log::debug("File Template Path: " . $template_filename);
 
@@ -265,7 +267,7 @@ class GenerateReport implements ShouldQueue
             $writer->insertAll(json_decode(json_encode($this->invoices['invoices']), true));
         }
         $csvContent = $writer->getContent();
-        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".csv";
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->timezone('America/La_Paz')->toDateTimeString() . md5(rand(1, 1000))) . ".csv";
         $this->report_name_path = storage_path("app/report/$this->filename");
         file_put_contents($this->report_name_path, $csvContent);
         $memory_usage1 = memory_get_usage();
@@ -280,11 +282,15 @@ class GenerateReport implements ShouldQueue
 
         \Log::debug("Usage Memory: " . $memory_usage);
 
-        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->toDateTimeString() . md5(rand(1, 1000))) . ".xlsx";
+        $this->filename = "Report-$this->entity-" . hash('sha1', Carbon::now()->timezone('America/La_Paz')->toDateTimeString() . md5(rand(1, 1000))) . ".xlsx";
         $this->report_name_path = storage_path("app/report/$this->filename");
 
         $writer = SimpleExcelWriter::create($this->report_name_path);
 
+        $style_header = (new Style())
+        ->setFontBold()
+        ->setFontSize(11);
+        $writer->setHeaderStyle($style_header);
         $writer->addHeader($this->invoices['header']);
 
         if ($this->entity == ExportUtils::REGISTER_SALES){
@@ -314,7 +320,13 @@ class GenerateReport implements ShouldQueue
             \Log::debug("Counter >>>>>>>>>>>>>>>> all: " . $counter);
         
         } else {
-            // $writer->insertAll(json_decode(json_encode($this->invoices['invoices']), true));
+            /* foreach ( $this->invoices['items'] as $invoice) { */
+
+            $style = (new Style())
+            ->setShouldWrapText(false)
+            ->setFontSize(11);
+            $writer->addRows($this->invoices['items'], $style);
+            /* } */
         }
 
         $memory_usage1 = memory_get_usage();

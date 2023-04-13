@@ -100,6 +100,21 @@ class InraResumenIngresosReport extends BaseReport implements ReportInterface
             $invoice_data = json_decode(json_encode($invoices_grouped[$key]), true);
 
             $detail = json_decode($detail, true);
+            $detail = collect($detail)->map(function ($d) {
+                return [
+                    "product_key" => $d["product_key"],
+                    "codigo_producto" => $d["codigo_producto"],
+                    'notes' => $d['notes'],
+                    "cost" => $d["cost"],
+                    "quantity" => $d["quantity"],
+                    "custom_value1" => $d["custom_value1"],
+                    "custom_value2" => $d["custom_value2"],
+                    "discount" => $d["discount"],
+                    "product_id" => $d["product_id"],
+                    "line_total" => $d["line_total"],
+                ];
+            })->all();
+
 
             $joined = collect($invoice_data)->crossJoin($detail)->all();
 
@@ -131,7 +146,7 @@ class InraResumenIngresosReport extends BaseReport implements ReportInterface
             "header" => [
                 "sucursal" => $this->branch_desc,
                 "usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString(),
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString(),
                 "from" => date('Y-m-d', $this->from_date) . " 00:00:00",
                 "to" => date('Y-m-d', $this->to_date) . " 23:59:59",
             ],
