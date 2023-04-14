@@ -31,6 +31,12 @@ class FelClient extends Model {
         return self::withTrashed()->where('company_id', $company_id)->get();
     }
 
+ 
+    public function clients()
+    {
+        return $this->hasOne(\App\Models\Client::class, 'id_origin', 'id')->withTrashed();
+    }
+
     public function getFieldTypeDocument(){
         switch ($this->type_document_id) {
             case self::CI:

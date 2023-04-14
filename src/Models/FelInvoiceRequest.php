@@ -372,6 +372,7 @@ class FelInvoiceRequest extends Model
                     ->update([
                         'errores' => $invoice_service->getErrors(),
                         'codigoEstado' => 902,
+                        'estado' => "RECHAZADA",
                     ]);
             }
 

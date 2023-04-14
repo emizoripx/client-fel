@@ -54,6 +54,7 @@ class LineItemResource extends JsonResource
             "cantidadDevuelto" =>  isset($this->cantidadDevuelto) ? $this->cantidadDevuelto : 0,
             "subtotalOriginal" =>  isset($this->subtotalOriginal) ? $this->subtotalOriginal : "0",
 
+            "isConciliacion" =>  isset($this->isConciliacion) ? $this->isConciliacion : false,
             "marcaIce" =>  isset($this->marcaIce) ? $this->marcaIce : 0,
             "alicuotaIva" =>  isset($this->alicuotaIva) ? $this->alicuotaIva : 0,
             "precioNetoVentaIce" =>  isset($this->precioNetoVentaIce) ? $this->precioNetoVentaIce : 0,
