@@ -250,7 +250,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
             "header" => [
                 "sucursal" => $this->branch_desc,
                 "usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString()
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString()
             ],
             "totales" =>[
                 "montoTotalGeneral" => $invoices->sum('montoTotal')

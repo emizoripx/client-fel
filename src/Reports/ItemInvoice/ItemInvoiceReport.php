@@ -20,9 +20,11 @@ class ItemInvoiceReport extends BaseReport implements ReportInterface {
 
     protected $user;
 
+    protected $headers_csv;
+
     protected $branch_desc = "Todos";
 
-    public function __construct( $company_id, $request, $columns, $user )
+    public function __construct( $company_id, $request, $columns, $user, $headers_csv = null )
     {
         $this->company_id = $company_id;
 
@@ -32,6 +34,8 @@ class ItemInvoiceReport extends BaseReport implements ReportInterface {
         $to = $request->has('to_date') ? $request->get('to_date') : null;
 
         $this->columns = $columns;
+
+        $this->headers_csv = $headers_csv;
 
         $this->user = $user;
 
@@ -116,12 +120,13 @@ class ItemInvoiceReport extends BaseReport implements ReportInterface {
 
         $items = ExportUtils::flatten_array($items);
 
-        return [
-            "header" => [
+        $header = [
                 "sucursal" => $this->branch_desc,
                 "usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString()
-            ],
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString()
+            ];
+        return [
+            "header" => (empty($this->headers_csv) || is_null($this->headers_csv)) ? $header : $this->headers_csv ,
             "totales" =>[
                 "montoTotalGeneral" => NumberUtils::number_format_custom(collect($items)->sum('subTotal'), 2)
             ],

@@ -128,7 +128,7 @@ class ClientsReport extends BaseReport implements ReportInterface {
             "header" => [
                 "sucursal" => is_null($this->branch_code) ?  "Todos" : ($this->branch_code == 0 ? "Casa Matriz" : 'Sucursal ' . $this->branch_code),
                 "usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString()
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString()
             ],
             "clients" => ClientReportResource::collection($clients)->resolve()
         ];

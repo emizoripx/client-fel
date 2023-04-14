@@ -130,7 +130,7 @@ class ProductReport extends BaseReport implements ReportInterface {
             "header" => [
                 "sucursal" => $this->branch_desc,
                 "usuario" => $this->user->name(),
-                "fechaReporte" => Carbon::now()->toDateTimeString()
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString()
             ],
             "totales" =>[
                 "montoTotalGeneral" => NumberUtils::number_format_custom(collect($data)->sum('subTotal'), 2)
