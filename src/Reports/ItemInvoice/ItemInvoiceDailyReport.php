@@ -191,7 +191,7 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
                 "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
                 "desde" => date('Y-m-d', $this->from) . " 00:00:00",
                 "hasta" => date('Y-m-d', $this->to) . " 23:59:59",
-                "fechaReporte" => Carbon::now()->format("Y-m-d"),
+                "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->format("Y-m-d"),
                 "usuario" => $this->user->name(),
                 "sucursal" => $this->branch_desc,
             ],
