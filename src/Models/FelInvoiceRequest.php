@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use stdClass;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Jobs\BiocenterStatusNotification;
+use EmizorIpx\ClientFel\Jobs\GetInvoiceStatus;
+use EmizorIpx\ClientFel\Utils\InvoiceStates;
 use Throwable;
 
 class FelInvoiceRequest extends Model
@@ -365,6 +367,8 @@ class FelInvoiceRequest extends Model
                     ]);
                 }
 
+                GetInvoiceStatus::dispatch( $this, InvoiceStates::EMIT_ACTION )->delay( now()->addSeconds( 5 ) );
+
             } else {
 
                 \DB::table("fel_invoice_requests")
@@ -419,7 +423,9 @@ class FelInvoiceRequest extends Model
                 \DB::table('invoices')->whereId($this->id_origin)->update(['date' => Carbon::parse($result['fechaEmision'])->toDateString()]);
                 $this->invoiceDateUpdatedAt();
             }
+            
         }
+        GetInvoiceStatus::dispatch( $this, InvoiceStates::REVOCATE_ACTION )->delay( now()->addSeconds( 5 ) );
 
     }
 

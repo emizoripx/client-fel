@@ -31,4 +31,22 @@ class InvoiceStates{
     const ANULACION_RECHAZADA = 906;
     const ANULACION_CONFIRMADA = 905;
     const REVERSION_ANULACION_CONFIRMADA = 907;
+
+
+
+    const ARRAY_FINAL_STATUS = [902,904,690,691,906];
+    const ARRAY_FINAL_STATUS_EMIT = [902,904,690];
+    const ARRAY_FINAL_STATUS_REVOCATE = [691, 906];
+
+    const EMIT_ACTION = 'emit';
+    const REVOCATE_ACTION = 'revocate';
+
+    public static function getFinalStatusArray( $action ) {
+
+        return match( $action ){
+            static::EMIT_ACTION => static::ARRAY_FINAL_STATUS_EMIT,
+            static::REVOCATE_ACTION => static::ARRAY_FINAL_STATUS_REVOCATE,
+            'default' => static::ARRAY_FINAL_STATUS
+        };
+    }
 }
