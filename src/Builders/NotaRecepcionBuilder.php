@@ -32,18 +32,13 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
     {
         // find origin invoice
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
-        $id_origin = $hashid->decode($this->source_data['fel_data_parsed']["idFacturaOriginal"])[0];
-        $invoice_origin = FelInvoiceRequest::where('id_origin', $id_origin )->first();
 
         $this->input['fechaEmision'] = Carbon::parse($this->input['fechaEmision'])->toDateTimeString();
 
         $input = array_merge(
             $this->input,
             [
-                "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
-                "extras" => json_encode(["turno" => $invoice_origin->getVariableExtra('turno')]),
                 "codigoMetodoPago" => 1,
-                "document_number" => $invoice_origin->document_number,
                 "numeroTarjeta" => null,
                 "codigoLeyenda" => 1,
                 "codigoActividad" => 1,
@@ -65,10 +60,6 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
 
             $this->fel_invoice->save();
     
-            $invoice = $this->fel_invoice->getFacturaOrigin();
-    
-            $invoice->service()->markReceived()->save();
-
         } catch( \Exception $ex ) {
 
             \Log::debug("Error al guardar nota de recepción: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
@@ -101,9 +92,7 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             $new->precioUnitario = $detail->cost;
             $new->subTotal = round((float)$detail->line_total,5);
             $new->cantidad = $detail->quantity;
-            $new->cantidadEntrega = $detail->cantidadEntrega;
             $new->cantidadVendido = $detail->quantity;
-            $new->cantidadDevuelto = $detail->cantidadEntrega - $detail->quantity;
             $new->rango = $detail->rango;
 
             $new->unidadMedida = $product_sync->codigo_unidad;
