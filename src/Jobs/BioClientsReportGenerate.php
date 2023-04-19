@@ -41,7 +41,7 @@ class BioClientsReportGenerate implements ShouldQueue
 
         $from = Carbon::parse($now)->subDays(6);
 
-        $company = Company::where('id', 277)->first();
+        $company = Company::where('id', 569)->first();
 
         $user = CompanyUser::where('company_id', $company->id)->where('is_admin', 1)->first()->user;
 
