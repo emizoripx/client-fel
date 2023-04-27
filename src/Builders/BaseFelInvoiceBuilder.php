@@ -123,7 +123,7 @@ class BaseFelInvoiceBuilder {
             "codigoActividad" => 1,
             "codigoExcepcion" => $fel_data_parsed['codigoExcepcion'],
             #automatico
-            // "numeroFactura" => $fel_data_parsed['numeroFactura'] ? $fel_data_parsed['numeroFactura'] : ($model->number ?? 0),
+            "numeroFactura" => (isset($fel_data_parsed['cafc']) && !is_null($fel_data_parsed['cafc']) && $fel_data_parsed['cafc'] != "") ? ($fel_data_parsed['numeroFactura'] ? $fel_data_parsed['numeroFactura'] : 0 ) : 0,
             # it is generated in FEL
             "fechaEmision" => substr($fechadeemision->setTimezone('America/La_Paz')->format('Y-m-d\TH:i:s.u'), 0, -3),
             "codigoPuntoVenta" => $fel_data_parsed['codigoPuntoVenta'],
