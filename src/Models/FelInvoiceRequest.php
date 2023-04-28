@@ -120,7 +120,7 @@ class FelInvoiceRequest extends Model
 
     public function getComplementoAttribute()
     {
-        if ($this->attributes['codigoTipoDocumentoIdentidad '] == 5) {
+        if ($this->attributes['codigoTipoDocumentoIdentidad'] == 5) {
             return null;
         }
 
