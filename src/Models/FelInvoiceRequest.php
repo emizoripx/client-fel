@@ -118,6 +118,15 @@ class FelInvoiceRequest extends Model
         return $this->attributes['numeroFactura'];
     }
 
+    public function getComplementoAttribute()
+    {
+        if ($this->attributes['codigoTipoDocumentoIdentidad '] == 5) {
+            return null;
+        }
+
+        return $this->attributes['complemento'];
+    }
+
     protected static function newFactory(){
         return FelInvoiceRequestFactory::new();
     }
