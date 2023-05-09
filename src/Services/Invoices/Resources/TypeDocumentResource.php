@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVenta\CompraVentaResou
 use EmizorIpx\ClientFel\Services\Invoices\Resources\CompraVentaBonificaciones\CompraVentaBonificacionesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\DebitoCredito\DebitoCreditoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Engarrafadoras\EngarrafadorasResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\EntidadFinanciera\EntidadFinancieraResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionMinerales\ExportacionMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ExportacionServicios\ExportacionServiciosResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\HidrocarburosIehd\HidrocarburosIehdResource;
@@ -128,6 +129,9 @@ class TypeDocumentResource extends JsonResource
 
             case TypeDocumentSector::PREVALORADA_SDCF:
                 return new PrevaloradaSdcfResource($this);
+
+            case TypeDocumentSector::ENTIDADES_FINANCIERAS:
+                return new EntidadFinancieraResource($this);
 
             default:
                 return new CompraVentaResource($this);

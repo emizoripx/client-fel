@@ -51,19 +51,19 @@ class BaseFelInvoiceBuilder {
         }
 
         if ( in_array($fel_data_parsed['numeroDocumento'], [99001]) ) {
-            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 4;
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
         }
         if ( in_array($fel_data_parsed['numeroDocumento'], [99002]) ) {
             $fel_data_parsed['nombreRazonSocial'] = "CONTROL TRIBUTARIO";
-            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 4;
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
         }
         if ( in_array($fel_data_parsed['numeroDocumento'], [99003]) ) {
             $fel_data_parsed['nombreRazonSocial'] = "VENTAS MENORES DEL DÍA";
-            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 4;
+            $fel_data_parsed['codigoTipoDocumentoIdentidad'] = 5;
             $fel_data_parsed['complemento'] = null;
             $client->complement = null;
         }

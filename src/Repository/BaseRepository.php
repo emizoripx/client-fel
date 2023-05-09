@@ -226,8 +226,10 @@ class BaseRepository
 
                         // TICKETS
                         "turno" => !empty($fel_data['turno']) ? $fel_data["turno"] : null,
-                        "idFacturaOriginal" => !empty($fel_data['idFacturaOriginal']) ? $fel_data["idFacturaOriginal"] : null
+                        "idFacturaOriginal" => !empty($fel_data['idFacturaOriginal']) ? $fel_data["idFacturaOriginal"] : null,
 
+                        // ENTIDAD FINANCIERA
+                        "montoTotalArrendamientoFinanciero" => !empty($fel_data['montoTotalArrendamientoFinanciero']) ? $fel_data["montoTotalArrendamientoFinanciero"] : null,
                     ];
                     break;
                 

@@ -14,6 +14,7 @@ use EmizorIpx\ClientFel\Builders\CompraVentaBonificacionesBuilder;
 use EmizorIpx\ClientFel\Builders\CompraVentaBuilder;
 use EmizorIpx\ClientFel\Builders\CreditoDebitoBuilder;
 use EmizorIpx\ClientFel\Builders\EngarrafadorasBuilder;
+use EmizorIpx\ClientFel\Builders\EntidadFinancieraBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
@@ -213,6 +214,9 @@ class TypeDocumentSector
             case static::PREVALORADA_SDCF :
                 return PrevaloradaSdcfBuilder::class; 
                 break;
+            case static::ENTIDADES_FINANCIERAS :
+                return EntidadFinancieraBuilder::class; 
+                break;
             
             
             default:
@@ -309,6 +313,9 @@ class TypeDocumentSector
                 break;
             case static::PREVALORADA_SDCF:
                 return 'prevalorada-sdcf';
+                break;
+            case static::ENTIDADES_FINANCIERAS:
+                return 'entidad-financiera';
                 break;
 
 
