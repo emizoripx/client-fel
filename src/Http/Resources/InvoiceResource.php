@@ -219,15 +219,12 @@ class InvoiceResource extends JsonResource
 
 
                 //     ]);
-                // case TypeDocumentSector::COMERCIALIZACION_GNV:
-                //     return array_merge($main, [
-                //         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
-                //         "tipoCambio" => round((float)$this->tipoCambio, 2),
-                //         "montoGiftCard" => (string)$this->montoGiftCard ?? null,
-                //         "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '',
-                //         "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '',
-                //         "montoVale" => isset($this->data_specific_by_sector['montoVale']) ? $this->data_specific_by_sector['montoVale'] : '',
-                //     ]);
+                case TypeDocumentSector::ENTIDADES_FINANCIERAS:
+                    return array_merge($main, [
+                        "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
+                        "tipoCambio" => round((float)$this->tipoCambio, 2),
+                        "montoTotalArrendamientoFinanciero" => isset($this->data_specific_by_sector['montoTotalArrendamientoFinanciero']) ? $this->data_specific_by_sector['montoTotalArrendamientoFinanciero'] : '',
+                    ]);
                 // case TypeDocumentSector::SERVICIOS_BASICOS:
                 //     return array_merge($main, [
                 //         "montoTotalSujetoIva" => $this->montoTotalSujetoIva,
@@ -578,7 +575,8 @@ class InvoiceResource extends JsonResource
                         "fechaIngresoHospedaje" => isset($this->fechaIngresoHospedaje) ? $this->fechaIngresoHospedaje : null,
 
 
-                        "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '', 
+                        "razonSocialOperadorTurismo" => isset($this->data_specific_by_sector['razonSocialOperadorTurismo']) ? $this->data_specific_by_sector['razonSocialOperadorTurismo'] : '',
+                        "montoTotalArrendamientoFinanciero" => isset($this->data_specific_by_sector['montoTotalArrendamientoFinanciero']) ? $this->data_specific_by_sector['montoTotalArrendamientoFinanciero'] : null, 
                     ];
                     break;
             }
