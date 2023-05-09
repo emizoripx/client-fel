@@ -44,7 +44,7 @@ class EntidadFinancieraResource extends JsonResource
             "usuario" => $this->usuario,
             "codigoDocumentoSector" => $this->codigoDocumentoSector,
             "codigoPuntoVenta" => $this->codigoPuntoVenta,
-            'detalles' => DetalleCompraVentaBonificacionesResource::collection(collect($this->detalles)),
+            'detalles' => DetalleEntidadFinancieraResource::collection(collect($this->detalles)),
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
