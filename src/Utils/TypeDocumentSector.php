@@ -315,7 +315,7 @@ class TypeDocumentSector
                 return 'prevalorada-sdcf';
                 break;
             case static::ENTIDADES_FINANCIERAS:
-                return 'entidad-financiera';
+                return 'entidades-financieras';
                 break;
 
 
