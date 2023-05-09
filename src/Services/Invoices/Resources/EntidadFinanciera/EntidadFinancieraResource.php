@@ -48,7 +48,7 @@ class EntidadFinancieraResource extends JsonResource
             "emailCliente" => $this->emailCliente,
             "cafc" => $this->cafc,
             "codigoExcepcion" => $this->codigoExcepcion,
-            "montoTotalArrendamientoFinanciero" => round($this->montoTotalArrendamientoFinanciero,2),
+            "montoTotalArrendamientoFinanciero" => isset($this->data_specific_by_sector['montoTotalArrendamientoFinanciero']) ? round($this->data_specific_by_sector['montoTotalArrendamientoFinanciero'],2) : null,
             "descuentoAdicional" => round($this->descuentoAdicional,2),
             "extras" => json_decode($this->extras)
         ];
