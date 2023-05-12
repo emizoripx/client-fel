@@ -9,9 +9,9 @@ class DetalleFacturaEntidadesFinancierasTemplateResource extends BaseDetalleTemp
     public function toArray($request)
     {
         $common = parent::toArray($request);
-        $common['cantidad'] = NumberUtils::number_format_custom($this->cantidad, 5);
-        $common['precioUnitario'] = intval($this->precioUnitario) < $this->precioUnitario ? NumberUtils::number_format_custom((float) $this->precioUnitario, 5) : NumberUtils::number_format_custom((float) $this->precioUnitario, 5);
-        $common["subTotal"] = NumberUtils::number_format_custom((float) $this->subTotal, 5);
+        $common['cantidad'] = NumberUtils::number_format_custom($this->cantidad, 2);
+        $common['precioUnitario'] = intval($this->precioUnitario) < $this->precioUnitario ? NumberUtils::number_format_custom((float) $this->precioUnitario, 2) : NumberUtils::number_format_custom((float) $this->precioUnitario, 5);
+        $common["subTotal"] = NumberUtils::number_format_custom((float) $this->subTotal, 2);
 
         return $common;
         
