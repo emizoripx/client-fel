@@ -21,7 +21,7 @@ class FacturaEntidadesFinancierasTemplateResource extends BaseTemplateResource {
             "montoTotal" => NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal , 2),
             "totalPagar" => NumberUtils::number_format_custom( (float) ($fel_invoice->montoTotal - $fel_invoice->montoGiftCard) , 2),
             "montoTotalLiteral" => to_word((float)($fel_invoice->montoTotal - $fel_invoice->montoGiftCard), 2, 1),
-            "detalles" => DetalleFacturaCompraVentaBonificacionesTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve(),
+            "detalles" => DetalleFacturaEntidadesFinancierasTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve(),
             "currencyShortCode" => "Bs",
             "subTotal" => NumberUtils::number_format_custom((float) $fel_invoice->montoTotal - (isset($fel_invoice->data_specific_by_sector['montoTotalArrendamientoFinanciero']) ?  NumberUtils::number_format_custom((float) ($fel_invoice->data_specific_by_sector['montoTotalArrendamientoFinanciero']), 2) : 0.00) + $fel_invoice->descuentoAdicional, 2) ,
         ]);
