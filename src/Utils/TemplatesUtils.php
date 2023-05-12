@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionHidrocarburos\
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVenta\FacturaCompraVentaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaCompraVentaBonificaciones\FacturaCompraVentaBonificacionesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaEngarrafadoras\FacturaEngarrafadorasTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaEntidadesFinancieras\FacturaEntidadedFinancierasTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaExportacionLibreConsignacion\FacturaExportacionLibreConsignacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosAlcanzadosIehd\FacturaHidrocarburosAlcanzadosIehdTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaHidrocarburosNoAlcanzadosIehd\FacturaHidrocarburosNoAlcanzadosIehdTemplateResource;
@@ -128,6 +129,9 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::PREVALORADA_SDCF:
                 return FacturaPrevaloradaSdcfTemplateResource::class;
+                break;
+            case TypeDocumentSector::ENTIDADES_FINANCIERAS:
+                return FacturaEntidadedFinancierasTemplateResource::class;
                 break;
 
 
