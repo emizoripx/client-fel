@@ -17,63 +17,37 @@ class ServiciosBasicosBuilder extends BaseFelInvoiceBuilder implements FelInvoic
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']){
-            $modelFelInvoice = $this->getFelInvoiceFirst();
-
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
-            
-        }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,[
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                "mes" => $this->source_data['fel_data_parsed']['mes'],
-                "gestion" => $this->source_data['fel_data_parsed']['gestion'],
-                "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
-                "zona" => $this->source_data['fel_data_parsed']['zona'],
-                "otrasTasas" => $this->source_data['fel_data_parsed']['otrasTasas'],
-                "numeroMedidor" => $this->source_data['fel_data_parsed']['numeroMedidor'],
-                "domicilioCliente" => $this->source_data['fel_data_parsed']['domicilioCliente'],
-                "consumoPeriodo" => $this->source_data['fel_data_parsed']['consumoPeriodo'],
-                "beneficiarioLey1886" => $this->source_data['fel_data_parsed']['beneficiarioLey1886'],
-                "montoDescuentoLey1886" => $this->source_data['fel_data_parsed']['montoDescuentoLey1886'],
-                "montoDescuentoTarifaDignidad" => $this->source_data['fel_data_parsed']['montoDescuentoTarifaDignidad'],
-                "tasaAseo" => $this->source_data['fel_data_parsed']['tasaAseo'],
-                "tasaAlumbrado" => $this->source_data['fel_data_parsed']['tasaAlumbrado'],
-                "ajusteNoSujetoIva" => $this->source_data['fel_data_parsed']['ajusteNoSujetoIva'],
-                "detalleAjusteNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteNoSujetoIva'],
-                "ajusteSujetoIva" => $this->source_data['fel_data_parsed']['ajusteSujetoIva'],
-                "detalleAjusteSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteSujetoIva'],
-                "otrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'],
-                "detalleOtrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleOtrosPagosNoSujetoIva'],
+                'data_specific_by_sector' => [
+                    "mes" => $this->source_data['fel_data_parsed']['mes'],
+                    "gestion" => $this->source_data['fel_data_parsed']['gestion'],
+                    "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
+                    "zona" => $this->source_data['fel_data_parsed']['zona'],
+                    "otrasTasas" => $this->source_data['fel_data_parsed']['otrasTasas'],
+                    "numeroMedidor" => $this->source_data['fel_data_parsed']['numeroMedidor'],
+                    "domicilioCliente" => $this->source_data['fel_data_parsed']['domicilioCliente'],
+                    "consumoPeriodo" => $this->source_data['fel_data_parsed']['consumoPeriodo'],
+                    "beneficiarioLey1886" => $this->source_data['fel_data_parsed']['beneficiarioLey1886'],
+                    "montoDescuentoLey1886" => $this->source_data['fel_data_parsed']['montoDescuentoLey1886'],
+                    "montoDescuentoTarifaDignidad" => $this->source_data['fel_data_parsed']['montoDescuentoTarifaDignidad'],
+                    "tasaAseo" => $this->source_data['fel_data_parsed']['tasaAseo'],
+                    "tasaAlumbrado" => $this->source_data['fel_data_parsed']['tasaAlumbrado'],
+                    "ajusteNoSujetoIva" => $this->source_data['fel_data_parsed']['ajusteNoSujetoIva'],
+                    "detalleAjusteNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteNoSujetoIva'],
+                    "ajusteSujetoIva" => $this->source_data['fel_data_parsed']['ajusteSujetoIva'],
+                    "detalleAjusteSujetoIva" => $this->source_data['fel_data_parsed']['detalleAjusteSujetoIva'],
+                    "otrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['otrosPagosNoSujetoIva'],
+                    "detalleOtrosPagosNoSujetoIva" => $this->source_data['fel_data_parsed']['detalleOtrosPagosNoSujetoIva'],
+                ]
             ],
             $this->getDetailsAndTotals()
         );
 
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

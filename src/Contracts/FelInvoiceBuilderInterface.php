@@ -7,11 +7,9 @@ use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 interface FelInvoiceBuilderInterface
 {
 
-    public function prepare(): FelInvoiceRequest;
+    public function processInput(): void;
 
-    public function processInput(): FelInvoiceRequest;
-
-    public function createOrUpdate(): void;
+    public function insertInputOriginalModel(): void;
 
     public function getFelInvoice(): FelInvoiceRequest;
     

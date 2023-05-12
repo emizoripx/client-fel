@@ -17,30 +17,9 @@ class EngarrafadorasBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']){
-            
-            $modelFelInvoice = $this->getFelInvoiceFirst();
-
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
-            
-        }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,[
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
@@ -48,16 +27,8 @@ class EngarrafadorasBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
             $this->getDetailsAndTotals()
         );
 
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
     }
-
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
-    }
-
+    
     public function getDetailsAndTotals(): array
     {
         $line_items = $this->source_data['model']->line_items;

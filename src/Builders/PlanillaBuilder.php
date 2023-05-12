@@ -17,23 +17,9 @@ class PlanillaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilder
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']) {
-          
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
-            
-        } else {
-
-            $this->fel_invoice = new FelInvoiceRequest();
-        }
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,
             [
                 "codigoMetodoPago" => 1,
@@ -49,14 +35,6 @@ class PlanillaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilder
             $this->getDetailsAndTotals()
         );
 
-        $this->fel_invoice->fill($input);
-
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate(): void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

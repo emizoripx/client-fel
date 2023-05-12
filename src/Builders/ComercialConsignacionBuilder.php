@@ -17,32 +17,21 @@ class ComercialConsignacionBuilder extends BaseFelInvoiceBuilder implements FelI
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update'])
-            $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             [
-                "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
-                "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "data_specific_by_sector" => [
+                    "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
+                    "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
+                ],
             ],
             $this->input,
             $this->getDetailsAndTotals(),
             $this->getOtrosDatos(),
         );
-
-        $this->fel_invoice->fill($input);
-
-        return $this->fel_invoice;
+        
     }
 
 
@@ -50,11 +39,6 @@ class ComercialConsignacionBuilder extends BaseFelInvoiceBuilder implements FelI
     {
 
         return [];
-    }
-
-    public function createOrUpdate(): void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

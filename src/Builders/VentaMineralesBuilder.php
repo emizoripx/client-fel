@@ -19,23 +19,16 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
 
-        if ($this->source_data['update'])
-            $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        try {
-            $input = array_merge(
-                $this->input,
-                [
+        $this->input = array_merge(
+            $this->input,
+            [
+                "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'], 2),
+                "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
+                "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "data_specific_by_sector" => [
                     "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
                     "ruex" => $this->source_data['company']->ruex,
                     "nim" => $this->source_data['company']->nim,
@@ -54,19 +47,12 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
                     "mermaValor" => $this->source_data['fel_data_parsed']["mermaValor"],
                     "kilosNetosSecos" => $this->source_data['fel_data_parsed']["kilosNetosSecos"],
                     "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
-                    "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'], 2),
-                    "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
-                    "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                ],
-                $this->getOtrosDatos(),
-                $this->getDetailsAndTotals()
-            );
+                ]
+            ],
+            $this->getOtrosDatos(),
+            $this->getDetailsAndTotals()
+        );
 
-            $this->fel_invoice->fill($input);
-        } catch (Exception $ex) {
-            \Log::info($ex->getMessage());
-        }
-        return $this->fel_invoice;
     }
 
     public function getOtrosDatos(): array
@@ -139,13 +125,4 @@ class VentaMineralesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceB
         return $this->fel_invoice;
     }
 
-    public function createOrUpdate(): void
-    {
-        try {
-
-            $this->fel_invoice->save();
-        } catch (\Throwable $th) {
-            \Log::info($th);
-        }
-    }
 }

@@ -17,39 +17,19 @@ class TurismoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']){
-            $modelFelInvoice = $this->getFelInvoiceFirst();
-
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
-            
-        }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,[
                 "montoGiftCard" => round($this->source_data['fel_data_parsed']['montoGiftCard'],2),
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                "cantidadHuespedes" => $this->source_data['fel_data_parsed']['cantidadHuespedes'],
-                "cantidadHabitaciones" => $this->source_data['fel_data_parsed']['cantidadHabitaciones'],
-                "cantidadMayores" => $this->source_data['fel_data_parsed']['cantidadMayores'],
-                "cantidadMenores" => $this->source_data['fel_data_parsed']['cantidadMenores'],
-                "fechaIngresoHospedaje" => $this->source_data['fel_data_parsed']['fechaIngresoHospedaje'],
                 "data_specific_by_sector" => [
+                    "cantidadHuespedes" => $this->source_data['fel_data_parsed']['cantidadHuespedes'],
+                    "cantidadHabitaciones" => $this->source_data['fel_data_parsed']['cantidadHabitaciones'],
+                    "cantidadMayores" => $this->source_data['fel_data_parsed']['cantidadMayores'],
+                    "cantidadMenores" => $this->source_data['fel_data_parsed']['cantidadMenores'],
+                    "fechaIngresoHospedaje" => $this->source_data['fel_data_parsed']['fechaIngresoHospedaje'],
                     "razonSocialOperadorTurismo" => $this->source_data['fel_data_parsed']['razonSocialOperadorTurismo']
                 ],
 
@@ -57,14 +37,6 @@ class TurismoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
             $this->getDetailsAndTotals()
         );
 
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

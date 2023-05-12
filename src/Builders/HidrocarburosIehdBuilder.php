@@ -17,30 +17,11 @@ class HidrocarburosIehdBuilder extends BaseFelInvoiceBuilder implements FelInvoi
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']){
-            $modelFelInvoice = $this->getFelInvoiceFirst();
-
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
-            
-        }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
-            $this->input, ['data_specific_by_sector' => [
+        $this->input = array_merge(
+            $this->input, [
+                'data_specific_by_sector' => [
                     "ciudad" => $this->source_data['fel_data_parsed']['ciudad'],
                     "nombrePropietario" => $this->source_data['fel_data_parsed']['nombrePropietario'],
                     "nombreRepresentanteLegal" => $this->source_data['fel_data_parsed']['nombreRepresentanteLegal'],
@@ -55,18 +36,8 @@ class HidrocarburosIehdBuilder extends BaseFelInvoiceBuilder implements FelInvoi
 
         $input ['data_specific_by_sector'] = array_merge( $input ['data_specific_by_sector'], [ 'montoIehd' => $input['montoIehd'] ] );
 
-        \Log::debug("Data Document: " , [$input ['data_specific_by_sector']]);
-
         unset( $input['montoIehd'] );
-
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
+      
     }
 
     public function getDetailsAndTotals(): array

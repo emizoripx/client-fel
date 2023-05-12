@@ -17,58 +17,29 @@ class NotaConciliacionBuilder extends BaseFelInvoiceBuilder implements FelInvoic
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update'])
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->whereNull('cuf')->firstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
+        // find origin invoice
+        $invoice_origin = FelInvoiceRequest::whereCuf( $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"] )->first();
 
-        return $this->fel_invoice;
-    }
+        $input = array_merge(
+            $this->input,
+            [
+                "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
+                "facturaExterna" => !is_null($invoice_origin) ? 0 : 1,
+                "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
+                "external_invoice_data" => [
+                        "numeroFacturaOriginal" => $this->source_data['fel_data_parsed']["numeroFacturaOriginal"],
+                        "codigoControl" => $this->source_data['fel_data_parsed']["codigoControl"],
+                        "fechaEmisionOriginal" => $this->source_data['fel_data_parsed']["fechaEmisionOriginal"],
+                        "montoTotalOriginal" => $this->source_data['fel_data_parsed']["montoTotalOriginal"],
+                    ],
+                "creditoFiscalIva" => $this->source_data['fel_data_parsed']["creditoFiscalIva"],
+                "debitoFiscalIva" => $this->source_data['fel_data_parsed']["debitoFiscalIva"],
+            ],
+            $this->getDetailsAndTotals()
+        );
 
-    public function processInput(): FelInvoiceRequest
-    {
-        try {
-            
-            // find origin invoice
-            $invoice_origin = FelInvoiceRequest::whereCuf( $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"] )->first();
-    
-            $input = array_merge(
-                $this->input,
-                [
-                    "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
-                    "facturaExterna" => !is_null($invoice_origin) ? 0 : 1,
-                    "numeroAutorizacionCuf" => $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"],
-                    "external_invoice_data" => [
-                            "numeroFacturaOriginal" => $this->source_data['fel_data_parsed']["numeroFacturaOriginal"],
-                            "codigoControl" => $this->source_data['fel_data_parsed']["codigoControl"],
-                            "fechaEmisionOriginal" => $this->source_data['fel_data_parsed']["fechaEmisionOriginal"],
-                            "montoTotalOriginal" => $this->source_data['fel_data_parsed']["montoTotalOriginal"],
-                        ],
-                    "creditoFiscalIva" => $this->source_data['fel_data_parsed']["creditoFiscalIva"],
-                    "debitoFiscalIva" => $this->source_data['fel_data_parsed']["debitoFiscalIva"],
-                ],
-                $this->getDetailsAndTotals()
-            );
-            \Log::debug("informacion DATA " , $input);
-            $this->fel_invoice->fill($input);
-            \Log::debug("SE TERMINA LA CREACION");
-        } catch (\Throwable $th) {
-            \Log::debug("errores ====> " . $th->getMessage());
-        }
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        try {
-            //code...
-            $this->fel_invoice->save();
-        } catch (\Throwable $ex) {
-            
-            \Log::emergency("File: " . $ex->getFile() . " Line: " . $ex->getLine() . " Message: " . $ex->getMessage());
-        }
     }
 
     public function getDetailsAndTotals(): array

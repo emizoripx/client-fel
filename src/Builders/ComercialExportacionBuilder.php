@@ -17,33 +17,24 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update'])
-            $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             [
-                "incoterm_detalle" => $this->source_data['fel_data_parsed']['incoterm_detalle'],
-                "lugarDestino" => $this->source_data['fel_data_parsed']['lugarDestino'],
-                "totalGastosNacionalesFob" => $this->source_data['fel_data_parsed']['totalGastosNacionalesFob'],
-                "totalGastosInternacionales" => $this->source_data['fel_data_parsed']['totalGastosInternacionales'],
-                "numeroDescripcionPaquetesBultos" => $this->source_data['fel_data_parsed']['numeroDescripcionPaquetesBultos'],
-                "informacionAdicional" => $this->source_data['fel_data_parsed']['informacionAdicional'],
-
-                "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
-                "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
-                "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
-                "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
+                "data_specific_by_sector" => [
+                    "incoterm_detalle" => $this->source_data['fel_data_parsed']['incoterm_detalle'],
+                    "lugarDestino" => $this->source_data['fel_data_parsed']['lugarDestino'],
+                    "totalGastosNacionalesFob" => $this->source_data['fel_data_parsed']['totalGastosNacionalesFob'],
+                    "totalGastosInternacionales" => $this->source_data['fel_data_parsed']['totalGastosInternacionales'],
+                    "numeroDescripcionPaquetesBultos" => $this->source_data['fel_data_parsed']['numeroDescripcionPaquetesBultos'],
+                    "informacionAdicional" => $this->source_data['fel_data_parsed']['informacionAdicional'],
+                    "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
+                    "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
+                    "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
+                    "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
+                ]
             ],
             $this->input,
             $this->getDetailsAndTotals(),
@@ -64,11 +55,6 @@ class ComercialExportacionBuilder extends BaseFelInvoiceBuilder implements FelIn
             "costosGastosNacionales" => $this->source_data['fel_data_parsed']['costosGastosNacionales'] != null ? json_decode($this->source_data['fel_data_parsed']['costosGastosNacionales']) : [],
             "costosGastosInternacionales" => $this->source_data['fel_data_parsed']['costosGastosInternacionales'] != null ? json_decode($this->source_data['fel_data_parsed']['costosGastosInternacionales']) : []
         ];
-    }
-
-    public function createOrUpdate(): void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

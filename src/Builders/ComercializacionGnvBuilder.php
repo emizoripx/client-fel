@@ -17,35 +17,15 @@ class ComercializacionGnvBuilder extends BaseFelInvoiceBuilder implements FelInv
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update']){
-            $modelFelInvoice = $this->getFelInvoiceFirst();
-
-            if($modelFelInvoice->codigoEstado != 690){
-                $this->fel_invoice = $modelFelInvoice; 
-            } else{
-                $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-            }
-            
-        }
-            
-        else{
-            
-            $this->fel_invoice = new FelInvoiceRequest();}
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,[
-                "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
                 "montoTotalSujetoIva" => $this->source_data['fel_data_parsed']["montoTotalSujetoIva"],
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'],2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
                 "data_specific_by_sector" => [
+                    "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
                     "tipoEnvase" => $this->source_data['fel_data_parsed']["tipoEnvase"],
                     "placaVehiculo" => $this->source_data['fel_data_parsed']["placaVehiculo"],
                     "montoVale" => $this->source_data['fel_data_parsed']["montoVale"],
@@ -54,14 +34,6 @@ class ComercializacionGnvBuilder extends BaseFelInvoiceBuilder implements FelInv
             $this->getDetailsAndTotals()
         );
 
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

@@ -4,21 +4,17 @@ namespace EmizorIpx\ClientFel\Models;
 
 use App\Models\Invoice;
 use Database\Factories\FelInvoiceRequestFactory;
-use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Services\Invoices\Invoices;
 use EmizorIpx\ClientFel\Traits\DecodeHashIds;
 use EmizorIpx\ClientFel\Traits\GetCredentialsTrait;
 use EmizorIpx\ClientFel\Traits\GetInvoiceStateTrait;
 use EmizorIpx\ClientFel\Traits\InvoiceUpdateDateTrait;
-use EmizorIpx\PrepagoBags\Exceptions\PrepagoBagsException;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
 use Exception;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use stdClass;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Jobs\BiocenterStatusNotification;
 use EmizorIpx\ClientFel\Jobs\GetInvoiceStatus;
@@ -137,34 +133,6 @@ class FelInvoiceRequest extends Model
         return is_array($result) ?  $result : $result['original'];
     }
 
-    public function saveCuf($value) 
-    {
-        \Log::debug("Saving CUF......");
-        if(!is_null($value)){
-            
-            $this->cuf = $value;
-
-            $this->save();
-        }
-
-        return $this;
-    }
-    public function saveAckTicket($value) 
-    {
-        \Log::debug("Saving AckTicket......");
-        if(! is_null($value)){
-            $this->ack_ticket = $value;
-            $this->save();
-        }
-        \Log::debug("Save AckTicket......");
-    }
-    public function saveUrlSin($value) 
-    {
-        if(!is_null($value)){
-            $this->urlSin = $value;
-        }
-        return $this;
-    }
     public function getUrlSin() 
     {
         $url = $this->urlSin ?? "qr no valido";
@@ -204,43 +172,6 @@ class FelInvoiceRequest extends Model
             $this->estado = $this->getInvoiceState($value);
         }
         return $this;
-    }
-    public function savePackageId($value){
-        $this->package_id = $value;
-        return $this;
-    }
-    public function saveIndexPackage($value){
-        $this->index_package = $value;
-        return $this;
-    }
-    public function saveUuidPackage($value){
-        $this->uuid_package = $value;
-        return $this;
-    }
-
-    public function saveEmisionDate($fechaEmision){
-        $this->fechaEmision = $fechaEmision;
-        return $this;
-    }
-
-    public function saveStatusCode($value){
-        if(!is_null($value)){
-
-            $this->codigoEstado = $value;
-        }
-        return $this;
-    }
-
-    public function saveSINErrors($value){
-        $this->errores = $value;
-        return $this;
-    }
-    public function saveRevocationReasonCode($value){
-        $this->revocation_reason_code = $value;
-        return $this;
-    }
-    public function getRevocationReasonCode(){
-        return $this->revocation_reason_code;
     }
     public function getDeletedAt(){
         return $this->deleted_at;
@@ -293,14 +224,7 @@ class FelInvoiceRequest extends Model
 
         return $this;
     }
-    public function saveXmlUrl($value){
-        
-        if( !is_null($value)){
-            $this->xml_url = $value;
-        }
 
-        return $this;
-    }
     /**
      * Get the prepagoAccount instance
      *
@@ -509,6 +433,7 @@ class FelInvoiceRequest extends Model
 
     public function sendVerifyStatus()
     {
+        return ["codigoEstado" => 690, "estado" => 'VALIDO'];
         \Log::debug("LA FACTURA ESTA CON ESTADO : " . $this->codigoEstado);
 
         // if (  in_array($this->codigoEstado,[690, 908]) && is_null($this->revocation_reason_code)  ) {
@@ -528,7 +453,7 @@ class FelInvoiceRequest extends Model
                 $response = $invoice_service->getResponse();
             try {
                 $estadoAntiguo = $this->estado;
-                $this->saveStatusCode($response['codigoEstado']);
+                $this->codigoEstado = $response['codigoEstado'];
                 $this->estado = $response['estado'];
                 if (!empty($response) && isset($response['errores'])) {
                     $this->errores = $response['errores'];
@@ -729,7 +654,7 @@ class FelInvoiceRequest extends Model
     public function getBranchByCode()
     {
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
-        \Log::debug( " Get Branch Code - Company ID:  ". $hashid->decode($this->company_id)[0]);
+        
         return FelBranch::whereCompanyId($hashid->decode($this->company_id)[0])->whereCodigo(strval($this->codigoSucursal))->first();
     }
     public function getLeyenda()

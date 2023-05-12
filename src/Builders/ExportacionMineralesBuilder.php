@@ -18,57 +18,43 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        \Log::debug("ingresando ya con la data : " . json_encode($this->source_data['fel_data_parsed']));
-        if ($this->source_data['update'])
-            $this->fel_invoice = $this->getFelInvoiceFirstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
 
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        try{
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,
             [
-                "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
-                "ruex" => $this->source_data['company']->ruex,
-                "nim" => $this->source_data['company']->nim,
-                "concentradoGranel" => $this->source_data['fel_data_parsed']["concentradoGranel"],
-                "origen" => $this->source_data['fel_data_parsed']["origen"],
-                "puertoTransito" => $this->source_data['fel_data_parsed']["puertoTransito"],
-                "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
-                "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
-                "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
-                "tipoCambioANB" => $this->source_data['fel_data_parsed']["tipoCambioANB"],
-                "numeroLote" => $this->source_data['fel_data_parsed']["numeroLote"],
-                "kilosNetosHumedos" => $this->source_data['fel_data_parsed']["kilosNetosHumedos"],
-                "humedadPorcentaje" => $this->source_data['fel_data_parsed']["humedadPorcentaje"],
-                "humedadValor" => $this->source_data['fel_data_parsed']["humedadValor"],
-                "mermaPorcentaje" => $this->source_data['fel_data_parsed']["mermaPorcentaje"],
-                "mermaValor" => $this->source_data['fel_data_parsed']["mermaValor"],
-                "kilosNetosSecos" => $this->source_data['fel_data_parsed']["kilosNetosSecos"],
-                "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
                 "descuentoAdicional" => round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2),
                 "cafc" => $this->source_data['fel_data_parsed']['cafc'],
-                "pesoBrutoGr" => $this->source_data['fel_data_parsed']['pesoBrutoGr'],
-                "pesoBrutoKg" => $this->source_data['fel_data_parsed']['pesoBrutoKg'],
-                "pesoNetoGr" => $this->source_data['fel_data_parsed']['pesoNetoGr'],
-                "numeroContrato" => $this->source_data['fel_data_parsed']['numeroContrato'],
+                "data_specific_by_sector" => [
+                    "direccionComprador" => $this->source_data['fel_data_parsed']["direccionComprador"],
+                    "ruex" => $this->source_data['company']->ruex,
+                    "nim" => $this->source_data['company']->nim,
+                    "concentradoGranel" => $this->source_data['fel_data_parsed']["concentradoGranel"],
+                    "origen" => $this->source_data['fel_data_parsed']["origen"],
+                    "puertoTransito" => $this->source_data['fel_data_parsed']["puertoTransito"],
+                    "puertoDestino" => $this->source_data['fel_data_parsed']["puertoDestino"],
+                    "paisDestino" => $this->source_data['fel_data_parsed']["paisDestino"],
+                    "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
+                    "tipoCambioANB" => $this->source_data['fel_data_parsed']["tipoCambioANB"],
+                    "numeroLote" => $this->source_data['fel_data_parsed']["numeroLote"],
+                    "kilosNetosHumedos" => $this->source_data['fel_data_parsed']["kilosNetosHumedos"],
+                    "humedadPorcentaje" => $this->source_data['fel_data_parsed']["humedadPorcentaje"],
+                    "humedadValor" => $this->source_data['fel_data_parsed']["humedadValor"],
+                    "mermaPorcentaje" => $this->source_data['fel_data_parsed']["mermaPorcentaje"],
+                    "mermaValor" => $this->source_data['fel_data_parsed']["mermaValor"],
+                    "kilosNetosSecos" => $this->source_data['fel_data_parsed']["kilosNetosSecos"],
+                    "gastosRealizacion" => $this->source_data['fel_data_parsed']["gastosRealizacion"],
+                    "pesoBrutoGr" => $this->source_data['fel_data_parsed']['pesoBrutoGr'],
+                    "pesoBrutoKg" => $this->source_data['fel_data_parsed']['pesoBrutoKg'],
+                    "pesoNetoGr" => $this->source_data['fel_data_parsed']['pesoNetoGr'],
+                    "numeroContrato" => $this->source_data['fel_data_parsed']['numeroContrato'],
+                ]
             ],
             $this->getOtrosDatos(),
             $this->getDetailsAndTotals()
         );
-   
-        $this->fel_invoice->fill($input);
-        }catch (Exception $ex) {
-            \Log::info($ex->getMessage());
-        }
-        return $this->fel_invoice;
+
     }
 
     public function getOtrosDatos(): array
@@ -149,16 +135,6 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     public function getFelInvoice(): FelInvoiceRequest
     {
         return $this->fel_invoice;
-    }
-
-    public function createOrUpdate(): void
-    {
-        try {
-            
-            $this->fel_invoice->save();
-        } catch (\Throwable $th) {
-            \Log::info($th);
-        }
     }
     
 }

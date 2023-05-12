@@ -18,24 +18,12 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
+    public function processInput(): void
     {
-        if ($this->source_data['update'])
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->firstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
-    {
-        // find origin invoice
-        $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
         $this->input['fechaEmision'] = Carbon::parse($this->input['fechaEmision'])->toDateTimeString();
 
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,
             [
                 "codigoMetodoPago" => 1,
@@ -49,23 +37,6 @@ class NotaRecepcionBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             $this->getDetailsAndTotals()
         );
         
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
-
-    public function createOrUpdate():void
-    {
-        try {
-
-            $this->fel_invoice->save();
-    
-        } catch( \Exception $ex ) {
-
-            \Log::debug("Error al guardar nota de recepción: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
-
-        }
-
     }
 
     public function getDetailsAndTotals(): array

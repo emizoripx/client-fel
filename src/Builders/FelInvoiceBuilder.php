@@ -13,12 +13,8 @@ class FelInvoiceBuilder {
 
         $builder->processInput();
         
-        try{
-            $builder->createOrUpdate();
-        }catch(Exception $ex) {
-            \Log::debug($ex->getMessage());
-        }
-        
+        $builder->insertInputOriginalModel();
+
         $builder->changeOriginalTotal($builder->getFelInvoice());
 
         return $builder->getFelInvoice();

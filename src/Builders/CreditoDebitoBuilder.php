@@ -17,22 +17,12 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
         parent::__construct($data);
     }
 
-    public function prepare(): FelInvoiceRequest
-    {
-        if ($this->source_data['update'])
-            $this->fel_invoice = FelInvoiceRequest::whereIdOrigin($this->source_data['model']->id)->whereNull('cuf')->firstOrFail();
-        else
-            $this->fel_invoice = new FelInvoiceRequest();
-
-        return $this->fel_invoice;
-    }
-
-    public function processInput(): FelInvoiceRequest
+    public function processInput(): void
     {
         // find origin invoice
         $invoice_origin = FelInvoiceRequest::whereCuf( $this->source_data['fel_data_parsed']["numeroAutorizacionCuf"] )->first();
 
-        $input = array_merge(
+        $this->input = array_merge(
             $this->input,
             [
                 "factura_original_id" => !is_null($invoice_origin) ? $invoice_origin->id_origin : null,
@@ -48,15 +38,7 @@ class CreditoDebitoBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBu
             ],
             $this->getDetailsAndTotals()
         );
-        
-        $this->fel_invoice->fill($input);
-        
-        return $this->fel_invoice;
-    }
 
-    public function createOrUpdate():void
-    {
-        $this->fel_invoice->save();
     }
 
     public function getDetailsAndTotals(): array

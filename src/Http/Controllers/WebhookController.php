@@ -30,31 +30,6 @@ class WebhookController extends BaseController
             'xml_url' => $request->input('xml_url', null),
             'facturaTicket' => $request->input('fiscalDocumentCode', null),
         ];
-
-        // if (isset($data['package_id'])) {
-        //     \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK PACKAGES *******************************************************');
-
-        //     \Log::debug($request->all());
-        //     \Log::debug("WEBHOOK-CONTROLLER UPDATE PACKAGE ID");
-        //     $felInvoice = FelInvoiceRequest::withTrashed()->where('cuf', $data['cuf'])->first();
-
-        //     if (!empty($felInvoice)) {
-        //         \Log::debug("WEBHOOK-CONTROLLER UPDATE INVOICE ID #" . $felInvoice->cuf);
-        //         $felInvoice->savePackageId($data['package_id'])
-        //             ->saveState($data['state'])
-        //             ->saveStatusCode($data['status_code'])
-        //             ->saveIndexPackage($data['index_package'])
-        //             ->saveUrlSin($data['urlSin'])
-        //             ->saveEmisionType($data['emission_type'])
-        //             ->saveXmlUrl($data['xml_url'])
-        //             ->saveAddressInvoice($data['direccion'])
-        //             ->saveUuidPackage($data['uuid_package'])
-        //             ->save();
-        //         \Log::debug('WEBHOOK-CONTROLLER FIN CALLBACK PACKAGES *******************************************************');
-        //     } else {
-        //         \Log::debug('WEBHOOK-CONTROLLER invoice package was not found');
-        //     }
-        // } else{
             \Log::debug('WEBHOOK-CONTROLLER INICIO CALLBACK INVOICE *******************************************************');
 
             if ( !is_null($data['facturaTicket']) ) {
@@ -89,8 +64,5 @@ class WebhookController extends BaseController
                 $invoiceUpdate->touchPdf();
             }
             \Log::debug('WEBHOOK-CONTROLLER FIN CALLBACK INVOICE *******************************************************');
-
-        // }
-
     }
 }

@@ -91,7 +91,7 @@ class InvoiceController extends BaseController
                 throw new ClientFelException("Factura no encontrada");
             }
 
-            if(!is_null($felInvoiceRequest->getRevocationReasonCode())){
+            if(!is_null($felInvoiceRequest->revocation_reason_code)){
                 throw new ClientFelException("La Factura ya fue anulada");
             }
 

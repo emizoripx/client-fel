@@ -5,7 +5,6 @@ use App\Models\RecurringInvoice;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelCaption;
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
-use EmizorIpx\ClientFel\Models\Parametric\SectorDocumentTypes;
 use EmizorIpx\ClientFel\Repository\FelClientRepository;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use EmizorIpx\ClientFel\Utils\TypeInvoice;
@@ -222,6 +221,46 @@ class BaseFelInvoiceBuilder {
 
         return $fel_invoice;
 
+    }
+
+    public function insertInputOriginalModel()
+    {
+        $modelInvoice = $this->source_data['model'];
+        $modelInvoice->factura_ticket = $this->input['factura_ticket'];
+        $modelInvoice->type_document_sector_id = $this->input['type_document_sector_id'];
+        $modelInvoice->type_invoice = $this->input['type_invoice'];
+        $modelInvoice->codigoMetodoPago = $this->input['codigoMetodoPago'];
+        $modelInvoice->fechaEmision = $this->input['fechaEmision'];
+        $modelInvoice->codigoPuntoVenta = $this->input['codigoPuntoVenta'];
+        $modelInvoice->codigoSucursal = $this->input['codigoSucursal'];
+        $modelInvoice->nombreRazonSocial = $this->input['nombreRazonSocial'];
+        $modelInvoice->codigoTipoDocumentoIdentidad = $this->input['codigoTipoDocumentoIdentidad'];
+        $modelInvoice->numeroDocumento = $this->input['numeroDocumento'];
+        $modelInvoice->complemento = $this->input['complemento'];
+        $modelInvoice->emailCliente = $this->input['emailCliente'];
+        $modelInvoice->telefonoCliente = $this->input['telefonoCliente'];
+        $modelInvoice->cafc = $this->input['cafc'];
+        $modelInvoice->typeDocument = $this->input['typeDocument'];
+        $modelInvoice->codigoExcepcion = $this->input['codigoExcepcion'];
+        $modelInvoice->codigoMoneda = $this->input['codigoMoneda'];
+        $modelInvoice->codigoCliente = $this->input['codigoCliente'];
+        $modelInvoice->codigoLeyenda = $this->input['codigoLeyenda'];
+        $modelInvoice->usuario = $this->input['usuario'];
+        $modelInvoice->extras = $this->input['extras'];
+        $modelInvoice->numeroAutorizacionCuf = $this->input['numeroAutorizacionCuf'];
+        $modelInvoice->factura_original_id = $this->input['factura_original_id'];
+        $modelInvoice->facturaExterna = $this->input['facturaExterna'];
+        $modelInvoice->descuentoAdicional = $this->input['descuentoAdicional'];
+        $modelInvoice->montoGiftCard = $this->input['montoGiftCard'];
+        $modelInvoice->montoTotalSujetoIva = $this->input['montoTotalSujetoIva'];
+        $modelInvoice->montoTotal = $this->input['montoTotal'];
+        $modelInvoice->montoTotalMoneda = $this->input['montoTotalMoneda'];
+        $modelInvoice->tipoCambio = $this->input['tipoCambio'];
+        $modelInvoice->montoDescuentoCreditoDebito = $this->input['montoDescuentoCreditoDebito'];
+        $modelInvoice->montoEfectivoCreditoDebito = $this->input['montoEfectivoCreditoDebito'];
+        $modelInvoice->data_specific_by_sector = isset($this->input['data_specific_by_sector']) ? $this->input['data_specific_by_sector'] : [];
+        $modelInvoice->line_items = collect($modelInvoice->line_items)->merge($this->input['detalles']);
+        $modelInvoice->saveQuietly();
     }
 
 }
