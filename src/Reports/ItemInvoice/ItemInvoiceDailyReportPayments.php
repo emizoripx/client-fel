@@ -7,7 +7,7 @@ use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
-
+use Carbon\Carbon;
 class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterface
 {
 
@@ -231,6 +231,7 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
             "additional_data" => null,
             "username" => $this->user->name(),
             "date" => date("d/m/Y", $this->from),
+            "fecha_reporte" => Carbon::now()->timezone('America/La_Paz')->toDateTimeString(),
             "totals" => $totales,
             "total" => $total,
             "literal" => to_word((float)($total), 2, 1),
