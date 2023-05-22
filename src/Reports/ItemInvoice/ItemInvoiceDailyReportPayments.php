@@ -91,7 +91,7 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
 
     public function generateReport()
     {
-
+        info("Generando reporte MOVIMIENTO DIARIO COTEOR PAYMENTS");
         $from = date('Y-m-d', $this->from_date) . " 00:00:00";
         $to = date("Y-m-d", $this->to_date) . " 23:59:59";
 
