@@ -7,7 +7,7 @@ use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
-
+use Carbon\Carbon;
 class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterface
 {
 
@@ -91,7 +91,7 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
 
     public function generateReport()
     {
-
+        info("Generando reporte MOVIMIENTO DIARIO COTEOR PAYMENTS");
         $from = date('Y-m-d', $this->from_date) . " 00:00:00";
         $to = date("Y-m-d", $this->to_date) . " 23:59:59";
 
@@ -231,6 +231,7 @@ class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterfa
             "additional_data" => null,
             "username" => $this->user->name(),
             "date" => date("d/m/Y", $this->from),
+            "fecha_reporte" => Carbon::now()->timezone('America/La_Paz')->format("d/m/Y h:i a"),
             "totals" => $totales,
             "total" => $total,
             "literal" => to_word((float)($total), 2, 1),

@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use EmizorIpx\ClientFel\Models\FelSyncProduct;
 use Hashids\Hashids;
 
-class ItemInvoiceDailyReportPayments extends BaseReport implements ReportInterface
+class ItemInvoiceDailyReportPaymentsOld extends BaseReport implements ReportInterface
 {
 
     protected $branch_code;
