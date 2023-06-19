@@ -80,12 +80,8 @@ class BaseFelInvoiceBuilder {
             $felrepo->update($fel_client_data, $model->client);
         }
 
-        $caption_id = null;
-        if ( is_null($fel_data_parsed['caption_id']) ) {
-            $caption_id = FelCaption::whereCompanyId($model->company_id)->orderBy(\DB::raw('rand()'))->first()->codigo;
-        }else {
-            $caption_id = $fel_data_parsed['caption_id'];
-        }
+        $caption_id = FelCaption::whereCompanyId($model->company_id)->orderBy(\DB::raw('rand()'))->first()->codigo;
+
 
         $extras = isset($fel_data_parsed['extras']) ? $fel_data_parsed['extras'] : [];
 
