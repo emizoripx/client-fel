@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Company;
 use App\Models\Invoice;
 
 class MigrationClientFelTables
@@ -13,7 +12,7 @@ class MigrationClientFelTables
     public function run()
     {
 
-        info("inicio de script sql");
+        // info("inicio de script sql");
         // \DB::statement(\DB::raw("update invoices left join fel_invoice_requests on fel_invoice_requests.id_origin = invoices.id set 
         //     invoices.factura_ticket = fel_invoice_requests.factura_ticket,
         //     invoices.numeroFactura = fel_invoice_requests.numeroFactura,
@@ -81,7 +80,7 @@ class MigrationClientFelTables
         //     )
         // );
 
-        // // transfer products
+        // // // transfer products
         // \DB::statement(
         //     \DB::raw(
         //         "
@@ -149,7 +148,7 @@ class MigrationClientFelTables
             array_merge(
                 $common,
                 [
-                    "razonSocialOperadorTurismo"
+                    // "razonSocialOperadorTurismo"
                 ]
             ),
             // 7.- COMERCIALIZACION_ALIMENTOS_SEGURIDAD
@@ -196,8 +195,8 @@ class MigrationClientFelTables
             ]),
             // 14.- PRODUCTOS_ALCANZADOS_ICE  
             array_merge($common,[
-                "montoIceEspecifico",
-                "montoIcePorcentual"
+                // "montoIceEspecifico",
+                // "montoIcePorcentual"
             ]),
             // 15.- ENTIDADES_FINANCIERAS  
             array_merge($common,[
@@ -227,7 +226,6 @@ class MigrationClientFelTables
             // 20.- EXPORTACION_MINERALES  
             array_merge($common,[
                 "lugarDestino",
-                "incotermDetalle",
                 "direccionComprador",
                 "concentradoGranel",
                 "origen",
@@ -244,11 +242,6 @@ class MigrationClientFelTables
                 "mermaPorcentaje",
                 "kilosNetosSecos",
                 "gastosRealizacion",
-                "monedaTransaccional",
-                "fleteInternoUSD",
-                "valorFobFrontera",
-                "valorPlata",
-                "valorFobFronteraBs",
                 "pesoBrutoGr",
                 "pesoBrutoKg",
                 "pesoNetoGr",
@@ -275,11 +268,6 @@ class MigrationClientFelTables
                 "mermaPorcentaje",
                 "kilosNetosSecos",
                 "gastosRealizacion",
-                "monedaTransaccional",
-                "fleteInternoUSD",
-                "valorFobFrontera",
-                "valorPlata",
-                "valorFobFronteraBs",
                 "liquidacion_preliminar",
                 "iva",
                 "otrosDatos",
@@ -333,7 +321,8 @@ class MigrationClientFelTables
             $common,
         ];
 
-        $documents_available = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,34,35,36,37,38, 46, 51];
+        // $documents_available = [1, 2, 3, 5, 6, 8, 11, 14, 17, 20, 21, 22, 24, 29, 35];
+        $documents_available = [ 21, 22, 24, 29, 35];
         foreach ($documents_available as $sector_id) {
 
             $this->processInvoices($addicional_columns, $sector_id);

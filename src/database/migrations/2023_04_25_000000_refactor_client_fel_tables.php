@@ -96,6 +96,42 @@ class RefactorClientFelTables extends Migration
             $table->string("codigo_nandina");
             $table->json("additional_data");
         });
+
+
+        Schema::table('recurring_invoices', function (Blueprint $table) {
+            // columns for searching
+            $table->unsignedInteger('type_document_sector_id')->nullable();
+            $table->unsignedInteger('codigoMetodoPago');
+            $table->unsignedInteger('codigoPuntoVenta');
+            $table->unsignedInteger('codigoSucursal');
+            $table->string('nombreRazonSocial');
+            $table->unsignedInteger('codigoTipoDocumentoIdentidad');
+            $table->string('numeroDocumento');
+            $table->string('complemento');
+            $table->string('emailCliente');
+            $table->string('telefonoCliente');
+            $table->unsignedInteger('codigoMoneda');
+            $table->unsignedInteger('codigoCliente');
+            $table->string('codigoLeyenda');
+
+            // totales
+            $table->decimal('descuentoAdicional', 20, 8);
+            $table->decimal('montoGiftCard', 20, 8)->nullable();
+            $table->decimal('montoTotalSujetoIva', 20, 8)->nullable();
+            $table->decimal('montoTotal', 20, 8)->nullable();
+            $table->decimal('montoTotalMoneda', 20, 8)->nullable();
+            $table->decimal('tipoCambio', 20, 8)->nullable();
+
+            
+            $table->string('numeroTarjeta')->nullable();
+            $table->string('codigoActividad')->nullable();
+      
+
+            $table->json('detalles');
+            
+            // columns in JSON
+            $table->json('data_specific_by_sector');
+        });
     }
 
     /**

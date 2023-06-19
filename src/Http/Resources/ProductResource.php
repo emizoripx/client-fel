@@ -35,7 +35,7 @@ class ProductResource extends JsonResource
             "codigo_producto_sin" => (string)$this->codigo_producto_sin,
             "codigo_unidad" => (string)$this->codigo_unidad,
             "nombre_unidad" => $this->nombre_unidad,
-            "id_origin" => $this->encodePrimaryKey($this->id_origin),
+            "id_origin" => $this->encodePrimaryKey($this->id),
             "company_id" => $this->company_id,
             "id" => (int)$this->id,
         ]);
