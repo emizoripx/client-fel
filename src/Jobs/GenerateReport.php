@@ -93,8 +93,11 @@ class GenerateReport implements ShouldQueue
     public function handle()
     {
         set_time_limit ( 980 );
-        ini_set('memory_limit', '256M');
-        \Log::debug("GENERATE REPORT JOBS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INIT >>>>>>> 10 html 2");
+        ini_set('memory_limit', '512M');
+        $from = date('Y-m-d', $this->request->has('from_date')) . " 00:00:00";
+        $to = date("Y-m-d", $this->request->has('to_date')) . " 23:59:59";
+        $timestamp = "GENERATE_REPORT ID=" . $this->report_record_id." >>> " ;
+        \Log::debug($timestamp."DATA REPORT=" . $this->entity . "COMPANY_ID=" . $this->company_id . " USER=" . $this->user->id . "USERNAME=" . $this->user->name . "REPORT_ID=" . "RANGE=(from:" . $from . " to:" . $to . ")");
 
         try {
 
@@ -114,16 +117,14 @@ class GenerateReport implements ShouldQueue
 
             $report_class = ExportUtils::getClassReport($this->entity);
 
-            \Log::debug("Report Type: "  . $report_class);
+            \Log::debug($timestamp . "render class = ". $report_class);
             
             $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user, $this->headers_csv);
-
+            \Log::debug($timestamp . "start processing report");
             $this->invoices = $service_report->generateReport();
-
+            \Log::debug($timestamp . "get invoices data");
             $user_settings = $this->user->token()->cu->settings;
-
-            \Log::debug("User Settings TYpe: " . gettype($user_settings));
-            \Log::debug("User Settings: " . json_encode($user_settings));
+            \Log::debug($timestamp . " user setting = ". json_encode($user_settings));
 
             if( isset($user_settings) && isset($user_settings->report_enable_pdf_type) && $user_settings->report_enable_pdf_type == 1 && $this->entity == ExportUtils::ITEMS_ENTITY ) {
 
@@ -134,11 +135,11 @@ class GenerateReport implements ShouldQueue
             }
 
             if( strpos($this->template_path, 'blade.php') != false ) {
-                info("DATOS DEL TEMPLATE  => " . $this->template_path);
+                \Log::debug($timestamp . "template PDF = " . $this->template_path);
                 $this->type_file_pdf = true;
 
             }
-    
+            \Log::debug($timestamp . "processing type format = " . $this->type_format_report);
             switch ($this->type_format_report) {
 
                 case 'csv':
@@ -152,17 +153,17 @@ class GenerateReport implements ShouldQueue
                     $this->processTemplateFormat();
                     break;
             }
-
+            \Log::debug($timestamp . "finish type format");
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'status' => 3,
                 'report_date' => Carbon::now()->timezone('America/La_Paz')->toDateString(),
             ]);
-
+            \Log::debug($timestamp . "start upload");
             UploadReport::dispatch( $this->company_nit, $this->entity, $this->report_name_path, $this->filename, $this->report_record_id );
 
         
         } catch ( Exception $ex ) {
-            \Log::debug("Error al Generar Reporte: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
+            \Log::error($timestamp ."Error al Generar Reporte: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'status' => 4,
             ]);
