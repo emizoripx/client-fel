@@ -97,7 +97,7 @@ class GenerateReport implements ShouldQueue
         $from = date('Y-m-d', $this->request->has('from_date')) . " 00:00:00";
         $to = date("Y-m-d", $this->request->has('to_date')) . " 23:59:59";
         $timestamp = "GENERATE_REPORT ID=" . $this->report_record_id." >>> " ;
-        \Log::debug($timestamp."DATA REPORT=" . $this->entity . "COMPANY_ID=" . $this->company_id . " USER=" . $this->user->id . "USERNAME=" . $this->user->name . "REPORT_ID=" . "RANGE=(from:" . $from . " to:" . $to . ")");
+        \Log::debug($timestamp."DATA REPORT=" . $this->entity . "COMPANY_ID=" . $this->company_id . " USER=" . $this->user->id . "USERNAME=" . $this->user->first_name." ". $this->user->last_name . "REPORT_ID=" . "RANGE=(from:" . $from . " to:" . $to . ")");
 
         try {
 
