@@ -49,7 +49,7 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
         $query_base = $this->addDateFilter($query_base);
         $query_base = $query_base->select('fel_invoice_requests.id', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.fechaEmision');
 
-
+        $query_invoices = \DB::table('fel_invoice_requests')->select('fel_invoice_requests.id');
         $query_invoices = $query_invoices
             ->mergeBindings($query_base)
             ->join(
