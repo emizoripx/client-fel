@@ -123,7 +123,7 @@ class FelReportController extends BaseController
                         })
                         ->select('fel_report_requests.company_id', 'fel_report_requests.entity', 'fel_report_requests.status', 'fel_report_requests.s3_filepath', 'fel_report_requests.report_date', 'fel_report_requests.registered_at', 'fel_report_requests.start_process_at', 'fel_report_requests.completed_at', 'users.first_name', 'users.last_name', 'fel_report_requests.user_id')
                         ->orderBy('fel_report_requests.created_at', 'DESC')
-                        ->get();
+                        ->paginate(30);
 
             return response()->json([
                 'success' => true,
