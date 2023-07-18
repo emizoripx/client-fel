@@ -108,10 +108,19 @@ class Sobodaycom {
       
         $felinvoice = $felInvoiceRequest->invoice_origin();
         $resourceClass = TemplatesUtils::getClassResourceByDocumentSector(1);
-
         $invoice = new $resourceClass($felinvoice);
+        $data = $invoice->resolve();
+        $obj = $data['sobodaycom'];
+        $concatenate = function($x) use($obj) {
+            return isset($obj->{$x}) ?  collect($obj->{$x})->map(function($d){ return $d->description; })->implode(",") :"";
+        };
+
+        $data['grupos_artistas'] =  $concatenate('grupos_artistas');
+        $data['eventos_rubros'] =   $concatenate('eventos_rubros');
+        $data['medios_transmisiones'] = $concatenate('medios_transmisiones');
+
         $content = file_get_contents("https://emizorv5.s3.amazonaws.com/autorizacion_template.blade.php");
-        $render_template = Blade::render($content, ['fiscalDocument' => $invoice->resolve()]);
+        $render_template = Blade::render($content, ['fiscalDocument' => $data]);
         return $render_template;
     }
 }
