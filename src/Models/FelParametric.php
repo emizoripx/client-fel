@@ -152,7 +152,7 @@ class FelParametric
                 }
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
-                if ($company_id == 568) { // COTEOR IN PRODUCTION
+                if ($company_id == 568 || $company_id == 288) { // COTEOR, sobodaycom IN PRODUCTION
                     $query = PaymentMethod::whereIn('codigo', [1, 3, 7, 8])->orderBy('descripcion');
                 } else {
                     $query = PaymentMethod::orderBy('descripcion');

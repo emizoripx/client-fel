@@ -6,6 +6,7 @@ use EmizorIpx\ClientFel\Http\Resources\Sobodaycom\SobodaycomCategoryCustomCollec
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Utils\TemplatesUtils;
 use Illuminate\Support\Facades\Blade;
+use Beganovich\Snappdf\Snappdf;
 class Sobodaycom {
 
     public $request; 
@@ -110,17 +111,15 @@ class Sobodaycom {
         $resourceClass = TemplatesUtils::getClassResourceByDocumentSector(1);
         $invoice = new $resourceClass($felinvoice);
         $data = $invoice->resolve();
-        $obj = $data['sobodaycom'];
-        $concatenate = function($x) use($obj) {
-            return isset($obj->{$x}) ?  collect($obj->{$x})->map(function($d){ return $d->description; })->implode(",") :"";
-        };
-
-        $data['grupos_artistas'] =  $concatenate('grupos_artistas');
-        $data['eventos_rubros'] =   $concatenate('eventos_rubros');
-        $data['medios_transmisiones'] = $concatenate('medios_transmisiones');
-
+ 
         $content = file_get_contents("https://emizorv5.s3.amazonaws.com/autorizacion_template.blade.php");
-        $render_template = Blade::render($content, ['fiscalDocument' => $data]);
-        return $render_template;
+
+        $html = Blade::render($content, ['fiscalDocument' => $data]);
+
+        $pdf = new Snappdf();
+
+        $generated = $pdf->setHtml($html)->generate();
+
+        return $generated;
     }
 }
