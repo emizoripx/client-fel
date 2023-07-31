@@ -118,7 +118,7 @@ class Sobodaycom {
 
         $pdf = new Snappdf();
 
-        $generated = $pdf->setHtml($html)->generate();
+        $generated = $pdf->setHtml(str_replace('%24', '$', $html))->generate();
 
         return $generated;
     }
