@@ -17,19 +17,21 @@ class Sobodaycom {
 
     public function index()
     {
-        $data = $this->request->only(['category','search','per_page']);
-        info("ingresando data " , $data);
-        $per_page = empty($data['per_page'])?10: $data['per_page'];
+        $data = $this->request->only(['category','search','per_page','updated_at']);
 
-        if (empty($data['search']) || is_null($data['search']) ) {
-            $data = \DB::table('sobodaycom_categories')
-            ->where('category', $data['category'])
-            ->paginate($per_page);    
-        }else {
-            $data = \DB::table('sobodaycom_categories')
-            ->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '") and category = "' . $data['category'].'"')
-                ->paginate($per_page);
+        $updated_at = empty($data['updated_at'])?0: $data['updated_at'];
+        $per_page = empty($data['per_page'])?10: $data['per_page'];
+        
+        $updated_at = date('Y-m-d H:i:s', $updated_at);
+
+        $data = \DB::table('sobodaycom_categories')
+                    ->where('category', $data['category']);
+        
+        if (!empty($data['search'])) {
+            $data = $data->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '")');
         }
+
+        $data = $data->where('updated_at','>=', $updated_at)->paginate($per_page);    
 
         return new SobodaycomCategoryCustomCollectionResource($data);
     }

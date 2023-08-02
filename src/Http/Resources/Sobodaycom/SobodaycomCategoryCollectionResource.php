@@ -17,7 +17,8 @@ class SobodaycomCategoryCollectionResource extends JsonResource
         $result = [
             'id' => $this->id,
             'description' => $this->description,
-            'type' => $this->type
+            'type' => $this->type,
+            'updated_at' => $this->updated_at,
         ];
       
         return $result;
