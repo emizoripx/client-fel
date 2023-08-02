@@ -18,6 +18,7 @@ class Sobodaycom {
     public function index()
     {
         $data = $this->request->only(['category','search','per_page']);
+        info("ingresando data " , $data);
         $per_page = empty($data['per_page'])?10: $data['per_page'];
 
         if (empty($data['search']) || is_null($data['search']) ) {
