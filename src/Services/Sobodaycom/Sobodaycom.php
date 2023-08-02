@@ -24,16 +24,16 @@ class Sobodaycom {
         
         $updated_at = date('Y-m-d H:i:s', $updated_at);
 
-        $data = \DB::table('sobodaycom_categories')
+        $query = \DB::table('sobodaycom_categories')
                     ->where('category', $data['category']);
         
         if (!empty($data['search'])) {
-            $data = $data->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '")');
+            $query = $query->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '")');
         }
 
-        $data = $data->where('updated_at','>=', $updated_at)->paginate($per_page);    
+        $query = $query->where('updated_at','>=', $updated_at)->paginate($per_page);    
 
-        return new SobodaycomCategoryCustomCollectionResource($data);
+        return new SobodaycomCategoryCustomCollectionResource($query);
     }
 
     public function store() 
