@@ -17,7 +17,8 @@ class Sobodaycom {
 
     public function index()
     {
-        $data = $this->request->only(['category','search']);
+        $data = $this->request->only(['category','search','per_page']);
+        $per_page = empty($data['per_page'])?10: $data['per_page'];
 
         if (empty($data['search']) || is_null($data['search']) ) {
             $data = \DB::table('sobodaycom_categories')
@@ -26,7 +27,7 @@ class Sobodaycom {
         }else {
             $data = \DB::table('sobodaycom_categories')
             ->whereRaw('MATCH (description) AGAINST ("' . $data['search'] . '") and category = "' . $data['category'].'"')
-                ->paginate();
+                ->paginate($per_page);
         }
 
         return new SobodaycomCategoryCustomCollectionResource($data);
