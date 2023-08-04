@@ -20,7 +20,8 @@ class SobodaycomInformationAgentsResource extends JsonResource
     {
 
         info("este es l objeto " . json_encode($this->resource->extras). " TIPO : " . gettype($this->resource->extras));
-        $obj = $this->resource->extras->sobodaycom;
+        $obj_decoded = json_decode($this->resource->extras);
+        $obj = $obj_decoded->sobodaycom;
         $concatenate = function ($x) use ($obj) {
             return isset($obj->{$x}) ?  collect($obj->{$x})->map(function ($d) {
                 return $d->description;
