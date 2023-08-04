@@ -19,8 +19,8 @@ class SobodaycomInformationAgentsResource extends JsonResource
     public function toArray($request)
     {
 
+        info("este es l objeto " . json_encode($this->resource['extras']). " TIPO : " . gettype($this->resource['extras']));
         $obj = $this->resource['extras']['sobodaycom'];
-        info("este es l objeto " . json_encode($obj). " TIPO : " . gettype($obj));
         $concatenate = function ($x) use ($obj) {
             return isset($obj->{$x}) ?  collect($obj->{$x})->map(function ($d) {
                 return $d->description;
