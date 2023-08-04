@@ -36,7 +36,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
             "nombreRazonSocial" => $this->resource->nombreRazonSocial,
             "eventoRubro" => $concatenate('eventos_rubros'),
             "lugarEvento" => $this->resource->client_name,
-            "fechaEvento" => $$obj->fecha_evento,
+            "fechaEvento" => $obj->fecha_evento,
             "artisasGrupos" => $concatenate('grupos_artistas'),
             "medioTransmision" => $concatenate('medios_transmisiones'),
             "importeTotal" => NumberUtils::number_format_custom( $this->resource->montoTotal, 2),
