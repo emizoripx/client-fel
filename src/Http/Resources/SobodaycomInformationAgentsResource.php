@@ -19,7 +19,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
     public function toArray($request)
     {
 
-        $obj = $$this->resource['extras']['sobodaycom'];
+        $obj = $this->resource['extras']['sobodaycom'];
         $concatenate = function ($x) use ($obj) {
             return isset($obj->{$x}) ?  collect($obj->{$x})->map(function ($d) {
                 return $d->description;
