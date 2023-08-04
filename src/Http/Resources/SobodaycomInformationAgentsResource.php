@@ -20,7 +20,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
     {
 
         info("este es l objeto " . json_encode($this->resource->extras). " TIPO : " . gettype($this->resource->extras));
-        $obj = $this->resource['extras']['sobodaycom'];
+        $obj = $this->resource->extras->sobodaycom;
         $concatenate = function ($x) use ($obj) {
             return isset($obj->{$x}) ?  collect($obj->{$x})->map(function ($d) {
                 return $d->description;
@@ -28,17 +28,17 @@ class SobodaycomInformationAgentsResource extends JsonResource
         };
 
         return [
-            "num" => $this->resource['num'],
-            "numeroFactura" => $this->resource['numeroFactura'],
-            "numeroAutorización" => $this->resource['cuf'],
-            "numeroDocumento" => $this->resource['numeroDocumento'],
-            "nombreRazonSocial" => $this->resource['nombreRazonSocial'],
+            "num" => $this->resource->num,
+            "numeroFactura" => $this->resource->numeroFactura,
+            "numeroAutorización" => $this->resource->cuf,
+            "numeroDocumento" => $this->resource->numeroDocumento,
+            "nombreRazonSocial" => $this->resource->nombreRazonSocial,
             "eventoRubro" => $concatenate('eventos_rubros'),
-            "lugarEvento" => $this->resource['client_name'],
+            "lugarEvento" => $this->resource->client_name,
             "fechaEvento" => $$obj->fecha_evento,
             "artisasGrupos" => $concatenate('grupos_artistas'),
             "medioTransmision" => $concatenate('medios_transmisiones'),
-            "importeTotal" => NumberUtils::number_format_custom( $this->resource['montoTotal'], 2),
+            "importeTotal" => NumberUtils::number_format_custom( $this->resource->montoTotal, 2),
         ];
     }
 }
