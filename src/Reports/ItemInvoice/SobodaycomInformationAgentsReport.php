@@ -80,7 +80,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
                 "Artista ó grupos musicales",
                 "Importe total",
             ],
-            "invoices" => SobodaycomInformationAgentsResource::collection($query_invoices)->resolve()
+            "items" => SobodaycomInformationAgentsResource::collection($query_invoices)->resolve()
         ];
     }
 }
