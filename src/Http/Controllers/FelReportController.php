@@ -141,7 +141,7 @@ class FelReportController extends BaseController
 
     }
 
-    public function getAnnualReport()
+    public function getTrimestralReport()
     {
 
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
