@@ -143,7 +143,7 @@ class FelReportController extends BaseController
 
     public function getTrimestralReport()
     {
-        $company = $user->company();
+        $company = auth()->user()->company();
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
             $access_branches = auth()->user()->getOnlyBranchAccess();
             if (in_array(0, $access_branches)) {
