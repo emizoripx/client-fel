@@ -144,6 +144,18 @@ class FelReportController extends BaseController
     public function getTrimestralReport()
     {
         $company = auth()->user()->company();
+
+        $today = Carbon::now();
+        $lastThreeMonths = [];
+
+        for ($i = 0; $i < 3; $i++) {
+            $lastThreeMonths[] = $today->format('Y-m');
+            $today->subMonth();
+        }
+
+        $lastThreeMonths = array_reverse($lastThreeMonths);
+        $dates = '(' . implode(', ', $lastThreeMonths) . ')';
+        
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
             $access_branches = auth()->user()->getOnlyBranchAccess();
             if (in_array(0, $access_branches)) {
@@ -158,16 +170,6 @@ class FelReportController extends BaseController
             $branches = '(' . implode(', ', $formattedNumbers) . ')';
 
 
-            $today = Carbon::now();
-            $lastThreeMonths = [];
-
-            for ($i = 0; $i < 3; $i++) {
-                $lastThreeMonths[] = $today->format('Y-m');
-                $today->subMonth();
-            }
-
-            $lastThreeMonths = array_reverse($lastThreeMonths);
-            $dates = '(' . implode(', ', $lastThreeMonths) . ')';
 
             return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
