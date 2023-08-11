@@ -172,27 +172,27 @@ class FelReportController extends BaseController
             return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
                 FROM invoices
-                where company_id = :company_id
+                where company_id = '. $company->id .'
                 and exists (
                     select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = :company_id and codigoSucursal in :codigo_sucursal
+                    and company_id = ' . $company->id . ' and codigoSucursal in '.$branches.'
                 ) 
-                and yearmonth in :dates
+                and yearmonth in '.$dates.'
                 GROUP BY yearmonth;
-            '), ['company_id' => $company->id, 'dates' => $dates, 'codigo_sucursal' => $branches]);
+            '));
 
         }
-        return \DB::select(\DB::raw('
+         return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
                 FROM invoices
-                where company_id = :company_id
+                where company_id = '. $company->id .'
                 and exists (
                     select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = :company_id
+                    and company_id = ' . $company->id . ' 
                 ) 
-                and yearmonth in :dates
+                and yearmonth in '.$dates.'
                 GROUP BY yearmonth;
-            '), ['company_id' => $company->id, 'dates' => $dates]);
+            '));
 
     }
     
