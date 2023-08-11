@@ -150,7 +150,7 @@ class FelReportController extends BaseController
         $lastThreeMonths = [];
 
         for ($i = 0; $i < 3; $i++) {
-            $lastThreeMonths[] = $today->format('Y-m');
+            $lastThreeMonths[] = '"' . $today->format('Y-m') . '"';
             $today->subMonth();
         }
 
