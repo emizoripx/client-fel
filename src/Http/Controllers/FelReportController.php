@@ -145,7 +145,7 @@ class FelReportController extends BaseController
     {
         $company = auth()->user()->company();
         $timestamps = "GET_TRIMESTRAL_REPORT => ". $company->settings->name . " >> ";
-        info($timestamps . "usuario > " . json_encode(auth()->user));
+        info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
         $today = Carbon::now();
         $lastThreeMonths = [];
 
