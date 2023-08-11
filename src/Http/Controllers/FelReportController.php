@@ -143,7 +143,7 @@ class FelReportController extends BaseController
 
     public function getTrimestralReport()
     {
-
+        $company = $user->company();
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
             $access_branches = auth()->user()->getOnlyBranchAccess();
             if (in_array(0, $access_branches)) {
@@ -179,7 +179,7 @@ class FelReportController extends BaseController
                 ) 
                 and yearmonth in :dates
                 GROUP BY yearmonth;
-            '), ['company_id' => $this->company->id, 'dates' => $dates, 'codigo_sucursal' => $branches]);
+            '), ['company_id' => $company->id, 'dates' => $dates, 'codigo_sucursal' => $branches]);
 
         }
         return \DB::select(\DB::raw('
@@ -192,7 +192,7 @@ class FelReportController extends BaseController
                 ) 
                 and yearmonth in :dates
                 GROUP BY yearmonth;
-            '), ['company_id' => $this->company->id, 'dates' => $dates]);
+            '), ['company_id' => $company->id, 'dates' => $dates]);
 
     }
     
