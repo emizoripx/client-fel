@@ -140,5 +140,60 @@ class FelReportController extends BaseController
         }
 
     }
+
+    public function getAnnualReport()
+    {
+
+        if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
+            $access_branches = auth()->user()->getOnlyBranchAccess();
+            if (in_array(0, $access_branches)) {
+                array_push($access_branches, 1);
+            }
+            $formattedNumbers = [];
+
+            foreach ($access_branches as $number) {
+                $formattedNumbers[] = '"' . $number . '"';
+            }
+
+            $branches = '(' . implode(', ', $formattedNumbers) . ')';
+
+
+            $today = Carbon::now();
+            $lastThreeMonths = [];
+
+            for ($i = 0; $i < 3; $i++) {
+                $lastThreeMonths[] = $today->format('Y-m');
+                $today->subMonth();
+            }
+
+            $lastThreeMonths = array_reverse($lastThreeMonths);
+            $dates = '(' . implode(', ', $lastThreeMonths) . ')';
+
+            return \DB::select(DB::raw('
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = :company_id
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = :company_id and codigoSucursal in :codigo_sucursal
+                ) 
+                and yearmonth in :dates
+                GROUP BY yearmonth;
+            '), ['company_id' => $this->company->id, 'dates' => $dates, 'codigo_sucursal' => $branches]);
+
+        }
+        return \DB::select(DB::raw('
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = :company_id
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = :company_id
+                ) 
+                and yearmonth in :dates
+                GROUP BY yearmonth;
+            '), ['company_id' => $this->company->id, 'dates' => $dates]);
+
+    }
     
 }

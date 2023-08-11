@@ -27,6 +27,11 @@ class ElectronicInvoice
                 Route::post('generate', 'FelReportController@getGenerateReport');
 
             });
+            Route::prefix('graphic-reports')->group(function () {
+                
+                Route::post('annual', 'FelReportController@getAnnualReport');
+
+            });
         });
     }
 }
