@@ -221,5 +221,85 @@ class FelReportController extends BaseController
             '));
 
     }
+
+    public function getAnualReport()
+    {
+        $company = auth()->user()->company();
+        $timestamps = "GET_ANUAL_REPORT => " . $company->settings->name . " >> ";
+        info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
+        $today = Carbon::now();
+        $year = $today->year;
+        $monthsOfYear = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthsOfYear[] = '"' . $year . '-' . str_pad($i, 2, '0', STR_PAD_LEFT) . '"';
+        }
+
+        $dates = '(' . implode(', ', $monthsOfYear) . ')';
+
+
+        info($timestamps . "fechas obtenidas => " . $dates);
+        if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
+            info($timestamps . "El usuario no es administardor");
+            $access_branches = auth()->user()->getOnlyBranchAccess();
+            if (in_array(0, $access_branches)) {
+                array_push($access_branches, 1);
+            }
+            $formattedNumbers = [];
+
+            foreach ($access_branches as $number) {
+                $formattedNumbers[] = '"' . $number . '"';
+            }
+
+            $branches = '(' . implode(', ', $formattedNumbers) . ')';
+            info($timestamps . " sucursal -> " . $branches);
+            info($timestamps . '
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = ' . $company->id . '
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = ' . $company->id . ' and codigoSucursal in ' . $branches . '
+                ) 
+                and yearmonth in ' . $dates . '
+                GROUP BY yearmonth;
+            ');
+
+            return \DB::select(\DB::raw('
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = ' . $company->id . '
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = ' . $company->id . ' and codigoSucursal in ' . $branches . '
+                ) 
+                and yearmonth in ' . $dates . '
+                GROUP BY yearmonth;
+            '));
+        }
+        info($timestamps . '
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = ' . $company->id . '
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = ' . $company->id . ' 
+                ) 
+                and yearmonth in ' . $dates . '
+                GROUP BY yearmonth;
+            ');
+
+        return \DB::select(\DB::raw('
+                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                FROM invoices
+                where company_id = ' . $company->id . '
+                and exists (
+                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = ' . $company->id . ' 
+                ) 
+                and yearmonth in ' . $dates . '
+                GROUP BY yearmonth;
+            '));
+    }
     
 }

@@ -30,6 +30,7 @@ class ElectronicInvoice
             Route::prefix('graphic-reports')->group(function () {
                 
                 Route::post('trimestral', 'FelReportController@getTrimestralReport');
+                Route::post('anual', 'FelReportController@getAnualReport');
 
             });
         });
