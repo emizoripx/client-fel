@@ -169,7 +169,7 @@ class FelReportController extends BaseController
             $lastThreeMonths = array_reverse($lastThreeMonths);
             $dates = '(' . implode(', ', $lastThreeMonths) . ')';
 
-            return \DB::select(DB::raw('
+            return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
                 FROM invoices
                 where company_id = :company_id
@@ -182,7 +182,7 @@ class FelReportController extends BaseController
             '), ['company_id' => $this->company->id, 'dates' => $dates, 'codigo_sucursal' => $branches]);
 
         }
-        return \DB::select(DB::raw('
+        return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
                 FROM invoices
                 where company_id = :company_id
