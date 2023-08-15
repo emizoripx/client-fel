@@ -171,8 +171,8 @@ class FelReportController extends BaseController
 
             $branches = '(' . implode(', ', $formattedNumbers) . ')';
             info($timestamps . " sucursal -> " . $branches);
-            info($timestamps .'
-                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+            info($timestamps . '
+                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
                 FROM invoices
                 where company_id = ' . $company->id . '
                 and exists (
@@ -184,7 +184,7 @@ class FelReportController extends BaseController
             ');
 
             return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
                 FROM invoices
                 where company_id = '. $company->id .'
                 and exists (
@@ -196,8 +196,8 @@ class FelReportController extends BaseController
             '));
 
         }
-        info($timestamps .'
-                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+        info($timestamps . '
+                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
                 FROM invoices
                 where company_id = ' . $company->id . '
                 and exists (
@@ -209,7 +209,7 @@ class FelReportController extends BaseController
             ');
 
          return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(amount),2) AS total_payment, round(SUM(amount-balance),2) AS total_debts
+                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
                 FROM invoices
                 where company_id = '. $company->id .'
                 and exists (
