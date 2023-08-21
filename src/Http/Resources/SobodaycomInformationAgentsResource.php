@@ -19,7 +19,6 @@ class SobodaycomInformationAgentsResource extends JsonResource
     public function toArray($request)
     {
 
-        info("este es l objeto " . json_encode($this->resource->extras). " TIPO : " . gettype($this->resource->extras));
         $obj_decoded = json_decode($this->resource->extras);
         $obj = $obj_decoded->sobodaycom;
         $concatenate = function ($x) use ($obj) {
@@ -34,12 +33,12 @@ class SobodaycomInformationAgentsResource extends JsonResource
             "numeroAutorización" => $this->resource->cuf,
             "numeroDocumento" => $this->resource->numeroDocumento,
             "nombreRazonSocial" => $this->resource->nombreRazonSocial,
-            "eventoRubro" => $concatenate('eventos_rubros'),
+            "eventoRubro" => isset($concatenate('eventos_rubros')) ? $concatenate('eventos_rubros') : "",
             "lugarEvento" => $this->resource->client_name,
-            "fechaEvento" => $obj->fecha_evento,
-            "artisasGrupos" => $concatenate('grupos_artistas'),
-            "medioTransmision" => $concatenate('medios_transmisiones'),
-            "importeTotal" => NumberUtils::number_format_custom( $this->resource->montoTotal, 2),
+            "fechaEvento" => isset($obj->fecha_evento) ? $obj->fecha_evento : "",
+            "artisasGrupos" => isset($concatenate('grupos_artistas')) ? $concatenate('grupos_artistas') : "",
+            "medioTransmision" => isset($concatenate('medios_transmisiones')) ? $concatenate('medios_transmisiones') : "",
+            "importeTotal" => NumberUtils::number_format_custom($this->resource->montoTotal, 2),
         ];
     }
 }
