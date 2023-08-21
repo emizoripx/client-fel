@@ -28,7 +28,7 @@ class ElectronicInvoice
 
             });
             Route::prefix('graphic-reports')->group(function () {
-                Route::post('{}', 'FelReportController@getGraphicReports');
+                Route::post('{period}', 'FelReportController@getGraphicReports');
             });
         });
     }
