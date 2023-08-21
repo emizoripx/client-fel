@@ -150,7 +150,7 @@ class FelReportController extends BaseController
                 return $this->graphicReport(2);
             case 'trimestral':
                 return $this->graphicReport(3);
-            case 'Semestral':
+            case 'semestral':
                 return $this->graphicReport(6);
             case 'anual':
                 return $this->graphicReport(12);
@@ -161,7 +161,7 @@ class FelReportController extends BaseController
     }
 
 
-    private function getLastXMonths($number_months)
+    private function getLastXMonths($month_number)
     {
         $getMonth = function ($month_number) {
             $months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -177,7 +177,7 @@ class FelReportController extends BaseController
                 break;
 
             $lastMonths[] = '"' . $today->format('Y-m') . '"';
-            $months_available[] = $getMonth($today->format('m'));
+            $months_available[$today->format('Y-m')] = $getMonth($today->format('m')) . " " . $year;
             $today->subMonth();
         }
         $dates = '(' . implode(', ', array_reverse($lastMonths)) . ')';
@@ -188,13 +188,13 @@ class FelReportController extends BaseController
     public function graphicReport($number_months)
     {
         $company = auth()->user()->company();
-        $timestamps = "GET_GRAPHIC_REPORT => ". $company->settings->name . " >> MONTHS = " . $month_number." >>";
+        $timestamps = "GET_GRAPHIC_REPORT => ". $company->settings->name . " >> MONTHS = " . $number_months." >>";
         info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
        
         $x_last_months = $this->getLastXMonths($number_months);
         $dates = $x_last_months[0];
         $months_available = $x_last_months[1];
-
+        $branches = "";
         info($timestamps . "fechas obtenidas => " . $dates );
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
             info($timestamps . "El usuario no es administardor");
@@ -234,31 +234,34 @@ class FelReportController extends BaseController
             '));
     }
 
-    private function transform($result, $months_available)
+    private function transform($report_result, $months_available)
     {
-        
-        $months = $months_available;
-
-        // Create an associative array with month keys and initialized values
         $formattedResult = [];
-        foreach ($months as $monthIndex => $monthName) {
-            $formattedResult[$months[$monthIndex] . " " . explode("-", $result[0]->mes)[0]] = [
-                "mes" => $months[$monthIndex] . " " . explode("-", $result[0]->mes)[0],
+
+        foreach($months_available as $code => $m) {
+            $formattedResult[$code] = [
+                "mes" => $m,
                 "total_debts" => "0.00",
                 "total_payment" => "0.00",
+                "total" => "0.00",
             ];
         }
-
-        // Fill in the actual data for the last month
-        $lastMonth = $months[intval(explode("-", $result[0]->mes)[1]) - 1] . " " . explode("-", $result[0]->mes)[0];
-        $formattedResult[$lastMonth] = [
-            "mes" => $lastMonth,
-            "total_debts" => number_format((float)$result[0]->total_debts, 2, '.', ''),
-            "total_payment" => number_format((float)$result[0]->total_payment, 2, '.', ''),
+        
+        foreach ($formattedResult as $key => $value) {
+            foreach ($report_result as $rr) {
+                if ($key == $rr->mes) {
+                    $formattedResult[$key]["total_debts"] = $rr->total_debts;
+                    $formattedResult[$key]["total_payment"] = $rr->total_payment;
+                    $formattedResult[$key]["total"] = round(($rr->total_payment+ $rr->total_debts),2);
+                }
+            }
+        }
+        return [
+            "data" => array_values($formattedResult),
+            "total_debts" => collect($formattedResult)->sum('total_debts'),
+            "total_payment" => collect($formattedResult)->sum('total_payment'),
+            "total" => collect($formattedResult)->sum('total'),
         ];
-
-        return array_values($formattedResult); // Reset array keys
-    
     }
     
 }
