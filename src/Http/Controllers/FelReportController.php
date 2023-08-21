@@ -141,21 +141,60 @@ class FelReportController extends BaseController
 
     }
 
-    public function getTrimestralReport()
+    public function getGraphicReports(Request $request, $period)
     {
-        $company = auth()->user()->company();
-        $timestamps = "GET_TRIMESTRAL_REPORT => ". $company->settings->name . " >> ";
-        info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
-        $today = Carbon::now();
-        $lastThreeMonths = [];
+        switch ($period) {
+            case 'mensual':
+                return $this->graphicReport(1);
+            case 'bimestral':
+                return $this->graphicReport(2);
+            case 'trimestral':
+                return $this->graphicReport(3);
+            case 'Semestral':
+                return $this->graphicReport(6);
+            case 'anual':
+                return $this->graphicReport(12);
+            default:
+                return [];
+                break;
+        }
+    }
 
-        for ($i = 0; $i < 3; $i++) {
-            $lastThreeMonths[] = '"' . $today->format('Y-m') . '"';
+
+    private function getLastXMonths($number_months)
+    {
+        $getMonth = function ($month_number) {
+            $months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            return $months[intval($month_number) - 1];
+        };
+
+        $today = Carbon::now()->timezone("America/La_Paz");
+        $year = $today->format("Y");
+        $lastMonths = [];
+
+        for ($i = 0; $i < $month_number; $i++) {
+            if ($year != $today->format("Y"))
+                break;
+
+            $lastMonths[] = '"' . $today->format('Y-m') . '"';
+            $months_available[] = $getMonth($today->format('m'));
             $today->subMonth();
         }
+        $dates = '(' . implode(', ', array_reverse($lastMonths)) . ')';
+        return [$dates, array_reverse($months_available)];
+    }
 
-        $lastThreeMonths = array_reverse($lastThreeMonths);
-        $dates = '(' . implode(', ', $lastThreeMonths) . ')';
+
+    public function graphicReport($number_months)
+    {
+        $company = auth()->user()->company();
+        $timestamps = "GET_GRAPHIC_REPORT => ". $company->settings->name . " >> MONTHS = " . $month_number." >>";
+        info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
+       
+        $x_last_months = $this->getLastXMonths($number_months);
+        $dates = $x_last_months[0];
+        $months_available = $x_last_months[1];
+
         info($timestamps . "fechas obtenidas => " . $dates );
         if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
             info($timestamps . "El usuario no es administardor");
@@ -171,135 +210,55 @@ class FelReportController extends BaseController
 
             $branches = '(' . implode(', ', $formattedNumbers) . ')';
             info($timestamps . " sucursal -> " . $branches);
-            info($timestamps . '
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = ' . $company->id . '
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' and codigoSucursal in ' . $branches . '
-                ) 
-                and yearmonth in ' . $dates . '
-                GROUP BY yearmonth;
-            ');
-
-            return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = '. $company->id .'
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' and codigoSucursal in '.$branches.'
-                ) 
-                and yearmonth in '.$dates.'
-                GROUP BY yearmonth;
-            '));
+            $branches = ' and codigoSucursal in ' . $branches;
 
         }
-        info($timestamps . '
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = ' . $company->id . '
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' 
-                ) 
-                and yearmonth in ' . $dates . '
-                GROUP BY yearmonth;
-            ');
 
-         return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = '. $company->id .'
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' 
-                ) 
-                and yearmonth in '.$dates.'
-                GROUP BY yearmonth;
-            '));
+        $result = $this->getQuery($company->id, $dates, $branches);
+        return $this->transform($result, $months_available);
 
     }
 
-    public function getAnualReport()
+    private function getQuery($company_id, $dates, $branches = "" )
     {
-        $company = auth()->user()->company();
-        $timestamps = "GET_ANUAL_REPORT => " . $company->settings->name . " >> ";
-        info($timestamps . "usuario > " . json_encode(auth()->user()->name()));
-        $today = Carbon::now();
-        $year = $today->year;
-        $monthsOfYear = [];
-
-        for ($i = 1; $i <= 12; $i++) {
-            $monthsOfYear[] = '"' . $year . '-' . str_pad($i, 2, '0', STR_PAD_LEFT) . '"';
-        }
-
-        $dates = '(' . implode(', ', $monthsOfYear) . ')';
-
-
-        info($timestamps . "fechas obtenidas => " . $dates);
-        if (!auth()->user()->isAdmin() && !auth()->user()->isOwner()) {
-            info($timestamps . "El usuario no es administardor");
-            $access_branches = auth()->user()->getOnlyBranchAccess();
-            if (in_array(0, $access_branches)) {
-                array_push($access_branches, 1);
-            }
-            $formattedNumbers = [];
-
-            foreach ($access_branches as $number) {
-                $formattedNumbers[] = '"' . $number . '"';
-            }
-
-            $branches = '(' . implode(', ', $formattedNumbers) . ')';
-            info($timestamps . " sucursal -> " . $branches);
-            info($timestamps . '
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = ' . $company->id . '
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' and codigoSucursal in ' . $branches . '
-                ) 
-                and yearmonth in ' . $dates . '
-                GROUP BY yearmonth;
-            ');
-
-            return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = ' . $company->id . '
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' and codigoSucursal in ' . $branches . '
-                ) 
-                and yearmonth in ' . $dates . '
-                GROUP BY yearmonth;
-            '));
-        }
-        info($timestamps . '
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = ' . $company->id . '
-                and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' 
-                ) 
-                and yearmonth in ' . $dates . '
-                GROUP BY yearmonth;
-            ');
-
         return \DB::select(\DB::raw('
                 SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
                 FROM invoices
-                where company_id = ' . $company->id . '
+                where company_id = '.$company_id.'
                 and exists (
                     select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company->id . ' 
+                    and company_id = '.$company_id . $branches . '
                 ) 
                 and yearmonth in ' . $dates . '
                 GROUP BY yearmonth;
             '));
+    }
+
+    private function transform($result, $months_available)
+    {
+        
+        $months = $months_available;
+
+        // Create an associative array with month keys and initialized values
+        $formattedResult = [];
+        foreach ($months as $monthIndex => $monthName) {
+            $formattedResult[$months[$monthIndex] . " " . explode("-", $result[0]->mes)[0]] = [
+                "mes" => $months[$monthIndex] . " " . explode("-", $result[0]->mes)[0],
+                "total_debts" => "0.00",
+                "total_payment" => "0.00",
+            ];
+        }
+
+        // Fill in the actual data for the last month
+        $lastMonth = $months[intval(explode("-", $result[0]->mes)[1]) - 1] . " " . explode("-", $result[0]->mes)[0];
+        $formattedResult[$lastMonth] = [
+            "mes" => $lastMonth,
+            "total_debts" => number_format((float)$result[0]->total_debts, 2, '.', ''),
+            "total_payment" => number_format((float)$result[0]->total_payment, 2, '.', ''),
+        ];
+
+        return array_values($formattedResult); // Reset array keys
+    
     }
     
 }
