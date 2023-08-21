@@ -62,7 +62,6 @@ class ComprobanteDiarioUnslpReport extends BaseReport implements ReportInterface
             ->leftJoin("clients", 'invoices.client_id', 'clients.id')
             ->leftJoin("group_settings", 'group_settings.id', 'clients.group_settings_id')
             ->whereNotNull('fel_invoice_requests.estado');
-        $query_invoices = $this->addDateFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
         return [
             "header" => $this->headers_csv,
