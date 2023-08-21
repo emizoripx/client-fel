@@ -63,6 +63,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
             ->leftJoin("invoices", 'fel_invoice_requests.id_origin', 'invoices.id')
             ->leftJoin("clients", 'invoices.client_id', 'clients.id')
             ->whereNotNull('fel_invoice_requests.estado');
+        info("========================================");
         $query_invoices = $this->addDateFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
         $query_invoices = $query_invoices->get();
