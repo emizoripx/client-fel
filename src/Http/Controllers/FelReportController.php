@@ -143,17 +143,25 @@ class FelReportController extends BaseController
 
     public function getGraphicReports(Request $request, $period)
     {
+        $branch_code = $request->get('branch_code',null);
+        
+        if (!preg_match('/^[0-9]+$/', $branch_code)) {
+            $branch_code = null;
+        }else {
+            $branch_code = intval($branch_code);
+        } 
+        
         switch ($period) {
             case 'mensual':
-                return $this->graphicReport(1);
+                return $this->graphicReport(1, $branch_code);
             case 'bimestral':
-                return $this->graphicReport(2);
+                return $this->graphicReport(2, $branch_code);
             case 'trimestral':
-                return $this->graphicReport(3);
+                return $this->graphicReport(3, $branch_code);
             case 'semestral':
-                return $this->graphicReport(6);
+                return $this->graphicReport(6, $branch_code);
             case 'anual':
-                return $this->graphicReport(12);
+                return $this->graphicReport(12, $branch_code);
             default:
                 return [];
                 break;
@@ -185,7 +193,7 @@ class FelReportController extends BaseController
     }
 
 
-    public function graphicReport($number_months)
+    public function graphicReport($number_months, $branch_code = null)
     {
         $company = auth()->user()->company();
         $timestamps = "GET_GRAPHIC_REPORT => ". $company->settings->name . " >> MONTHS = " . $number_months." >>";
@@ -208,10 +216,18 @@ class FelReportController extends BaseController
                 $formattedNumbers[] = '"' . $number . '"';
             }
 
-            $branches = '(' . implode(', ', $formattedNumbers) . ')';
-            info($timestamps . " sucursal -> " . $branches);
-            $branches = ' and codigoSucursal in ' . $branches;
+            if (!is_null($branch_code) && in_array($branch_code, $access_branches)) {
+                $branches = ' and codigoSucursal = "' . $branch_code . '"';
+            } else {
+                $branches = '(' . implode(', ', $formattedNumbers) . ')';
+                info($timestamps . " sucursal -> " . $branches);
+                $branches = ' and codigoSucursal in ' . $branches;
+            }
 
+        } else {
+            if (!is_null($branch_code)) {
+                $branches = ' and codigoSucursal = "' . $branch_code . '"';
+            }
         }
 
         $result = $this->getQuery($company->id, $dates, $branches);
