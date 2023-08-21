@@ -21,9 +21,11 @@ class SobodaycomInformationAgentsResource extends JsonResource
         $obj_decoded = json_decode($this->resource->extras);
         $obj = $obj_decoded->sobodaycom;
         $concatenate = function ($x) use ($obj) {
-            return isset($obj->{$x}) ?  collect($obj->{$x})->map(function ($d) {
+            return isset($obj->{$x}) ?  
+            collect($obj->{$x})->map(function ($d) {
                 return $d->description;
-            })->implode(",") : null;
+            })->implode(",") : 
+            "";
         };
 
         return [
@@ -32,11 +34,11 @@ class SobodaycomInformationAgentsResource extends JsonResource
             "numeroAutorización" => $this->resource->cuf,
             "numeroDocumento" => $this->resource->numeroDocumento,
             "nombreRazonSocial" => $this->resource->nombreRazonSocial,
-            "eventoRubro" => null !== $concatenate('eventos_rubros') ? $concatenate('eventos_rubros') : "",
+            "eventoRubro" => $concatenate('eventos_rubros'),
             "lugarEvento" => $this->resource->client_name,
             "fechaEvento" => isset($obj->fecha_evento) ? $obj->fecha_evento : "",
-            "artisasGrupos" => null !== $concatenate('grupos_artistas') ? $concatenate('grupos_artistas') : "",
-            "medioTransmision" => null !== $concatenate('medios_transmisiones') ? $concatenate('medios_transmisiones') : "",
+            "artisasGrupos" => $concatenate('grupos_artistas'),
+            "medioTransmision" => $concatenate('medios_transmisiones'),
             "importeTotal" => NumberUtils::number_format_custom($this->resource->montoTotal, 2),
         ];
     }
