@@ -244,7 +244,7 @@ class FelReportController extends BaseController
                 and exists (
                     select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
                     and company_id = '.$company_id . $branches . '
-                    and (fel_invoice_requests.codigoEstado is null or fel_invoice_requests.codigoEstado != 902)
+                    and (fel_invoice_requests.codigoEstado is null or fel_invoice_requests.codigoEstado not in (691,902))
                 ) 
                 and yearmonth in ' . $dates . '
                 GROUP BY yearmonth;
