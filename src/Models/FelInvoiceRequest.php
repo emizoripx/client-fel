@@ -811,4 +811,28 @@ class FelInvoiceRequest extends Model
         return null;
     }
 
+    public static function getStatusText($status)
+    {
+        $common_class = "inline-flex items-center px-3 py-2 rounded-full gap-x-2 text-red-500 text-sm font-normal ";
+        
+        $valid ='<div class="'.$common_class. ' text-emerald-500 bg-emerald-100/60 dark:bg-gray-800"><h2>Válido</h2> </div>';
+        $rejected = '<div class="' . $common_class . ' text-red-500 bg-red-100/60 dark:bg-gray-800"><h2>Rechazado</h2> </div>';
+        $pending = '<div class="' . $common_class . ' text-orange-500 bg-orange-100/60"><h2></h2> </div>';
+        $sn = '<div class="' . $common_class . ' "><h2></h2> </div>';
+                    
+
+        if ($status == 902) {
+            return $rejected;
+        }
+
+        if ($status == "") {
+            return $sn;
+        }
+
+        if ($status == 690) {
+            return $valid;
+        }
+        
+    }
+
 }

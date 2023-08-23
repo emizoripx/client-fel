@@ -244,13 +244,13 @@ class FelReportController extends BaseController
                 and exists (
                     select 1 from fel_invoice_requests 
                     where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = ' . $company_id .'
+                    and company_id = ' . $company_id . '
                     and exists (
                     	select 1 from fel_invoice_requests 
-                    	where fel_invoice_requests.id = fel_invoice_requests.id 
+                    	where fel_invoice_requests.id_origin = invoices.id 
                     	 and exists (
 	                    	select 1 from fel_invoice_requests 
-	                    	where fel_invoice_requests.id = fel_invoice_requests.id 
+	                    	where fel_invoice_requests.id_origin = invoices.id 
 	                    	' . $branches . '
                     	)
                     	and company_id = ' . $company_id .'	
