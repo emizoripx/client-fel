@@ -238,13 +238,25 @@ class FelReportController extends BaseController
     private function getQuery($company_id, $dates, $branches = "" )
     {
         return \DB::select(\DB::raw('
-                SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
-                FROM invoices
-                where company_id = '.$company_id.'
+            SELECT yearmonth as mes , round(SUM(balance),2) AS total_debts, round(SUM(amount-balance),2) AS total_payment
+              FROM invoices
+                where company_id = ' . $company_id .'
                 and exists (
-                    select 1 from fel_invoice_requests where fel_invoice_requests.id_origin = invoices.id
-                    and company_id = '.$company_id . $branches . '
-                    and (fel_invoice_requests.codigoEstado is null or fel_invoice_requests.codigoEstado not in (691,902))
+                    select 1 from fel_invoice_requests 
+                    where fel_invoice_requests.id_origin = invoices.id
+                    and company_id = ' . $company_id .'
+                    and exists (
+                    	select 1 from fel_invoice_requests 
+                    	where fel_invoice_requests.id = fel_invoice_requests.id 
+                    	 and exists (
+	                    	select 1 from fel_invoice_requests 
+	                    	where fel_invoice_requests.id = fel_invoice_requests.id 
+	                    	' . $branches . '
+                    	)
+                    	and company_id = ' . $company_id .'	
+                    	and (fel_invoice_requests.codigoEstado is null or fel_invoice_requests.codigoEstado not in ( 691, 902) )
+                    )
+                    and fel_invoice_requests.estado is not null
                 ) 
                 and yearmonth in ' . $dates . '
                 GROUP BY yearmonth;
