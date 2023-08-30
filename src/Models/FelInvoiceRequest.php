@@ -623,20 +623,21 @@ class FelInvoiceRequest extends Model
 
     public function setNumeroFactura($numeroFacturaFromInvoice = null)
     {
+        $log_info = request("tstms_small") . "SET-NUMERO-FACTURA " ;
 
+        info($log_info ."input=" . $numeroFacturaFromInvoice);
         // condition to detect if  numeroFactura still doest not have value,
         // check if contains "Pre", this is because, in an above method there is a mutator that changes value in case is 0
-        info('ANTES  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LEVEL INVOICE NUMBER GENERATION =======================> ' . $this->numeroFactura);
+        info($log_info . " old numeroFactura =" . $this->numeroFactura);
         if ($this->numeroFactura == 0 ||  strpos( $this->numeroFactura,"Pre") === 0) {
 
-            info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LEVEL INVOICE NUMBER GENERATION =======================> ' );
+            info($log_info . "CHECKING INVOICE_GENERATOR_NUMBER...");
             $obj = \DB::table('fel_company')->where('company_id', $this->getCompanyIdDecoded())->select('level_invoice_number_generation')->first();
             
             if (empty($obj)) 
                 return 1;
 
-            info('LEVEL INVOICE NUMBER GENERATION =======================> ' . $obj->level_invoice_number_generation);
-
+            info($log_info .'LEVEL INVOICE NUMBER GENERATION = ' . $obj->level_invoice_number_generation);
             switch ($obj->level_invoice_number_generation) {
                 case 0:
                     $numeroFactura = !is_null($numeroFacturaFromInvoice) ? $numeroFacturaFromInvoice : 1;
@@ -654,8 +655,11 @@ class FelInvoiceRequest extends Model
                     $numeroFactura = 1;
                     break;
             }
+            info($log_info . ' save= ' . $numeroFactura);
             $this->numeroFactura = $numeroFactura;
             $this->save();
+        }else {
+            logger()->error( $log_info . " !! NOT SET INVOICE NUMBER !! ");
         }
 
     }

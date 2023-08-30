@@ -102,7 +102,9 @@ Class FelConnection
     }
     public function handleRequest($method, $endpoint ,$data = null)
     {
-        info("REQUEST BY " . request()->company_name . " >>> START >>> [$method]" . $endpoint );
+        $log_info = request("tstms_small") . "FEL-REQ ";
+      
+        info($log_info . "SENDING [$method]" . $endpoint );
 
         $headers = array();
         $options = array();
@@ -119,41 +121,43 @@ Class FelConnection
         if ($method == "DELETE")
             $response = $this->client->request("DELETE",$endpoint,["json" => $data]);
 
-        // $response = $this->client->send($request);
-        info("REQUEST BY " . request()->company_name . " >>> SENT >>> [$method]" . $endpoint);
+        info($log_info . "SENT" );
+
         $this->handleResponse($response);
         
     }
 
     public function handleResponse($response)
     {
-        info("RESPONSE BY " .  request()->company_name  . " status " . $response->getStatusCode());
+        $log_info = request("tstms_small") . "FEL-RES ";
+        info($log_info . "STATUS " . $response->getStatusCode());
+        
         $this->status_code = $response->getStatusCode();
         // errors parameters
         if (in_array($response->getStatusCode(), array(400, 404))) {
-            info("RESPONSE BY " .  request()->company_name  . "   data => " . $response->getBody());
+            logger()->error($log_info . " ERROR DATA => " . $response->getBody());
             $this->setErrors($response);
         }
         
         if ($response->getStatusCode() == 405) {
-            info("RESPONSE BY " .  request()->company_name  . "   data => METODO ENDPOINT INCORRECTO O INEXISTENTE");
+            logger()->error($log_info . "ERROR DATA => METODO ENDPOINT INCORRECTO O INEXISTENTE");
             $this->setErrors(['code' => 9999, "description" => "Ocurrió un problema en el servicio utilizado, revisar codigo de sucursal"]);
         }
         // errors access
         if (in_array($response->getStatusCode(), array(419, 401))) {
-            info("RESPONSE BY " .  request()->company_name  . "   data => ACCESO DENEGADO ". $response->getBody());
+            logger()->error($log_info . "ERROR DATA => ACCESO DENEGADO ". $response->getBody());
             // TODO: generate new token when expire
             $this->setErrors(array("Acceso denegado, su token no es valido"));
         }
         // success
         if (in_array($response->getStatusCode(), array(201, 200))) {
-            info("RESPONSE BY " .  request()->company_name  . "   data => " . $response->getBody());
+            info($log_info . "SUCCESS DATA => " . $response->getBody());
             $this->setResponse($response);
         }
 
         // error server
         if ($response->getStatusCode() >= 500) {
-            info("response ID-REQUEST " . $this->ticket . "   ERROR EN SERVER ");
+            logger()->error($log_info ."ERROR DATA => ID-REQUEST " . $this->ticket . "   ERROR EN SERVER ");
             $this->setErrors(array("Error en el servicio de facturación"));
         }
             
@@ -161,64 +165,74 @@ Class FelConnection
 
     public function emit($data, $sectorDocument)
     {
+        $log_info = request("tstms_small") . "FEL-EMIT ";
         try {
-            info("EMIT DATA  ====>  " . json_encode($data));
+            info($log_info . "DATA =>" . json_encode($data));
             $this->handleRequest("POST", "/api/v1/sucursales/" . $data['codigoSucursal'] . "/facturas/" . $sectorDocument, $data);
 
         } catch (\Exception $ex) {
-            info("EMIT >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         };
     }
 
     public function remit($data, $sectorDocument, $factura_ticket)
     {
+        $log_info = request("tstms_small") . "FEL-REEMIT ";
         try {
-            info("EMIT DATA  ====>  " . json_encode($data));
+            info($log_info . "DATA =>" . json_encode($data));
             $this->handleRequest("PUT", "/api/v1/sucursales/" . $data['codigoSucursal'] . "/facturas/" . $sectorDocument. "/update/$factura_ticket", $data);
 
         } catch (\Exception $ex) {
-            info("EMIT >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         };
     }
 
     public function revocate($ticket, $revocationCode)
     {
+        $log_info = request("tstms_small") . "FEL-REVOCATE ";
         try {
+            info($log_info . " codigoMotivoAnulacion => $revocationCode");
             $this->handleRequest("DELETE", "/api/v1/facturas/$ticket/anular?unique_code",array("codigoMotivoAnulacion" => $revocationCode));
         }catch (\Exception $ex) {
-            info("REVOCATE >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         }
     }
 
     public function getDetails($ticket)
     {
+        $log_info = request("tstms_small") . "FEL-DETAILS ";
         try {
+            info($log_info . " GETTING... ");
             $this->handleRequest("GET", "/api/v1/facturas/$ticket?unique_code");
         }catch (\Exception $ex) {
-            info("GET-DETAILS >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         }
     }
 
     public function getStatus($ticket)
     {
+        $log_info = request("tstms_small") . "FEL-GET-STATUS ";
         try {
+            info($log_info . " GETTING... ");
             $this->handleRequest("GET", "/api/v1/facturas/$ticket/status?unique_code");
         }catch (\Exception $ex) {
-            info("GET-STATUS >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         }
     }
 
     public function checkNit($nit)
     {
+        $log_info = request("tstms_small") . "FEL-CHECK-NIT ";
         try {
+            info($log_info . " GETTING... ");
             $this->handleRequest("GET", "/api/v1/sucursales/0/validate-nit/$nit");
         } catch (\Exception $ex) {
-            info("CHECK-NIT >>> " . $ex->getMessage());
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
             $this->setErrors(array("Problema desconocido"));
         }
     }

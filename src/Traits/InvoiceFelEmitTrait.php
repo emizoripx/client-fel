@@ -13,7 +13,9 @@ trait InvoiceFelEmitTrait
 
     public function emit( $should_emit = 'true')
     {
-        \Log::debug("Usando el EMIT TRAIT >>>>>>>>>>>>>>>>>");
+        $info = request("tstms_small") . "EMIT-TRAIT  "; 
+        info($info .  "INVOICE_ID=  [" . $this->invoice->id . "] ");
+
         //if should invoice is not set, then not emit
         if ($should_emit !== 'true')
             return $this;
@@ -26,9 +28,9 @@ trait InvoiceFelEmitTrait
             throw new ClientFelException(" La Factura #" . $this->invoice->number . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
-
+        info($info .  " FEL_INVOICE = " . $felInvoiceRequest->id );
         try {
-          
+            info($info .  "set invoice number ". $this->invoice->number);
             // save number in felinvoicerequest 
             $felInvoiceRequest->setNumeroFactura($this->invoice->number);
             // reload changes in model
@@ -47,10 +49,10 @@ trait InvoiceFelEmitTrait
             event(new InvoiceWasEmited($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user() ? auth()->user()->id : null)));
 
             bitacora_info("EMIT INVOICE", "From Company:" . $this->invoice->fel_invoice->company_id . ", Invoice #" . $this->invoice->fel_invoice->numeroFactura . " was emitted succesfully.");
-
+            info($info .  " OK INVOICE_NUMBER=" . $felInvoiceRequest->numeroFactura);
             return $this;
         } catch (ClientFelException $ex) {
-
+            logger()->error($info .  "ERROR" . $ex->getMessage());
             bitacora_error("EMIT INVOICE", "From Company:" . $this->invoice->fel_invoice->company_id . ", Invoice #" . $this->invoice->fel_invoice->numeroFactura . " was NOT emitted." . "Error emit invoice " . $ex->getMessage());
             throw new ClientFelException( $ex->getMessage() );
 
