@@ -45,6 +45,8 @@ class ExportUtils {
 
     const REGISTER_SALES = 'Registro_Ventas';
 
+    const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Custom_1';
+
     const REGISTER_REPORT_COTEOR = 'Registro_reporte_coteor';
 
     const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';
@@ -129,6 +131,10 @@ class ExportUtils {
 
             case static::REGISTER_SALES:
                 return RegisterSalesReport::class;
+                break;
+
+            case static::REGISTER_SALES_CUSTOM_1:
+                return RegisterSalesCustom1Report::class;
                 break;
 
             case static::REGISTER_REPORT_COTEOR:

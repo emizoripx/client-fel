@@ -294,7 +294,7 @@ class GenerateReport implements ShouldQueue
         $writer->setHeaderStyle($style_header);
         $writer->addHeader($this->invoices['header']);
 
-        if ($this->entity == ExportUtils::REGISTER_SALES){
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1){
 
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
