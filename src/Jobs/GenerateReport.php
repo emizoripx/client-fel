@@ -242,7 +242,7 @@ class GenerateReport implements ShouldQueue
         $writer->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $writer->setOutputBOM(Writer::BOM_UTF8);
         $writer->insertOne($this->invoices['header']);
-        if ($this->entity == ExportUtils::REGISTER_SALES){
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1){
 
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
