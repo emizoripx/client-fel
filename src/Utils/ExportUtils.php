@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\ComprobanteDiarioUnslpReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\IngresosDiarioBioReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
+use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
