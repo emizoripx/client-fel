@@ -117,6 +117,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
                 "Lugar de evento",
                 "Fecha evento",
                 "Artista ó grupos musicales",
+                "Medios de transmisión",
                 "Importe total",
             ],
             "items" => SobodaycomInformationAgentsResource::collection($query_invoices)->resolve()
