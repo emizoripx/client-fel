@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Http\Resources;
 use App\Utils\Traits\MakesHash;
 use EmizorIpx\ClientFel\Utils\NumberUtils;
 use Illuminate\Http\Resources\Json\JsonResource;
+use stdClass;
 
 class SobodaycomInformationAgentsResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
     public function toArray($request)
     {
         $obj_decoded = json_decode($this->resource->extras);
-        $obj = $obj_decoded->sobodaycom;
+        $obj = property_exists($obj_decoded, 'sobodaycom') ? $obj_decoded->sobodaycom : new stdClass;
         $concatenate = function ($x) use ($obj) {
             return isset($obj->{$x}) ?  
             collect($obj->{$x})->map(function ($d) {
