@@ -22,12 +22,43 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
         $this->company_id = $company_id;
 
         $this->type_document = $request->has('type_document') ? $request->get('type_document') : null;
+        
+        $this->branch_code = $request->has('branch') ? $request->get('branch') : null;
 
         $this->revocated_zero = $request->has('revocated_zero') ? $request->get('revocated_zero') : false;
         $from = $request->has('from_date') ? $request->get('from_date') : null;
         $to = $request->has('to_date') ? $request->get('to_date') : null;
 
         parent::__construct($from, $to);
+    }
+
+    public function addBranchFilter($query)
+    {
+
+        if (!is_null($this->branch_code)) {
+
+            \Log::debug("Filter by Brach: " . $this->branch_code);
+
+            $this->branch_desc = "Sucursal " . $this->branch_code;
+
+            return $query->where('fel_invoice_requests.codigoSucursal', $this->branch_code);
+        } elseif (count($branch_access = $this->user->getOnlyBranchAccess()) > 0) {
+
+            $branch_access = $this->user->getOnlyBranchAccess();
+
+            \Log::debug("Filter by Access Branch");
+
+            $branches_desc = [];
+            foreach ($branch_access as $value) {
+                array_push($branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value));
+            }
+
+            $this->branch_desc = implode(" - ", $branches_desc);
+
+            return $query->whereIn('fel_invoice_requests.codigoSucursal', $branch_access);
+        }
+
+        return $query;
     }
 
     public function addSelectColumns($query)
@@ -50,6 +81,7 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
                         ->whereNotNull('fel_invoice_requests.codigoEstado')
                         ->whereNotNull('fel_invoice_requests.cuf');   
         $query_invoices = $this->addDateFilter($query_invoices);
+        $query_invoices = $this->addBranchFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
 
 
