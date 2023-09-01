@@ -24,6 +24,8 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
 
         $this->type_document = $request->has('type_document') ? $request->get('type_document') : null;
 
+        $this->branch_code = $request->has('branch') ? $request->get('branch') : null;
+
         $from = $request->has('from_date') ? $request->get('from_date') : null;
         $to = $request->has('to_date') ? $request->get('to_date') : null;
 
@@ -34,6 +36,35 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
     public function addSelectColumns($query)
     {
         return $query->selectRaw('(@counter := @counter +1) as num,cuf, nombreRazonSocial, fel_invoice_requests.numeroFactura, codigoSucursal, codigoPuntoVenta, montoTotal ,  numeroDocumento, extras , clients.name as client_name');
+    }
+
+    public function addBranchFilter($query)
+    {
+
+        if (!is_null($this->branch_code)) {
+
+            \Log::debug("Filter by Brach: " . $this->branch_code);
+
+            $this->branch_desc = "Sucursal " . $this->branch_code;
+
+            return $query->where('fel_invoice_requests.codigoSucursal', $this->branch_code);
+        } elseif (count($branch_access = $this->user->getOnlyBranchAccess()) > 0) {
+
+            $branch_access = $this->user->getOnlyBranchAccess();
+
+            \Log::debug("Filter by Access Branch");
+
+            $branches_desc = [];
+            foreach ($branch_access as $value) {
+                array_push($branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value));
+            }
+
+            $this->branch_desc = implode(" - ", $branches_desc);
+
+            return $query->whereIn('fel_invoice_requests.codigoSucursal', $branch_access);
+        }
+
+        return $query;
     }
 
     public function generateReport()
@@ -49,6 +80,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
             });
 
         $query_base = $this->addDateFilter($query_base);
+        $query_base = $this->addBranchFilter($query_base);
         $query_base = $query_base->select('fel_invoice_requests.id', 'fel_invoice_requests.numeroFactura', 'fel_invoice_requests.fechaEmision');
 
         $query_invoices = \DB::table('fel_invoice_requests')->select('fel_invoice_requests.id');
