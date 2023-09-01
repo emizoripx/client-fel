@@ -16,10 +16,17 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
 
     protected $revocated_zero;
 
+    protected $user;
 
-    public function __construct($company_id, $request)
+    protected $columns;
+
+    public function __construct($company_id, $request, $columns, $user)
     {
         $this->company_id = $company_id;
+
+        $this->columns = $columns;
+
+        $this->user = $user;
 
         $this->type_document = $request->has('type_document') ? $request->get('type_document') : null;
         
