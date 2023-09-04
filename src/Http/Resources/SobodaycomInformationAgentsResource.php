@@ -32,7 +32,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
         return [
             "num" => $this->resource->num,
             "numeroFactura" => $this->resource->numeroFactura,
-            "numeroAutorización" => $this->resource->cuf,
+            "numeroAutorizacion" => $this->resource->codigoSucursal.$this->resource->codigoPuntoVenta.$this->resource->numeroFactura,
             "numeroDocumento" => $this->resource->numeroDocumento,
             "nombreRazonSocial" => $this->resource->nombreRazonSocial,
             "eventoRubro" => $concatenate('eventos_rubros'),
