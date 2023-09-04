@@ -7,6 +7,7 @@ use EmizorIpx\ClientFel\Http\Resources\SobodaycomInformationAgentsResource;
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
+use Carbon\Carbon;
 
 class SobodaycomInformationAgentsReport extends BaseReport implements ReportInterface
 {
@@ -20,7 +21,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
     protected $user;
 
     protected $columns;
-    
+
     protected $branch_desc = "Todos";
 
     public function __construct($company_id, $request, $columns, $user)
@@ -107,7 +108,14 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
         info("========================================");
         $query_invoices =  $this->addSelectColumns($query_invoices);
         $query_invoices = $query_invoices->get();
-        
+        info("GENERATE_REPORT >>> cabecera " , [
+            "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
+            "desde" => date('Y-m-d', $this->from) . " 00:00:00",
+            "hasta" => date('Y-m-d', $this->to) . " 23:59:59",
+            "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->format("Y-m-d"),
+            "usuario" => $this->user->name(),
+            "sucursal" => $this->branch_desc,
+        ]);
         return [
             "header" => [
                 "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
