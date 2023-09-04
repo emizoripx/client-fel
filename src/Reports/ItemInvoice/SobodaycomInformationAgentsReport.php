@@ -39,7 +39,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
         $this->from = $request->has('from_date') ? $request->get('from_date') : null;
         $this->to = $request->has('to_date') ? $request->get('to_date') : null;
 
-        parent::__construct($from, $to);
+        parent::__construct($this->from, $this->to);
     }
     
 
