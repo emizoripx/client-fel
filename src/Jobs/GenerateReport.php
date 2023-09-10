@@ -47,7 +47,8 @@ class GenerateReport implements ShouldQueue
 
     protected $type_format_report = "template";
 
-    public $timeout = 600;
+    public $timeout = 1000; // EMIZOR-INVOICE-INSERT
+    public $tries = 1; // EMIZOR-INVOICE-INSERT
 
     protected $invoices = null;
 
@@ -64,6 +65,7 @@ class GenerateReport implements ShouldQueue
      */
     public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template", $headers_csv=[] )
     {
+        $this->onQueue('reports');
         $this->request = collect($request);
 
         $this->entity = $entity;
