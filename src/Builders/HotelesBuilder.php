@@ -94,11 +94,7 @@ class HotelesBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuilderI
                 $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,5);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
-
-            if( isset( $detail->codigoTipoHabitacion ) ){
-                \Log::debug("Enter to Codigo Hanitación: >>>>>>>>>>>> " . $detail->codigoTipoHabitacion);
-                $new->codigoTipoHabitacion = $detail->codigoTipoHabitacion;
-            }
+            $new->codigoTipoHabitacion = isset($detail->codigoTipoHabitacion) && preg_match("/^[0-9]+$/", $detail->codigoTipoHabitacion) ? $detail->codigoTipoHabitacion : null;
 
             \Log::debug("Detail: " . json_encode($new));
             $details[] = $new;
