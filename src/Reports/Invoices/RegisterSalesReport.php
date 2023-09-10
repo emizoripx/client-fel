@@ -33,10 +33,10 @@ class RegisterSalesReport extends BaseReport implements ReportInterface
         $this->branch_code = $request->has('branch') ? $request->get('branch') : null;
 
         $this->revocated_zero = $request->has('revocated_zero') ? $request->get('revocated_zero') : false;
-        $from = $request->has('from_date') ? $request->get('from_date') : null;
-        $to = $request->has('to_date') ? $request->get('to_date') : null;
+        $this->from = $request->has('from_date') ? $request->get('from_date') : null;
+        $this->to = $request->has('to_date') ? $request->get('to_date') : null;
 
-        parent::__construct($from, $to);
+        parent::__construct($this->from, $this->to);
     }
 
     public function addBranchFilter($query)
