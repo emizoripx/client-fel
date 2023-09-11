@@ -22,6 +22,8 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
 
     protected $columns;
 
+    protected $branch_desc = "Todos";
+    
     public function __construct($company_id, $request, $columns, $user)
     {
         $this->company_id = $company_id;
