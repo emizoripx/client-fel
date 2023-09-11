@@ -5,6 +5,8 @@ namespace EmizorIpx\ClientFel\Reports\Invoices;
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use Carbon\Carbon;
+use EmizorIpx\ClientFel\Http\Resources\SobodaycomRegisterSalesResource;
+
 class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
 {
 
@@ -90,7 +92,7 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
         $query_invoices = $this->addDateFilter($query_invoices);
         $query_invoices = $this->addBranchFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
-
+        $query_invoices = $query_invoices->get();
 
         return [
             "header" => [
@@ -101,7 +103,7 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
                 "usuario" => $this->user->name(),
                 "sucursal" => $this->branch_desc,
             ],
-            "items" => $query_invoices->get()
+            "items" => SobodaycomRegisterSalesResource::collection($query_invoices)->resolve() 
         ];
     }
 }
