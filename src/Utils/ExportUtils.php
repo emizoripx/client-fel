@@ -46,7 +46,7 @@ class ExportUtils {
 
     const REGISTER_SALES = 'Registro_Ventas';
 
-    const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Custom_1';
+    const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Sobodaycom';
 
     const REGISTER_REPORT_COTEOR = 'Registro_reporte_coteor';
 

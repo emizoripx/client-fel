@@ -105,17 +105,10 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
             ->leftJoin("invoices", 'fel_invoice_requests.id_origin', 'invoices.id')
             ->leftJoin("clients", 'invoices.client_id', 'clients.id')
             ->whereNotNull('fel_invoice_requests.estado');
-        info("========================================");
+
         $query_invoices =  $this->addSelectColumns($query_invoices);
         $query_invoices = $query_invoices->get();
-        info("GENERATE_REPORT >>> cabecera " , [
-            "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
-            "desde" => date('Y-m-d', $this->from) . " 00:00:00",
-            "hasta" => date('Y-m-d', $this->to) . " 23:59:59",
-            "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->format("Y-m-d"),
-            "usuario" => $this->user->name(),
-            "sucursal" => $this->branch_desc,
-        ]);
+
         return [
             "header" => [
                 "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,

@@ -65,7 +65,7 @@ class GenerateReport implements ShouldQueue
      */
     public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template", $headers_csv=[] )
     {
-        $this->onQueue('reports');
+        $this->onQueue('default');
         $this->request = collect($request);
 
         $this->entity = $entity;
