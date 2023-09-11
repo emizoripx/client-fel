@@ -26,7 +26,9 @@ class UploadReport implements ShouldQueue
 
     protected $report_record_id;
 
-    public $timeout = 300;
+    public $timeout = 1000; // EMIZOR-INVOICE-INSERT
+    
+    public $tries = 1; // EMIZOR-INVOICE-INSERT
 
     /**
      * Create a new job instance.
@@ -35,6 +37,7 @@ class UploadReport implements ShouldQueue
      */
     public function __construct( $company_nit, $entity, $report_path, $report_filename, $report_record_id)
     {
+        $this->onQueue('reports');
 
         $this->entity = $entity;
 
