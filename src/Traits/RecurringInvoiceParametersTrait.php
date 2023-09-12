@@ -8,7 +8,7 @@ trait RecurringInvoiceParametersTrait {
 
     public function fel_invoice()
     {
-        return $this->hasOne(FelInvoiceRequest::class,'recurring_id_origin', 'id')->whereNull("deleted_at");
+        return $this->hasOne(FelInvoiceRequest::class,'recurring_id_origin', 'id')->withTrashed();
     }
 
     public function includeFelData(){
