@@ -13,12 +13,14 @@ trait InvoiceFelEmitTrait
 
     public function emit( $should_emit = 'true')
     {
-        $info = request("tstms_small") . "EMIT-TRAIT  "; 
-        info($info .  "INVOICE_ID=  [" . $this->invoice->id . "] ");
 
+        
         //if should invoice is not set, then not emit
         if ($should_emit !== 'true')
             return $this;
+        
+        $info = request("tstms_small") . "EMIT-TRAIT  ";
+        info($info .  "INVOICE_ID=  [" . $this->invoice->id . "] ");
         
         $felInvoiceRequest = $this->invoice->fel_invoice->fresh();
 
