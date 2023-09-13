@@ -32,6 +32,7 @@ class SobodaycomInformationAgentsResource extends JsonResource
         return [
             "num" => $this->resource->num,
             "numeroFactura" => $this->resource->numeroFactura,
+            "sucursal" => $this->resource->codigoSucursal == 0 ? "Casa Matriz " : "Sucursal " . $this->resource->codigoSucursal,
             "numeroAutorizacion" => $this->resource->codigoSucursal.$this->resource->codigoPuntoVenta.$this->resource->numeroFactura,
             "numeroDocumento" => $this->resource->numeroDocumento,
             "nombreRazonSocial" => $this->resource->nombreRazonSocial,

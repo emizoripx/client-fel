@@ -24,6 +24,7 @@ class SobodaycomRegisterSalesResource extends JsonResource
             "especificaciones" => $this->resource->especificaciones,
             "fechaEmision" => $this->resource->fechaEmision,
             "numeroFactura" => $this->resource->numeroFactura,
+            "sucursal" => $this->resource->codigoSucursal == 0 ? "Casa Matriz ": "Sucursal ".$this->resource->codigoSucursal,
             "cuf" => $this->resource->cuf,
             "numeroDocumento" => $this->resource->numeroDocumento,
             "complemento" => $this->resource->complemento,
