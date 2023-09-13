@@ -27,8 +27,8 @@ class ReportResource extends JsonResource
             "completed_at" => $this->completed_at,
             "user" => $this->first_name . ' ' . $this->last_name,
             "user_id" => $this->user_id,
-            "from_date" => $this->from_date,
-            "to_date" => $this->to_date,
+            "from_date" => trim($this->from_date,'"'),
+            "to_date" => trim($this->to_date,'"'),
         ];
     }
 }
