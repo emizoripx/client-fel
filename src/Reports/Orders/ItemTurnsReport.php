@@ -36,7 +36,7 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
         $this->user = $user;
 
         parent::__construct($from, $to);
-        
+
     }
 
     public function addBranchFilter( $query ) {
@@ -57,7 +57,7 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
 
             $branches_desc = [];
             foreach ($branch_access as $value) {
-                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
+                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );
             }
 
             $this->branch_desc = implode(" - ", $branches_desc);
@@ -115,9 +115,9 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
 
             $extras = json_decode($invoice_data[0]['extras']);
             $invoice_data[0]['turno'] = isset($extras) ? $extras->turno : '';
-            
+
             $detail = json_decode($detail, true);
-            
+
             $joined = collect($invoice_data)->crossJoin($detail)->all();
 
             $detalle = collect($joined)->map( function ( $d ) {
@@ -135,6 +135,8 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
         $items = ExportUtils::flatten_array($items);
 
         $items_grouped = collect($items)->groupBy('codigoProducto')->all();
+
+        $items_grouped = collect($items_grouped)->sort()->all();
 
         $items_resume = collect( $items_grouped )->map( function( $product_group ) {
 
@@ -177,7 +179,7 @@ class ItemTurnsReport extends BaseReport implements ReportInterface {
             "items" => $items_grouped,
             "resume" => $items_resume
         ];
-        
+
     }
 
 }
