@@ -15,6 +15,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReportPayments;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceProductReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterReportCoteor;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\SobodaycomInformationAgentsReport;
@@ -65,6 +66,8 @@ class ExportUtils {
     const BIO_CLIENTS_REPORT = 'Reporte_Clientes';
 
     const AGENTS_INFORMATION_REPORT = 'Agentes_informacion';
+
+    const REPORTE_POR_PRODUCTO = 'Reporte_por_producto';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -167,6 +170,9 @@ class ExportUtils {
             
             case static::AGENTS_INFORMATION_REPORT:
                 return SobodaycomInformationAgentsReport::class;
+                break;
+            case static::REPORTE_POR_PRODUCTO:
+                return ItemInvoiceProductReport::class;
                 break;
             
             default:
