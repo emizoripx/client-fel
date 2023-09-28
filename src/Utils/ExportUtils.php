@@ -12,6 +12,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceBestSellerProductReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReportPayments;
@@ -68,6 +69,8 @@ class ExportUtils {
     const AGENTS_INFORMATION_REPORT = 'Agentes_informacion';
 
     const REPORTE_POR_PRODUCTO = 'Reporte_por_producto';
+
+    const REPORTE_PRODUCT_MAS_VENDIDO = 'Reporte_producto_mas_vendido';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -173,6 +176,9 @@ class ExportUtils {
                 break;
             case static::REPORTE_POR_PRODUCTO:
                 return ItemInvoiceProductReport::class;
+                break;
+            case static::REPORTE_PRODUCT_MAS_VENDIDO:
+                return ItemInvoiceBestSellerProductReport::class;
                 break;
             
             default:
