@@ -19,6 +19,9 @@ class EmitTerminalPreinvoices implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 1000; // EMIZOR-INVOICE-INSERT
+
+    public $tries = 1; // EMIZOR-INVOICE-INSERT
     /**
      * Create a new job instance.
      *
@@ -26,7 +29,7 @@ class EmitTerminalPreinvoices implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->onQueue('recurring');
     }
 
     /**
