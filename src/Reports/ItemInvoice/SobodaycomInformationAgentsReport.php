@@ -45,7 +45,7 @@ class SobodaycomInformationAgentsReport extends BaseReport implements ReportInte
 
     public function addSelectColumns($query)
     {
-        return $query->selectRaw('(@counter := @counter +1) as num,cuf, nombreRazonSocial, fel_invoice_requests.numeroFactura, codigoSucursal, codigoPuntoVenta, montoTotal ,  numeroDocumento, extras , clients.name as client_name, codigoSucursal');
+        return $query->selectRaw('(@counter := @counter +1) as num,cuf, nombreRazonSocial, fel_invoice_requests.numeroFactura, codigoSucursal, codigoPuntoVenta, montoTotal ,codigoEstado,  numeroDocumento, extras , clients.name as client_name, codigoSucursal');
     }
 
     public function addBranchFilter($query)

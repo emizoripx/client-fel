@@ -35,13 +35,13 @@ class SobodaycomInformationAgentsResource extends JsonResource
             "sucursal" => $this->resource->codigoSucursal == 0 ? "Casa Matriz " : "Sucursal " . $this->resource->codigoSucursal,
             "numeroAutorizacion" => $this->resource->codigoSucursal.$this->resource->codigoPuntoVenta.$this->resource->numeroFactura,
             "numeroDocumento" => $this->resource->numeroDocumento,
-            "nombreRazonSocial" => $this->resource->nombreRazonSocial,
-            "eventoRubro" => $concatenate('eventos_rubros'),
-            "lugarEvento" => $this->resource->client_name,
-            "fechaEvento" => isset($obj->fecha_evento) ? $obj->fecha_evento : "",
-            "artisasGrupos" => $concatenate('grupos_artistas'),
-            "medioTransmision" => $concatenate('medios_transmisiones'),
-            "importeTotal" => NumberUtils::number_format_custom($this->resource->montoTotal, 2),
+            "nombreRazonSocial" => in_array($this->resource->codigoEstado, [905, 691]) ?"ANULADO": $this->resource->nombreRazonSocial,
+            "eventoRubro" => in_array($this->resource->codigoEstado, [905, 691]) ? "ANULADO" : $concatenate('eventos_rubros'),
+            "lugarEvento" => in_array($this->resource->codigoEstado, [905, 691]) ? "ANULADO" : $this->resource->client_name,
+            "fechaEvento" =>  in_array($this->resource->codigoEstado, [905, 691]) ? "ANULADO" :( isset($obj->fecha_evento) ? $obj->fecha_evento : ""),
+            "artisasGrupos" => in_array($this->resource->codigoEstado, [905, 691]) ? "ANULADO" : $concatenate('grupos_artistas'),
+            "medioTransmision" => in_array($this->resource->codigoEstado, [905, 691]) ? "ANULADO" : $concatenate('medios_transmisiones'),
+            "importeTotal" => in_array($this->resource->codigoEstado, [905, 691]) ? 0 :( NumberUtils::number_format_custom($this->resource->montoTotal, 2)),
         ];
     }
 }
