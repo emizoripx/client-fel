@@ -108,6 +108,10 @@ class FelInvoiceRequest extends Model
 
     public function getNumeroFacturaAttribute()
     {
+        if ($this->attributes['typeDocument'] == 3) {
+            return "Orden " . $this->attributes['document_number'];
+        }
+
         if ($this->attributes['typeDocument'] == 1) {
             return "Planilla " . $this->attributes['document_number'];
         }
