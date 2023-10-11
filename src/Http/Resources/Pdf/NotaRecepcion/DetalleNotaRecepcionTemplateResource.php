@@ -18,13 +18,13 @@ class DetalleNotaRecepcionTemplateResource extends JsonResource
     {
         return [
                 "codigoProducto" => isset($this->codigoProducto) ? $this->codigoProducto : '',
-                "cantidad" => intval($this->cantidad) < $this->cantidad ? NumberUtils::number_format_custom( (float) $this->cantidad, 2) : NumberUtils::number_format_custom( (float) $this->cantidad, 2),
+                "cantidad" => intval($this->cantidad) < $this->cantidad ? NumberUtils::number_format_custom( (float) str_replace(',', '', $this->cantidad), 2) : NumberUtils::number_format_custom( (float) str_replace(',', '', $this->cantidad), 2),
                 "descripcion" => isset($this->descripcion) ? $this->descripcion : '',
                 "rango" => isset($this->rango) ? $this->rango : '',
                 "cantidadDevuelto" => isset($this->cantidadDevuelto) ? $this->cantidadDevuelto : '',
                 "cantidadEntrega" => isset($this->cantidadEntrega) ? $this->cantidadEntrega : '',
                 "cantidadVendido" => isset($this->cantidadVendido) ? $this->cantidadVendido : '',
-                "precioUnitario" => intval($this->precioUnitario) < $this->precioUnitario ? NumberUtils::number_format_custom( (float) $this->precioUnitario, 2) : NumberUtils::number_format_custom( (float) $this->precioUnitario, 2),
+                "precioUnitario" => intval($this->precioUnitario) < $this->precioUnitario ? NumberUtils::number_format_custom( (float) str_replace(',', '', $this->precioUnitario), 2) : NumberUtils::number_format_custom( (float)str_replace(',', '', $this->precioUnitario), 2),
                 "subTotal" => NumberUtils::number_format_custom( (float) $this->subTotal, 2)
     
             ];
