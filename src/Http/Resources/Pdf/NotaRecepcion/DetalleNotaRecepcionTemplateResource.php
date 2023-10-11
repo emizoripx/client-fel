@@ -18,7 +18,7 @@ class DetalleNotaRecepcionTemplateResource extends JsonResource
     {
         return [
                 "codigoProducto" => isset($this->codigoProducto) ? $this->codigoProducto : '',
-                "cantidad" => intval($this->cantidad) < $this->cantidad ? NumberUtils::number_format_custom( (float) str_replace(',', '', $this->cantidad), 2) : NumberUtils::number_format_custom( (float) str_replace(',', '', $this->cantidad), 2),
+                "cantidad" => $this->cantidad,
                 "descripcion" => isset($this->descripcion) ? $this->descripcion : '',
                 "rango" => isset($this->rango) ? $this->rango : '',
                 "cantidadDevuelto" => isset($this->cantidadDevuelto) ? $this->cantidadDevuelto : '',
