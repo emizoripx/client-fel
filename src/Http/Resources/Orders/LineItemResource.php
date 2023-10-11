@@ -20,7 +20,7 @@ class LineItemResource extends JsonResource
             "product_id" => !empty($this->product_id) ? (string) $this->product_id : "",
             "notes" => !empty($this->notes) ? (string) $this->notes : "",
             "is_amount_discount" => !empty($this->is_amount_discount) ? (bool) $this->is_amount_discount : false,
-            "quantity" => !empty($this->quantity) ? (float) $this->quantity : 0,
+            "quantity" => !empty($this->quantity) ? (float) str_replace(',', '', $this->quantity) : 0,
             "discount" => !empty($this->discount) ? (int) $this->discount : 0,
             "product_key" => !empty($this->product_key) ? (string) $this->product_key : "",
             "price" => !empty($this->cost) ? (float) $this->cost : 0,
