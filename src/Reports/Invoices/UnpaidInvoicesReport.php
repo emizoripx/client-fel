@@ -6,7 +6,7 @@ use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Http\Resources\UnpaidInvoicesResource;
-
+use App\Utils\Traits\MakesHash;
 class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
 
     protected $branch_code;
@@ -34,7 +34,7 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
 
         $this->user = $user;
 
-        $this->client_id = $request->has('client') ? $request->get('client') : null;
+        $this->client_id = $request->has('client') ? $this->decodePrimaryKey($request->get('client'))  : null;
 
         parent::__construct($this->from, $this->to);
         
@@ -80,7 +80,7 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
         ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->where('invoices.status_id', '<', 4)
-            ->where('invoices.client_id', $this->client_id);
+            ->where('invoices.client_id', $this->`client_id`);
 
         $client = \App\Models\Client::find($this->client_id);
         $client_name = "S/N";
