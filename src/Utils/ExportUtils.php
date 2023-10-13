@@ -20,6 +20,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceProductReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterReportCoteor;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\SobodaycomInformationAgentsReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\UnpaidInvoicesReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
@@ -71,6 +72,8 @@ class ExportUtils {
     const REPORTE_POR_PRODUCTO = 'Reporte_por_producto';
 
     const REPORTE_PRODUCT_MAS_VENDIDO = 'Reporte_producto_mas_vendido';
+
+    const UNPAID_INVOICES_REPORT = 'Cuentas_por_cobrar';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -179,6 +182,9 @@ class ExportUtils {
                 break;
             case static::REPORTE_PRODUCT_MAS_VENDIDO:
                 return ItemInvoiceBestSellerProductReport::class;
+                break;
+            case static::UNPAID_INVOICES_REPORT:
+                return UnpaidInvoicesReport::class;
                 break;
             
             default:
