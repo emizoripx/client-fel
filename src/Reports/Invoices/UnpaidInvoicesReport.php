@@ -39,7 +39,7 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
         if (!is_null($this->client_id)) {
 
             $hashids = new Hashids(config('ninja.hash_salt'), 10);
-            $decoded_array = $hashids->decode($value);
+            $decoded_array = $hashids->decode($this->client_id);
             
             if (is_array($decoded_array)) {
                 $this->client_id = $decoded_array[0];
