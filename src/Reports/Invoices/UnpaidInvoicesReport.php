@@ -34,7 +34,7 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
 
         $this->user = $user;
 
-        $this->client_id = $request->has('client') ? $this->decodePrimaryKey($request->get('client'))  : null;
+        $this->client_id = $request->has('client') ? $request->get('client')  : null;
 
         if (!is_null($this->client_id)) {
 
