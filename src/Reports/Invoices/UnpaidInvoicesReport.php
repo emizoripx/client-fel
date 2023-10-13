@@ -6,7 +6,7 @@ use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
 use Carbon\Carbon;
 use EmizorIpx\ClientFel\Http\Resources\UnpaidInvoicesResource;
-use App\Utils\Traits\MakesHash;
+use Hashids\Hashids;
 class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
 
     protected $branch_code;
@@ -35,6 +35,16 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
         $this->user = $user;
 
         $this->client_id = $request->has('client') ? $this->decodePrimaryKey($request->get('client'))  : null;
+
+        if (!is_null($this->client_id)) {
+
+            $hashids = new Hashids(config('ninja.hash_salt'), 10);
+            $decoded_array = $hashids->decode($value);
+            
+            if (is_array($decoded_array)) {
+                $this->client_id = $decoded_array[0];
+            }
+        }
 
         parent::__construct($this->from, $this->to);
         
