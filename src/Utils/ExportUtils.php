@@ -20,7 +20,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceProductReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterReportCoteor;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\SobodaycomInformationAgentsReport;
-use EmizorIpx\ClientFel\Reports\ItemInvoice\UnpaidInvoicesReport;
+use EmizorIpx\ClientFel\Reports\Invoices\UnpaidInvoicesReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemsReport;
 use EmizorIpx\ClientFel\Reports\Orders\ItemTurnsReport;
 use EmizorIpx\ClientFel\Reports\Products\ProductReport;
@@ -101,7 +101,7 @@ class ExportUtils {
 
 
     public static function getClassReport ( $entity ) {
-        \Log::debug("ENTIDAD  ====> " . $entity . "  ==>  " . static::DAILY_MOVEMENTS_PAYMENTS);
+        \Log::debug("ENTIDAD  ====> " . $entity );
         switch ($entity) {
 
             case static::INVOICE_ENTITY:

@@ -1,6 +1,6 @@
 <?php
 
-namespace EmizorIpx\ClientFel\Reports\ItemInvoice;
+namespace EmizorIpx\ClientFel\Reports\Invoices;
 
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
