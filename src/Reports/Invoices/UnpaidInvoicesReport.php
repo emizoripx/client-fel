@@ -80,7 +80,7 @@ class UnpaidInvoicesReport extends BaseReport implements ReportInterface {
         ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->where('invoices.status_id', '<', 4)
-            ->where('invoices.client_id', $this->`client_id`);
+            ->where('invoices.client_id', $this->client_id);
 
         $client = \App\Models\Client::find($this->client_id);
         $client_name = "S/N";
