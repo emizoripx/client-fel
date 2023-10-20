@@ -8,6 +8,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\ComprobanteDiarioUnslpReport;
 use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\IngresosDiarioBioReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
+use EmizorIpx\ClientFel\Reports\Invoices\PaidInvoicesReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
@@ -74,6 +75,8 @@ class ExportUtils {
     const REPORTE_PRODUCT_MAS_VENDIDO = 'Reporte_producto_mas_vendido';
 
     const UNPAID_INVOICES_REPORT = 'Cuentas_por_cobrar';
+
+    const PAID_INVOICES_REPORT = 'Reporte_pagos';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -185,6 +188,9 @@ class ExportUtils {
                 break;
             case static::UNPAID_INVOICES_REPORT:
                 return UnpaidInvoicesReport::class;
+                break;
+            case static::PAID_INVOICES_REPORT:
+                return PaidInvoicesReport::class;
                 break;
             
             default:
