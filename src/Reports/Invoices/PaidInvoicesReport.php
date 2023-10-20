@@ -88,6 +88,7 @@ class PaidInvoicesReport extends BaseReport implements ReportInterface {
             fel_invoice_requests.numeroFactura, 
             fel_invoice_requests.fechaEmision,
             fel_invoice_requests.cuf, 
+            fel_invoice_requests.codigoSucursal, 
             payments.amount,
             fel_invoice_requests.estado,
             fel_invoice_requests.codigoEstado,
