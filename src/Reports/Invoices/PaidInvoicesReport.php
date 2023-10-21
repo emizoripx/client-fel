@@ -77,7 +77,7 @@ class PaidInvoicesReport extends BaseReport implements ReportInterface {
         ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
         ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
-            ->where('invoices.status_id', '=', 4);
+            ->whereIn('invoices.status_id',[3,4]);
 
         $query_items = $this->addBranchFilter($query_items);
         $query_items = $this->addDateFilter($query_items);
