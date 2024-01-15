@@ -175,17 +175,14 @@ class FelReportController extends BaseController
             $months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             return $months[intval($month_number) - 1];
         };
-
-        $today = Carbon::now()->timezone("America/La_Paz");
-        $year = $today->format("Y");
+    
+        $today = now()->timezone("America/La_Paz");
         $lastMonths = [];
-
+        $months_available = [];
+    
         for ($i = 0; $i < $month_number; $i++) {
-            if ($year != $today->format("Y"))
-                break;
-
             $lastMonths[] = '"' . $today->format('Y-m') . '"';
-            $months_available[$today->format('Y-m')] = $getMonth($today->format('m')) . " " . $year;
+            $months_available[$today->format('Y-m')] = $getMonth($today->format('m')) . " " . $today->format('Y');
             $today->subMonth();
         }
         $dates = '(' . implode(', ', array_reverse($lastMonths)) . ')';
