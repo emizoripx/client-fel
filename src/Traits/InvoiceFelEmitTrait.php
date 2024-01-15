@@ -30,7 +30,7 @@ trait InvoiceFelEmitTrait
             throw new ClientFelException(" La Factura #" . $this->invoice->number . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
-        info($info .  " FEL_INVOICE = " . $felInvoiceRequest->id );
+        info($info .  " FEL_INVOICE = " . $felInvoiceRequest->id . " numerofactura = " . $felInvoiceRequest->numeroFactura );
         try {
             info($info .  "set invoice number ". $this->invoice->number);
             // save number in felinvoicerequest 

@@ -106,6 +106,14 @@ class BaseFelInvoiceBuilder {
         if( $model instanceof RecurringInvoice ) {
             $this->input['recurring_id_origin'] = $model->id;
         }
+        $old_numero_factura = 0;
+        $updatefir = $this->getFelInvoiceFirst();
+
+        info("CONTROL-CORRELATIVO REPETIDO PASO 1 ");
+        if (isset($updatefir) && isset($updatefir->numeroFactura) && $updatefir->numeroFactura!=0 ) {
+            $old_numero_factura = $updatefir->numeroFactura;
+            info("CONTROL-CORRELATIVO REPETIDO PASO 2 >> " . $old_numero_factura );
+        }
 
         $this->input = array_merge($this->input ,[
             "id_origin" => $model->id,
@@ -119,7 +127,7 @@ class BaseFelInvoiceBuilder {
             "codigoActividad" => 1,
             "codigoExcepcion" => $fel_data_parsed['codigoExcepcion'],
             #automatico
-            "numeroFactura" => (isset($fel_data_parsed['cafc']) && !is_null($fel_data_parsed['cafc']) && $fel_data_parsed['cafc'] != "") ? ($fel_data_parsed['numeroFactura'] ? $fel_data_parsed['numeroFactura'] : 0 ) : 0,
+            "numeroFactura" => (isset($fel_data_parsed['cafc']) && !is_null($fel_data_parsed['cafc']) && $fel_data_parsed['cafc'] != "") ? ($fel_data_parsed['numeroFactura'] ? $fel_data_parsed['numeroFactura'] : 0 ) : $old_numero_factura,
             # it is generated in FEL
             "fechaEmision" => substr($fechadeemision->setTimezone('America/La_Paz')->format('Y-m-d\TH:i:s.u'), 0, -3),
             "codigoPuntoVenta" => $fel_data_parsed['codigoPuntoVenta'],
