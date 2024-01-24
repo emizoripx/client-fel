@@ -190,9 +190,9 @@ class Invoices extends FelConnection
         $this->revocate($factura_ticket, $this->revocationReasonCode );
     }
 
-    public function reversionRevocateInvoice(){
+    public function reversionRevocateInvoice($factura_ticket){
 
-        
+        $this->revocateReversion($factura_ticket);
     }
 
     public function updateInvoice($factura_ticket){

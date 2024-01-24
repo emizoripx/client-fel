@@ -201,6 +201,17 @@ Class FelConnection
         }
     }
 
+    public function revocateReversion($ticket)
+    {
+        $log_info = request("tstms_small") . "FEL-REVOCATE-REVERSION ";
+        try {
+            $this->handleRequest("DELETE", "/api/v1/facturas/$ticket/revertir-anulacion?unique_code",array());
+        }catch (\Exception $ex) {
+            logger()->error($log_info . "ERROR >>> " . $ex->getMessage());
+            $this->setErrors(array("Problema desconocido"));
+        }
+    }
+
     public function getDetails($ticket)
     {
         $log_info = request("tstms_small") . "FEL-DETAILS ";

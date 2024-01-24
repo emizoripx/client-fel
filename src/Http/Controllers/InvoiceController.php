@@ -110,6 +110,33 @@ class InvoiceController extends BaseController
             ]);
 
         }
+    } 
+    public function reversionRevocate(Request $request){
+        try{
+            $felInvoiceRequest = FelInvoiceRequest::findByIdOrigin($request->input('id_origin'));
+
+            if(!$felInvoiceRequest){
+                throw new ClientFelException("Factura no encontrada");
+            }
+
+            if($felInvoiceRequest->codigoEstado != 691){
+                throw new ClientFelException("La Factura debe de estar anulada");
+            }
+
+            $felInvoiceRequest->setAccessToken()->sendRevocateReversionInvoiceToFel();
+            $felInvoiceRequest->invoiceDateUpdatedAt();
+            return response()->json([
+                'success' => true
+            ]);
+            
+
+        } catch(ClientFelException $ex){
+            return response()->json([
+                'success' => false,
+                'msg' => $ex->getMessage()
+            ]);
+
+        }
     }
     public function getStatus(Request $request){
         try{

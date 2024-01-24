@@ -40,6 +40,7 @@ class InvoiceStates{
 
     const EMIT_ACTION = 'emit';
     const REVOCATE_ACTION = 'revocate';
+    const REVERSION_REVOCATE_ACTION = 'reversion-revocate';
 
     public static function getFinalStatusArray( $action ) {
 

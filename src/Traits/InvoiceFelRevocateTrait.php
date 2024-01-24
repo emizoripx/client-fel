@@ -55,4 +55,34 @@ trait InvoiceFelRevocateTrait{
         }
     }
 
+    public function reversionRevocate(){
+        
+        $felInvoiceRequest = $this->fel_invoice;
+
+        try {
+
+            if(is_null($felInvoiceRequest) || is_null($felInvoiceRequest->cuf)){
+                return;
+            }
+
+            if($felInvoiceRequest->codigoEstado != 691){
+                throw new ClientFelException(json_encode(["errors"=>["La Factura debe estar anulada"]]));
+            }
+            
+            $felInvoiceRequest->setAccessToken()->sendRevocateReversionInvoiceToFel();
+            
+            $felInvoiceRequest->invoiceDateUpdatedAt();
+            
+            // event(new InvoiceWasRevoked($felInvoiceRequest->invoice_origin(), $felInvoiceRequest->invoice_origin()->company, Ninja::eventVars(auth()->user()->id)));
+
+            // fel_register_historial($felInvoiceRequest);
+            
+        } catch (ClientFelException $ex) {
+            // bitacora_error("FelInvoiceRequestRevocate", "Error al anular Factura ". $ex->getMessage());
+            info("error revocation anulacion  File:".$ex->getFile()." Line: ".$ex->getLine()." Message: ". $ex->getMessage());
+            // fel_register_historial($felInvoiceRequest, $ex->getMessage());
+
+            throw new Exception($ex->getMessage());
+        }
+    }
 }

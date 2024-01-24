@@ -442,6 +442,43 @@ class FelInvoiceRequest extends Model
 
     }
 
+
+    public function sendRevocateReversionInvoiceToFel(){
+        $invoice_service = new Invoices($this->host, $this->access_token);
+
+        $invoice_service->reversionRevocateInvoice($this->factura_ticket);
+
+        if ($invoice_service->isSuccessful()) {
+            $invoice_service->getDetails($this->factura_ticket);
+
+            if ($invoice_service->isSuccessful()) {
+                $result = (array)$invoice_service->getResponse();
+                \DB::table("fel_invoice_requests")
+                    ->whereId($this->id)
+                    ->update([
+                        'cuf' => $result['cuf'],
+                        'urlSin' => isset($result['urlSin']) ? $result['urlSin'] . "&t=2" : "",
+                        'xml_url' => $result['xml_url'],
+                        'ack_ticket' => isset($result['ack_ticket']) ? $result['ack_ticket'] : null,
+                        'package_id' => $result['package_id'],
+                        'uuid_package' => $result['uuid_package'],
+                        'index_package' => $result['index_package'],
+                        'emission_type' => isset($result['tipoEmision']['codigo']) ? ($result['tipoEmision']['codigo'] == 2 ? "Fuera de línea" : "En línea") : "En línea",
+                        'fechaEmision' => Carbon::parse($result['fechaEmision'])->toDateTimeString(),
+                        'codigoEstado' => $result['codigoEstado'],
+                        'errores' => $result['errores'],
+                    ]);
+
+                \DB::table('invoices')->whereId($this->id_origin)->update(['date' => Carbon::parse($result['fechaEmision'])->toDateString()]);
+                $this->invoiceDateUpdatedAt();
+            }
+            
+        }
+        // GetInvoiceStatus::dispatch( $this, InvoiceStates::REVERSION_REVOCATE_ACTION )->delay( now()->addSeconds( 5 ) );
+
+    }
+
+
     public function sendUpdateInvoiceToFel(){
 
         $invoice_service = new Invoices($this->host, $this->access_token);
