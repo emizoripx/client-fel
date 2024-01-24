@@ -11,9 +11,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use EmizorIpx\OfficePhp74\Drivers\PhpSpreadsheetDriver;
-use EmizorIpx\OfficePhp74\Sheets\Parser;
-use EmizorIpx\OfficePhp74\SheetsService;
+use AnourValar\Office\Drivers\PhpSpreadsheetDriver;
+use AnourValar\Office\Sheets\Parser;
+use AnourValar\Office\SheetsService;
 use Carbon\Carbon;
 use App\Utils\HostedPDF\NinjaPdf;
 use EmizorIpx\ClientFel\Utils\ExportUtils;
@@ -223,7 +223,7 @@ class GenerateReport implements ShouldQueue
             // $template_filename = storage_path('reports/daily_movement_report_template.xlsx');
             \Log::debug("File Template Path: " . $template_filename);
 
-            $service_export->generate($template_filename, $this->invoices)->saveAs($this->report_name_path, \EmizorIpx\OfficePhp74\Format::Xlsx);
+            $service_export->generate($template_filename, $this->invoices)->saveAs($this->report_name_path, \AnourValar\Office\Format::Xlsx);
         }
         if (isset($template_filename))
             unlink($template_filename);
