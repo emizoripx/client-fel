@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsReceiptsInvoices extends Migration
+class AddColumnsReceiptsInvoicesTable extends Migration
 {
     /**
      * Run the migrations.
