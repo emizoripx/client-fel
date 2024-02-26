@@ -22,6 +22,10 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
     public function create($fel_data, $model)
     {
+        if (request()->has('receipt') && !request()->has("should_emit"))
+            return;
+
+
         \Log::debug("create !!!!! ");
         bitacora_info("FelInvoiceRequestRepository:create", json_encode($fel_data));
         
@@ -36,6 +40,9 @@ class FelInvoiceRequestRepository extends BaseRepository implements RepoInterfac
 
     public function update($fel_data, $model)
     {
+        if (request()->has('receipt') && !request()->has("should_emit"))
+            return;
+        
         \Log::debug("update !!!!! ");
         bitacora_info("FelInvoiceRequestRepository:update", json_encode($fel_data));
 
