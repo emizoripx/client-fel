@@ -201,13 +201,19 @@ class CobrosqrService{
             
             $input = [];
             
+            $uniques = [];
             foreach ($imeis_not_register as $imei) {
-                $input [] = [
-                    "client_id" => $client->id,
-                    "imei"=> $imei,
-                    "created_at"=>now()->format("Y-m-d H:i:s"),
-                    "updated_at"=>now()->format("Y-m-d H:i:s")
-                ];
+                $unique = $client->id."-".$imei;
+                if (!in_array($unique, $uniques)) {
+                
+                    $input [] = [
+                        "client_id" => $client->id,
+                        "imei"=> $imei,
+                        "created_at"=>now()->format("Y-m-d H:i:s"),
+                        "updated_at"=>now()->format("Y-m-d H:i:s")
+                    ];
+                    $uniques[] = $unique;
+                }
             }
             \DB::table("cobros_qr_links")->insert($input);
 
