@@ -16,6 +16,7 @@ class FelInvoiceObserver
     }
     public function created($model)
     {
+        info("INGRESANDO AL OBSERVER");
         if ( !is_null(request()->input('felData')) )
             $this->repo->create(request()->input('felData'), $model);
     }
