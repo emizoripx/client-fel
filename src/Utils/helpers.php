@@ -77,3 +77,14 @@ if(!function_exists('short_emission_date_to_literal')){
 //         return FunctionUtils::match_value($value, $options);
 //     }
 // }
+
+
+if (!function_exists('cobrosqr_logging')) {
+    function cobrosqr_logging($output, $context = []): void
+    {
+        if (gettype($output) == 'object') {
+            $output = print_r($output, 1);
+        }
+        \Illuminate\Support\Facades\Log::channel('cobroqr_logs')->info($output, $context);
+    }
+}

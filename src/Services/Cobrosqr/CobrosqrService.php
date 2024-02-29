@@ -27,33 +27,34 @@ class CobrosqrService{
 
     public function createInvoice($data)
     {
-        
-        $obj =  \DB::table("cobros_qr_links")->where("imei", $data["imei"])->first();
+        $tsm = "STORE>CREATE-INVOICE #" . $data['ticket']. " [imei='".$data["imei"]."']>>>" ;
+
+        cobrosqr_logging( $tsm . "start");
+        $obj =  \DB::table("cobros_qr_links")->where("imei", trim($data["imei"]))->first();
         if (!empty($obj)) {
             if ($this->getVendisCompany() !== null) {
                 if ( ($invoice_id = $this->invoiceWasCreated($data["ticket"]) ) == -1 ) {
-                    info("building invoice");
-
+                    cobrosqr_logging($tsm . "building invoice ");
                     $invoice = $this->buildInvoice($obj->client_id,$data);
-                    info("mark send invoice");
+
+                    cobrosqr_logging($tsm . "sending email to: " . $invoice->invitation?->contact->email);
                     $invoice->service()->markSent()->touchPdf()->save();
-                    info("send email");
-    
                     $send_email = new SendEmail($invoice, 'custom1');
                     $send_email->run();
-                    info("CREATING.....");
-                    $this->callbackResponseInvoice($invoice->id, $data['imei']);
+
+                    cobrosqr_logging($tsm . "Invoice created : sending callback ");
+                    $this->callbackResponseInvoice($invoice->id, $data['imei'], $data["ticket"]);
                 } else {
-                    info("VOLVIENDO A ENVIAR EL CALLBACK.....");
-                    $this->callbackResponseInvoice($invoice_id, $data['imei']);
+                    cobrosqr_logging($tsm . "Invoice was already created : sending callback ");
+                    $this->callbackResponseInvoice($invoice_id, $data['imei'], $data["ticket"]);
                 }   
 
 
+            }else {
+                cobrosqr_logging($tsm . "CREDENTIALS NOT FOUND: ");
             }
         } else {
-            //send email , not register imei
-            logger()->error("Error-COBROS-QR-COMMISSION: enviado : " . json_encode($data) );
-
+            cobrosqr_logging($tsm . "NOT-FOUND: ");
         }
     }
 
@@ -68,55 +69,67 @@ class CobrosqrService{
         return -1;
     }
 
-    private function callbackResponseInvoice($invoice_id, $imei)
+    private function callbackResponseInvoice($invoice_id, $imei, $ticket)
     {
         $vendis_call_back_url = $this->getVendisCallbackUrl();
-        dispatch(function () use ($invoice_id, $imei, $vendis_call_back_url){
-            if (empty($vendis_call_back_url))
-                return;
+        $tsm = "STORE>CALLBACK #" . $ticket . " [imei='" . $imei . "']>>>";
 
+        if (empty($vendis_call_back_url)){
+            cobrosqr_logging($tsm . "NOT FOUND CALLBACK URL");
+            return;
+        }
+        
+
+        dispatch(function () use ($invoice_id, $imei, $vendis_call_back_url, $tsm){
+
+            cobrosqr_logging($tsm . "waiting");
             sleep(10); //sleep 10 seconds for waiting invoice process
+            cobrosqr_logging($tsm . "processing");
+            
             $invoice = Invoice::find($invoice_id);
 
-            if (empty($invoice)) 
+            if (empty($invoice)) {
+                cobrosqr_logging($tsm . "NOT FOUND invoice #" . $invoice_id);
                 return;
+            }
 
-                try {
-                    $invoice->load('fel_invoice');
-                    $pdf_url = $invoice->service()->getInvoicePdf();
-                    info("pdf_url  " . $pdf_url);
-                    // Aquí deberías obtener los datos necesarios del objeto $invoice->fel_invoice
-                    $dataToSend = [
-                        "cuf" => $invoice->fel_invoice->cuf,
-                        "pdf_url" => is_null($pdf_url) ? null : Storage::url($pdf_url),
-                        "imei" => $imei,
-                        "emission_date" => $invoice->fel_invoice->fechaEmision,
-                        "document_number" => $invoice->fel_invoice->numeroDocumento,
-                        "business_name" => $invoice->fel_invoice->nombreRazonSocial,
-                        "ticket" => $invoice->fel_invoice->factura_ticket
-                    ];
-                    info("sending data : " ,$dataToSend);
-                    // Lógica para enviar los datos a través de Guzzle
-                    $client = new \GuzzleHttp\Client();
-                    $response = $client->post($vendis_call_back_url, [
-                        'json' => $dataToSend
-                    ]);
+            try {
+                $invoice->load('fel_invoice');
+                cobrosqr_logging($tsm . "load fel invoice successfully ");
+                $pdf_url = $invoice->service()->getInvoicePdf();
+                cobrosqr_logging($tsm . "pdf_url generated : " . $pdf_url);
 
-                    // Manejar la respuesta del endpoint
-                    $responseBody = json_decode($response->getBody(), true);
-                    info("response " , [$responseBody]);
-                // if ($responseBody['success']) {
-                //     // Lógica en caso de éxito
-                //     // Por ejemplo, registrar el éxito en el registro de la aplicación
-                // } else {
-                //     // Lógica en caso de fallo
-                //     // Por ejemplo, registrar el fallo en el registro de la aplicación
-                // }
-                } catch (\Throwable $th) {
-                    logger()->emergency("Error: ". $th->getMessage()." File: " .$th->getFile(). " Line: ". $th->getLine());
+                // Aquí deberías obtener los datos necesarios del objeto $invoice->fel_invoice
+                $dataToSend = [
+                    "cuf" => $invoice->fel_invoice->cuf,
+                    "pdf_url" => is_null($pdf_url) ? null : Storage::url($pdf_url),
+                    "imei" => $imei,
+                    "emission_date" => $invoice->fel_invoice->fechaEmision,
+                    "document_number" => $invoice->fel_invoice->numeroDocumento,
+                    "business_name" => $invoice->fel_invoice->nombreRazonSocial,
+                    "ticket" => $invoice->fel_invoice->factura_ticket
+                ];
+                
+                cobrosqr_logging($tsm . " SEND TO [".$vendis_call_back_url."] data : " , $dataToSend);
+                // Lógica para enviar los datos a través de Guzzle
+                $client = new \GuzzleHttp\Client();
+                $response = $client->post($vendis_call_back_url, [
+                    'json' => $dataToSend
+                ]);
+
+                // Manejar la respuesta del endpoint
+                $responseBody = json_decode($response->getBody(), true);
+
+
+                if ( isset($responseBody['success']) && $responseBody['success'] == true) {
+                    cobrosqr_logging($tsm . "RESPONSE:SUCCESS");
+                } else {
+                    cobrosqr_logging($tsm . "RESPONSE:FAIL");
+                    
                 }
-               
-            
+            } catch (\Throwable $th) {
+                cobrosqr_logging($tsm ."ERROR: " . $th->getMessage() . " File: " . $th->getFile() . " Line: " . $th->getLine());
+            }
 
         })->afterResponse();
     }
@@ -183,12 +196,14 @@ class CobrosqrService{
             ],
             "should_emit" => 'true'
         ];
-
+        $tsm = "STORE>BUILD-INVOICE #" . $data["ticket"] . " [imei='" . $data['imei'] . "']>>>";
         $request = request();
         $request->replace($input);
+        
+        cobrosqr_logging($tsm . "INPUT-INVOICE: ". json_encode($input));
 
         $invoice = $this->invoice_repo->save($input, InvoiceFactory::create($this->getVendisCompany(), $this->getVendisUser()));
-
+        cobrosqr_logging($tsm . "INVOICE CREATED SUCCESS ");
         return $invoice;
         
         
@@ -196,21 +211,25 @@ class CobrosqrService{
 
     public static function registerNewImeis(Client $client)
     {
-        
+
         if (static::getVendisCompany() == $client->company_id) {
-            info("REGISTER-IMEIS ===> ingresa");
+            $tsm = "REGISTER-IMEI CLIENT= ".$client->id.">>>>";
             $imeis = $client->custom_value4;
             $imeis_array_input = explode( ",", $imeis);
+
+            cobrosqr_logging($tsm . "CLIENT_NAME=".$client->name." IMEIS=".$imeis);
 
             $imeis_client = \DB::table("cobros_qr_links")->whereClientId($client->id)->select("imei")->pluck("imei")->toArray();
             
             $imeis_to_delete = array_diff($imeis_client, $imeis_array_input);
-            info("imeis to delete ========> " , $imeis_to_delete);
+            
+            cobrosqr_logging($tsm . "imeis-for-delete=" , $imeis_to_delete);
+
             if (!empty($imeis_to_delete))
                 \DB::table("cobros_qr_links")->whereClientId($client->id)->whereIn("imei",$imeis_to_delete)->delete();
 
             $imeis_not_register = array_diff($imeis_array_input, $imeis_client);
-            
+            cobrosqr_logging($tsm . "imeis-for-create=", $imeis_not_register);
             $input = [];
             
             $uniques = [];
