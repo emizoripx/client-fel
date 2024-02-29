@@ -70,11 +70,17 @@ class CobrosqrService{
 
     private function callbackResponseInvoice($invoice_id, $imei)
     {
-        dispatch(function () use ($invoice_id, $imei){
-            sleep(10);
+        $vendis_call_back_url = $this->getVendisCallbackUrl();
+        dispatch(function () use ($invoice_id, $imei, $vendis_call_back_url){
+            if (empty($vendis_call_back_url))
+                return;
+
+            sleep(10); //sleep 10 seconds for waiting invoice process
             $invoice = Invoice::find($invoice_id);
 
-            if ($invoice) {
+            if (empty($invoice)) 
+                return;
+
                 try {
                     $invoice->load('fel_invoice');
                     $pdf_url = $invoice->service()->getInvoicePdf();
@@ -92,7 +98,7 @@ class CobrosqrService{
                     info("sending data : " ,$dataToSend);
                     // Lógica para enviar los datos a través de Guzzle
                     $client = new \GuzzleHttp\Client();
-                    $response = $client->post('https://marcus.requestcatcher.com/test', [
+                    $response = $client->post($vendis_call_back_url, [
                         'json' => $dataToSend
                     ]);
 
@@ -110,9 +116,14 @@ class CobrosqrService{
                     logger()->emergency("Error: ". $th->getMessage()." File: " .$th->getFile(). " Line: ". $th->getLine());
                 }
                
-            }
+            
 
         })->afterResponse();
+    }
+
+    private static function getVendisCallbackUrl()
+    {
+        return env("VENDIS_CALLBACK_URL", null);
     }
 
     private static function getVendisCompany()
@@ -166,6 +177,7 @@ class CobrosqrService{
                 "nombreRazonSocial" => $data['nombreRazonSocial']??null,
                 "numeroDocumento" => $data['numeroDocumento']??null,
                 "codigoTipoDocumentoIdentidad" => $data["codigoTipoDocumentoIdentidad"]??null,
+                "codigoException" =>  $data["codigoTipoDocumentoIdentidad"] == 5? 1:null,
                 "facturaTicket" => $data["ticket"],
                 "typeDocument"=>0,
             ],
