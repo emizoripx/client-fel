@@ -29,7 +29,7 @@ class CobrosQRInvoiceStoreRequest extends FormRequest
         return [
             'imei' => [
                 'required',
-                'integer',
+                'string',
             ],
             'amount' => "required|numeric|gt:0",
             "ticket" => "required|string",
@@ -62,7 +62,7 @@ class CobrosQRInvoiceStoreRequest extends FormRequest
     {
         return [
             'imei.required' => 'El IMEI es obligatorio.',
-            'imei.integer' => 'El IMEI debe ser un número entero.',
+            'imei.string' => 'El IMEI debe ser una cadena de caracteres.',
             'amount.required' => 'El monto es obligatorio.',
             'amount.numeric' => 'El monto debe ser un valor numérico.',
             'amount.gt' => 'El monto debe ser mayor a 0.',
