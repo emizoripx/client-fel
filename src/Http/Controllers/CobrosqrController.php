@@ -11,7 +11,6 @@ class CobrosqrController extends BaseController
 {
     public function store(CobrosQRInvoiceStoreRequest $request)
     {
-        info("ingresando =========== " . json_encode($request->all()));
         cobrosqr_logging("STORE>start #".$request->get('ticket') . "  request => " . json_encode($request->all()));
         $service = new CobrosqrService();
         $service->createInvoice($request->all());
