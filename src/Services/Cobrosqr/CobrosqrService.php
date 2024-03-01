@@ -41,7 +41,8 @@ class CobrosqrService{
                     $invoice->service()->markSent()->touchPdf()->save();
                     $send_email = new SendEmail($invoice, 'custom1');
                     $send_email->run();
-
+                    cobrosqr_logging($tsm . "marked as paid");
+                    $invoice->service()->markPaid();
                     cobrosqr_logging($tsm . "Invoice created : sending callback ");
                     $this->callbackResponseInvoice($invoice->id, $data['imei'], $data["ticket"]);
                 } else {
@@ -190,7 +191,7 @@ class CobrosqrService{
                 "nombreRazonSocial" => $data['nombreRazonSocial']??null,
                 "numeroDocumento" => $data['numeroDocumento']??null,
                 "codigoTipoDocumentoIdentidad" => $data["codigoTipoDocumentoIdentidad"]??null,
-                "codigoException" =>  $data["codigoTipoDocumentoIdentidad"] == 5? 1:null,
+                "codigoException" =>  1,
                 "facturaTicket" => $data["ticket"],
                 "typeDocument"=>0,
             ],
@@ -216,7 +217,9 @@ class CobrosqrService{
             $tsm = "REGISTER-IMEI CLIENT= ".$client->id.">>>>";
             $imeis = $client->custom_value4;
             $imeis_array_input = explode( ",", $imeis);
-
+            //cleaning strings with spaces
+            $imeis_array_input = array_map('trim', $imeis_array_input);
+            
             cobrosqr_logging($tsm . "CLIENT_NAME=".$client->name." IMEIS=".$imeis);
 
             $imeis_client = \DB::table("cobros_qr_links")->whereClientId($client->id)->select("imei")->pluck("imei")->toArray();

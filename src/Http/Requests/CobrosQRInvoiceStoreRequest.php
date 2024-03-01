@@ -52,7 +52,7 @@ class CobrosQRInvoiceStoreRequest extends FormRequest
                 'montoTotal' => $this->get('amount'),
                 'nombreRazonSocial' => $this->get('business_name'),
                 'numeroDocumento' => $this->get('document_number'),
-                "codigoTipoDocumentoIdentidad" => $ctdi,
+                "codigoTipoDocumentoIdentidad" => is_null($this->get('document_number'))?:$ctdi,
             ]);
         });
     }
