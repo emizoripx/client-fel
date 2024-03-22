@@ -204,7 +204,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
 
         $items_changed = collect($items)->map(function ($item, $key) use (&$invoice_date, &$invoice_number, &$tipoPago) {
 
-            if (in_array($item['codigoEstado'], [905, 691])) {
+            if (in_array($item['codigoEstado'], [905, 691, 902])) {
                 $item['montoTotal'] = 0;
             }
 
