@@ -20,6 +20,7 @@ use EmizorIpx\ClientFel\Builders\ExportacionServiciosBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HidrocarburosNoIehdBuilder;
 use EmizorIpx\ClientFel\Builders\HotelesBuilder;
+use EmizorIpx\ClientFel\Builders\LubricantesBuilder;
 use EmizorIpx\ClientFel\Builders\NotaConciliacionBuilder;
 use EmizorIpx\ClientFel\Builders\PrevaloradaBuilder;
 use EmizorIpx\ClientFel\Builders\PrevaloradaSdcfBuilder;
@@ -70,6 +71,7 @@ class TypeDocumentSector
     const PREVALORADA_SDCF = 36;
     const COMERCIALIZACION_GNV = 37;
     const HIDROCARBUROS_NO_IEHD = 38;
+    const LUBRICANTES = 44;
     const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
     const ENGARRAFADORAS = 51;
 
@@ -217,6 +219,9 @@ class TypeDocumentSector
             case static::ENTIDADES_FINANCIERAS :
                 return EntidadFinancieraBuilder::class; 
                 break;
+            case static::LUBRICANTES :
+                return LubricantesBuilder::class; 
+                break;
             
             
             default:
@@ -316,6 +321,9 @@ class TypeDocumentSector
                 break;
             case static::ENTIDADES_FINANCIERAS:
                 return 'entidades-financieras';
+                break;
+            case static::LUBRICANTES:
+                return 'lubricantes';
                 break;
 
 
@@ -435,6 +443,9 @@ class TypeDocumentSector
                 break;
             case static::ENGARRAFADORAS:
                 return 'engarrafadora';
+                break;
+            case static::LUBRICANTES:
+                return 'lubricantes';
                 break;
 
             default:
@@ -616,6 +627,9 @@ class TypeDocumentSector
                 break;
             case static::ENGARRAFADORAS:
                 return 'FACTURA ENGARRAFADORAS';
+                break;
+            case static::LUBRICANTES:
+                return 'Factura Importación y Comercialización de Lubricantes';
                 break;
             
             
