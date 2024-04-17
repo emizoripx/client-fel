@@ -11,6 +11,7 @@ use EmizorIpx\ClientFel\Services\Cobrosqr\CobrosqrService;
 use EmizorIpx\ClientFel\Services\Cobrosqr\CobrosqrTerminalService;
 use Illuminate\Http\Request;
 use App\Models\CompanyGateway;
+use App\Utils\Traits\MakesHash;
 class CobrosqrController extends BaseController
 {
     use MakesHash;
