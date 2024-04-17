@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\CompanyGateway;
 class CobrosqrController extends BaseController
 {
+    use MakesHash;
     public function store(CobrosQRInvoiceStoreRequest $request)
     {
         cobrosqr_logging("STORE>start #".$request->get('ticket') . "  request => " . json_encode($request->all()));
@@ -52,10 +53,10 @@ class CobrosqrController extends BaseController
             $service = new CobrosqrTerminalService();
             $data = $service->listPayments();
             
-            return response()->json(["success" => true, "data" => $data]);
+            return response()->json(["success" => true, "message" => $data]);
         } catch (\Throwable $th) {
             info("error " . $th->getLine() . "    file " . $th->getFile() );
-            return response()->json(["success" => false, "data" => $th->getMessage()]);
+            return response()->json(["success" => false, "message" => $th->getMessage()]);
         }
     }
     public function listCashClosures(Request $request)
@@ -64,10 +65,28 @@ class CobrosqrController extends BaseController
             $service = new CobrosqrTerminalService();
             $data = $service->listCashClosures();
             
-            return response()->json(["success" => true, "data" => $data]);
+            return response()->json(["success" => true, "message" => $data]);
         } catch (\Throwable $th) {
             info("error " . $th->getLine() . "    file " . $th->getFile() );
-            return response()->json(["success" => false, "data" => $th->getMessage()]);
+            return response()->json(["success" => false, "message" => $th->getMessage()]);
+        }
+    }
+
+    public function checkQrId(Request $request)
+    {
+        try{
+
+            $payment_hash = PaymentHash::whereRaw('BINARY `hash`= ?', [$request->get("qr_id")])->first();
+            $qr_paid = !is_null($payment_hash->payment_id);
+
+            if ($qr_paid){
+                return response()->json(["success" => true, "message" => $payment_hash->payment->transaction_reference , "payment_id" => $this->encodePrimaryKey($payment_hash->payment_id) ] );
+            }
+            return response()->json(["success" => true, "message" => "Esperando pago...", "payment_id" => null ] );
+
+        } catch (\Throwable $th) {
+            info("error " . $th->getLine() . "    file " . $th->getFile() );
+            return response()->json(["success" => false, "message" => $th->getMessage()]);
         }
     }
 

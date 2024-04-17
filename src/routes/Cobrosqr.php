@@ -11,6 +11,7 @@ Route::group(['middleware' => ['token_auth'],'namespace' => "\EmizorIpx\ClientFe
 Route::group(['middleware' => ['token_auth'],'namespace' => "\EmizorIpx\ClientFel\Http\Controllers", "prefix" => "cobrosqr/api/"], function () {
     Route::get("list-payments", "CobrosqrController@listPayments");
     Route::get("list-cash-closures", "CobrosqrController@listCashClosures");
+    Route::get("check-qr", "CobrosqrController@checkQrId");
 });
 
 
