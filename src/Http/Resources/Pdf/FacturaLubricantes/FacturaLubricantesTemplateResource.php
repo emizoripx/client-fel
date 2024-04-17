@@ -13,7 +13,7 @@ class FacturaLubricantesTemplateResource extends BaseTemplateResource {
 
         $fel_invoice = $this->fel_invoice;
 
-        $common["subTotal"] = isset($fel_invoice->montoTotal) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional - $fel_invoice->data_specific_by_sector['montoIehd'] , 2) : '';
+        $common["subTotal"] = isset($fel_invoice->montoTotal) ? NumberUtils::number_format_custom( (float) $fel_invoice->montoTotal + $fel_invoice->descuentoAdicional, 2) : '';
 
         return array_merge($common, [
             "title" => is_null($fel_invoice->cuf) ? "PREFACTURA" : "FACTURA",
