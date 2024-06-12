@@ -40,65 +40,66 @@ class EmitTerminalPreinvoices implements ShouldQueue
     public function handle()
     {
         try {
-            \Log::debug("EMIT TERMIAL INVOICES JOB >>>>>>>>>>>>>>>>> INIT");
-            $company = Company::where('settings->id_number', '347399028')->first();
+            $now_date = now()->settimeZone(config('app.timezone'));
+            $first_day = $now_date->startOfMonth()->format("Y-m-d") . " 00:00:00";
+            $last_day  = $now_date->endOfMonth()->format("Y-m-d") . " 23:59:59";
+            $company = Company::where('settings->id_number', '347399028')->select("id")->first();
 
-            if( empty($company) ){
-                \Log::debug("Compañia no encontrada");
+
+            if (empty($company)) {
+               logger()->error("EMIT-TERMINAL NOT FOUND");
                 return;
             }
 
-            $now_date = Carbon::now();
-
-            \Log::debug("Mes Actual: " . $now_date->month);
-            \Log::debug("INICIO DE PROCESO: " . $now_date);
-            // $last_day = $now_date->lastOfMonth();
-
-            \Log::debug("Company " . $company->id);
-
-            $invoices = Invoice::join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')
-                        ->where('fel_invoice_requests.company_id', $company->id)
-                        ->where('invoices.company_id', $company->id)
-                        ->where('fel_invoice_requests.type_document_sector_id', TypeDocumentSector::ALQUILER_BIENES_INMUEBLES)
-                        ->whereNull('fel_invoice_requests.cuf')
-                        ->whereNull('fel_invoice_requests.recurring_id_origin')
-                        ->whereMonth('invoices.created_at', $now_date->month)
-                        ->select('invoices.*')
-                        ->get();
+            $tms = "EMIT-TERMINAL #" . $company->id;
 
 
-            \Log::debug("Preinvoices: " . count($invoices));
+            info($tms ."Periodo " . $first_day . " - " . $last_day);
+            $this->info($tms ."Periodo " . $first_day . " - " . $last_day);
 
-            foreach ($invoices as $invoice) {
-                
+            $invoices = Invoice::join('fel_invoice_requests', function ($join) use($company) {
+                $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
+                ->where('fel_invoice_requests.company_id', $company->id)
+                ->where('fel_invoice_requests.type_document_sector_id', 2)
+                ->whereNull('fel_invoice_requests.cuf')
+                ->whereNull('fel_invoice_requests.recurring_id_origin')
+                ->whereNull('fel_invoice_requests.deleted_at');
+            })
+            ->where('invoices.company_id', $company->id)
+            ->whereBetween('invoices.created_at', [$first_day, $last_day])
+            ->select('invoices.*');
+
+            $invoices->cursor()->each(function($invoice) use ($tms){
                 try {
-
-                    \Log::debug("Emit Invoice Number: " . $invoice->numeroFactura);
+                    info($tms .  "Emit Invoice Number: " . $invoice->number);
+                    // $this->info($tms .  "Emit Invoice Number: " . $invoice->number);
 
                     $invoice = $invoice->service()->applyNumber()->save();
-                    info("TRACK-TERMINAL " . $invoice->id);
+                    info($tms . "invoice_id=" . $invoice->id);
+                    
+                    // $this->info($tms . "invoice_id=" . $invoice->id);
+
                     $invoice->service()->emit('true');
 
-                } catch ( ClientFelException $cex ) {
+                    info($tms . "invoice_id=" . $invoice->id . " EMITTED");
+                    // $this->info($tms . "invoice_id=" . $invoice->id . " EMITTED");
 
-                    \Log::debug("Ocurrio a emitir la Factura: " . $invoice->numeroFactura . " Error: " . $cex->getMessage());
-
+                } catch (\Throwable $th) {
+                    logger()->error($tms . " File:".$th->getFile() . " Line:".$th->getLine()." message: ".$th->getMessage());
+                    // $this->info($tms . " File:".$th->getFile() . " Line:".$th->getLine()." message: ".$th->getMessage());
                 }
 
-            }
+            });
 
-            \Log::debug("Se emitió " . count($invoices) . " Facturas");
-            \Log::debug("EMIT TERMIAL INVOICES JOB >>>>>>>>>>>>>>>>> END");
+            info($tms . "FINISH");
+            // $this->info($tms . "FINISH");
 
-        } catch( \Exception $ex ) {
 
-            \Log::debug("Error al Obtener las prefacturas: " . $ex->getMessage());
+        } catch(\Throwable $th ) {
 
+            logger()->error("EMIT-TERMINAL File: ".$th->getFile() . " Line:" . $th->getLine() . " message: " . $th->getMessage() );
             return;
 
         }
-
-
-
     }
 }
