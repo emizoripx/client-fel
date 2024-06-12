@@ -152,6 +152,10 @@ class ExportUtils {
                 return RegisterSalesCustom1Report::class;
                 break;
 
+            case static::REGISTER_SALES_CUSTOM_2:
+                return RegisterSalesCustom1Report::class;
+                break;
+
             case static::REGISTER_REPORT_COTEOR:
                 return RegisterReportCoteor::class;
                 break;
