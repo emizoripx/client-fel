@@ -52,6 +52,8 @@ class ExportUtils {
 
     const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Sobodaycom';
 
+    const REGISTER_SALES_CUSTOM_2 = 'Registro_Ventas_excel';
+
     const REGISTER_REPORT_COTEOR = 'Registro_reporte_coteor';
 
     const COMPROBANTE_DIARIO_CUSTOM1 = 'Comprobante_diario_UNSL';

@@ -58,14 +58,16 @@ class EmitTerminalPreinvoices implements ShouldQueue
 
             $invoices = Invoice::join('fel_invoice_requests', 'invoices.id', '=', 'fel_invoice_requests.id_origin')
                         ->where('fel_invoice_requests.company_id', $company->id)
+                        ->where('invoices.company_id', $company->id)
                         ->where('fel_invoice_requests.type_document_sector_id', TypeDocumentSector::ALQUILER_BIENES_INMUEBLES)
                         ->whereNull('fel_invoice_requests.cuf')
+                        ->whereNull('fel_invoice_requests.recurring_id_origin')
                         ->whereMonth('invoices.created_at', $now_date->month)
                         ->select('invoices.*')
                         ->get();
 
 
-            \Log::debug("Preinvoices: " . json_encode($invoices));
+            \Log::debug("Preinvoices: " . count($invoices));
 
             foreach ($invoices as $invoice) {
                 
@@ -74,7 +76,7 @@ class EmitTerminalPreinvoices implements ShouldQueue
                     \Log::debug("Emit Invoice Number: " . $invoice->numeroFactura);
 
                     $invoice = $invoice->service()->applyNumber()->save();
-
+                    info("TRACK-TERMINAL " . $invoice->id);
                     $invoice->service()->emit('true');
 
                 } catch ( ClientFelException $cex ) {

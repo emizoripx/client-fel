@@ -215,12 +215,11 @@ class CobrosqrService{
 
         if (static::getVendisCompany() == $client->company_id) {
             $tsm = "REGISTER-IMEI CLIENT= ".$client->id.">>>>";
-            $imeis = $client->custom_value4;
+            $imeis =  preg_replace('/\s*,\s*/', ',', $client->custom_value4);
             $imeis_array_input = explode( ",", $imeis);
             //cleaning strings with spaces
             $imeis_array_input = array_map('trim', $imeis_array_input);
-            
-            cobrosqr_logging($tsm . "CLIENT_NAME=".$client->name." IMEIS=".$imeis);
+            cobrosqr_logging($tsm . "CLIENT_NAME=".$client->name." IMEIS=". json_encode($imeis_array_input));
 
             $imeis_client = \DB::table("cobros_qr_links")->whereClientId($client->id)->select("imei")->pluck("imei")->toArray();
             
@@ -237,6 +236,7 @@ class CobrosqrService{
             
             $uniques = [];
             foreach ($imeis_not_register as $imei) {
+                if(trim($imei) == "") continue;
                 $unique = $client->id."-".$imei;
                 if (!in_array($unique, $uniques)) {
                 
