@@ -100,7 +100,10 @@ class BaseFelInvoiceBuilder {
         }
 
         if (isset($model->due_date) && !is_null($model->due_date)) {
-            $extras["fechaVencimiento"] = $model->due_date;
+            if (is_array($extras))
+                $extras["fechaVencimiento"] = $model->due_date;
+            else
+                $extras->fechaVencimiento = $model->due_date;
         }
 
         if( $model instanceof RecurringInvoice ) {
