@@ -15,7 +15,13 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
         $fel_invoice = $this->fel_invoice;
 
         $common['subTotal'] = NumberUtils::number_format_custom( (float) collect(json_decode(json_encode($fel_invoice->detalles)))->sum('subTotal'), 2);
+       
+        $array_costosGastosInternacionales = [];
 
+        foreach ($fel_invoice->costosGastosInternacionales as $key => $value) {
+            array_push($array_costosGastosInternacionales, ["campo" => $key, "valor" => NumberUtils::number_format_custom((float)($value), 2)]);
+        }
+        
         return array_merge($common, [
             "title" => is_null($fel_invoice->cuf) ? "PREFACTURA COMERCIAL DE EXPORTACIÓN" : "FACTURA COMERCIAL DE EXPORTACIÓN",
             "subtitle" => is_null($fel_invoice->cuf) ? null : "(Sin Derecho a Crédito Fiscal)",
@@ -56,7 +62,7 @@ class FacturaComercialExportacionMineralesTemplateResource extends BaseTemplateR
             "otrosDatos" => $fel_invoice->otrosDatos,
             "fleteInternoUSDLiteral" =>  to_word( (float) isset($fel_invoice->otrosDatos['fleteInternoUSD']) ? $fel_invoice->otrosDatos['fleteInternoUSD'] : 0 , 2, $fel_invoice->codigoMoneda ),
             "valorPlataLiteral" => to_word( (float) isset($fel_invoice->otrosDatos['valorPlata']) ? $fel_invoice->otrosDatos['valorPlata'] : 0 , 2, $fel_invoice->codigoMoneda ),
-
+            "costosGastosInternacionales" => $array_costosGastosInternacionales,
             "detalles" => DetalleFacturaComercialExportacionMineralesTemplateResource::collection(json_decode(json_encode($fel_invoice->detalles)))->resolve()
         ]);
 

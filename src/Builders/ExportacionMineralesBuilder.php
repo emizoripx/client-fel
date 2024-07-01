@@ -75,7 +75,8 @@ class ExportacionMineralesBuilder extends BaseFelInvoiceBuilder implements FelIn
     {
 
         return [
-            "otrosDatos" => $this->source_data['fel_data_parsed']['otrosDatos']
+            "otrosDatos" => $this->source_data['fel_data_parsed']['otrosDatos'],
+            "costosGastosInternacionales" => $this->source_data['fel_data_parsed']['costosGastosInternacionales'] != null ? json_decode($this->source_data['fel_data_parsed']['costosGastosInternacionales']) : []
         ];
     }
 

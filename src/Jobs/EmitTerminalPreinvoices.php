@@ -41,8 +41,8 @@ class EmitTerminalPreinvoices implements ShouldQueue
     {
         try {
             $now_date = now()->settimeZone(config('app.timezone'));
-            $first_day = $now_date->startOfMonth()->format("Y-m-d") . " 00:00:00";
-            $last_day  = $now_date->endOfMonth()->format("Y-m-d") . " 23:59:59";
+            $first_day = "2024-06-01 00:00:00";
+            $last_day  = "2024-06-30 23:59:59";
             $company = Company::where('settings->id_number', '347399028')->select("id")->first();
 
 
