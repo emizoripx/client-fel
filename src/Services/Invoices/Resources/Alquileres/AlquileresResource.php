@@ -28,7 +28,7 @@ class AlquileresResource extends JsonResource
             "complemento" => $this->complemento,
             "codigoCliente" => $this->codigoCliente,
             "tipoCambio" => $this->tipoCambio,
-            "codigoMetodoPago" => $this->codigoMetodoPago,
+            "codigoMetodoPago" => $this->company_id == 460 ? 10 : $this->codigoMetodoPago,
             "numeroTarjeta" => $this->numeroTarjeta,
             "codigoLeyenda" => $this->codigoLeyenda,
             "usuario" => $this->usuario,

@@ -55,7 +55,7 @@ class EmitTerminalPreinvoices implements ShouldQueue
 
 
             info($tms ."Periodo " . $first_day . " - " . $last_day);
-            $this->info($tms ."Periodo " . $first_day . " - " . $last_day);
+            // $this->info($tms ."Periodo " . $first_day . " - " . $last_day);
 
             $invoices = Invoice::join('fel_invoice_requests', function ($join) use($company) {
                 $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
