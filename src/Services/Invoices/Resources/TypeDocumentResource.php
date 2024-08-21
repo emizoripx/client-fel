@@ -44,10 +44,8 @@ class TypeDocumentResource extends JsonResource
      */
     public function toArray($request)
     {
-        \Log::debug("========================= ANTES ======= ". $this->fechaEmision );
         $this->fechaEmision = substr((\Carbon\Carbon::parse($this->fechaEmision))->setTimezone('America/La_Paz')->format('Y-m-d\TH:i:s.u'), 0, -3) ;
 
-        \Log::debug("========================= DESPUES ======= " . $this->fechaEmision);
         switch ($this->type_document_sector_id) {
             
             case TypeDocumentSector::COMPRA_VENTA:

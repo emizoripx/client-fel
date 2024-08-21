@@ -139,7 +139,9 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
-            ->whereNull('paymentables.created_at')
+            ->where(function($query){
+                return $query->where('paymentables.deleted_at')->orWhere('paymentables.created_at',null);
+            } )
             ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
         $emitted = $this->addBranchFilter($emitted);
         $emittend_payed = $this->addBranchFilter($emittend_payed);

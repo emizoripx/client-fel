@@ -22,14 +22,15 @@ trait InvoiceFelEmitTrait
         $info = request("tstms_small") . "EMIT-TRAIT  ";
         info($info .  "INVOICE_ID=  [" . $this->invoice->id . "] ");
         
-        $felInvoiceRequest = $this->invoice->fel_invoice->fresh();
-
-
+        
+        
         if (empty($this->invoice->fel_invoice)) {
             bitacora_warning("EMIT INVOICE", "From Company:" . $this->invoice->company_id . ", Invoice #" . $this->invoice->number . " does not exist yet in table FEL_INVOICE_REQUEST.");
             throw new ClientFelException(" La Factura #" . $this->invoice->number . " no cuenta con datos necesarios para emitirse.");
             return $this;
         }
+        
+        $felInvoiceRequest = $this->invoice->fel_invoice->fresh();
         info($info .  " FEL_INVOICE = " . $felInvoiceRequest->id . " numerofactura = " . $felInvoiceRequest->numeroFactura );
         try {
             info($info .  "set invoice number ". $this->invoice->number);
