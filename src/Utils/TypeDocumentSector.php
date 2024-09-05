@@ -33,6 +33,7 @@ use EmizorIpx\ClientFel\Builders\TelecomunicacionesBuilder;
 use EmizorIpx\ClientFel\Builders\TurismoBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ZonaFrancaBuilder;
+use EmizorIpx\ClientFel\Builders\VentaMineralesBcbBuilder;
 
 class TypeDocumentSector
 {
@@ -73,6 +74,7 @@ class TypeDocumentSector
     const HIDROCARBUROS_NO_IEHD = 38;
     const LUBRICANTES = 44;
     const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
+    const VENTA_MINERALES_BCB = 52;
     const ENGARRAFADORAS = 51;
 
     const ARRAY_NAMES = [
@@ -123,6 +125,7 @@ class TypeDocumentSector
         45 => "Factura Comercial De Exportacion Precio Venta",
         46 => "Factura Sectores Educativo Zona Franca",
         51 => "Factura Engarrafadoras",
+        52 => "Factura Venta Minerales BCB",
     ];
 
     public static function getInstanceByCode($code):string
@@ -221,6 +224,9 @@ class TypeDocumentSector
                 break;
             case static::LUBRICANTES :
                 return LubricantesBuilder::class; 
+                break;
+            case static::VENTA_MINERALES_BCB :
+                return VentaMineralesBcbBuilder::class; 
                 break;
             
             
@@ -324,6 +330,9 @@ class TypeDocumentSector
                 break;
             case static::LUBRICANTES:
                 return 'lubricantes';
+                break;
+            case static::VENTA_MINERALES_BCB:
+                return 'venta-minerales-bcb';
                 break;
 
 
@@ -446,6 +455,9 @@ class TypeDocumentSector
                 break;
             case static::LUBRICANTES:
                 return 'lubricantes';
+                break;
+            case static::VENTA_MINERALES_BCB:
+                return 'venta-minerales-bcb';
                 break;
 
             default:
@@ -630,6 +642,9 @@ class TypeDocumentSector
                 break;
             case static::LUBRICANTES:
                 return 'Factura Importación y Comercialización de Lubricantes';
+                break;
+            case static::VENTA_MINERAL_BCB:
+                return 'Factura Venta Mineral Banco Central';
                 break;
             
             
