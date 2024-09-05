@@ -643,7 +643,7 @@ class TypeDocumentSector
             case static::LUBRICANTES:
                 return 'Factura Importación y Comercialización de Lubricantes';
                 break;
-            case static::VENTA_MINERAL_BCB:
+            case static::VENTA_MINERALES_BCB:
                 return 'Factura Venta Mineral Banco Central';
                 break;
             
