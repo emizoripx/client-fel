@@ -41,7 +41,6 @@ class VentaMineralesBcbBuilder extends BaseFelInvoiceBuilder implements FelInvoi
                     "nim" => $this->source_data['company']->nim,
                     "concentradoGranel" => $this->source_data['fel_data_parsed']["concentradoGranel"],
                     "origen" => $this->source_data['fel_data_parsed']["origen"],
-                    "incoterm" => $this->source_data['fel_data_parsed']["incoterm"],
                     "numeroLote" => $this->source_data['fel_data_parsed']["numeroLote"],
                     "kilosNetosHumedos" => $this->source_data['fel_data_parsed']["kilosNetosHumedos"],
                     "humedadPorcentaje" => $this->source_data['fel_data_parsed']["humedadPorcentaje"],

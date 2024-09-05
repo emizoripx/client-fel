@@ -24,7 +24,6 @@ class FacturaVentaMineralesBcbTemplateResource extends BaseTemplateResource {
             "concentradoGranel" => $fel_invoice->concentradoGranel,
             "origen" => $fel_invoice->origen,
             "puertoTransito" => $fel_invoice->puertoTransito,
-            "incoterm" => $fel_invoice->incoterm,
             "puertoDestino" => $fel_invoice->puertoDestino,
             "destinyCountry" =>  $fel_invoice->paisDestino ? country($fel_invoice->paisDestino) : '---' ,
             "tipoCambio" => NumberUtils::number_format_custom( (float) $fel_invoice->tipoCambio, 2),
