@@ -31,6 +31,7 @@ use EmizorIpx\ClientFel\Services\Invoices\Resources\Telecomunicaciones\Telecomun
 use EmizorIpx\ClientFel\Services\Invoices\Resources\Turismo\TurismoResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMinerales\VentaMineralesResource;
 use EmizorIpx\ClientFel\Services\Invoices\Resources\ZonaFranca\ZonaFrancaResource;
+use EmizorIpx\ClientFel\Services\Invoices\Resources\VentaMineralesBcb\VentaMineralesBcbResource;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -133,6 +134,8 @@ class TypeDocumentResource extends JsonResource
                 return new EntidadFinancieraResource($this);
             case TypeDocumentSector::LUBRICANTES:
                 return new LubricantesResource($this);
+            case TypeDocumentSector::VENTA_MINERALES_BCB:
+                return new VentaMineralesBcbResource($this);
 
 
             default:
