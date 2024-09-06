@@ -20,7 +20,7 @@ class VentaMineralesBcbResource extends JsonResource
             "ruex" => $this->ruex,
             "nim" => $this->nim,
             "concentradoGranel" => $this->concentradoGranel,
-            "incoterm" => $this->incoterm,
+            "origen" => $this->origen,
             "numeroLote" => $this->numeroLote,
             "fechaEmision"=> $this->fechaEmision,
             "kilosNetosHumedos" => round($this->kilosNetosHumedos, 2),
