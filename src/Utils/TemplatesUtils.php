@@ -29,6 +29,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTasaCero\FacturaTasaCeroTempla
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTelecomunicaciones\FacturaTelecomunicacionesTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaTurismo\FacturaTurismoTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaInternaMinerales\FacturaVentaInternaMineralesTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaVentaMineralesBcb\FacturaVentaMineralesBcbTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaZonaFranca\FacturaZonaFrancaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaDebitoCredito\NotaDebitoCreditoTemplateResource;
@@ -137,6 +138,8 @@ class TemplatesUtils {
             case TypeDocumentSector::LUBRICANTES:
                 return FacturaLubricantesTemplateResource::class;
                 break;
+            case TypeDocumentSector::VENTA_MINERALES_BCB:
+                return FacturaVentaMineralesBcbTemplateResource::class;
 
 
 
