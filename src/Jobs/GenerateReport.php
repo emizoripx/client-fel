@@ -249,17 +249,8 @@ class GenerateReport implements ShouldQueue
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
                 $writer->insertOne((array) $record);
-                $totalFinalBaseCreditoFiscal += $row['baseCreditoFiscal'];
-                $totalFinal += $row['importeTotal'];
             }
         
-            // Al final, agregar una fila con el total final
-            $writer->insertOne([
-                '', '', '', '', '', '', '', '', 
-                $totalFinalBaseCreditoFiscal, '', '', '', '', '', '', '', 
-                '', '', '',$totalFinal , '', '', '', 
-                '' 
-            ]);
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
             $mensualidad_code = 1001;
             $matricula_code = 1000;
@@ -307,11 +298,20 @@ class GenerateReport implements ShouldQueue
         $writer->addHeader($this->invoices['header']);
 
         if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1){
-
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
-                $writer->addRow((array) $record);
+                $writer->insertOne((array) $record);
+                $totalFinalBaseCreditoFiscal += $row['baseCreditoFiscal'];
+                $totalFinal += $row['importeTotal'];
             }
+        
+            // Al final, agregar una fila con el total final
+            $writer->insertOne([
+                '', '', '', '', '', '', '', '', 
+                $totalFinalBaseCreditoFiscal, '', '', '', '', '', '', '', 
+                '', '', '',$totalFinal , '', '', '', 
+                '' 
+            ]);
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
             $mensualidad_code = 1001;
             $matricula_code = 1000;
