@@ -301,8 +301,8 @@ class GenerateReport implements ShouldQueue
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
                 $writer->insertOne((array) $record);
-                $totalFinalBaseCreditoFiscal += $row['baseCreditoFiscal'];
-                $totalFinal += $row['importeTotal'];
+                $totalFinalBaseCreditoFiscal += $record['baseCreditoFiscal'];
+                $totalFinal += $record['importeTotal'];
             }
         
             // Al final, agregar una fila con el total final
