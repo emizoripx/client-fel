@@ -249,7 +249,17 @@ class GenerateReport implements ShouldQueue
             foreach ($this->invoices['invoices']->cursor() as $record) {
                 
                 $writer->insertOne((array) $record);
+                $totalFinalBaseCreditoFiscal += $row['baseCreditoFiscal'];
+                $totalFinal += $row['importeTotal'];
             }
+        
+            // Al final, agregar una fila con el total final
+            $writer->insertOne([
+                '', '', '', '', '', '', '', '', 
+                $totalFinalBaseCreditoFiscal, '', '', '', '', '', '', '', 
+                '', '', '',$totalFinal , '', '', '', 
+                '' 
+            ]);
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
             $mensualidad_code = 1001;
             $matricula_code = 1000;
