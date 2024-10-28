@@ -101,8 +101,8 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
         
         foreach ($query_invoices as $record) {
                 
-                $totalFinalBaseCreditoFiscal += $record['baseCreditoFiscal'];
-                $totalFinal += $record['importeTotal'];
+                $totalFinalBaseCreditoFiscal += $record->baseCreditoFiscal;
+                $totalFinal += $record->importeTotal;
         }
         $total_row = $query_invoices[0];
 
@@ -110,13 +110,13 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
             if (in_array($col, ["baseCreditoFiscal", "baseCreditoFiscal"])) {
 
                 if ($col == "baseCreditoFiscal") {
-                    $total_row["baseCreditoFiscal"] = $totalFinalBaseCreditoFiscal;
+                    $total_row->baseCreditoFiscal = $totalFinalBaseCreditoFiscal;
                 }
                 if ($col == "baseCreditoFiscal") {
-                    $total_row["baseCreditoFiscal"] = $totalFinalBaseCreditoFiscal;
+                    $total_row->baseCreditoFiscal = $totalFinalBaseCreditoFiscal;
                 }
             } else {
-                $total_row[$col] = '';
+                $total_row->{$col} = '';
             }
         }
         $query_invoices[] = $total_row;
