@@ -95,6 +95,32 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
         $query_invoices = $this->addBranchFilter($query_invoices);
         $query_invoices =  $this->addSelectColumns($query_invoices);
         $query_invoices = $query_invoices->get();
+        
+        $totalFinalBaseCreditoFiscal =0;
+        $totalFinal =0;
+        
+        foreach ($query_invoices as $record) {
+                
+                $totalFinalBaseCreditoFiscal += $record['baseCreditoFiscal'];
+                $totalFinal += $record['importeTotal'];
+        }
+        $total_row = $query_invoices[0];
+
+        foreach($total_row as $col => $value) {
+            if (in_array($col, ["baseCreditoFiscal", "baseCreditoFiscal"])) {
+
+                if ($col == "baseCreditoFiscal") {
+                    $total_row["baseCreditoFiscal"] = $totalFinalBaseCreditoFiscal;
+                }
+                if ($col == "baseCreditoFiscal") {
+                    $total_row["baseCreditoFiscal"] = $totalFinalBaseCreditoFiscal;
+                }
+            } else {
+                $total_row[$col] = '';
+            }
+        }
+        $query_invoices[] = $total_row;
+
 
         return [
             "header" => [
