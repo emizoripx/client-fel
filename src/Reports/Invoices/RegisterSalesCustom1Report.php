@@ -96,25 +96,37 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
         $query_invoices =  $this->addSelectColumns($query_invoices);
         $query_invoices = $query_invoices->get();
         
-        $totalFinalBaseCreditoFiscal =0;
-        $totalFinal =0;
+        $totals =[
+            "importeTotal"=> 0,
+            "importeIce"=> 0,
+            "importeIEHD"=> 0,
+            "importeIPJ"=> 0,
+            "tasas"=> 0,
+            "otros"=> 0,
+            "exportaciones"=> 0,
+            "tasaCero"=> 0,
+            "subTotal"=> 0,
+            "descuentoAdicional"=> 0,
+            "bonificaciones"=> 0,
+            "montoGiftCard"=> 0,
+            "baseCreditoFiscal"=> 0,
+            "debitoFiscal" => 0
+        ];
+        
         
         foreach ($query_invoices as $record) {
-                
-                $totalFinalBaseCreditoFiscal += $record->baseCreditoFiscal;
-                $totalFinal += $record->importeTotal;
+                foreach (["importeTotal", "importeIce", "importeIEHD", "importeIPJ", "tasas", "otros", "exportaciones", "tasaCero", "subTotal", "descuentoAdicional", "bonificaciones", "montoGiftCard", "baseCreditoFiscal", "debitoFiscal"] as $col) {
+
+                    $totals[$col] += $record->{$col};
+                }
         }
         $total_row = $query_invoices[0];
 
         foreach($total_row as $col => $value) {
-            if (in_array($col, ["baseCreditoFiscal", "baseCreditoFiscal"])) {
+            if (in_array($col, ["importeTotal", "importeIce", "importeIEHD", "importeIPJ", "tasas", "otros", "exportaciones", "tasaCero", "subTotal", "descuentoAdicional", "bonificaciones", "montoGiftCard", "baseCreditoFiscal", "debitoFiscal"])) {
 
-                if ($col == "baseCreditoFiscal") {
-                    $total_row->baseCreditoFiscal = $totalFinalBaseCreditoFiscal;
-                }
-                if ($col == "baseCreditoFiscal") {
-                    $total_row->baseCreditoFiscal = $totalFinalBaseCreditoFiscal;
-                }
+                $total_row->{$col} = $totals[$col];
+              
             } else {
                 $total_row->{$col} = '';
             }
