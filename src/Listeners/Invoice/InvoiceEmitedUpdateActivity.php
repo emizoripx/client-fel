@@ -36,10 +36,10 @@ class InvoiceEmitedUpdateActivity
         MultiDB::setDB($event->company->db);
 
         $fields = new stdClass;
-
+        $user_id = array_key_exists('user_id', $event->event_vars) ? $event->event_vars['user_id'] : $event->invoice->user_id;
         $fields->invoice_id = $event->invoice->id;
         $fields->client_id = $event->invoice->client_id;
-        $fields->user_id = $event->invoice->user_id;
+        $fields->user_id = $user_id;
         $fields->company_id = $event->invoice->company_id;
         $fields->activity_type_id = Activity::EMIT_UPDATE_INVOICE;
         $fields->notes = "Factura #". $event->invoice->fel_invoice->numeroFactura." Emisión Actualizada";
