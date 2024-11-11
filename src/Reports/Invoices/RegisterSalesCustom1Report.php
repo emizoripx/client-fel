@@ -120,7 +120,7 @@ class RegisterSalesCustom1Report extends BaseReport implements ReportInterface
                     $totals[$col] += $record->{$col};
                 }
         }
-        $total_row = $query_invoices[0];
+        $total_row = clone $query_invoices[0];
 
         foreach($total_row as $col => $value) {
             if (in_array($col, ["importeTotal", "importeIce", "importeIEHD", "importeIPJ", "tasas", "otros", "exportaciones", "tasaCero", "subTotal", "descuentoAdicional", "bonificaciones", "montoGiftCard", "baseCreditoFiscal", "debitoFiscal"])) {
