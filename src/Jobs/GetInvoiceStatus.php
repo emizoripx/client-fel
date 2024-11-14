@@ -24,11 +24,13 @@ class GetInvoiceStatus implements ShouldQueue
 
     protected $fel_invoice;
 
-    protected $delay_times = [ 10, 20, 30, 60, 120, 300 ];
+    public $tries = 0; 
 
-    protected $delay_offline = [ 1800, 3600, 10800, 18000, 36000, 86400 ];
-
-    public $tries = 6;
+    public $timeout = 0;
+    // 6 seg, 6 seg, 30 seg, 30 seg, 1 min, 1 min, 5 min, 10 min 30 min
+    public $backoff = [0.1, 0.1,0.5,0.5,1,1,5,10,30];
+    // 6 seg, 30 seg, 5 min, 30 min 60 min
+    public $backoffoffline = [0.1, 0.5, 5, 30, 60];
     /**
      * Create a new job instance.
      *
@@ -41,6 +43,10 @@ class GetInvoiceStatus implements ShouldQueue
 
     }
 
+    public function retryUntil()
+    {
+        return now()->addHours(48); // two days
+    }
 
     public function middleware() {
 
@@ -54,33 +60,58 @@ class GetInvoiceStatus implements ShouldQueue
      */
     public function handle()
     {
+        $tms = "GET-INVOICE-STATUS >>> #" . $this->fel_invoice->id . " >> ACTION = ". $this->action. " >>> ";
         try {
 
             $this->fel_invoice->refresh();
 
-            if( empty( $this->fel_invoice->cuf ) || is_null( $this->fel_invoice->cuf ) ) {
+            if( empty( $this->fel_invoice->cuf ) ) {
 
-                \Log::debug('GET INVOICE STATUS JOBS ----------- ' . $this->fel_invoice->id . ' La Factura no tiene CUF');
-                $this->fail();
+                info($tms. "CUF NOT FOUND");
+                return;
+                // $this->fail();
             }
-
             $response = $this->fel_invoice->setAccessToken()->sendVerifyStatus();
-
-            \Log::debug('GET INVOICE STATUS JOBS ------------- ' . $this->fel_invoice->id . ' status response: ' . json_encode($response) );
-
+            
+            info($tms. "FEL response ". json_encode($response));
 
             if( is_null( $response['codigoEstado'] ) || ! in_array( $response['codigoEstado'], InvoiceStates::getFinalStatusArray($this->action) ) ){
+                info($tms. "Fel invoice request status " , [$this->fel_invoice->emission_type]);
 
-                throw new ClientFelException( 'Factura Pendiente' );
+
+                if ($this->action == InvoiceStates::REVOCATE_ACTION && $response['codigoEstado'] == 690 && !empty($response["errores"])  ) {
+                        $used_or_consolidated = array_filter(
+                            json_decode($response["errores"], false),
+                            function ($e) {
+                                return $e->code == 997 || $e->code == 3010;
+                            }
+                        );
+
+                        if (!empty($used_or_consolidated)) {
+                            info($tms. "CONSOLIDADA!!!");
+                            info($tms. "REVERTING INVOICE TO VALID !!!");
+                            $invoice = $this->fel_invoice->invoice_origin();
+                            $invoice = $invoice->service()->reverseCancellation()->touchPdf(true)->save();
+                            // TODO: send email or notification to user
+                            return;
+                        }
+                }
+
+                if( $this->fel_invoice->emission_type == 'Fuera de línea' ){
+
+                    $this->releaseBackoff("offline");
+                }
+
+                $this->releaseBackoff();
             }
-
 
             $this->fel_invoice->update([
                 'codigoEstado' => $response['codigoEstado'],
                 'estado' => $response['estado'],
                 'errores' => $response['errores']
             ]);
-
+            
+            info($tms. "updated status code");
             if( $this->action == InvoiceStates::REVOCATE_ACTION && $response['codigoEstado'] == 691 ){
 
                 \Log::debug('Cancellation Invoice: ' . $this->fel_invoice->id_origin);
@@ -89,27 +120,22 @@ class GetInvoiceStatus implements ShouldQueue
                 $invoice = $invoice->service()->handleCancellation()->deletePdf()->touchPdf()->save();
             }
 
-        } catch( ClientFelException | Exception $ex ) {
-            \Log::debug('GET INVOICE STATUS JOBS ---------- Log Exception ' . $ex->getMessage() . ' File: ' . $ex->getFile() . ' Line: ' . $ex->getLine() );
-
-            $attempts_after = $this->delay_times[ $this->attempts() - 1 ];
-
-            if( $this->fel_invoice->emission_type == 'Fuera de línea' ){
-
-                $attempts_after = $this->delay_offline[$this->attempts() - 1];
-            }
-
-            \Log::debug('GET INVOICE STATUS JOBS ----------- Invoice #' . $this->fel_invoice->numeroFactura . ' Attempt after of ' . $attempts_after . ' seconds');
-
-            $this->release( $attempts_after );
-            
+        } catch( \Throwable $ex ) {
+            info($tms. "ERRROR " . $ex->getMessage() . ' File: ' . $ex->getFile() . ' Line: ' . $ex->getLine());
+            // TODO: NOTIFY BY EMAIL
+            return;
         }
     }
 
-    public function failed( Throwable $exception ) {
+    public function releaseBackoff($type="")
+    {
+        if ($this->attempts() > sizeof($this->{"backoff".$type})) {
+            $retry_time= $this->{"backoff".$type}[sizeof($this->{"backoff".$type})-1] * 60 ;
+        }else {
+            $retry_time= $this->{"backoff".$type}[$this->attempts()-1] * 60 ;
+        }
 
-        \Log::debug('GET INOVICE STATUS JOBS ----------- ocurrio un error en realizar la petición de Estado Exception: ' . $exception->getMessage() );
-
-        //Notificar por correo
+        info("GET-INVOICE-STATUS >>> #" . $this->fel_invoice->id . " >> ACTION = ". $this->action. " >>> RELEASE FOR " . $retry_time . " seconds");
+        $this->release($retry_time); 
     }
 }
