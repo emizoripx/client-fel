@@ -91,7 +91,8 @@ class GetInvoiceStatus implements ShouldQueue
                             info($tms. "CONSOLIDADA!!!");
                             info($tms. "REVERTING INVOICE TO VALID !!!");
                             $invoice = $this->fel_invoice->invoice_origin();
-                            $invoice = $invoice->service()->reverseCancellation()->touchPdf(true)->save();
+                            $invoice = $invoice->service()->setCalculatedStatus()->touchPdf(true)->save();
+
                             // TODO: send email or notification to user
                             return;
                         }
