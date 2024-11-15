@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  
 ### Fixed
  
+ ## [v2.18.8] - 2024-11-15
+ 
+### Added
+- added validation for concolidate invoices, return to valid invoice, to retry revocation
+### Changed
+- changed check status, added time to validato until 48 hours,
+### Fixed
+ 
+
  ## [v1.6.3] - 2021-02-26
   
 ### Added
