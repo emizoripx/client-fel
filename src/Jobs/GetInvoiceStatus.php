@@ -136,7 +136,7 @@ class GetInvoiceStatus implements ShouldQueue
             $retry_time= $this->{"backoff".$type}[$this->attempts()-1] * 60 ;
         }
 
-        info("GET-INVOICE-STATUS >>> #" . $this->fel_invoice->id . " >> ACTION = ". $this->action. " >>> RELEASE FOR " . $retry_time . " seconds");
+        info("GET-INVOICE-STATUS >>> #" . $this->fel_invoice->id . " >> ACTION = ". $this->action. " >> ATTEMPT = " . $this->attempts() . " >>> RELEASE FOR " . $retry_time . " seconds");
         $this->release($retry_time); 
     }
 }
