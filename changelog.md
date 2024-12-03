@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased] 
   
 ### Added
+### Changed 
+### Fixed
+
+## [v2.18.9] - 2024-11-15
+  
+### Added
 - validation when service is not available, it shoult not contiue revocation
 ### Changed 
 ### Fixed
