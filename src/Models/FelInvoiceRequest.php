@@ -441,7 +441,7 @@ class FelInvoiceRequest extends Model
         }else {
             // there was no successful
             $errors = $invoice_service->getErrors();
-            throw new ClientFelException($errors);
+            throw new ClientFelException(json_encode($errors));
         }
 
     }
