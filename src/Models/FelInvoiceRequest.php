@@ -437,8 +437,12 @@ class FelInvoiceRequest extends Model
                 $this->invoiceDateUpdatedAt();
             }
             
+            GetInvoiceStatus::dispatch( $this, InvoiceStates::REVOCATE_ACTION )->delay( now()->addSeconds( 5 ) );
+        }else {
+            // there was no successful
+            $errors = $invoice_service->getErrors();
+            throw new ClientFelException($errors);
         }
-        GetInvoiceStatus::dispatch( $this, InvoiceStates::REVOCATE_ACTION )->delay( now()->addSeconds( 5 ) );
 
     }
 
