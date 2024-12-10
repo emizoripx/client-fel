@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed 
 ### Fixed
 
+## [v2.18.10] - 2024-11-15
+  
+### Added
+### Changed 
+### Fixed
+- fix error for nota conciliacion, missing data not handle
+
 ## [v2.18.9] - 2024-11-15
   
 ### Added
