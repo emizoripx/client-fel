@@ -53,4 +53,42 @@ class FunctionUtils {
 
     }
 
+    public static function updateTermsTemplate($termsTemplate)
+    {
+        // regular expresion to extract information between [[ and ]]
+        $patron = '/\[\[(.*?)\]\]/';
+        $template = null;
+        if (preg_match($patron, $termsTemplate, $coincidences)) {
+            // found information
+            $template = $coincidences[1];
+        } 
+        $period_changed = "";
+        switch ($template) {
+            case 'MENSUAL_PREPAGO':
+                $period_changed = static::literalMonthsPeriod(now()->format("m"))  . "-" . now()->format("Y");
+                break;
+            case 'MENSUAL_POSTPAGO':
+                $period_changed = static::literalMonthsPeriod(now()->subMonth()->format("m"))   . "-" . now()->format("Y");
+                break;
+            default:
+                $period_changed = "";
+                break;
+        }
+
+        if ($period_changed != "") {
+            // replace
+            return preg_replace($patron, $period_changed, $termsTemplate);
+        }
+
+        return $termsTemplate;
+
+    }
+
+    public static function literalMonthsPeriod($num)
+    {
+        $months = ["","ENERO", "FEBRERO","MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+
+        return $months[intval($num)];
+    }
+
 }
