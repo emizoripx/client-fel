@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed 
 ### Fixed
 
+## [v2.18.11] - 2025-01-16
+  
+### Added
+- update invoice recurring in terms
+### Changed 
+### Fixed
+
 ## [v2.18.10] - 2024-11-15
   
 ### Added
