@@ -201,7 +201,7 @@ class InvoiceController extends BaseController
         if ( !is_numeric($nit) ) {
             return response()->json([
                 "success" => false,
-                "message" => "NIT INEXISTENTE",
+                "message" => "El NIT sólo debe contener números",
                 "codigo" => 994
             ]);
         }
