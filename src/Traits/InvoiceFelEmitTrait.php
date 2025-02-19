@@ -45,6 +45,8 @@ trait InvoiceFelEmitTrait
 
             $invoice->service()->markSent()->save();
 
+            $invoice->service()->deletePdf();
+
             $felInvoiceRequest->setEmittedByUser();
 
             $felInvoiceRequest->savePolicyCnc();
