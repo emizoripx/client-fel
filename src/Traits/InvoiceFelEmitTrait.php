@@ -33,8 +33,6 @@ trait InvoiceFelEmitTrait
         $felInvoiceRequest = $this->invoice->fel_invoice->fresh();
         info($info .  " FEL_INVOICE = " . $felInvoiceRequest->id . " numerofactura = " . $felInvoiceRequest->numeroFactura );
         try {
-            info($info .  "deleting url pdf before set invoice number ". $this->invoice->pdf_url);
-            $invoice->service()->deletePdf();
 
             info($info .  "set invoice number ". $this->invoice->number);
             // save number in felinvoicerequest 

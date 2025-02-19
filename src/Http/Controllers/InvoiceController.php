@@ -39,6 +39,11 @@ class InvoiceController extends BaseController
             // begin a trasaction in case an error happend, rollback changes
             // save number in felinvoicerequest 
 
+            if (!empty($invoice->pdf_url)) {
+                \Log::debug("EMIT-INVOICE ==============> Pdf url set " . $invoice->pdf_url . " removing ...");
+                $invoice->service()->deletePdf();
+            }
+
             // generate next number new emission invoice
             if ($invoice->number == 0) {
                 \Log::debug("\n\n\n\n\n ASIGNANDO VALOR desde PREFACTURA EMIT =================invoice_number is set up cause number is not assigned \n\n\n\n\n\n");
