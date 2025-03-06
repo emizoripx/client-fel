@@ -18,6 +18,7 @@ use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyMovementReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceDailyReportPayments;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceProductReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceQuipusReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterReportCoteor;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\SobodaycomInformationAgentsReport;
@@ -79,6 +80,8 @@ class ExportUtils {
     const UNPAID_INVOICES_REPORT = 'Cuentas_por_cobrar';
 
     const PAID_INVOICES_REPORT = 'Reporte_pagos';
+
+    const INVOICE_ITEMS_QUIPUS_CUSTOM_1 = 'Reporte_detalle_facturacion_quipus';
 
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
@@ -197,6 +200,10 @@ class ExportUtils {
                 break;
             case static::PAID_INVOICES_REPORT:
                 return PaidInvoicesReport::class;
+                break;
+            
+            case static::INVOICE_ITEMS_QUIPUS_CUSTOM_1:
+                return ItemInvoiceQuipusReport::class;
                 break;
             
             default:
