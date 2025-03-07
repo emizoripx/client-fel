@@ -38,7 +38,7 @@ class ItemInvoiceQuipusReport extends BaseReport implements ReportInterface {
         
         $this->columns = $columns;
 
-        $this->branch_names = FelBranch::whereCompanyId($company_id)->pluck("description","code")->get();
+        $this->branch_names = FelBranch::whereCompanyId($company_id)->pluck("descripcion","code")->get();
 
         $this->same_user = $request->has('same_user') ? ($request->get('same_user') == "true" ? true:false) : false;
         $this->paid_range_filter = $request->has('paid_range_filter') ? ($request->get('paid_range_filter') == "true" ? true:false) : false;
