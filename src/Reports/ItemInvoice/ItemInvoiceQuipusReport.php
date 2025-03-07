@@ -162,6 +162,7 @@ class ItemInvoiceQuipusReport extends BaseReport implements ReportInterface {
                 $invoice_number = $item['numeroFactura'];
             }
             $item["sucursal"] = $this->branch_names[intval($item["codigoSucursal"])];
+            $item["estado"] = $item["codigoEstado"] == 690 ? "VALIDA" : ($item["codigoEstado"] == 691 ? "ANULADA" : ($item["codigoEstado"] == 902 ? "RECHAZADA" : "PENDIENTE") );
 
             return $item;
         });
