@@ -13,8 +13,6 @@ trait PaymentQrTrait {
 
     public function generateQR()
     {
-        \Log::debug("Company ID");
-        \Log::debug($this->company_id);
         $gateway = CompanyGateway::whereCompanyId($this->company_id)->whereGatewayKey('d14dd26a47cec830x11x5700bfb67b34')->first();
         if (empty($gateway) ) return ;
         $payment_method_id = 1000;
