@@ -21,6 +21,13 @@ class TerrasurController extends BaseController
         return $service->getResponse();
     }
 
+    public function indexReceipts(Request $request)
+    {
+        $service = new TerrasurService($request->all());
+        return $service->listReceipts();   
+        
+    }
+
     public function index(GetPaymentsTerrasurRequest $request, $paymentType)
     {
         $service = new TerrasurService($request->all());   

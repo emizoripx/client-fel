@@ -259,12 +259,13 @@ class CobrosqrTerminalService{
         return $this->makeRequest("api/v1/devices/cashclosures/".$this->getDeviceId());
     }
 
-    public function requireQR($total, $only_publish = false, $qr_expiration = null)
+    public function requireQR($total, $only_publish = false, $qr_expiration = null, $description="")
     {
 
         $data = [
                     "device_id" => $this->getDeviceId(),
                     "amount" => round((float) $total,2),
+                    "description" => $description,
                     "modify_amount" => false,
                     "is_multi_use" => false,
                     "qr_expiration" => is_null($qr_expiration)? $this->getQrExpiration():$qr_expiration,  

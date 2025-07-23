@@ -33,6 +33,8 @@ class TerrasurService {
     public function conciliation()
     {
         $this->conexion->conciliate($this->data);
+
+        return $this->conexion->getResponse();
     }    
 
     public function listPaymentTypes()
@@ -53,6 +55,62 @@ class TerrasurService {
         return $this->conexion->getPaymentsQuota($this->data);
     
     }
+    // public function listReceipts()
+    // {
+    //     $invoices = Invoice::where("company_id", auth()->user()->company()->id)
+    //         ->where("document_type", "receipt")
+    //         ->whereNotNull("document_data")
+    //         ->select('id', 'document_data', 'number', 'created_by')
+    //         ->paginate(30); // <-- Esto usa paginación directa desde la BD
+
+    //         // Transformamos solo los elementos de esta página
+    //         $invoices->getCollection()->transform(function ($inv) {
+
+    //         if (is_null($inv->document_data)) {
+    //             return null;
+    //         }
+
+    //         $additional_parameters = $inv->document_data;
+    //         $bbr_cliente = $additional_parameters->bbr_cliente ?? null;
+
+    //         if (!$bbr_cliente) return null;
+
+    //         $bbr_tipo_pago = $bbr_cliente->bbr_tipo_pagos[0] ?? null;
+
+    //         if ($bbr_tipo_pago && isset($bbr_tipo_pago->bbr_pagos[0])) {
+    //             $bbr_pago = $bbr_tipo_pago->bbr_pagos[0];
+    //         } else {
+    //             $bbr_servicio = $bbr_cliente->bbr_servicio->bbr_pago_servicio ?? null;
+    //             if (!$bbr_servicio) return null;
+
+    //             // Se recomienda usar fecha actual solo si no tienes otra
+    //             $fecha = now(); // <- Reemplaza por lógica real si aplica
+
+    //             $bbr_pago = (object) [
+    //                 'fecha_pago' => $fecha->format('d/m/Y'),
+    //                 'moneda' => 1,
+    //                 'monto_pago' => $bbr_servicio->unidades_seleccionada * $bbr_servicio->valor_unit_sus,
+    //                 'num_pago' => "Servicio",
+    //                 'concepto_pago' => $bbr_servicio->concepto,
+    //             ];
+    //         }
+
+    //         return [
+    //             'id' => $inv->id,
+    //             'number' => $inv->number,
+    //             'created_by' => $inv->created_by,
+    //             'num_contrato' => $bbr_cliente->num_contrato ?? null,
+    //             'client_name' => $bbr_cliente->nombre_cliente ?? null,
+    //             'fecha_pago' => $bbr_pago->fecha_pago ?? null,
+    //             'num_pago' => $bbr_pago->num_pago ?? null,
+    //             'concepto_pago' => $bbr_pago->concepto_pago ?? null,
+    //         ];
+    //     });
+
+    //     // El objeto paginado se devuelve ya transformado
+    //     return $invoices;
+    // }
+
     public function search()
     {
         if ($this->data['entity'] == "contract")

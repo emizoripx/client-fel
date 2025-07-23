@@ -37,7 +37,7 @@ class GetPaymentsTerrasurRequest extends FormRequest
                 'tipo_pago' => [
                     'required',
                     'string',
-                    Rule::in(['cuo']),
+                    Rule::in(['cuo','cap']),
                 ],
                 'numero_contrato' => 'required|integer',
                 'digitar_monto_pago' => "nullable|numeric"
