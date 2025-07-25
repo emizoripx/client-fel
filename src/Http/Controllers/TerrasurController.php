@@ -61,6 +61,7 @@ class TerrasurController extends BaseController
     
     public function branchInfo(Request $request, $code)
     {
+        info("request " , [$request]);
         $branch = FelBranch::whereCompanyId(auth()->user()->company()->id)->whereCodigo($code)->first();
     
         return response()->json([
