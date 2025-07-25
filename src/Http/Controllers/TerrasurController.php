@@ -51,5 +51,13 @@ class TerrasurController extends BaseController
         return $service->getResponse();  
     }
 
+    public function conciliate(Request $request, $id)
+    {
+
+        $service = new TerrasurService($request->all());
+        $service->conciliation($this->decodePrimaryKey($id));
+        return $service->getResponse();  
+    }
+
 
 }

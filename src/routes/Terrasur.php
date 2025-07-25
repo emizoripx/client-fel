@@ -8,4 +8,5 @@ Route::group(['midlleware'=>["token_auth"], 'namespace' => "\EmizorIpx\ClientFel
     Route::post("list-payments/{payment_type}", "TerrasurController@index"); 
     Route::post("list-receipts", "TerrasurController@indexReceipts"); 
     Route::post("search", "TerrasurController@search"); // search
+    Route::post("conciliate/{id}", "TerrasurController@conciliate");
 });
