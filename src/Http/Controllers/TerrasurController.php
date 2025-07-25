@@ -10,7 +10,7 @@ use EmizorIpx\ClientFel\Services\Terrasur\TerrasurService;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
 use App\Utils\Traits\MakesHash;
-
+use EmizorIpx\ClientFel\Models\FelBranch;
 class TerrasurController extends BaseController
 {
     use MakesHash;
@@ -58,6 +58,18 @@ class TerrasurController extends BaseController
         $service->conciliation($this->decodePrimaryKey($id));
         return $service->getResponse();  
     }
+    
+    public function branchInfo(Request $request, $code)
+    {
+        $branch = FelBranch::whereCompanyId(auth()->user()->company()->id)->whereCodigo($code)->first();
+    
+        return response()->json([
+            "success"=>true,
+            "data" => $branch
+        ]);
+    }
+
+
 
 
 }
