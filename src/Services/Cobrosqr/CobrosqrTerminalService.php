@@ -291,7 +291,7 @@ class CobrosqrTerminalService{
                 ->driver($invoice->client)
                 ->setPaymentMethod(1000) // gatewattype qr = 1000
                 ->setPaymentHash($payment_hash)
-                ->processPaymentCallback("Pagado por: ". $data["payment_name"] . " banco: ". $data["payment_bank"]);
+                ->processPaymentCallback("Pagado por: ". $data["payment_name"] . " banco: ". $data["payment_bank". "hash:" . $payment_hash]);
 
         }catch(\Throwable $th) {
             info("error :  callback payment  file:" .$th->getFile() . " message: ". $th->getMessage() . " Line: " .$th->getLine() );
