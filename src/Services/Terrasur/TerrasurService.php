@@ -25,7 +25,7 @@ class TerrasurService {
             "usuario_sucursal" => "emizor",
             "version_app_mp3" => "v1.5.47",
             "control_code_service" => env("TERRASUR_CODE_SERVICE", NULL),
-            "empresa" => auth()->user()->company()->settings->custom_value1,
+            "empresa" => intval( auth()->user()->company()->settings->custom_value1),
             "imei" => "353007061023451,353007061023469",
         ];
     }
