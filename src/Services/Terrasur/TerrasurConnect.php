@@ -122,11 +122,11 @@ class TerrasurConnect {
          
     }
     
-    public function conciliate($data)
+    public function conciliate($data, $is_service=false)
     {
         
         try {
-            $this->handleRequest("POST", "", "conciliar_pago", $data );
+            $this->handleRequest("POST", "", ($is_service?"conciliar_pago_servicio":"conciliar_pago") , $data );
 
         } catch (\Exception $ex) {
             $this->setErrors(array($ex->getMessage()));

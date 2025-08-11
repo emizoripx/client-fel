@@ -49,6 +49,7 @@ class TerrasurService {
         $bbr_client = $data->bbr_cliente;
         
         info("bbr_client " . "type : " . gettype($bbr_client) . " contiene :" . json_encode($bbr_client));
+        $is_service = false;
         if(isset($bbr_client->bbr_tipo_pagos)) {
             $bbr_tipo_pagos = $bbr_client->bbr_tipo_pagos;
             $bbr_pago = $bbr_tipo_pagos[0]->bbr_pagos[0];
@@ -87,7 +88,9 @@ class TerrasurService {
                 "id_servicio"=> $bbr_client->bbr_servicio->id_servicio ?? 0,
                 "precio_total"=> $bbr_pago->valor_unit_bs,
                 "precio_unidad"=> $bbr_pago->valor_unit_bs,
+                "monto_pago" => $bbr_pago->valor_unit_bs,
             ];
+            $is_service = true;
         }
         
         if (isset($invoice->fel_invoice)) {
@@ -101,7 +104,7 @@ class TerrasurService {
 
         $data = array_merge($this->data, $input);
 
-        $this->conexion->conciliate($data);
+        $this->conexion->conciliate($data, $is_service);
 
         return $this->conexion->getResponse();
     }    
