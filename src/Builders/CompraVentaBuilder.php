@@ -66,29 +66,32 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
         $hashid = new Hashids(config('ninja.hash_salt'), 10);
 
         foreach ($line_items as $detail) {
+            
+            if (!isset($detail->is_receipt)  || ( isset($detail->is_receipt) && $detail->is_receipt == false ) ){
 
-            $id_origin = $hashid->decode($detail->product_id)[0];
+                $id_origin = $hashid->decode($detail->product_id)[0];
 
-            $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->first();
+                $product_sync = FelSyncProduct::whereIdOrigin($id_origin)->whereCompanyId($model->company_id)->first();
 
-            $new = new stdClass;
-            $new->codigoProducto =  $product_sync->codigo_producto  . ""; // this values was added only frontend Be careful
-            $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
-            $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
-            $new->descripcion = $detail->notes;
-            $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,2);
-            $new->cantidad = $detail->quantity;
-            $new->numeroSerie = null;
+                $new = new stdClass;
+                $new->codigoProducto =  $product_sync->codigo_producto  . ""; // this values was added only frontend Be careful
+                $new->codigoProductoSin =  $product_sync->codigo_producto_sin . ""; // this values was added only frontend Be careful
+                $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
+                $new->descripcion = $detail->notes;
+                $new->precioUnitario = $detail->cost;
+                $new->subTotal = round((float)$detail->line_total,2);
+                $new->cantidad = $detail->quantity;
+                $new->numeroSerie = null;
 
-            if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
+                if ($detail->discount > 0)
+                    $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
 
-            $new->unidadMedida = $product_sync->codigo_unidad;
+                $new->unidadMedida = $product_sync->codigo_unidad;
 
-            $details[] = $new;
+                $details[] = $new;
 
-            $total += $new->subTotal;
+                $total += $new->subTotal;
+            }
         }
         $total = $total - round($this->source_data['fel_data_parsed']['descuentoAdicional'], 2);
         
