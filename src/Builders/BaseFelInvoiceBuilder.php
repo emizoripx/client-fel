@@ -183,6 +183,20 @@ class BaseFelInvoiceBuilder {
 
                 $model->line_items = $items;
             }
+
+            if ($model->document_type == "receipt") {
+
+                $items = $model->line_items;
+                $sum = 0;
+                foreach ($items as $item) {
+                    if(isset($item->is_receipt) && $item->is_receipt == true){
+                        $sum += $item->line_total;
+                    }
+                }
+                $model->amount = $sum;
+                $model->balance = $sum;
+                
+            }
     
             $model->saveQuietly();
 
