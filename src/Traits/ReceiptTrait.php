@@ -10,7 +10,7 @@ trait ReceiptTrait {
     public function convertReceipt()
     {
 
-        $data = request()->only(['document_data', 'document_search']);
+        $data = request()->only(['document_data', 'document_search',"recibo_ticket"]);
         $this->invoice->document_data =  $data['document_data'];
         $this->invoice->document_search=  $data['document_search'];
         $this->invoice->document_type =  'receipt';
