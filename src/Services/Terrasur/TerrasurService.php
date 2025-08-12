@@ -53,6 +53,7 @@ class TerrasurService {
         if(isset($bbr_client->bbr_tipo_pagos)) {
             $bbr_tipo_pagos = $bbr_client->bbr_tipo_pagos;
             $bbr_pago = $bbr_tipo_pagos[0]->bbr_pagos[0];
+            $moneda = $bbr_pago->moneda ?? 1;
             $input = [
                     "factura_bs_monto" => "0",
                     "factura_cliente_nit" => "0",
@@ -63,10 +64,18 @@ class TerrasurService {
                     "monto_pago" => $bbr_pago->monto_pago,
                     "numero_contrato" => $bbr_pago->num_contrato,
                     "recibo_efectivo_bs" => 0.0,
-                    "recibo_efectivo_sus" => $bbr_pago->monto_pago,
+                    "recibo_efectivo_sus" => 0.00,
                     "recibo_num" => intval($invoice->number),
                     "usuario_sucursal" => $invoice->user->name()
             ];
+            // MONEDA = 1 bs
+
+            if ($moneda == 1) {
+                $input["recibo_efectivo_bs"] = bbr_pago->monto_pago;
+            }else {
+                $input["recibo_efectivo_sus"] = bbr_pago->monto_pago;
+            }
+
         }else {
             $bbr_pago = $bbr_client->bbr_servicio->bbr_pago_servicio;
             
