@@ -71,9 +71,9 @@ class TerrasurService {
             // MONEDA = 1 bs
 
             if ($moneda == 1) {
-                $input["recibo_efectivo_bs"] = bbr_pago->monto_pago;
+                $input["recibo_efectivo_bs"] = $bbr_pago->monto_pago;
             }else {
-                $input["recibo_efectivo_sus"] = bbr_pago->monto_pago;
+                $input["recibo_efectivo_sus"] = $bbr_pago->monto_pago;
             }
 
         }else {
