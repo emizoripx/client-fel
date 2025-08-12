@@ -68,9 +68,9 @@ class TerrasurService {
                     "recibo_num" => intval($invoice->number),
                     "usuario_sucursal" => $invoice->user->name()
             ];
-            // MONEDA = 1 bs
+            // MONEDA = 2 bs
 
-            if ($moneda == 1) {
+            if ($moneda == 2) {
                 $input["recibo_efectivo_bs"] = $bbr_pago->monto_pago;
             }else {
                 $input["recibo_efectivo_sus"] = $bbr_pago->monto_pago;
