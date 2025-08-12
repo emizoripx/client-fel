@@ -14,6 +14,7 @@ trait ReceiptTrait {
         $this->invoice->document_data =  $data['document_data'];
         $this->invoice->document_search=  $data['document_search'];
         $this->invoice->document_type =  'receipt';
+        $this->invoice->custom_value1 =  $data["recibo_ticket"];
         return $this->invoice;
 
     }
