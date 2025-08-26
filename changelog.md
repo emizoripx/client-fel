@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v2.18.12] - 2025-03-06
   
 ### Added
+- added terrasur services
+### Changed 
+### Fixed
+- document 38 fixed, error in quantity of decimals, needs more than 2
+
+## [v2.18.12] - 2025-03-06
+  
+### Added
 - report for quipus
 ### Changed 
 ### Fixed
