@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed 
 ### Fixed
 
+## [v2.18.13] - 2025-08-26
+  
+### Fixed
+- hot fix, needs more than 2 decimals to precision in details for documento 38 
+- hot fix, report best seller products, error in sum by subtotals
+
+
+## [v2.18.12] - 2025-03-06
+  
+### Added
+- added terrasur services
+### Changed 
+### Fixed
+- document 38 fixed, error in quantity of decimals, needs more than 2
+
 ## [v2.18.12] - 2025-03-06
   
 ### Added

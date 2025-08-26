@@ -123,7 +123,7 @@ class ItemInvoiceBestSellerProductReport extends BaseReport implements ReportInt
                     'nombre_producto' => $linea->descripcion,
                     'cantidad_vendida' => $linea->cantidad,
                     'costo_vendido' => $linea->precioUnitario,
-                    'subtotal' => $linea->precioUnitario,
+                    'subtotal' => $linea->subTotal,
                 ];
             });
         })->groupBy('codigo_producto')->map(function ($items) {
