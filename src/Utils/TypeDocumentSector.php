@@ -341,7 +341,7 @@ class TypeDocumentSector
                 return 'venta-minerales-bcb';
                 break;
             case static::COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO:
-                return 'venta-minerales-bcb';
+                return 'venta-combustible-sin-subvencion';
                 break;
 
 
