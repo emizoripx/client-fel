@@ -520,7 +520,7 @@ class InvoiceResource extends JsonResource
                         "pesoNetoGr" => $this->pesoNetoGr,
                         "numeroContrato" => (string)$this->numeroContrato ?? "",
 
-                        // Comercialización Hidrocarburos
+                        // Comercialización Hidrocarburos and comercializacion combustible sin subvención
                         "placaVehiculo" => isset($this->data_specific_by_sector['placaVehiculo']) ? $this->data_specific_by_sector['placaVehiculo'] : '',
                         "tipoEnvase" => isset($this->data_specific_by_sector['tipoEnvase']) ? $this->data_specific_by_sector['tipoEnvase'] : '',
                         "codigoAutorizacionSC" => isset($this->data_specific_by_sector['codigoAutorizacionSC']) ? $this->data_specific_by_sector['codigoAutorizacionSC'] : '',

@@ -35,6 +35,7 @@ use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaConciliacion\NotaConciliacionTemp
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaDebitoCredito\NotaDebitoCreditoTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaEntrega\NotaEntregaTemplateResource;
 use EmizorIpx\ClientFel\Http\Resources\Pdf\NotaRecepcion\NotaRecepcionTemplateResource;
+use EmizorIpx\ClientFel\Http\Resources\Pdf\FacturaComercializacionCombustibleNoSubvencionado\FacturaComercializacionCombustibleNoSubvencionadoTemplateResource;
 
 class TemplatesUtils {
 
@@ -140,6 +141,8 @@ class TemplatesUtils {
                 break;
             case TypeDocumentSector::VENTA_MINERALES_BCB:
                 return FacturaVentaMineralesBcbTemplateResource::class;
+            case TypeDocumentSector::COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO:
+                return FacturaComercializacionCombustibleNoSubvencionadoTemplateResource::class;
 
 
 

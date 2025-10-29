@@ -34,6 +34,7 @@ use EmizorIpx\ClientFel\Builders\TurismoBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBuilder;
 use EmizorIpx\ClientFel\Builders\ZonaFrancaBuilder;
 use EmizorIpx\ClientFel\Builders\VentaMineralesBcbBuilder;
+use EmizorIpx\ClientFel\Builders\ComercializacionCombustibleNoSubvencionado;
 
 class TypeDocumentSector
 {
@@ -76,6 +77,7 @@ class TypeDocumentSector
     const SECTOR_EDUCATIVO_ZONA_FRANCA = 46;
     const VENTA_MINERALES_BCB = 52;
     const ENGARRAFADORAS = 51;
+    const COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO = 55;
 
     const ARRAY_NAMES = [
         1 => "Factura compra venta",
@@ -126,6 +128,7 @@ class TypeDocumentSector
         46 => "Factura Sectores Educativo Zona Franca",
         51 => "Factura Engarrafadoras",
         52 => "Factura Venta Minerales BCB",
+        55 => "Factura Comercialización de Combustible - No subvencionado",
     ];
 
     public static function getInstanceByCode($code):string
@@ -227,6 +230,9 @@ class TypeDocumentSector
                 break;
             case static::VENTA_MINERALES_BCB :
                 return VentaMineralesBcbBuilder::class; 
+                break;
+            case static::COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO:
+                return ComercializacionCombustibleNoSubvencionado::class; 
                 break;
             
             
@@ -332,6 +338,9 @@ class TypeDocumentSector
                 return 'lubricantes';
                 break;
             case static::VENTA_MINERALES_BCB:
+                return 'venta-minerales-bcb';
+                break;
+            case static::COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO:
                 return 'venta-minerales-bcb';
                 break;
 
@@ -457,6 +466,9 @@ class TypeDocumentSector
                 return 'lubricantes';
                 break;
             case static::VENTA_MINERALES_BCB:
+                return 'venta-minerales-bcb';
+                break;
+            case static::COMER:
                 return 'venta-minerales-bcb';
                 break;
 
@@ -646,8 +658,9 @@ class TypeDocumentSector
             case static::VENTA_MINERALES_BCB:
                 return 'Factura Venta Mineral Banco Central';
                 break;
-            
-            
+            case static::COMERCIALIZACION_COMBUSTIBLE_NO_SUBVENCIONADO:
+                return 'Factura Comercialización de Combustible - No subvencionado';
+                break;
         }
 
     }

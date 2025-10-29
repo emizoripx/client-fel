@@ -4,7 +4,7 @@ namespace EmizorIpx\ClientFel\Utils;
 
 class TypeInvoice{
 
-    const DERECHO_CREDITO_FISCAL = [1,2,11,12,13,14,15,16,17,18,19,21,22,23,25,26,35,37];
+    const DERECHO_CREDITO_FISCAL = [1,2,11,12,13,14,15,16,17,18,19,21,22,23,25,26,35,37,55];
     const SIN_DERECHO_CREDITO_FISCAL = [3,4,5,6,7,8,9,10,20,27,28,5];
     
 
