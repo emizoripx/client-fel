@@ -85,11 +85,11 @@ class HidrocarburosNoIehdBuilder extends BaseFelInvoiceBuilder implements FelInv
             $new->codigoActividadEconomica =  $product_sync->codigo_actividad_economica . "";
             $new->descripcion = $detail->notes;
             $new->precioUnitario = $detail->cost;
-            $new->subTotal = round((float)$detail->line_total,2);
+            $new->subTotal = round((float)$detail->line_total,10);
             $new->cantidad = $detail->quantity;
 
             if ($detail->discount > 0)
-                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,2);
+                $new->montoDescuento = round((float)($detail->cost * $detail->quantity) - $detail->line_total,10);
 
             $new->unidadMedida = $product_sync->codigo_unidad;
 
