@@ -4,6 +4,7 @@ namespace EmizorIpx\ClientFel\Reports\Invoices;
 
 use EmizorIpx\ClientFel\Reports\BaseReport;
 use EmizorIpx\ClientFel\Reports\ReportInterface;
+use App\Models\Company;
 use Carbon\Carbon;
 
 class RenacerPaymentReport extends BaseReport implements ReportInterface
@@ -94,16 +95,31 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         $results = $query_invoices->get();
 
-        \Log::debug("Report Data: " . json_encode($this->formatReportData($results)));
+        $company = Company::query()->where('id', $this->company_id)->first();
 
-        return $this->formatReportData($results);
+        \Log::debug("Report Data: " . json_encode($this->formatReportData($results, $company->users)));
+
+        return $this->formatReportData($results, $company->users);
     }
 
-    private function formatReportData($results)
+    private function formatReportData($results, $all_users)
     {
         $collectors = [];
         $total_sus = 0;
         $total_bs = 0;
+
+        // Inicializar collectors para todos los usuarios
+        foreach ($all_users as $user) {
+            $collector_key = 'cob' . $user->id;
+            $collectors[$collector_key] = [
+                'name' => $user->first_name,
+                'items' => [],
+                'subtotal' => [
+                    'total_sus' => 0,
+                    'total_bs' => 0
+                ]
+            ];
+        }
 
         foreach ($results as $row) {
             if (empty($row->collector_name)) {
