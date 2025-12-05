@@ -80,6 +80,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         $query_invoices->select(
             'users.first_name as collector_name',
+            'users.id as user_id',
             'fel_invoice_requests.fechaEmision',
             'fel_invoice_requests.numeroFactura'
         )
@@ -109,8 +110,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
                 continue;
             }
 
-            /* $collector_key = 'cob' . str_replace(' ', '', strtolower($row->collector_name)); */
-            $collector_key = 'cob1';
+            $collector_key = 'cob' . $row->user_id;
 
             if (!isset($collectors[$collector_key])) {
                 $collectors[$collector_key] = [
