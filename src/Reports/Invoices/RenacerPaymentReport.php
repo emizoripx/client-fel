@@ -85,7 +85,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
         )
             ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].fecha_pago")) as payment_date')
             ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].num_pago")) as quota')
-            ->selectRaw('JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].monto_pago") as amount_sus')
+            ->selectRaw('JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].monto_pago") as amount')
             ->selectRaw('JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].moneda") as currency')
             ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].num_contrato")) as contract_number')
             ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.nombre_cliente")) as client_name')
@@ -123,8 +123,16 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
                 ];
             }
 
-            $amount_sus = floatval($row->amount_sus);
-            $amount_bs = $row->currency == 2 ? floatval($row->amount_sus) : $amount_sus * 6.97;
+            if ($row->currency == 1) {
+                $amount_bs = floatval($row->amount);
+                $amount_sus = 0;
+            } elseif ($row->currency == 2) {
+                $amount_bs = 0;
+                $amount_sus = floatval($row->amount);
+            } else {
+                $amount_bs = floatval($row->amount);
+                $amount_sus = 0;
+            }
 
             $collectors[$collector_key]['items'][] = [
                 'date' => $row->payment_date,
@@ -162,4 +170,3 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
         ];
     }
 }
-
