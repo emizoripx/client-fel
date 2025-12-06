@@ -82,34 +82,28 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
         $query_invoices->select(
             'users.first_name as collector_name',
             'users.id as user_id',
-            'fel_invoice_requests.fechaEmision',
-            'fel_invoice_requests.numeroFactura'
-        )
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].fecha_pago")) as payment_date')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].num_pago")) as quota')
-            ->selectRaw('JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].monto_pago") as amount')
-            ->selectRaw('JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].moneda") as currency')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_tipo_pagos[0].bbr_pagos[0].num_contrato")) as contract_number')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.nombre_cliente")) as client_name')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(invoices.document_data, "$.bbr_cliente.bbr_contrato.unidad_negocio")) as business');
+            'invoices.document_data'
+        );
 
-        $results = $query_invoices->get();
+        $results_cursor = $query_invoices->cursor();
 
-        $company = Company::query()->where('id', $this->company_id)->first();
+        $all_users_cursor = \DB::table('users')
+            ->join('company_user', 'users.id', '=', 'company_user.user_id')
+            ->where('company_user.company_id', $this->company_id)
+            ->select('users.id', 'users.first_name')
+            ->cursor();
 
-        \Log::debug("Report Data: " . json_encode($this->formatReportData($results, $company->users)));
-
-        return $this->formatReportData($results, $company->users);
+        return $this->formatReportData($results_cursor, $all_users_cursor);
     }
 
-    private function formatReportData($results, $all_users)
+    private function formatReportData($results_cursor, $all_users_cursor)
     {
         $collectors = [];
         $total_sus = 0;
         $total_bs = 0;
 
         // Inicializar collectors para todos los usuarios
-        foreach ($all_users as $user) {
+        foreach ($all_users_cursor as $user) {
             $collector_key = 'cob' . $user->id;
             $collectors[$collector_key] = [
                 'name' => $user->first_name,
@@ -121,41 +115,40 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
             ];
         }
 
-        foreach ($results as $row) {
+        foreach ($results_cursor as $row) {
             if (empty($row->collector_name)) {
                 continue;
             }
 
             $collector_key = 'cob' . $row->user_id;
 
-            if (!isset($collectors[$collector_key])) {
-                $collectors[$collector_key] = [
-                    'name' => $row->collector_name,
-                    'items' => [],
-                    'subtotal' => [
-                        'total_sus' => 0,
-                        'total_bs' => 0
-                    ]
-                ];
+            // Extraer datos del JSON en PHP
+            $document_data = json_decode($row->document_data, true);
+            if (!$document_data || !isset($document_data['bbr_cliente']['bbr_tipo_pagos'][0]['bbr_pagos'][0])) {
+                continue;
             }
+            $pago = $document_data['bbr_cliente']['bbr_tipo_pagos'][0]['bbr_pagos'][0];
 
-            if ($row->currency == 1) {
-                $amount_bs = floatval($row->amount);
+            $currency = $pago['moneda'] ?? null;
+            $amount = $pago['monto_pago'] ?? 0;
+
+            if ($currency == 1) {
+                $amount_bs = floatval($amount);
                 $amount_sus = 0;
-            } elseif ($row->currency == 2) {
+            } elseif ($currency == 2) {
                 $amount_bs = 0;
-                $amount_sus = floatval($row->amount);
+                $amount_sus = floatval($amount);
             } else {
-                $amount_bs = floatval($row->amount);
+                $amount_bs = floatval($amount);
                 $amount_sus = 0;
             }
 
             $collectors[$collector_key]['items'][] = [
-                'date' => $row->payment_date,
-                'business' => $row->business ?? 'BBR S.A.',
-                'contract_number' => $row->contract_number,
-                'client_name' => $row->client_name,
-                'quota' => $row->quota,
+                'date' => $pago['fecha_pago'] ?? null,
+                'business' => $document_data['bbr_cliente']['bbr_contrato']['unidad_negocio'] ?? 'BBR S.A.',
+                'contract_number' => $pago['num_contrato'] ?? null,
+                'client_name' => $document_data['bbr_cliente']['nombre_cliente'] ?? null,
+                'quota' => $pago['num_pago'] ?? null,
                 'amount_sus' => $amount_sus,
                 'amount_bs' => $amount_bs
             ];
