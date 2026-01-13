@@ -66,23 +66,24 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         return $query;
     }
-
+/*
     public function generateReport()
     {
-        $query_invoices = \DB::table('invoices')
-            ->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=', 'invoices.id')
-            ->leftJoin('users', 'users.id', '=', 'invoices.user_id')
-            ->where('fel_invoice_requests.codigoEstado', 690)
-            ->where('fel_invoice_requests.company_id', $this->company_id)
-            ->whereNotNull('invoices.document_data');
 
-        $query_invoices = $this->addDateFilter($query_invoices);
-        $query_invoices = $this->addBranchFilter($query_invoices);
+        $from = date('Y-m-d', $this->from_date)." 00:00:00";
+        $to = date("Y-m-d", $this->to_date). " 23:59:59";
+
+        $query_invoices = \DB::table('invoices')
+            ->leftJoin('users', 'users.id', '=', 'invoices.user_id')
+            ->where('status_id',"<", 5)
+            ->where('company_id', $this->company_id)
+            ->whereNotNull('document_data')
+            ->whereBetween('date', [$from, $to]);
 
         $query_invoices->select(
             'users.first_name as collector_name',
             'users.id as user_id',
-            'invoices.document_data'
+            'document_data'
         );
 
         $results_cursor = $query_invoices->cursor();
@@ -95,7 +96,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         return $this->formatReportData($results_cursor, $all_users_cursor);
     }
-
+*/
     private function formatReportData($results_cursor, $all_users_cursor)
     {
         $collectors = [];
@@ -114,7 +115,8 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
                 ]
             ];
         }
-
+        $company = Company::find($this->company_id);
+        $company_name = $company->settings->name;
         foreach ($results_cursor as $row) {
             if (empty($row->collector_name)) {
                 continue;
@@ -132,10 +134,10 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
             $currency = $pago['moneda'] ?? null;
             $amount = $pago['monto_pago'] ?? 0;
 
-            if ($currency == 1) {
+            if ($currency == 2) {
                 $amount_bs = floatval($amount);
                 $amount_sus = 0;
-            } elseif ($currency == 2) {
+            } elseif ($currency == 1) {
                 $amount_bs = 0;
                 $amount_sus = floatval($amount);
             } else {
@@ -145,7 +147,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
             $collectors[$collector_key]['items'][] = [
                 'date' => $pago['fecha_pago'] ?? null,
-                'business' => $document_data['bbr_cliente']['bbr_contrato']['unidad_negocio'] ?? 'BBR S.A.',
+                'business' => $company_name,
                 'contract_number' => $pago['num_contrato'] ?? null,
                 'client_name' => $document_data['bbr_cliente']['nombre_cliente'] ?? null,
                 'quota' => $pago['num_pago'] ?? null,
@@ -162,14 +164,14 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         return [
             'header' => [
-                'company' => 'RENACER S.R.L.',
-                'nit' => 'NIT_PENDIENTE',
+                'company' => $company->settings->name,
+                'nit' => $company->settings->number,
                 'period' => $this->from_date && $this->to_date ?
                     date('d/m/Y', $this->from_date) . ' - ' . date('d/m/Y', $this->to_date) :
                     'Todos',
                 'date' => Carbon::now()->format('d/m/Y H:i:s'),
                 'user' => is_string($this->user) ? $this->user : (is_object($this->user) && method_exists($this->user, 'name') ? $this->user->name() : 'Usuario'),
-                'branch' => $this->branch_code ? 'Sucursal ' . $this->branch_code : 'Todas'
+                'branch' => 'Todas'
             ],
             'collectors' => $collectors,
             'totals' => [
