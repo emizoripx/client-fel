@@ -52,7 +52,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
         $this->user = $user;
 
         parent::__construct($from, $to);
-        
+
     }
 
     public function mapGroupData( $value ) {
@@ -89,7 +89,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
             $branches_desc = [];
             foreach ($branch_access as $value) {
-                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );  
+                array_push( $branches_desc, ($value == 0 ? " Casa Matriz" : " Sucursal " . $value) );
             }
 
             $this->branch_desc = implode(" - ", $branches_desc);
@@ -120,9 +120,9 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
             \Log::debug("Filter State: " . $this->state);
             return $query->where( 'fel_invoice_requests.codigoEstado', $this->state );
-            
+
         } elseif ( $this->state == 'null' ) {
-            
+
             \Log::debug("Filter State NULL: " . $this->state);
             return $query->whereNull( 'fel_invoice_requests.codigoEstado');
 
@@ -133,7 +133,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
     }
 
     public function addGroupFilter( $query ) {
-        // Grouped by client - branch 
+        // Grouped by client - branch
         // TODO: Added query
         if( !is_null($this->group) ) {
 
@@ -160,7 +160,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
             } else {
 
                 $query->addSelect("fel_invoice_requests.$column");
-                
+
             }
         }
 
@@ -182,7 +182,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
         }
 
         if( $column_group == 'codigoSucursal' ) {
-            
+
             $query->selectRaw("CONCAT( IF (fel_invoice_requests.$column_group = 0, 'CASA MATRIZ', CONCAT('SUCURSAL ', fel_invoice_requests.$column_group)), ' (',COUNT(*),')') as $column_group");
 
         } else {
@@ -204,7 +204,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
     public function generateReport() {
 
         $query_invoices = \DB::table('invoices')->join('fel_invoice_requests', 'fel_invoice_requests.id_origin', '=' , 'invoices.id')->where('fel_invoice_requests.codigoEstado', 690) ;
-        
+
         if ($this->user && ! $this->user->hasPermission('view_invoice')) {
 
             \Log::debug("Filter By User: " . $this->user->id);
@@ -217,7 +217,7 @@ class InvoiceReport extends BaseReport implements ReportInterface {
         $query_invoices = $this->addBranchFilter($query_invoices);
 
         $query_invoices = $this->addTypeDocumentFilter($query_invoices);
-        
+
         $query_invoices = $this->addStateFilter($query_invoices);
 
         $query_invoices = $this->addGroupFilter($query_invoices);
@@ -234,9 +234,9 @@ class InvoiceReport extends BaseReport implements ReportInterface {
 
 
 
-        
+
         $query_invoices = $query_invoices->where('fel_invoice_requests.company_id', $this->company_id);
-        
+
         // \Log::debug("SQL Statement: ". $query_invoices->toSql());
 
 

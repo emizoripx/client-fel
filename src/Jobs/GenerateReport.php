@@ -54,16 +54,16 @@ class GenerateReport implements ShouldQueue
 
     protected $report_name_path = "";
 
-    protected $file_name = "";  
+    protected $file_name = "";
 
-    protected $headers_csv = [];                                                                                                                                                                                                                                                                                                                      
+    protected $headers_csv = [];
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template", $headers_csv=[] )
+    public function __construct($request, $company_id, $company_nit, $entity, $columns, $template_path, $report_record_id, $user, $type_format_report = "template", $headers_csv = [])
     {
         $this->onQueue('reports');
         $this->request = collect($request);
@@ -85,6 +85,7 @@ class GenerateReport implements ShouldQueue
         $this->type_format_report = $type_format_report;
 
         $this->headers_csv = $headers_csv;
+        \Log::debug("GENERATE_REPORT ID=" . $this->report_record_id . " >>> ");
     }
 
     /**
@@ -94,12 +95,13 @@ class GenerateReport implements ShouldQueue
      */
     public function handle()
     {
-        set_time_limit ( 980 );
+        \Log::debug("GENERATE_REPORT ID=" . $this->report_record_id . " >>> ");
+        set_time_limit(980);
         ini_set('memory_limit', '512M');
         $from = date('Y-m-d', $this->request->get('from_date')) . " 00:00:00";
         $to = date("Y-m-d", $this->request->get('to_date')) . " 23:59:59";
-        $timestamp = "GENERATE_REPORT ID=" . $this->report_record_id." >>> " ;
-        \Log::debug($timestamp."DATA REPORT=" . $this->entity . "COMPANY_ID=" . $this->company_id . " USER=" . $this->user->id . "USERNAME=" . $this->user->first_name." ". $this->user->last_name . "REPORT_ID=" . "RANGE=(from:" . $from . " to:" . $to . ")");
+        $timestamp = "GENERATE_REPORT ID=" . $this->report_record_id . " >>> ";
+        \Log::debug($timestamp . "DATA REPORT=" . $this->entity . "COMPANY_ID=" . $this->company_id . " USER=" . $this->user->id . "USERNAME=" . $this->user->first_name . " " . $this->user->last_name . "REPORT_ID=" . "RANGE=(from:" . $from . " to:" . $to . ")");
 
         try {
 
@@ -119,27 +121,25 @@ class GenerateReport implements ShouldQueue
 
             $report_class = ExportUtils::getClassReport($this->entity);
 
-            \Log::debug($timestamp . "render class = ". $report_class);
-            
-            $service_report = new $report_class ($this->company_id, $this->request, $this->columns, $this->user, $this->headers_csv);
+            \Log::debug($timestamp . "render class = " . $report_class);
+
+            $service_report = new $report_class($this->company_id, $this->request, $this->columns, $this->user, $this->headers_csv);
             \Log::debug($timestamp . "start processing report");
             $this->invoices = $service_report->generateReport();
             \Log::debug($timestamp . "get invoices data");
             $user_settings = $this->user->token()->cu->settings;
-            \Log::debug($timestamp . " user setting = ". json_encode($user_settings));
+            \Log::debug($timestamp . " user setting = " . json_encode($user_settings));
 
-            if( isset($user_settings) && isset($user_settings->report_enable_pdf_type) && $user_settings->report_enable_pdf_type == 1 && $this->entity == ExportUtils::ITEMS_ENTITY ) {
+            if (isset($user_settings) && isset($user_settings->report_enable_pdf_type) && $user_settings->report_enable_pdf_type == 1 && $this->entity == ExportUtils::ITEMS_ENTITY) {
 
                 $this->type_file_pdf = true;
 
                 $this->template_path = str_replace('.xlsx', '.blade.php', $this->template_path);
-
             }
 
-            if( strpos($this->template_path, 'blade.php') != false ) {
+            if (strpos($this->template_path, 'blade.php') != false) {
                 \Log::debug($timestamp . "template PDF = " . $this->template_path);
                 $this->type_file_pdf = true;
-
             }
             \Log::debug($timestamp . "processing type format = " . $this->type_format_report);
             switch ($this->type_format_report) {
@@ -161,16 +161,13 @@ class GenerateReport implements ShouldQueue
                 'report_date' => Carbon::now()->timezone('America/La_Paz')->toDateString(),
             ]);
             \Log::debug($timestamp . "start upload");
-            UploadReport::dispatch( $this->company_nit, $this->entity, $this->report_name_path, $this->filename, $this->report_record_id );
-
-        
-        } catch ( Exception $ex ) {
-            \Log::error($timestamp ."Error al Generar Reporte: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
+            UploadReport::dispatch($this->company_nit, $this->entity, $this->report_name_path, $this->filename, $this->report_record_id);
+        } catch (Exception $ex) {
+            \Log::error($timestamp . "Error al Generar Reporte: " . $ex->getMessage() . " File: " . $ex->getFile() . " Line: " . $ex->getLine());
             \DB::table('fel_report_requests')->where('id', $this->report_record_id)->update([
                 'status' => 4,
             ]);
         }
-        
     }
 
     public function failed(\Throwable $exception)
@@ -207,7 +204,7 @@ class GenerateReport implements ShouldQueue
         $memory_usage = memory_get_usage();
         \Log::debug("Usage Memory: " . $memory_usage);
 
-        
+
         if ($this->type_file_pdf) {
             // $content = file_get_contents(storage_path('reports/daily_movement_payment_report_template.blade.php'));
             if ($this->entity == ExportUtils::DAILY_MOVEMENTS_PAYMENTS)
@@ -231,7 +228,6 @@ class GenerateReport implements ShouldQueue
         $memory_usage1 = memory_get_usage();
         \Log::debug("Usage Memory: " . $memory_usage1);
         \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
-
     }
     public function processCsvFormat()
     {
@@ -244,14 +240,13 @@ class GenerateReport implements ShouldQueue
         $writer->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $writer->setOutputBOM(Writer::BOM_UTF8);
         $writer->insertOne($this->invoices['header']);
-        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1){
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1) {
 
             foreach ($this->invoices['invoices']->cursor() as $record) {
-                
+
                 $writer->insertOne((array) $record);
             }
-        
-        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
+        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1) {
             $mensualidad_code = 1001;
             $matricula_code = 1000;
             $diplomado_code = 1019;
@@ -264,9 +259,8 @@ class GenerateReport implements ShouldQueue
                 $total_quantity_mensualidad = $detail_collect->whereNotIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code, $matricula_code])->sum('subTotal');
                 $total_quantity_otros_ingresos = $detail_collect->whereIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code])->sum('subTotal');
                 $merged = array_merge((array)$record, ['matricula' => $total_quantity_matricula, 'mensualidad' => $total_quantity_mensualidad, "otros_ingresos" => $total_quantity_otros_ingresos]);
-                $writer->insertOne( $merged);
+                $writer->insertOne($merged);
             }
-        
         } else {
             $writer->insertAll(json_decode(json_encode($this->invoices['invoices']), true));
         }
@@ -279,7 +273,8 @@ class GenerateReport implements ShouldQueue
         \Log::debug(">>>>>>>>>>>>> EXECUTED-TIME generate report Invoices " . (microtime(true) - $init));
     }
 
-    public function processExcelFormat() {
+    public function processExcelFormat()
+    {
 
         $init = microtime(true);
         $memory_usage = memory_get_usage();
@@ -292,17 +287,17 @@ class GenerateReport implements ShouldQueue
         $writer = SimpleExcelWriter::create($this->report_name_path);
 
         $style_header = (new Style())
-        ->setFontBold()
-        ->setFontSize(11);
+            ->setFontBold()
+            ->setFontSize(11);
         $writer->setHeaderStyle($style_header);
         $writer->addHeader($this->invoices['header']);
 
-        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1){
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1) {
             foreach ($this->invoices['invoices']->cursor() as $record) {
-                
+
                 $writer->insertOne((array) $record);
             }
-        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1){
+        } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1) {
             $mensualidad_code = 1001;
             $matricula_code = 1000;
             $diplomado_code = 1019;
@@ -310,24 +305,23 @@ class GenerateReport implements ShouldQueue
             $carnet_u_code = 1016;
             $counter = 0;
             foreach ($this->invoices['invoices']->cursor() as $record) {
-                $counter ++;
+                $counter++;
                 $detail_collect = collect(json_decode($record->detalles, true));
                 unset($record->detalles);
                 $total_quantity_matricula = $detail_collect->where('codigoProducto', $matricula_code)->sum('subTotal');
                 $total_quantity_mensualidad = $detail_collect->whereNotIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code, $matricula_code])->sum('subTotal');
                 $total_quantity_otros_ingresos = $detail_collect->whereIn('codigoProducto', [$diplomado_code, $postgrado_code, $carnet_u_code])->sum('subTotal');
                 $merged = array_merge((array)$record, ['matricula' => $total_quantity_matricula, 'mensualidad' => $total_quantity_mensualidad, "otros_ingresos" => $total_quantity_otros_ingresos]);
-                $writer->addRow( $merged);
+                $writer->addRow($merged);
             }
 
             \Log::debug("Counter >>>>>>>>>>>>>>>> all: " . $counter);
-        
         } else {
             /* foreach ( $this->invoices['items'] as $invoice) { */
 
             $style = (new Style())
-            ->setShouldWrapText(false)
-            ->setFontSize(11);
+                ->setShouldWrapText(false)
+                ->setFontSize(11);
             $writer->addRows($this->invoices['items'], $style);
             /* } */
         }
