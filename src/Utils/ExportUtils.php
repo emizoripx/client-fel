@@ -11,6 +11,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\Invoices\PaidInvoicesReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
+use EmizorIpx\ClientFel\Reports\Invoices\RenacerPaymentReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceBestSellerProductReport;
@@ -32,7 +33,7 @@ use Exception;
 class ExportUtils {
 
     const INVOICE_ENTITY = 'Invoice';
-    
+
     const ITEMS_ENTITY = 'Items';
 
     const ITEMS_INVOICE_ENTITY = 'Items_Invoice';
@@ -83,6 +84,8 @@ class ExportUtils {
 
     const INVOICE_ITEMS_QUIPUS_CUSTOM_1 = 'Reporte_detalle_facturacion_quipus';
 
+    const RENACER_PAYMENT_REPORT = 'Reporte_Pagos_Renacer';
+
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
         // Here we use the date for unique filename - This is the filename for the View
@@ -130,7 +133,7 @@ class ExportUtils {
             case static::QUANTITY_ITEMS:
                 return CosinCantidadReport::class;
                 break;
-            
+
             case static::ORDER_ITEMS:
                 return ItemsReport::class ;
                 break;
@@ -138,11 +141,11 @@ class ExportUtils {
             case static::ITEMS_TURNS:
                 return ItemTurnsReport::class;
                 break;
-            
+
             case static::INRA_RESUMEN:
                 return InraResumenIngresosReport::class;
                 break;
-            
+
             case static::INRA_TOTALES:
                 return InraTotalesReport::class;
                 break;
@@ -185,7 +188,7 @@ class ExportUtils {
             case static::BIO_CLIENTS_REPORT:
                 return BioClientsReport::class;
                 break;
-            
+
             case static::AGENTS_INFORMATION_REPORT:
                 return SobodaycomInformationAgentsReport::class;
                 break;
@@ -201,11 +204,15 @@ class ExportUtils {
             case static::PAID_INVOICES_REPORT:
                 return PaidInvoicesReport::class;
                 break;
-            
+
             case static::INVOICE_ITEMS_QUIPUS_CUSTOM_1:
                 return ItemInvoiceQuipusReport::class;
                 break;
-            
+
+            case static::RENACER_PAYMENT_REPORT:
+                return RenacerPaymentReport::class;
+                break;
+
             default:
             \Log::debug("ingresando a este reporte");
                 new Exception('Reporte no soportado');
@@ -220,7 +227,7 @@ class ExportUtils {
 
     public static function dictionaryPaymentTypesSpanish()
     {
-        return [ 
+        return [
             "" => "",
             "Bank Transfer" => "Transferencia bancaria",
             "Cash" => "Efectivo",
