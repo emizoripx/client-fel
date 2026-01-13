@@ -28,8 +28,8 @@ class GetPaymentsTerrasurRequest extends FormRequest
 
         if ($this->route('payment_type') == 'services') {
             return [
-                'id_servicio' => 'required|integer',
-                'numero_contrato' => 'required|integer',
+                'id_servicio' => 'required',
+                'numero_contrato' => 'required',
                 'digitar_monto_pago' => "nullable|numeric",
             ];
         }else {
@@ -39,7 +39,7 @@ class GetPaymentsTerrasurRequest extends FormRequest
                     'string',
                     Rule::in(['cuo','cap']),
                 ],
-                'numero_contrato' => 'required|integer',
+                'numero_contrato' => 'required',
                 'digitar_monto_pago' => "nullable|numeric"
             ];
         }

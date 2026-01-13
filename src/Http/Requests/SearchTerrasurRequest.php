@@ -28,7 +28,7 @@ class SearchTerrasurRequest extends FormRequest
 
      
         return [
-            'numero_contrato' => 'required|integer',
+            'numero_contrato' => 'required',
         ];
     
         
