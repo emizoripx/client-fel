@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed 
 ### Fixed
 
+## [v2.18.14] - 2026-01-13
+  
+## Added
+- daily report for terrasur
+### changed
+- hot fix, document 55, change montottotalcreditofiscal *0.7
+
 ## [v2.18.13] - 2025-08-26
   
 ### Fixed
