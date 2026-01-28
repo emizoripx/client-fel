@@ -61,6 +61,7 @@ class TerrasurService {
                     "factura_codigo_control" => "0",
                     "factura_num" => "0",
                     "id_pago" => $bbr_pago->id_pago,
+                    "numero_pago" => $bbr_pago->num_pago,
                     "monto_pago" => $bbr_pago->monto_pago,
                     "numero_contrato" => $bbr_pago->num_contrato,
                     "recibo_efectivo_bs" => 0.0,

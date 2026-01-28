@@ -66,37 +66,37 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
         return $query;
     }
-/*
-    public function generateReport()
-    {
 
-        $from = date('Y-m-d', $this->from_date)." 00:00:00";
-        $to = date("Y-m-d", $this->to_date). " 23:59:59";
+    public function generateReport()                                                                        
+    {                                                                                                       
+                                                                                                            
+        $from = date('Y-m-d', $this->from_date)." 00:00:00";                                                
+        $to = date("Y-m-d", $this->to_date). " 23:59:59";                                                   
+                                                                                                            
+        $query_invoices = \DB::table('invoices')                                                            
+            ->leftJoin('users', 'users.id', '=', 'invoices.user_id')                                        
+            ->where('status_id',"=", 4)                                                                     
+            ->where('company_id', $this->company_id)                                                        
+            ->whereNotNull('document_data')                                                                 
+            ->whereBetween('date', [$from, $to]);                                                           
+                                                                                                            
+        $query_invoices->select(                                                                            
+            'users.first_name as collector_name',                                                           
+            'users.id as user_id',                                                                          
+            'document_data'                                                                                 
+        );                                                                                         
+                                                                                                
+        $results_cursor = $query_invoices->cursor();                                               
+                                                                                                
+        $all_users_cursor = \DB::table('users')                                                    
+            ->join('company_user', 'users.id', '=', 'company_user.user_id')                        
+            ->where('company_user.company_id', $this->company_id)                                  
+            ->select('users.id', 'users.first_name')                                               
+            ->cursor();                                                                            
+                                                                                                
+        return $this->formatReportData($results_cursor, $all_users_cursor);                        
+    } 
 
-        $query_invoices = \DB::table('invoices')
-            ->leftJoin('users', 'users.id', '=', 'invoices.user_id')
-            ->where('status_id',"<", 5)
-            ->where('company_id', $this->company_id)
-            ->whereNotNull('document_data')
-            ->whereBetween('date', [$from, $to]);
-
-        $query_invoices->select(
-            'users.first_name as collector_name',
-            'users.id as user_id',
-            'document_data'
-        );
-
-        $results_cursor = $query_invoices->cursor();
-
-        $all_users_cursor = \DB::table('users')
-            ->join('company_user', 'users.id', '=', 'company_user.user_id')
-            ->where('company_user.company_id', $this->company_id)
-            ->select('users.id', 'users.first_name')
-            ->cursor();
-
-        return $this->formatReportData($results_cursor, $all_users_cursor);
-    }
-*/
     private function formatReportData($results_cursor, $all_users_cursor)
     {
         $collectors = [];
@@ -126,34 +126,69 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
 
             // Extraer datos del JSON en PHP
             $document_data = json_decode($row->document_data, true);
-            if (!$document_data || !isset($document_data['bbr_cliente']['bbr_tipo_pagos'][0]['bbr_pagos'][0])) {
+            if (!$document_data) {
                 continue;
             }
-            $pago = $document_data['bbr_cliente']['bbr_tipo_pagos'][0]['bbr_pagos'][0];
+            $pago = $document_data['bbr_cliente']['bbr_tipo_pagos'][0]['bbr_pagos'][0] ?? null;
 
-            $currency = $pago['moneda'] ?? null;
-            $amount = $pago['monto_pago'] ?? 0;
+            if($pago){
 
-            if ($currency == 2) {
-                $amount_bs = floatval($amount);
-                $amount_sus = 0;
-            } elseif ($currency == 1) {
-                $amount_bs = 0;
-                $amount_sus = floatval($amount);
-            } else {
-                $amount_bs = floatval($amount);
-                $amount_sus = 0;
+                $currency = $pago['moneda'] ?? null;
+                $amount = $pago['monto_pago'] ?? 0;
+
+                if ($currency == 2) {
+                    $amount_bs = floatval($amount);
+                    $amount_sus = 0;
+                } elseif ($currency == 1) {
+                    $amount_bs = 0;
+                    $amount_sus = floatval($amount);
+                } else {
+                    $amount_bs = floatval($amount);
+                    $amount_sus = 0;
+                }
+
+                $collectors[$collector_key]['items'][] = [
+                    'date' => $pago['fecha_pago'] ?? null,
+                    'business' => $company_name,
+                    'contract_number' => $document_data['bbr_cliente']['num_contrato'] ?? null,
+                    'client_name' => $document_data['bbr_cliente']['nombre_cliente'] ?? null,
+                    'quota' => $pago['num_pago'] ?? null,
+                    'amount_sus' => $amount_sus,
+                    'amount_bs' => $amount_bs
+                ];
+
+            }else{
+
+                $bbr_servicio = $document_data['bbr_cliente']['bbr_servicio']['bbr_pago_servicio'];
+
+                $currency = 1;
+
+                $amount = $bbr_servicio['unidades_seleccionada']*$bbr_servicio['valor_unit_sus'];
+
+                if ($currency == 2) {
+                    $amount_bs = floatval($amount);
+                    $amount_sus = 0;
+                } elseif ($currency == 1) {
+                    $amount_bs = 0;
+                    $amount_sus = floatval($amount);
+                } else {
+                    $amount_bs = floatval($amount);
+                    $amount_sus = 0;
+                }
+
+                $collectors[$collector_key]['items'][] = [
+                    'date' => null,
+                    'business' => $company_name,
+                    'contract_number' => $document_data['bbr_cliente']['num_contrato'] ?? null,
+                    'client_name' => $document_data['bbr_cliente']['nombre_cliente'] ?? null,
+                    'quota' => $pago['num_pago'] ?? null,
+                    'amount_sus' => $amount_sus,
+                    'amount_bs' => $amount_bs
+                ];
+
+
             }
 
-            $collectors[$collector_key]['items'][] = [
-                'date' => $pago['fecha_pago'] ?? null,
-                'business' => $company_name,
-                'contract_number' => $pago['num_contrato'] ?? null,
-                'client_name' => $document_data['bbr_cliente']['nombre_cliente'] ?? null,
-                'quota' => $pago['num_pago'] ?? null,
-                'amount_sus' => $amount_sus,
-                'amount_bs' => $amount_bs
-            ];
 
             $collectors[$collector_key]['subtotal']['total_sus'] += $amount_sus;
             $collectors[$collector_key]['subtotal']['total_bs'] += $amount_bs;
@@ -165,7 +200,7 @@ class RenacerPaymentReport extends BaseReport implements ReportInterface
         return [
             'header' => [
                 'company' => $company->settings->name,
-                'nit' => $company->settings->number,
+                'nit' => $company->settings->id_number,
                 'period' => $this->from_date && $this->to_date ?
                     date('d/m/Y', $this->from_date) . ' - ' . date('d/m/Y', $this->to_date) :
                     'Todos',
