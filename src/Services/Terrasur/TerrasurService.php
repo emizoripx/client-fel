@@ -94,7 +94,7 @@ class TerrasurService {
                 "facturar"=> $bbr_client->bbr_servicio->facturar,
                 "concepto"=> $bbr_pago->concepto,
                 "id_contrato"=> $bbr_pago->id_contrato,
-                "num_unidades"=> $bbr_pago->unidades,
+                "num_unidades"=>$bbr_pago->unidades_seleccionada,
                 "id_servicio"=> $bbr_client->bbr_servicio->id_servicio ?? 0,
                 "precio_total"=> $bbr_pago->valor_unit_bs,
                 "precio_unidad"=> $bbr_pago->valor_unit_bs,

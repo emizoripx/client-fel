@@ -69,7 +69,7 @@ class FunctionUtils {
                 break;
             case 'MENSUAL_POSTPAGO':
                 
-                $lastMonth = $date->subMonth();
+                $lastMonth = now()->subMonth();
 
                 $period_changed = static::literalMonthsPeriod($lastMonth->format("m"))   . "-" . $lastMonth->format("Y");
                 break;

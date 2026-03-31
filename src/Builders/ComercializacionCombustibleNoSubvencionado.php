@@ -100,7 +100,7 @@ class ComercializacionCombustibleNoSubvencionado extends BaseFelInvoiceBuilder i
 
         return [
             "tipoCambio" => $this->source_data['fel_data_parsed']['tipo_cambio'],
-            "montoTotal" => $total,
+            "montoTotal" => round($total,2),
             "montoTotalMoneda" => round($total / $this->source_data['fel_data_parsed']['tipo_cambio'],2),
             "montoTotalSujetoIva" => round(($total * 0.7),2),
             "detalles" => $details
