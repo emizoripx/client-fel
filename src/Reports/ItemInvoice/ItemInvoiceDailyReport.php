@@ -84,7 +84,8 @@ class ItemInvoiceDailyReport extends BaseReport implements ReportInterface {
                         ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
                         ->leftJoin('payment_types', 'payments.type_id','payment_types.id')
                         ->where('fel_invoice_requests.company_id', $this->company_id)
-                        ->whereNotNull('fel_invoice_requests.cuf');
+                        ->whereNotNull('fel_invoice_requests.cuf')
+                        ->whereIn("fel_invoice_requests.codigoEstado",[901, 690, 691]);
 
         if ($this->same_user) {
             $query_items = $query_items->where('invoices.user_id', '=', $this->user->id);
