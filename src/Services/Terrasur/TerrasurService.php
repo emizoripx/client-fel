@@ -88,19 +88,25 @@ class TerrasurService {
                 "factura_num" => "0",
                 "recibo_num" => intval($invoice->number),
                 "numero_contrato" => $bbr_client->num_contrato,
-                "recibo_efectivo_sus" => $bbr_pago->valor_unit_sus,
-                "recibo_efectivo_bs" => 0.0,
                 "usuario_sucursal" => $invoice->user->name(),
                 "facturar"=> $bbr_client->bbr_servicio->facturar,
                 "concepto"=> $bbr_pago->concepto,
                 "id_contrato"=> $bbr_pago->id_contrato,
                 "num_unidades"=>$bbr_pago->unidades_seleccionada,
                 "id_servicio"=> $bbr_client->bbr_servicio->id_servicio ?? 0,
-                "precio_total"=> $bbr_pago->valor_unit_bs,
-                "precio_unidad"=> $bbr_pago->valor_unit_bs,
+                "precio_unidad"=> $bbr_pago->valor_unit_sus,
                 "monto_pago" => $bbr_pago->valor_unit_bs,
             ];
             $is_service = true;
+            $amount = $bbr_pago->valor_unit_sus * $bbr_pago->unidades_seleccionada;
+            // MONEDA = 2 bs
+            if ($moneda == 2) {
+                $input["recibo_efectivo_bs"] = $amount;
+            }else {
+                $input["recibo_efectivo_sus"] = $amount;
+            }
+
+            $input["precio_total"] = $amount;
         }
         
         if (isset($invoice->fel_invoice)) {
