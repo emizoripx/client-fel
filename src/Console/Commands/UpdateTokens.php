@@ -14,7 +14,7 @@ class UpdateTokens extends Command
      *
      * @var string
      */
-    protected $signature = 'emizor:update-tokens';
+    protected $signature = 'emizor:update-tokens {--host=prod : The host environment (prod/dev)}';
 
     /**
      * The console command description.
@@ -40,9 +40,24 @@ class UpdateTokens extends Command
      */
     public function handle()
     {
+        $hostEnv = $this->option('host');
+        $hostUrl = $hostEnv === 'dev' ? 'https://sinfel.emizor.com' : 'https://fel.emizor.com';
 
-        FelClientToken::cursor()->each(function ($felClienttoken) {
+        FelClientToken::where("host", $hostUrl)->cursor()->each(function ($felClienttoken) {
             
+            $expiresIn = $felClienttoken->getExpiresIn();
+            $updatedAt = $felClienttoken->updated_at;
+
+            if (!empty($expiresIn) && !empty($updatedAt)) {
+                $expiresAt = \Carbon\Carbon::parse($updatedAt)->addSeconds((int)$expiresIn);
+                
+                // Si falta más de 48 horas (2 días) para que expire, saltar
+                if (now()->diffInHours($expiresAt, false) > 48) {
+                    $this->info("Empresa # {$felClienttoken->account_id} token aún válido. Expira en: {$expiresAt->toDateTimeString()}");
+                    return;
+                }
+            }
+
             $connection = new Connection($felClienttoken->getHost());
 
             $clientId = $felClienttoken->getClientId();
@@ -55,7 +70,7 @@ class UpdateTokens extends Command
                 "client_secret" => $clientSecret
             ];
             try {
-                sleep(3);
+                sleep(1);
                 $response = $connection->authenticate($data);
 
                 $felClienttoken->setTokenType($response['token_type']);
