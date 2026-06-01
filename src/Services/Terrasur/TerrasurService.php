@@ -99,14 +99,7 @@ class TerrasurService {
             ];
             $is_service = true;
             $amount = $bbr_pago->valor_unit_sus * $bbr_pago->unidades_seleccionada;
-            $moneda = $bbr_client->bbr_contrato->moneda ?? 1;
-            // MONEDA = 2 bs
-            if ($moneda == 2) {
-                $input["recibo_efectivo_bs"] = $amount;
-            }else {
-                $input["recibo_efectivo_sus"] = $amount;
-            }
-
+            $input["recibo_efectivo_sus"] = $amount;
             $input["precio_total"] = $amount;
         }
         
