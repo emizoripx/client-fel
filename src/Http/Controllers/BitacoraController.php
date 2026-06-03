@@ -57,4 +57,57 @@ class BitacoraController extends BaseController
         dd("done");
 
     }
+
+    public function getHtmlFromInvoice($company_id, $generate_pdf = true, $use_thermal_printer =false) 
+    {
+ 
+        $company = \App\Models\Company::find($company_id);
+
+        if(empty($company)){
+            return "not found";
+        }
+
+        $invoice_id = $company->invoices()->orderBy("id", "desc")->first()->id;
+        $invoice = \App\Models\Invoice::with(['company','fel_invoice'])->find($invoice_id);
+        
+        if (empty($invoice)) {
+            echo "not found";
+            return;
+        }
+        $company = $invoice->company;
+        
+        $felinvoice = $invoice->fel_invoice;
+
+        $numeroFactura = $invoice->numberFormatter();
+        
+        $path =$company->company_key.'/'.$invoice->hashed_id.'/invoices/'. $felinvoice->codigoSucursal."/";
+
+
+        [$template, $footer_custom] = \EmizorIpx\ClientFel\Utils\TypeDocumentSector::getTemplateByDocumentSector($felinvoice->type_document_sector_id, $invoice->company_id,  $felinvoice->codigoSucursal, $use_thermal_printer, $felinvoice->typeDocument, $felinvoice->codigoPuntoVenta);
+
+        $resourceClass = \EmizorIpx\ClientFel\Utils\TemplatesUtils::getClassResourceByDocumentSector($felinvoice->type_document_sector_id, $felinvoice->typeDocument);
+
+        $invoice = new $resourceClass($invoice);
+
+        $template = \Illuminate\Support\Facades\Storage::disk('template-s3')->url($template);
+
+        $content = file_get_contents($template);
+
+        $render_template = \Illuminate\Support\Facades\Blade::render($content, ['fiscalDocument' => $invoice->resolve(), 'fiscalDocumentOriginal' => '']);
+
+        if ($generate_pdf === 'true' || $generate_pdf === true || $generate_pdf === '1' || $generate_pdf === 1) {
+
+            $pdf = (new \App\Utils\HostedPDF\NinjaPdf())->build($render_template, $path . $numeroFactura, $numeroFactura, true);
+
+            return response($pdf)
+                ->header('Content-Disposition', 'attachment; filename="' . $numeroFactura . '.pdf"')
+                ->header('Content-Type', 'application/pdf');
+
+        } else {
+            return response($render_template)
+                ->header('Content-Disposition', 'attachment; filename="' . $numeroFactura . '.html"')
+                ->header('Content-Type', 'text/html');
+        }
+
+    }
 }
