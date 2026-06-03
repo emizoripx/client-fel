@@ -86,6 +86,9 @@ class ExportUtils {
 
     const RENACER_PAYMENT_REPORT = 'Reporte_Pagos_Renacer';
 
+    const REPORTE_ESTUDIANTES_FACTURA_APLANADO = 'Reporte_estudiantes_factura_aplanado';
+
+
     public static function saveFileLocal($name, $datetime, $content, $is_pdf = false) {
 
         // Here we use the date for unique filename - This is the filename for the View
@@ -212,6 +215,11 @@ class ExportUtils {
             case static::RENACER_PAYMENT_REPORT:
                 return RenacerPaymentReport::class;
                 break;
+
+            case static::REPORTE_ESTUDIANTES_FACTURA_APLANADO:
+                return \EmizorIpx\ClientFel\Reports\ItemInvoice\StudentInvoiceFlatReport::class;
+                break;
+
 
             default:
             \Log::debug("ingresando a este reporte");
