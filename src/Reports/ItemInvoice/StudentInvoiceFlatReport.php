@@ -74,7 +74,7 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
             fel_invoice_requests.numeroFactura, 
             fel_invoice_requests.codigoCliente,
             clients.id as client_id,
-            fel_invoice_requests.nombreRazonSocial,
+            fel_invoice_requests.nombreEstudiante,
             clients.custom_value2 as carrera,
             fel_invoice_requests.montoTotal,
             fel_invoice_requests.detalles,
@@ -93,13 +93,13 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
 
             $client_hash = (new \App\Models\Client())->encodePrimaryKey($item->client_id);
             $base_url = rtrim($this->host, '/');
-            $student_link = '=HYPERLINK("' . $base_url . '/#/clients/' . $client_hash . '", "' . $item->nombreRazonSocial . '")';
+            $student_link = '=HYPERLINK("' . $base_url . '/#/clients/' . $client_hash . '", "' . $item->nombreEstudiante . '")';
 
             $row = [
                 "numeroFactura" => $item->numeroFactura,
                 "fechaEmision" => Carbon::parse($item->fechaEmision)->format('d/M/Y H:i:s'),
                 "codigoCliente" => $item->codigoCliente,
-                "nombreRazonSocial" => $student_link,
+                "nombreEstudiante" => $student_link,
                 "carrera" => $item->carrera,
                 "montoTotal" => round((float)$item->montoTotal, 2),
             ];
