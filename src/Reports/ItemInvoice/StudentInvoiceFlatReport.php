@@ -93,14 +93,17 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
 
             $client_hash = (new \App\Models\Client())->encodePrimaryKey($item->client_id);
             $base_url = rtrim($this->host, '/');
-            $student_link = '=HYPERLINK("' . $base_url . '/#/clients/' . $client_hash . '", "' . $item->nombreEstudiante . '")';
+            $student_data = explode('-', $item->nombreEstudiante); 
+            $student_name = $student_data[0];
+            $carrera = $student_data[1] ?? $item->carrera;
+            $student_link = '=HYPERLINK("' . $base_url . '/#/clients/' . $client_hash . '", "' . $student_name . '")';
 
             $row = [
                 "numeroFactura" => $item->numeroFactura,
                 "fechaEmision" => Carbon::parse($item->fechaEmision)->format('d/M/Y H:i:s'),
                 "codigoCliente" => $item->codigoCliente,
-                "nombreEstudiante" => $student_link,
-                "carrera" => $item->carrera,
+                "nombreEstudiante" => trim($student_link),
+                "carrera" => trim($carrera),
                 "montoTotal" => round((float)$item->montoTotal, 2),
             ];
 
