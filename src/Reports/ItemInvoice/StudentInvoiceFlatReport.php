@@ -70,6 +70,7 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
 
         $invoices = $query_items->selectRaw(\DB::raw(
             '
+            invoices.id as invoice_id,
             fel_invoice_requests.fechaEmision,
             fel_invoice_requests.numeroFactura, 
             fel_invoice_requests.codigoCliente,
@@ -79,7 +80,12 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
             fel_invoice_requests.montoTotal,
             fel_invoice_requests.detalles,
             fel_invoice_requests.estado, 
-            fel_invoice_requests.codigoEstado
+            fel_invoice_requests.codigoEstado,
+            fel_invoice_requests.nombreRazonSocial,
+            fel_invoice_requests.numeroDocumento,
+            fel_invoice_requests.complemento,
+            fel_invoice_requests.urlSin,
+            fel_invoice_requests.periodoFacturado
          '
         ))->get();
 
@@ -92,19 +98,25 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
             $detalle = json_decode($item->detalles, true);
 
             $client_hash = (new \App\Models\Client())->encodePrimaryKey($item->client_id);
+            $invoice_hash = (new \App\Models\Invoice())->encodePrimaryKey($item->invoice_id);
             $base_url = rtrim($this->host, '/');
             $student_data = explode('-', $item->nombreEstudiante); 
             $student_name = $student_data[0];
             $carrera = $student_data[1] ?? $item->carrera;
             $student_link = '=HYPERLINK("' . $base_url . '/#/clients/' . $client_hash . '", "' . $student_name . '")';
+            $invoice_link = '=HYPERLINK("' . $base_url . '/#/invoices/' . $invoice_hash . '/view", "' . $item->numeroFactura . '")';
 
             $row = [
-                "numeroFactura" => $item->numeroFactura,
+                "numeroFactura" => trim($invoice_link),
                 "fechaEmision" => Carbon::parse($item->fechaEmision)->format('d/M/Y H:i:s'),
                 "codigoCliente" => $item->codigoCliente,
                 "nombreEstudiante" => trim($student_link),
                 "carrera" => trim($carrera),
                 "montoTotal" => round((float)$item->montoTotal, 2),
+                "nombreRazonSocial" => $item->nombreRazonSocial,
+                "numeroDocumento" => $item->numeroDocumento . (!empty($item->complemento) ? '-' . $item->complemento : ''),
+                "periodoFacturado" => $item->periodoFacturado,
+                "linkFactura" => $item->urlSin,
             ];
 
             // Delimitar a 10 detalles como máximo
@@ -134,7 +146,11 @@ class StudentInvoiceFlatReport extends BaseReport implements ReportInterface {
             "Código Estudiante",
             "Estudiante",
             "Carrera",
-            "Monto Total Bs"
+            "Monto Total Bs",
+            "NOMBRE/RAZON SOCIAL",
+            "NIT/CI/EX",
+            "PERIODO FACTURADO",
+            "LINK FACTURA EMITIDA",
         ];
 
         for ($i = 1; $i <= 10; $i++) {
