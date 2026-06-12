@@ -58,7 +58,7 @@ class BitacoraController extends BaseController
 
     }
 
-    public function getHtmlFromInvoice($company_id, $generate_pdf = true, $use_thermal_printer =false) 
+    public function getHtmlFromInvoice($company_id, $generate_pdf = true, $use_thermal_printer =false, $return_json = false) 
     {
  
         $company = \App\Models\Company::find($company_id);
@@ -93,7 +93,19 @@ class BitacoraController extends BaseController
 
         $content = file_get_contents($template);
 
-        $render_template = \Illuminate\Support\Facades\Blade::render($content, ['fiscalDocument' => $invoice->resolve(), 'fiscalDocumentOriginal' => '']);
+        $data = ['fiscalDocument' => $invoice->resolve(), 'fiscalDocumentOriginal' => ''];
+        $render_template = \Illuminate\Support\Facades\Blade::render($content, $data);
+
+        if ($return_json === 'true' || $return_json === true || $return_json === '1' || $return_json === 1) {
+            $pdf_payload = [
+                'html_pdf_url' => $render_template,
+                "cuf" => $numeroFactura,
+                "bucket_path" => $path . $numeroFactura,
+                'bucket_name' => "no-aplicable",
+                "is_html" => true
+            ];
+            return response()->json($pdf_payload);
+        }
 
         if ($generate_pdf === 'true' || $generate_pdf === true || $generate_pdf === '1' || $generate_pdf === 1) {
 
