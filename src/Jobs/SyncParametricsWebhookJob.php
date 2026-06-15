@@ -69,8 +69,9 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
 
                 $company = collect($companyTesting)->first();
                 $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
-                
+                \Log::info("DATA TESTEO: ", $data);
                 foreach ($data['data'] as $parametric) {
+                    \Log::info("PARAMETRICO: ", $parametric);
                     $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
                     $this->parametricSyncPhaseTesting($parametric, $companyTesting, $parametricService->getResponse());
                 }
@@ -106,6 +107,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
     public function parametricSyncPhaseTesting($type, $companies, $data)
     {
         foreach ($companies as $company) {
+            \Log::info("DATA TESTEO2: ", $type);
             FelParametric::saveParametrics($type, $company->company_id, $data);
         }
     }

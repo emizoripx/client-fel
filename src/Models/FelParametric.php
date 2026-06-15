@@ -619,13 +619,15 @@ class FelParametric
 
     public static function saveParametrics($type, $company_id, $data){
         $stats = ['upserted' => 0, 'deleted' => 0, 'unlinked' => 0];
-
+        \Log::info("DATA EN SAVE: ", $data);
         try {
             if ($type === TypeParametrics::PRODUCTOS_SIN) {
                 $existing = SINProduct::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigo . '_' . $i->codigoActividad; });
                 $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
                 foreach ($data as $d) {
                     $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = $d['codigo'];
                     } else {
@@ -641,7 +643,15 @@ class FelParametric
                         }
                     }
                 }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = $e->codigo;
+                        }
+                    }
+                }
                 if (!empty($toDelete)) {
+                    $toDelete = array_unique($toDelete);
                     SINProduct::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
                     $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_producto_sin', $toDelete)->update(['codigo_producto_sin' => null]);
                     $stats['deleted'] += count($toDelete);
@@ -654,11 +664,13 @@ class FelParametric
 
             } elseif ($type === TypeParametrics::LEYENDAS) {
                 $existing = FelCaption::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigo . '_' . $i->codigoActividad; });
-                $toInsert = []; $toUpdate = []; $toDelete = []; $toDeleteAct = [];
+                $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
                 foreach ($data as $d) {
                     $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
                     if (isset($d['isActive']) && $d['isActive'] == false) {
-                        $toDelete[] = $d['codigo']; $toDeleteAct[] = $d['codigoActividad'];
+                        $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
                         if ($existing->has($key)) {
                             if ($existing[$key]->descripcion != $d['descripcion']) {
@@ -672,9 +684,18 @@ class FelParametric
                         }
                     }
                 }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = ['codigo' => $e->codigo, 'codigoActividad' => $e->codigoActividad];
+                        }
+                    }
+                }
                 if (!empty($toDelete)) {
-                    // we should delete by matching both but for simplicity delete whereIn
-                    foreach($data as $d) { if (isset($d['isActive']) && $d['isActive'] == false) { FelCaption::where('company_id', $company_id)->where('codigo', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete(); $stats['deleted']++; } }
+                    foreach($toDelete as $d) {
+                        FelCaption::where('company_id', $company_id)->where('codigo', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete();
+                        $stats['deleted']++;
+                    }
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelCaption::insert($chunk); } $stats['upserted'] += count($toInsert); }
                 foreach ($toUpdate as $up) { FelCaption::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
@@ -682,8 +703,10 @@ class FelParametric
             } elseif ($type === TypeParametrics::ACTIVIDADES) {
                 $existing = FelActivity::where('company_id', $company_id)->get()->keyBy('codigo');
                 $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
                 foreach ($data as $d) {
                     $key = $d['codigo'];
+                    $incomingKeys[$key] = true;
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = $d['codigo'];
                     } else {
@@ -699,7 +722,15 @@ class FelParametric
                         }
                     }
                 }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = $e->codigo;
+                        }
+                    }
+                }
                 if (!empty($toDelete)) {
+                    $toDelete = array_unique($toDelete);
                     FelActivity::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
                     $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_actividad_economica', $toDelete)->update(['codigo_actividad_economica' => null]);
                     $stats['deleted'] += count($toDelete);
@@ -710,10 +741,12 @@ class FelParametric
             } elseif ($type === TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR) {
                 $existing = FelActivityDocumentSector::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigoDocumentoSector . '_' . $i->codigoActividad; });
                 $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
                 foreach ($data as $d) {
                     $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
                     if (isset($d['isActive']) && $d['isActive'] == false) {
-                        $toDelete[] = $d;
+                        $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
                         if ($existing->has($key)) {
                             if ($existing[$key]->actividad != $d['actividad'] || $existing[$key]->documentoSector != $d['descripcion']) {
@@ -728,20 +761,76 @@ class FelParametric
                         }
                     }
                 }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = ['codigo' => $e->codigoDocumentoSector, 'codigoActividad' => $e->codigoActividad];
+                        }
+                    }
+                }
                 if (!empty($toDelete)) {
-                    foreach($toDelete as $d) { FelActivityDocumentSector::where('company_id', $company_id)->where('codigoDocumentoSector', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete(); $stats['deleted']++; }
+                    foreach($toDelete as $d) { 
+                        FelActivityDocumentSector::where('company_id', $company_id)->where('codigoDocumentoSector', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete(); 
+                        $stats['deleted']++; 
+                    }
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivityDocumentSector::insert($chunk); } $stats['upserted'] += count($toInsert); }
                 foreach ($toUpdate as $up) { FelActivityDocumentSector::where('id', $up['id'])->update(['actividad' => $up['actividad'], 'documentoSector' => $up['documentoSector'], 'tipoDocumentoSector' => $up['tipoDocumentoSector'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
 
             } else {
                 // Fallback for smaller parametrics
+                $incomingKeys = [];
                 foreach ($data as $item) {
+                    $key = '';
+                    if ($type === TypeParametrics::TIPOS_DOCUMENTO_SECTOR) {
+                        $key = $item['codigoDocumentSector'] . '_' . $item['codigoSucursal'];
+                    } else {
+                        $key = $item['codigo'];
+                    }
+                    $incomingKeys[$key] = true;
+
                     $result = static::createOrUpdate($type, $item, $company_id);
                     if (isset($result['action'])) {
                         if ($result['action'] == 'deleted') { $stats['deleted']++; } else { $stats['upserted']++; }
                     }
                     if (isset($result['unlinked'])) { $stats['unlinked'] += $result['unlinked']; }
+                }
+
+                if (count($data) > 0) {
+                    $existing = [];
+                    switch ($type) {
+                        case TypeParametrics::MOTIVO_ANULACION: $existing = RevocationReason::get(); break;
+                        case TypeParametrics::PAISES: $existing = Country::get(); break;
+                        case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD: $existing = IdentityDocumentType::get(); break;
+                        case TypeParametrics::METODOS_DE_PAGO: $existing = PaymentMethod::get(); break;
+                        case TypeParametrics::MONEDAS: $existing = Currency::get(); break;
+                        case TypeParametrics::UNIDADES: $existing = Unit::get(); break;
+                        case TypeParametrics::TIPOS_HABITACION: $existing = FelRoomType::get(); break;
+                        case TypeParametrics::TIPOS_DOCUMENTO_SECTOR: $existing = SectorDocumentTypes::where('company_id', $company_id)->get(); break;
+                    }
+
+                    foreach ($existing as $e) {
+                        $key = '';
+                        $itemData = ['isActive' => false];
+                        if ($type === TypeParametrics::TIPOS_DOCUMENTO_SECTOR) {
+                            $key = $e->codigo . '_' . $e->codigoSucursal;
+                            $itemData['codigoDocumentSector'] = $e->codigo;
+                            $itemData['codigoSucursal'] = $e->codigoSucursal;
+                        } else {
+                            $key = $e->codigo;
+                            $itemData['codigo'] = $e->codigo;
+                        }
+
+                        if (!isset($incomingKeys[$key])) {
+                            $result = static::createOrUpdate($type, $itemData, $company_id);
+                            if (isset($result['action']) && $result['action'] == 'deleted') {
+                                $stats['deleted']++;
+                            }
+                            if (isset($result['unlinked'])) {
+                                $stats['unlinked'] += $result['unlinked'];
+                            }
+                        }
+                    }
                 }
             }
         } catch (ClientFelException $ex) {
