@@ -279,7 +279,7 @@ class FelParametric
                     elseif ( !is_null($felActivity) && $data['isActive'] == false) {
                         $felActivity->delete();
                         $action = "deleted";
-                        $unlinked = \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_actividad_economica', $data['codigo'])->update(['codigo_actividad_economica' => null]);
+                        $unlinked = \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_actividad_economica', $data['codigo'])->update(['codigo_actividad_economica' => null, 'codigo_producto_sin' => null]);
                     } 
                     else{
                         $felActivity->update([
@@ -732,7 +732,7 @@ class FelParametric
                 if (!empty($toDelete)) {
                     $toDelete = array_unique($toDelete);
                     FelActivity::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
-                    $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_actividad_economica', $toDelete)->update(['codigo_actividad_economica' => null]);
+                    $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_actividad_economica', $toDelete)->update(['codigo_actividad_economica' => null, 'codigo_producto_sin' => null]);
                     $stats['deleted'] += count($toDelete);
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivity::insert($chunk); } $stats['upserted'] += count($toInsert); }
