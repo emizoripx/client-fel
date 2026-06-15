@@ -47,67 +47,86 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
     {
         $data = $this->data;
 
-        \Log::debug("JOB PARAMETRICAS ------ Inicio");
+        \Log::info("JOB PARAMETRICAS ------ Inicio del flujo", ['data' => $data]);
 
         if (!$data['is_general']) {
             $companies = AccountPrepagoBags::where('fel_company_id', $data['company_id'])->get();
+            \Log::info("JOB PARAMETRICAS ------ Se encontraron " . $companies->count() . " empresas para el fel_company_id: " . $data['company_id']);
 
             $companyProduction = $companies->where('phase', 'Production')->all();
 
-            \Log::debug("JOB PARAMETRICAS ------ Actualizar companies Fase Produccción");
+            \Log::info("JOB PARAMETRICAS ------ Inicio actualización Fase Producción (" . count($companyProduction) . " empresas)");
             // Sync Companies Production
             foreach ($companyProduction as $company) {
+                \Log::info("JOB PARAMETRICAS ------ Producción: Sincronizando empresa " . $company->company_id);
                 $this->parametricSyncPhaseProduction($data['data'], $company);
             }
-            \Log::debug("JOB PARAMETRICAS ------ Fin Actulizaci[on de companies Fase Producción");
+            \Log::info("JOB PARAMETRICAS ------ Fin actualización Fase Producción");
 
-            \Log::debug("JOB PARAMETRICAS ------ Actualizar companies Fase Testing");
+            \Log::info("JOB PARAMETRICAS ------ Inicio actualización Fase Testing");
             // Sync Company in phase Testing
             $companyTesting = $companies->whereIn('phase', ['Testing', 'Piloto testing'])->all();
 
             if (!empty($companyTesting)){
-
+                \Log::info("JOB PARAMETRICAS ------ Se encontraron " . count($companyTesting) . " empresas en Testing");
                 $company = collect($companyTesting)->first();
                 $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
-                \Log::info("DATA TESTEO: ", $data);
+                
                 foreach ($data['data'] as $parametric) {
-                    \Log::info("PARAMETRICO: ", $parametric);
+                    \Log::info("JOB PARAMETRICAS ------ Testing: Solicitando parametrica " . $parametric . " para empresa token: " . $company->company_id);
                     $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
-                    $this->parametricSyncPhaseTesting($parametric, $companyTesting, $parametricService->getResponse());
+                    $response = $parametricService->getResponse();
+                    \Log::info("JOB PARAMETRICAS ------ Testing: Respuesta obtenida para " . $parametric, ['response_count' => is_array($response) ? count($response) : 'No es array']);
+                    $this->parametricSyncPhaseTesting($parametric, $companyTesting, $response);
                 }
+            } else {
+                \Log::info("JOB PARAMETRICAS ------ No se encontraron empresas en Testing");
             }
 
         }
         else{
 
-            \Log::debug("JOB PARAMETRICAS ------ Generales");
+            \Log::info("JOB PARAMETRICAS ------ Inicio actualización Generales (is_general=true)");
 
             $company = AccountPrepagoBags::where('fel_company_id', $data['company_id'])->first();
 
-            $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+            if ($company) {
+                \Log::info("JOB PARAMETRICAS ------ Generales: Usando token de empresa " . $company->company_id);
+                $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
 
-            foreach ($data['data'] as $parametric){
-                $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
-                FelParametric::saveParametrics($parametric, $company->company_id, $parametricService->getResponse());
+                foreach ($data['data'] as $parametric){
+                    \Log::info("JOB PARAMETRICAS ------ Generales: Solicitando parametrica " . $parametric);
+                    $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
+                    $response = $parametricService->getResponse();
+                    \Log::info("JOB PARAMETRICAS ------ Generales: Guardando respuesta para " . $parametric, ['response_count' => is_array($response) ? count($response) : 'No es array']);
+                    FelParametric::saveParametrics($parametric, $company->company_id, $response);
+                }
+            } else {
+                \Log::info("JOB PARAMETRICAS ------ Generales: No se encontró AccountPrepagoBags para fel_company_id: " . $data['company_id']);
             }
-
         }
+        
+        \Log::info("JOB PARAMETRICAS ------ Fin del flujo completo");
     }
 
     public function parametricSyncPhaseProduction($parametricUpdate, $company)
     {
+        \Log::info("JOB PARAMETRICAS ------ Producción: Iniciando request para empresa " . $company->company_id);
         $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
         
         foreach ($parametricUpdate as $parametric) {
+            \Log::info("JOB PARAMETRICAS ------ Producción: Solicitando parametrica " . $parametric . " para empresa " . $company->company_id);
             $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
-            FelParametric::saveParametrics($parametric, $company->company_id, $parametricService->getResponse());
+            $response = $parametricService->getResponse();
+            \Log::info("JOB PARAMETRICAS ------ Producción: Guardando respuesta para " . $parametric . " de empresa " . $company->company_id, ['response_count' => is_array($response) ? count($response) : 'No es array']);
+            FelParametric::saveParametrics($parametric, $company->company_id, $response);
         }
     }
 
     public function parametricSyncPhaseTesting($type, $companies, $data)
     {
         foreach ($companies as $company) {
-            \Log::info("DATA TESTEO2: ", $type);
+            \Log::info("JOB PARAMETRICAS ------ Testing: Guardando parametrica " . $type . " para empresa " . $company->company_id, ['data_count' => is_array($data) ? count($data) : 'No es array']);
             FelParametric::saveParametrics($type, $company->company_id, $data);
         }
     }
