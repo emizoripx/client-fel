@@ -21,6 +21,8 @@ use App\Models\RecurringInvoice;
 use EmizorIpx\ClientFel\Console\Commands\DataDummy;
 use EmizorIpx\ClientFel\Console\Commands\UpdateLangCommand;
 use EmizorIpx\ClientFel\Console\Commands\UpdateTokens;
+use EmizorIpx\ClientFel\Console\Commands\CheckHomologationCommand;
+use EmizorIpx\ClientFel\Console\Commands\CleanOrphanedHomologationsCommand;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSobodaycomCategory;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSuperAdmin;
 use EmizorIpx\ClientFel\Http\Middleware\ValidateSpecialCodes;
@@ -89,6 +91,8 @@ class ClientFelServiceProvider extends ServiceProvider
                 UpdateTokens::class,
                 DataDummy::class,
                 UpdateLangCommand::class,
+                CheckHomologationCommand::class,
+                CleanOrphanedHomologationsCommand::class,
                 
             ]);
         }

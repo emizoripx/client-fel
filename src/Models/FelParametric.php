@@ -131,7 +131,6 @@ class FelParametric
             $d["created_at"] = Carbon::now()->toDateTimeString();
             $data_added[] = $d;
         }
-        \Log::debug($data_added);
         return $data_added;
     }
 
@@ -263,6 +262,8 @@ class FelParametric
     }
 
     public static function createOrUpdate($type, $data, $company_id = null){
+        $unlinked = 0;
+        $action = "updated";
 
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
@@ -273,14 +274,14 @@ class FelParametric
 
                         unset($data['isActive']);
                         static::create($type, [$data], $company_id);
-                        \Log::debug("Saved Actividad codigo #". $data['codigo']);
+                        $action = "created";
                     }
                     elseif ( !is_null($felActivity) && $data['isActive'] == false) {
                         $felActivity->delete();
-                        \Log::debug("Delete Actividad codigo #". $data['codigo']);
+                        $action = "deleted";
+                        $unlinked = \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_actividad_economica', $data['codigo'])->update(['codigo_actividad_economica' => null, 'codigo_producto_sin' => null]);
                     } 
                     else{
-                        \Log::debug("updating Actividad codigo #". $data['codigo']);
                         $felActivity->update([
                             'codigo' => $data['codigo'],
                             'descripcion' => $data['descripcion'],
@@ -295,14 +296,13 @@ class FelParametric
                     if(is_null($felCaption)){
                         unset($data['isActive']);
                         static::create($type, [$data], $company_id);
-                        \Log::debug("Saved Leyenda codigo #". $data['codigo']);
+                        $action = "created";
                     }
                     elseif (!is_null($felCaption) && $data['isActive'] == false) {
-                        \Log::debug("Delete Leyenda codigo #". $data['codigo']);
                         $felCaption->delete();
+                        $action = "deleted";
                     }
                     else{
-                        \Log::debug("updating Leyenda codigo #". $data['codigo']);
                         $felCaption->update([
                             'codigo' => $data['codigo'],
                             'descripcion' => $data['descripcion'],
@@ -318,14 +318,14 @@ class FelParametric
                 if(is_null($sinProduct)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved Producto SIN codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($sinProduct) && $data['isActive'] == false) {
                     $sinProduct->delete();
-                    \Log::debug("Delete Producto SIN codigo #". $data['codigo']);
+                        $action = "deleted";
+                    $unlinked = \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_producto_sin', $data['codigo'])->update(['codigo_producto_sin' => null]);
                 }
                 else {
-                    \Log::debug("updating Producto SIN codigo #". $data['codigo']);
                     $sinProduct->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -342,14 +342,13 @@ class FelParametric
                 if(is_null($felActivityDocumentSector)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved Actividad Doc Sector codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($felActivityDocumentSector) && $data['isActive'] == false) {
                     $felActivityDocumentSector->delete();
-                    \Log::debug("Delete Actividad Doc Sector codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating Actividad Doc Sector codigo #". $data['codigo']);
                     $felActivityDocumentSector->update([
                         'codigoDocumentoSector' => $data['codigo'],
                         'actividad' => $data['actividad'],
@@ -368,14 +367,13 @@ class FelParametric
                 if(is_null($felSectorDocument)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved SectorDocument codigo #". $data['codigoDocumentSector']);
+                        $action = "created";
                 }
                 elseif (!is_null($felSectorDocument) && $data['isActive'] == false) {
                     $felSectorDocument->delete();
-                    \Log::debug("Delete SectorDocument codigo #". $data['codigoDocumentSector']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating SectorDocument codigo #". $data['codigoDocumentSector']);
                     $felSectorDocument->update([
                         'codigoSucursal' => $data['codigoSucursal'],
                         'codigo' => $data['codigoDocumentSector'],
@@ -393,14 +391,13 @@ class FelParametric
                 if(is_null($motivoAnulacion)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved Motivo Anulacion codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($motivoAnulacion) && $data['isActive'] == false) {
                     $motivoAnulacion->delete();
-                    \Log::debug("Delete Motivo Anulacion codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating Motivo Anulacion codigo #". $data['codigo']);
                     $motivoAnulacion->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -416,14 +413,13 @@ class FelParametric
                 if(is_null($pais)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved Paises codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($pais) && $data['isActive'] == false) {
                     $pais->delete();
-                    \Log::debug("Delete Paises codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating Paises codigo #". $data['codigo']);
                     $pais->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -439,14 +435,13 @@ class FelParametric
                 if(is_null($documentIdentidad)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved documentIdentidad codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($documentIdentidad) && $data['isActive'] == false) {
                     $documentIdentidad->delete();
-                    \Log::debug("Delete documentIdentidad codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating documentIdentidad codigo #". $data['codigo']);
                     $documentIdentidad->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -462,14 +457,13 @@ class FelParametric
                 if(is_null($metodosPago)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved metodosPago codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($metodosPago) && $data['isActive'] == false) {
                     $metodosPago->delete();
-                    \Log::debug("Delete metodosPago codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating metodosPago codigo #". $data['codigo']);
                     $metodosPago->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -485,14 +479,13 @@ class FelParametric
                 if(is_null($currency)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved currency codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($currency) && $data['isActive'] == false) {
                     $currency->delete();
-                    \Log::debug("Delete currency codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating currency codigo #". $data['codigo']);
                     $currency->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -508,14 +501,14 @@ class FelParametric
                 if(is_null($unit)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved unit codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($unit) && $data['isActive'] == false) {
                     $unit->delete();
-                    \Log::debug("Delete unit codigo #". $data['codigo']);
+                        $action = "deleted";
+                    $unlinked = \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_unidad', $data['codigo'])->update(['codigo_unidad' => null, 'nombre_unidad' => null]);
                 }
                 else {
-                    \Log::debug("updating unit codigo #". $data['codigo']);
                     $unit->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -531,14 +524,13 @@ class FelParametric
                 if(is_null($room_type)){
                     unset($data['isActive']);
                     static::create($type, [$data], $company_id);
-                    \Log::debug("Saved room type codigo #". $data['codigo']);
+                        $action = "created";
                 }
                 elseif (!is_null($room_type) && $data['isActive'] == false) {
                     $room_type->delete();
-                    \Log::debug("Delete room type codigo #". $data['codigo']);
+                        $action = "deleted";
                 }
                 else {
-                    \Log::debug("updating room type codigo #". $data['codigo']);
                     $room_type->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
@@ -553,79 +545,68 @@ class FelParametric
                 break;
         }
 
+        return ["action" => $action, "unlinked" => $unlinked];
     }
 
     public static function getUpdatedAt($type, $company_id){
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
                 $updated_at = FelActivity::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". $updated_at);
                 return strtotime($updated_at);
                 
                 break;
             case TypeParametrics::LEYENDAS:
                 $updated_at = FelCaption::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: " .strtotime($updated_at));
                 return strtotime( $updated_at );
 
                 break;
             case TypeParametrics::PRODUCTOS_SIN:
                 $updated_at = SINProduct::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". $updated_at);
                 return strtotime($updated_at);
 
                 break;
             case TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR:
                 $updated_at = FelActivityDocumentSector::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_SECTOR:
                 $updated_at = SectorDocumentTypes::where('company_id', $company_id)->orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::MOTIVO_ANULACION:
                 $updated_at = RevocationReason::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::PAISES:
                 $updated_at = Country::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD:
                 $updated_at = IdentityDocumentType::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::METODOS_DE_PAGO:
                 $updated_at = PaymentMethod::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::MONEDAS:
                 $updated_at = Currency::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::UNIDADES:
                 $updated_at = Unit::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
             case TypeParametrics::TIPOS_HABITACION:
                 $updated_at = FelRoomType::orderByDesc('updated_at')->pluck('updated_at')->first();
-                \Log::debug("Get updated_at: ". strtotime( strval( $updated_at)));
                 return strtotime( strval( $updated_at));
 
                 break;
@@ -637,13 +618,229 @@ class FelParametric
     }
 
     public static function saveParametrics($type, $company_id, $data){
-        foreach ($data as $item) {
-            try {
-                static::createOrUpdate($type, $item, $company_id);
-                \Log::debug("Saved Parametric");
-            } catch (ClientFelException $ex) {
-                \Log::debug("Error to save parametric ". $ex->getMessage());
+        $stats = ['upserted' => 0, 'deleted' => 0, 'unlinked' => 0];
+        \Log::info("DATA EN SAVE: ", $data);
+        try {
+            if ($type === TypeParametrics::PRODUCTOS_SIN) {
+                $existing = SINProduct::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigo . '_' . $i->codigoActividad; });
+                $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
+                foreach ($data as $d) {
+                    $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
+                    if (isset($d['isActive']) && $d['isActive'] == false) {
+                        $toDelete[] = $d['codigo'];
+                    } else {
+                        if ($existing->has($key)) {
+                            if ($existing[$key]->descripcion != $d['descripcion']) {
+                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion']];
+                            }
+                        } else {
+                            $toInsert[] = [
+                                'company_id' => $company_id, 'codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
+                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                            ];
+                        }
+                    }
+                }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = $e->codigo;
+                        }
+                    }
+                }
+                if (!empty($toDelete)) {
+                    $toDelete = array_unique($toDelete);
+                    SINProduct::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
+                    $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_producto_sin', $toDelete)->update(['codigo_producto_sin' => null]);
+                    $stats['deleted'] += count($toDelete);
+                }
+                if (!empty($toInsert)) {
+                    foreach (array_chunk($toInsert, 500) as $chunk) { SINProduct::insert($chunk); }
+                    $stats['upserted'] += count($toInsert);
+                }
+                foreach ($toUpdate as $up) { SINProduct::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+
+            } elseif ($type === TypeParametrics::LEYENDAS) {
+                $existing = FelCaption::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigo . '_' . $i->codigoActividad; });
+                $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
+                foreach ($data as $d) {
+                    $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
+                    if (isset($d['isActive']) && $d['isActive'] == false) {
+                        $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
+                    } else {
+                        if ($existing->has($key)) {
+                            if ($existing[$key]->descripcion != $d['descripcion']) {
+                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion']];
+                            }
+                        } else {
+                            $toInsert[] = [
+                                'company_id' => $company_id, 'codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
+                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                            ];
+                        }
+                    }
+                }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = ['codigo' => $e->codigo, 'codigoActividad' => $e->codigoActividad];
+                        }
+                    }
+                }
+                if (!empty($toDelete)) {
+                    foreach($toDelete as $d) {
+                        FelCaption::where('company_id', $company_id)->where('codigo', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete();
+                        $stats['deleted']++;
+                    }
+                }
+                if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelCaption::insert($chunk); } $stats['upserted'] += count($toInsert); }
+                foreach ($toUpdate as $up) { FelCaption::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+
+            } elseif ($type === TypeParametrics::ACTIVIDADES) {
+                $existing = FelActivity::where('company_id', $company_id)->get()->keyBy('codigo');
+                $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
+                foreach ($data as $d) {
+                    $key = $d['codigo'];
+                    $incomingKeys[$key] = true;
+                    if (isset($d['isActive']) && $d['isActive'] == false) {
+                        $toDelete[] = $d['codigo'];
+                    } else {
+                        if ($existing->has($key)) {
+                            if ($existing[$key]->descripcion != $d['descripcion'] || $existing[$key]->tipoActividad != $d['tipoActividad']) {
+                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion'], 'tipoActividad' => $d['tipoActividad']];
+                            }
+                        } else {
+                            $toInsert[] = [
+                                'company_id' => $company_id, 'codigo' => $d['codigo'], 'tipoActividad' => $d['tipoActividad'],
+                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                            ];
+                        }
+                    }
+                }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = $e->codigo;
+                        }
+                    }
+                }
+                if (!empty($toDelete)) {
+                    $toDelete = array_unique($toDelete);
+                    FelActivity::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
+                    $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_actividad_economica', $toDelete)->update(['codigo_actividad_economica' => null, 'codigo_producto_sin' => null]);
+                    $stats['deleted'] += count($toDelete);
+                }
+                if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivity::insert($chunk); } $stats['upserted'] += count($toInsert); }
+                foreach ($toUpdate as $up) { FelActivity::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'tipoActividad' => $up['tipoActividad'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+
+            } elseif ($type === TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR) {
+                $existing = FelActivityDocumentSector::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigoDocumentoSector . '_' . $i->codigoActividad; });
+                $toInsert = []; $toUpdate = []; $toDelete = [];
+                $incomingKeys = [];
+                foreach ($data as $d) {
+                    $key = $d['codigo'] . '_' . $d['codigoActividad'];
+                    $incomingKeys[$key] = true;
+                    if (isset($d['isActive']) && $d['isActive'] == false) {
+                        $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
+                    } else {
+                        if ($existing->has($key)) {
+                            if ($existing[$key]->actividad != $d['actividad'] || $existing[$key]->documentoSector != $d['descripcion']) {
+                                $toUpdate[] = ['id' => $existing[$key]->id, 'actividad' => $d['actividad'], 'documentoSector' => $d['descripcion'], 'tipoDocumentoSector' => $d['tipoDocumentoSector']];
+                            }
+                        } else {
+                            $toInsert[] = [
+                                'company_id' => $company_id, 'codigoDocumentoSector' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
+                                'actividad' => $d['actividad'], 'documentoSector' => $d['descripcion'], 'tipoDocumentoSector' => $d['tipoDocumentoSector'],
+                                'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                            ];
+                        }
+                    }
+                }
+                if (count($data) > 0) {
+                    foreach ($existing as $key => $e) {
+                        if (!isset($incomingKeys[$key])) {
+                            $toDelete[] = ['codigo' => $e->codigoDocumentoSector, 'codigoActividad' => $e->codigoActividad];
+                        }
+                    }
+                }
+                if (!empty($toDelete)) {
+                    foreach($toDelete as $d) { 
+                        FelActivityDocumentSector::where('company_id', $company_id)->where('codigoDocumentoSector', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete(); 
+                        $stats['deleted']++; 
+                    }
+                }
+                if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivityDocumentSector::insert($chunk); } $stats['upserted'] += count($toInsert); }
+                foreach ($toUpdate as $up) { FelActivityDocumentSector::where('id', $up['id'])->update(['actividad' => $up['actividad'], 'documentoSector' => $up['documentoSector'], 'tipoDocumentoSector' => $up['tipoDocumentoSector'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+
+            } else {
+                // Fallback for smaller parametrics
+                $incomingKeys = [];
+                foreach ($data as $item) {
+                    $key = '';
+                    if ($type === TypeParametrics::TIPOS_DOCUMENTO_SECTOR) {
+                        $key = $item['codigoDocumentSector'] . '_' . $item['codigoSucursal'];
+                    } else {
+                        $key = $item['codigo'];
+                    }
+                    $incomingKeys[$key] = true;
+
+                    $result = static::createOrUpdate($type, $item, $company_id);
+                    if (isset($result['action'])) {
+                        if ($result['action'] == 'deleted') { $stats['deleted']++; } else { $stats['upserted']++; }
+                    }
+                    if (isset($result['unlinked'])) { $stats['unlinked'] += $result['unlinked']; }
+                }
+
+                if (count($data) > 0) {
+                    $existing = [];
+                    switch ($type) {
+                        case TypeParametrics::MOTIVO_ANULACION: $existing = RevocationReason::get(); break;
+                        case TypeParametrics::PAISES: $existing = Country::get(); break;
+                        case TypeParametrics::TIPOS_DOCUMENTO_IDENTIDAD: $existing = IdentityDocumentType::get(); break;
+                        case TypeParametrics::METODOS_DE_PAGO: $existing = PaymentMethod::get(); break;
+                        case TypeParametrics::MONEDAS: $existing = Currency::get(); break;
+                        case TypeParametrics::UNIDADES: $existing = Unit::get(); break;
+                        case TypeParametrics::TIPOS_HABITACION: $existing = FelRoomType::get(); break;
+                        case TypeParametrics::TIPOS_DOCUMENTO_SECTOR: $existing = SectorDocumentTypes::where('company_id', $company_id)->get(); break;
+                    }
+
+                    foreach ($existing as $e) {
+                        $key = '';
+                        $itemData = ['isActive' => false];
+                        if ($type === TypeParametrics::TIPOS_DOCUMENTO_SECTOR) {
+                            $key = $e->codigo . '_' . $e->codigoSucursal;
+                            $itemData['codigoDocumentSector'] = $e->codigo;
+                            $itemData['codigoSucursal'] = $e->codigoSucursal;
+                        } else {
+                            $key = $e->codigo;
+                            $itemData['codigo'] = $e->codigo;
+                        }
+
+                        if (!isset($incomingKeys[$key])) {
+                            $result = static::createOrUpdate($type, $itemData, $company_id);
+                            if (isset($result['action']) && $result['action'] == 'deleted') {
+                                $stats['deleted']++;
+                            }
+                            if (isset($result['unlinked'])) {
+                                $stats['unlinked'] += $result['unlinked'];
+                            }
+                        }
+                    }
+                }
             }
+        } catch (ClientFelException $ex) {
+            \Log::debug("Error to save parametric ". $ex->getMessage());
         }
+        
+        \EmizorIpx\ClientFel\Models\BitacoraLog::register(
+            'INFO', 
+            'SYNC_PARAMETRICS', 
+            "Empresa [$company_id] | Paramétricas $type procesadas en Batch. Agregadas/Actualizadas: {$stats['upserted']}. Eliminadas: {$stats['deleted']}. Productos desvinculados: {$stats['unlinked']}."
+        );
     }
 }
