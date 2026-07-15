@@ -240,7 +240,7 @@ class GenerateReport implements ShouldQueue
         $writer->setNewline("\r\n"); //use windows line endings for compatibility with some csv libraries
         $writer->setOutputBOM(Writer::BOM_UTF8);
         $writer->insertOne($this->invoices['header']);
-        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1) {
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1 || $this->entity == ExportUtils::REGISTER_SALES_HNSLP) {
 
             foreach ($this->invoices['invoices']->cursor() as $record) {
 
@@ -292,7 +292,7 @@ class GenerateReport implements ShouldQueue
         $writer->setHeaderStyle($style_header);
         $writer->addHeader($this->invoices['header']);
 
-        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1) {
+        if ($this->entity == ExportUtils::REGISTER_SALES || $this->entity == ExportUtils::REGISTER_SALES_CUSTOM_1 || $this->entity == ExportUtils::REGISTER_SALES_HNSLP) {
             foreach ($this->invoices['invoices']->cursor() as $record) {
 
                 $writer->insertOne((array) $record);
