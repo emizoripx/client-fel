@@ -9,6 +9,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\CosinCantidadReport;
 use EmizorIpx\ClientFel\Reports\Invoices\IngresosDiarioBioReport;
 use EmizorIpx\ClientFel\Reports\Invoices\InvoiceReport;
 use EmizorIpx\ClientFel\Reports\Invoices\PaidInvoicesReport;
+use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReportHnslp;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RenacerPaymentReport;
@@ -51,6 +52,8 @@ class ExportUtils {
     const INRA_TOTALES = 'Inra_Totales';
 
     const REGISTER_SALES = 'Registro_Ventas';
+
+    const REGISTER_SALES_HNSLP = 'Registro_Ventas_Hnslp';
 
     const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Sobodaycom';
 
@@ -163,6 +166,10 @@ class ExportUtils {
 
             case static::REGISTER_SALES_CUSTOM_2:
                 return RegisterSalesCustom1Report::class;
+                break;
+
+            case static::REGISTER_SALES_HNSLP:
+                return RegisterSalesReportHnslp::class;
                 break;
 
             case static::REGISTER_REPORT_COTEOR:
