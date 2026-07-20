@@ -246,6 +246,30 @@ class GenerateReport implements ShouldQueue
 
                 $writer->insertOne((array) $record);
             }
+        } else if ($this->entity == ExportUtils::REGISTER_SALES_HNSLP_ITEM) {
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                $detalles = json_decode($record->detalles, true);
+                $extras = isset($record->extras) ? (is_string($record->extras) ? json_decode($record->extras, true) : (array) $record->extras) : [];
+                $paciente = isset($extras['paciente']) ? $extras['paciente'] : '';
+                $codigoPaciente = $record->numeroDocumento;
+
+                foreach ($detalles as $item) {
+                    $medico = isset($item['nombreApellidoMedico']) ? $item['nombreApellidoMedico'] : '';
+                    $merged = [
+                        "codigoPaciente" => $codigoPaciente,
+                        "paciente" => $paciente,
+                        "factura" => $record->numeroFactura,
+                        "fecha" => Carbon::parse($record->fechaEmision)->format('Y-m-d'),
+                        "producto" => isset($item['codigoProducto']) ? $item['codigoProducto'] : '',
+                        "cantidad" => isset($item['cantidad']) ? $item['cantidad'] : '',
+                        "descripcion" => isset($item['descripcion']) ? $item['descripcion'] : '',
+                        "medico" => $medico,
+                        "precioUnitario" => isset($item['precioUnitario']) ? $item['precioUnitario'] : '',
+                        "total" => isset($item['subTotal']) ? $item['subTotal'] : ''
+                    ];
+                    $writer->insertOne($merged);
+                }
+            }
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1) {
             $mensualidad_code = 1001;
             $matricula_code = 1000;
@@ -296,6 +320,30 @@ class GenerateReport implements ShouldQueue
             foreach ($this->invoices['invoices']->cursor() as $record) {
 
                 $writer->insertOne((array) $record);
+            }
+        } else if ($this->entity == ExportUtils::REGISTER_SALES_HNSLP_ITEM) {
+            foreach ($this->invoices['invoices']->cursor() as $record) {
+                $detalles = json_decode($record->detalles, true);
+                $extras = isset($record->extras) ? (is_string($record->extras) ? json_decode($record->extras, true) : (array) $record->extras) : [];
+                $paciente = isset($extras['paciente']) ? $extras['paciente'] : '';
+                $codigoPaciente = $record->numeroDocumento;
+
+                foreach ($detalles as $item) {
+                    $medico = isset($item['nombreApellidoMedico']) ? $item['nombreApellidoMedico'] : '';
+                    $merged = [
+                        "codigoPaciente" => $codigoPaciente,
+                        "paciente" => $paciente,
+                        "factura" => $record->numeroFactura,
+                        "fecha" => Carbon::parse($record->fechaEmision)->format('Y-m-d'),
+                        "producto" => isset($item['codigoProducto']) ? $item['codigoProducto'] : '',
+                        "cantidad" => isset($item['cantidad']) ? $item['cantidad'] : '',
+                        "descripcion" => isset($item['descripcion']) ? $item['descripcion'] : '',
+                        "medico" => $medico,
+                        "precioUnitario" => isset($item['precioUnitario']) ? $item['precioUnitario'] : '',
+                        "total" => isset($item['subTotal']) ? $item['subTotal'] : ''
+                    ];
+                    $writer->addRow($merged);
+                }
             }
         } else if ($this->entity == ExportUtils::COMPROBANTE_DIARIO_CUSTOM1) {
             $mensualidad_code = 1001;

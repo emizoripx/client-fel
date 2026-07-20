@@ -13,6 +13,7 @@ use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReportHnslp;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesCustom1Report;
 use EmizorIpx\ClientFel\Reports\Invoices\RegisterSalesReport;
 use EmizorIpx\ClientFel\Reports\Invoices\RenacerPaymentReport;
+use EmizorIpx\ClientFel\Reports\ItemInvoice\RegisterSalesItemHnslpReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraResumenIngresosReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\InraTotalesReport;
 use EmizorIpx\ClientFel\Reports\ItemInvoice\ItemInvoiceBestSellerProductReport;
@@ -54,6 +55,8 @@ class ExportUtils {
     const REGISTER_SALES = 'Registro_Ventas';
 
     const REGISTER_SALES_HNSLP = 'Registro_Ventas_Hnslp';
+
+    const REGISTER_SALES_HNSLP_ITEM = 'Registro_Ventas_Hnslp_Item';
 
     const REGISTER_SALES_CUSTOM_1 = 'Registro_Ventas_Sobodaycom';
 
@@ -170,6 +173,10 @@ class ExportUtils {
 
             case static::REGISTER_SALES_HNSLP:
                 return RegisterSalesReportHnslp::class;
+                break;
+
+            case static::REGISTER_SALES_HNSLP_ITEM:
+                return RegisterSalesItemHnslpReport::class;
                 break;
 
             case static::REGISTER_REPORT_COTEOR:
