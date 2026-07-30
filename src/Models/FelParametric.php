@@ -617,7 +617,7 @@ class FelParametric
         }
     }
 
-    public static function saveParametrics($type, $company_id, $data){
+    public static function saveParametrics($type, $company_id, $data, $is_full_sync = false){
         $stats = ['upserted' => 0, 'deleted' => 0, 'unlinked' => 0];
         \Log::info("DATA EN SAVE: ", $data);
         try {
@@ -643,13 +643,14 @@ class FelParametric
                         }
                     }
                 }
-                if (count($data) > 0) {
+                if ($is_full_sync && count($data) > 0) {
                     foreach ($existing as $key => $e) {
                         if (!isset($incomingKeys[$key])) {
                             $toDelete[] = $e->codigo;
                         }
                     }
                 }
+
                 if (!empty($toDelete)) {
                     $toDelete = array_unique($toDelete);
                     SINProduct::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
@@ -684,13 +685,15 @@ class FelParametric
                         }
                     }
                 }
-                if (count($data) > 0) {
+
+                if ($is_full_sync && count($data) > 0) {
                     foreach ($existing as $key => $e) {
                         if (!isset($incomingKeys[$key])) {
                             $toDelete[] = ['codigo' => $e->codigo, 'codigoActividad' => $e->codigoActividad];
                         }
                     }
                 }
+
                 if (!empty($toDelete)) {
                     foreach($toDelete as $d) {
                         FelCaption::where('company_id', $company_id)->where('codigo', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete();
@@ -722,13 +725,15 @@ class FelParametric
                         }
                     }
                 }
-                if (count($data) > 0) {
+
+                if ($is_full_sync && count($data) > 0) {
                     foreach ($existing as $key => $e) {
                         if (!isset($incomingKeys[$key])) {
                             $toDelete[] = $e->codigo;
                         }
                     }
                 }
+
                 if (!empty($toDelete)) {
                     $toDelete = array_unique($toDelete);
                     FelActivity::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
@@ -761,13 +766,15 @@ class FelParametric
                         }
                     }
                 }
-                if (count($data) > 0) {
+
+                if ($is_full_sync && count($data) > 0) {
                     foreach ($existing as $key => $e) {
                         if (!isset($incomingKeys[$key])) {
                             $toDelete[] = ['codigo' => $e->codigoDocumentoSector, 'codigoActividad' => $e->codigoActividad];
                         }
                     }
                 }
+
                 if (!empty($toDelete)) {
                     foreach($toDelete as $d) { 
                         FelActivityDocumentSector::where('company_id', $company_id)->where('codigoDocumentoSector', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete(); 
@@ -796,7 +803,7 @@ class FelParametric
                     if (isset($result['unlinked'])) { $stats['unlinked'] += $result['unlinked']; }
                 }
 
-                if (count($data) > 0) {
+                if ($is_full_sync && count($data) > 0) {
                     $existing = [];
                     switch ($type) {
                         case TypeParametrics::MOTIVO_ANULACION: $existing = RevocationReason::get(); break;
@@ -831,8 +838,7 @@ class FelParametric
                             }
                         }
                     }
-                }
-            }
+                }            }
         } catch (ClientFelException $ex) {
             \Log::debug("Error to save parametric ". $ex->getMessage());
         }
