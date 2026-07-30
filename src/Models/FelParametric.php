@@ -629,7 +629,7 @@ class FelParametric
                     $key = $d['codigo'] . '_' . $d['codigoActividad'];
                     $incomingKeys[$key] = true;
                     if (isset($d['isActive']) && $d['isActive'] == false) {
-                        $toDelete[] = $d['codigo'];
+                        $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
                         if ($existing->has($key)) {
                             if ($existing[$key]->descripcion != $d['descripcion']) {
@@ -646,16 +646,18 @@ class FelParametric
                 if ($is_full_sync && count($data) > 0) {
                     foreach ($existing as $key => $e) {
                         if (!isset($incomingKeys[$key])) {
-                            $toDelete[] = $e->codigo;
+                            $toDelete[] = ['codigo' => $e->codigo, 'codigoActividad' => $e->codigoActividad];
                         }
                     }
                 }
 
                 if (!empty($toDelete)) {
-                    $toDelete = array_unique($toDelete);
-                    SINProduct::where('company_id', $company_id)->whereIn('codigo', $toDelete)->delete();
-                    $stats['unlinked'] += \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->whereIn('codigo_producto_sin', $toDelete)->update(['codigo_producto_sin' => null]);
-                    $stats['deleted'] += count($toDelete);
+                    $toDelete = array_unique($toDelete, SORT_REGULAR);
+                    foreach($toDelete as $d) {
+                        SINProduct::where('company_id', $company_id)->where('codigo', $d['codigo'])->where('codigoActividad', $d['codigoActividad'])->delete();
+                        \EmizorIpx\ClientFel\Models\FelSyncProduct::where('company_id', $company_id)->where('codigo_producto_sin', $d['codigo'])->update(['codigo_producto_sin' => null]);
+                        $stats['deleted']++;
+                    }
                 }
                 if (!empty($toInsert)) {
                     foreach (array_chunk($toInsert, 500) as $chunk) { SINProduct::insert($chunk); }
