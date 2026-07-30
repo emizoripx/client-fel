@@ -46,6 +46,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
     public function handle()
     {
         $data = $this->data;
+        $isFullSync = isset($data['is_full_sync']) && $data['is_full_sync'];
 
         \Log::info("JOB PARAMETRICAS ------ Inicio del flujo", ['data' => $data]);
 
@@ -59,7 +60,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
             // Sync Companies Production
             foreach ($companyProduction as $company) {
                 \Log::info("JOB PARAMETRICAS ------ Producción: Sincronizando empresa " . $company->company_id);
-                $this->parametricSyncPhaseProduction($data['data'], $company);
+                $this->parametricSyncPhaseProduction($data['data'], $company, $isFullSync);
             }
             \Log::info("JOB PARAMETRICAS ------ Fin actualización Fase Producción");
 
@@ -74,10 +75,11 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
                 
                 foreach ($data['data'] as $parametric) {
                     \Log::info("JOB PARAMETRICAS ------ Testing: Solicitando parametrica " . $parametric . " para empresa token: " . $company->company_id);
-                    $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
+                    $updatedAt = $isFullSync ? '' : FelParametric::getUpdatedAt($parametric, $company->company_id);
+                    $parametricService->get($parametric, $updatedAt, true);
                     $response = $parametricService->getResponse();
                     \Log::info("JOB PARAMETRICAS ------ Testing: Respuesta obtenida para " . $parametric, ['response_count' => is_array($response) ? count($response) : 'No es array']);
-                    $this->parametricSyncPhaseTesting($parametric, $companyTesting, $response);
+                    $this->parametricSyncPhaseTesting($parametric, $companyTesting, $response, $isFullSync);
                 }
             } else {
                 \Log::info("JOB PARAMETRICAS ------ No se encontraron empresas en Testing");
@@ -96,10 +98,11 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
 
                 foreach ($data['data'] as $parametric){
                     \Log::info("JOB PARAMETRICAS ------ Generales: Solicitando parametrica " . $parametric);
-                    $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
+                    $updatedAt = $isFullSync ? '' : FelParametric::getUpdatedAt($parametric, $company->company_id);
+                    $parametricService->get($parametric, $updatedAt, true);
                     $response = $parametricService->getResponse();
                     \Log::info("JOB PARAMETRICAS ------ Generales: Guardando respuesta para " . $parametric, ['response_count' => is_array($response) ? count($response) : 'No es array']);
-                    FelParametric::saveParametrics($parametric, $company->company_id, $response);
+                    FelParametric::saveParametrics($parametric, $company->company_id, $response, $isFullSync);
                 }
             } else {
                 \Log::info("JOB PARAMETRICAS ------ Generales: No se encontró AccountPrepagoBags para fel_company_id: " . $data['company_id']);
@@ -109,25 +112,26 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
         \Log::info("JOB PARAMETRICAS ------ Fin del flujo completo");
     }
 
-    public function parametricSyncPhaseProduction($parametricUpdate, $company)
+    public function parametricSyncPhaseProduction($parametricUpdate, $company, $isFullSync = false)
     {
         \Log::info("JOB PARAMETRICAS ------ Producción: Iniciando request para empresa " . $company->company_id);
         $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
         
         foreach ($parametricUpdate as $parametric) {
             \Log::info("JOB PARAMETRICAS ------ Producción: Solicitando parametrica " . $parametric . " para empresa " . $company->company_id);
-            $parametricService->get($parametric, FelParametric::getUpdatedAt($parametric, $company->company_id), true);
+            $updatedAt = $isFullSync ? '' : FelParametric::getUpdatedAt($parametric, $company->company_id);
+            $parametricService->get($parametric, $updatedAt, true);
             $response = $parametricService->getResponse();
             \Log::info("JOB PARAMETRICAS ------ Producción: Guardando respuesta para " . $parametric . " de empresa " . $company->company_id, ['response_count' => is_array($response) ? count($response) : 'No es array']);
-            FelParametric::saveParametrics($parametric, $company->company_id, $response);
+            FelParametric::saveParametrics($parametric, $company->company_id, $response, $isFullSync);
         }
     }
 
-    public function parametricSyncPhaseTesting($type, $companies, $data)
+    public function parametricSyncPhaseTesting($type, $companies, $data, $isFullSync = false)
     {
         foreach ($companies as $company) {
             \Log::info("JOB PARAMETRICAS ------ Testing: Guardando parametrica " . $type . " para empresa " . $company->company_id, ['data_count' => is_array($data) ? count($data) : 'No es array']);
-            FelParametric::saveParametrics($type, $company->company_id, $data);
+            FelParametric::saveParametrics($type, $company->company_id, $data, $isFullSync);
         }
     }
 }
