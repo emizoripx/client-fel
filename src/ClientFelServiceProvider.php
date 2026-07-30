@@ -27,6 +27,7 @@ use EmizorIpx\ClientFel\Http\Middleware\CheckSobodaycomCategory;
 use EmizorIpx\ClientFel\Http\Middleware\CheckSuperAdmin;
 use EmizorIpx\ClientFel\Http\Middleware\ValidateSpecialCodes;
 use EmizorIpx\ClientFel\Providers\ClientFelEventServiceProvider;
+use EmizorIpx\ClientFel\Console\Commands\SyncParametricsCommand;
 
 class ClientFelServiceProvider extends ServiceProvider
 {
@@ -93,7 +94,7 @@ class ClientFelServiceProvider extends ServiceProvider
                 UpdateLangCommand::class,
                 CheckHomologationCommand::class,
                 CleanOrphanedHomologationsCommand::class,
-                
+                SyncParametricsCommand::class,
             ]);
         }
 
