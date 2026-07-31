@@ -27,22 +27,32 @@ class FelParametric
             case TypeParametrics::ACTIVIDADES:
                 $data_ = array();
                 foreach($data as $d) {
-                    $d["company_id"] = $company_id;
-                    $d["codigo"] = $d['codigo'];
-                    $d["descripcion"] = $d['descripcion'];
-                    $d["tipoActividad"] = $d['tipoActividad'];
-                    $data_[] = $d;
+                    $item = [
+                        "company_id" => $company_id,
+                        "codigo" => $d['codigo'],
+                        "descripcion" => $d['descripcion'],
+                        "tipoActividad" => $d['tipoActividad'],
+                    ];
+                    if (isset($d['updated_at'])) {
+                        $item['updated_at'] = $d['updated_at'];
+                    }
+                    $data_[] = $item;
                 }
                 return FelActivity::insert(static::addTimeStamp($data_));
                 break;
             case TypeParametrics::LEYENDAS:
                 $data_ = array();
                 foreach($data as $d) {
-                    $d["company_id"] = $company_id;
-                    $d["codigo"] = $d['codigo'];
-                    $d["codigoActividad"] = $d['codigoActividad'];
-                    $d["descripcion"] = $d['descripcion'];
-                    $data_[] = $d;
+                    $item = [
+                        "company_id" => $company_id,
+                        "codigo" => $d['codigo'],
+                        "codigoActividad" => $d['codigoActividad'],
+                        "descripcion" => $d['descripcion'],
+                    ];
+                    if (isset($d['updated_at'])) {
+                        $item['updated_at'] = $d['updated_at'];
+                    }
+                    $data_[] = $item;
                 }
                 
                 return FelCaption::insert(static::addTimeStamp($data_));
@@ -70,11 +80,16 @@ class FelParametric
 
                 $data_ = array();
                 foreach($data as $d) { 
-                    $d["company_id"] = $company_id;
-                    $d["codigo"] = $d['codigo'];
-                    $d["codigoActividad"] = $d['codigoActividad'];
-                    $d["descripcion"] = $d['descripcion'];
-                    $data_[] = $d;
+                    $item = [
+                        "company_id" => $company_id,
+                        "codigo" => $d['codigo'],
+                        "codigoActividad" => $d['codigoActividad'],
+                        "descripcion" => $d['descripcion'],
+                    ];
+                    if (isset($d['updated_at'])) {
+                        $item['updated_at'] = $d['updated_at'];
+                    }
+                    $data_[] = $item;
                 }
                 return SINProduct::insert(static::addTimeStamp($data_));
                 break;
@@ -82,14 +97,17 @@ class FelParametric
 
                 $data_ = array();
                 foreach($data as $d) { 
-                    $d["company_id"] = $company_id;
-                    $d["codigoSucursal"] = $d['codigoSucursal'];
-                    $d["codigo"] = $d['codigoDocumentSector'];
-                    $d["documentoSector"] = $d['documentoSector'];
-                    $d["tipoFactura"] = $d['tipoFactura'];
-
-                    unset($d['codigoDocumentSector']);
-                    $data_[] = $d;
+                    $item = [
+                        "company_id" => $company_id,
+                        "codigoSucursal" => $d['codigoSucursal'],
+                        "codigo" => isset($d['codigoDocumentSector']) ? $d['codigoDocumentSector'] : $d['codigo'],
+                        "documentoSector" => $d['documentoSector'],
+                        "tipoFactura" => $d['tipoFactura'],
+                    ];
+                    if (isset($d['updated_at'])) {
+                        $item['updated_at'] = $d['updated_at'];
+                    }
+                    $data_[] = $item;
                 }
                 return SectorDocumentTypes::insert(static::addTimeStamp($data_));
                 break;
@@ -97,16 +115,18 @@ class FelParametric
 
                 $data_ = array();
                 foreach($data as $d) { 
-                    $d["company_id"] = $company_id;
-                    $d["codigoActividad"] = $d['codigoActividad'];
-                    $d["actividad"] = $d['actividad'];
-                    $d["codigoDocumentoSector"] = $d['codigo'];
-                    $d["tipoDocumentoSector"] = $d['tipoDocumentoSector'];
-                    $d["documentoSector"] = $d['descripcion'];
-
-                    unset($d['codigo']);
-                    unset($d['descripcion']);
-                    $data_[] = $d;
+                    $item = [
+                        "company_id" => $company_id,
+                        "codigoActividad" => $d['codigoActividad'],
+                        "actividad" => $d['actividad'],
+                        "codigoDocumentoSector" => isset($d['codigoDocumentoSector']) ? $d['codigoDocumentoSector'] : $d['codigo'],
+                        "tipoDocumentoSector" => $d['tipoDocumentoSector'],
+                        "documentoSector" => isset($d['documentoSector']) ? $d['documentoSector'] : $d['descripcion'],
+                    ];
+                    if (isset($d['updated_at'])) {
+                        $item['updated_at'] = $d['updated_at'];
+                    }
+                    $data_[] = $item;
                 }
                 return FelActivityDocumentSector::insert(static::addTimeStamp($data_));
                 break;
@@ -127,8 +147,8 @@ class FelParametric
             if(isset($d['isActive'])){
                 unset($d['isActive']);
             }
-            $d["updated_at"] = Carbon::now()->toDateTimeString();
-            $d["created_at"] = Carbon::now()->toDateTimeString();
+            $d["updated_at"] = isset($d['updated_at']) && !empty($d['updated_at']) ? Carbon::parse($d['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : Carbon::now('America/La_Paz')->toDateTimeString();
+            $d["created_at"] = Carbon::now('America/La_Paz')->toDateTimeString();
             $data_added[] = $d;
         }
         return $data_added;
@@ -264,6 +284,7 @@ class FelParametric
     public static function createOrUpdate($type, $data, $company_id = null){
         $unlinked = 0;
         $action = "updated";
+        $updatedAt = isset($data['updated_at']) && !empty($data['updated_at']) ? Carbon::parse($data['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : Carbon::now('America/La_Paz')->toDateTimeString();
 
         switch ($type) {
             case TypeParametrics::ACTIVIDADES:
@@ -286,7 +307,7 @@ class FelParametric
                             'codigo' => $data['codigo'],
                             'descripcion' => $data['descripcion'],
                             'tipoActividad' => $data['tipoActividad'],
-                            'updated_at' => Carbon::now()->toDateTimeString()
+                            'updated_at' => $updatedAt
                         ]);
                     }
                 break;
@@ -307,7 +328,7 @@ class FelParametric
                             'codigo' => $data['codigo'],
                             'descripcion' => $data['descripcion'],
                             'codigoActividad' => $data['codigoActividad'],
-                            'updated_at' => Carbon::now()->toDateTimeString()
+                            'updated_at' => $updatedAt
                         ]);
                     }
                 break;
@@ -330,7 +351,7 @@ class FelParametric
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
                         'codigoActividad' => $data['codigoActividad'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -355,7 +376,7 @@ class FelParametric
                         'codigoActividad' => $data['codigoActividad'],
                         'documentoSector' => $data['descripcion'],
                         'tipoDocumentoSector' => $data['tipoDocumentoSector'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -379,7 +400,7 @@ class FelParametric
                         'codigo' => $data['codigoDocumentSector'],
                         'documentoSector' => $data['documentoSector'],
                         'tipoFactura' => $data['tipoFactura'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -401,7 +422,7 @@ class FelParametric
                     $motivoAnulacion->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -423,7 +444,7 @@ class FelParametric
                     $pais->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -445,7 +466,7 @@ class FelParametric
                     $documentIdentidad->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -467,7 +488,7 @@ class FelParametric
                     $metodosPago->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -489,7 +510,7 @@ class FelParametric
                     $currency->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -512,7 +533,7 @@ class FelParametric
                     $unit->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -534,7 +555,7 @@ class FelParametric
                     $room_type->update([
                         'codigo' => $data['codigo'],
                         'descripcion' => $data['descripcion'],
-                        'updated_at' => Carbon::now()->toDateTimeString()
+                        'updated_at' => $updatedAt
                     ]);
                 }
 
@@ -631,14 +652,21 @@ class FelParametric
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
+                        $incomingUpdatedAt = isset($d['updated_at']) && !empty($d['updated_at']) ? Carbon::parse($d['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : null;
                         if ($existing->has($key)) {
-                            if ($existing[$key]->descripcion != $d['descripcion']) {
-                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion']];
+                            if ($existing[$key]->descripcion != $d['descripcion'] || ($incomingUpdatedAt && $existing[$key]->updated_at != $incomingUpdatedAt)) {
+                                $toUpdate[] = [
+                                    'id' => $existing[$key]->id,
+                                    'descripcion' => $d['descripcion'],
+                                    'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
+                                ];
                             }
                         } else {
                             $toInsert[] = [
                                 'company_id' => $company_id, 'codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
-                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                                'descripcion' => $d['descripcion'],
+                                'created_at' => Carbon::now('America/La_Paz')->toDateTimeString(),
+                                'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
                             ];
                         }
                     }
@@ -663,7 +691,7 @@ class FelParametric
                     foreach (array_chunk($toInsert, 500) as $chunk) { SINProduct::insert($chunk); }
                     $stats['upserted'] += count($toInsert);
                 }
-                foreach ($toUpdate as $up) { SINProduct::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+                foreach ($toUpdate as $up) { SINProduct::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => $up['updated_at']]); $stats['upserted']++; }
 
             } elseif ($type === TypeParametrics::LEYENDAS) {
                 $existing = FelCaption::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigo . '_' . $i->codigoActividad; });
@@ -675,14 +703,21 @@ class FelParametric
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
+                        $incomingUpdatedAt = isset($d['updated_at']) && !empty($d['updated_at']) ? Carbon::parse($d['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : null;
                         if ($existing->has($key)) {
-                            if ($existing[$key]->descripcion != $d['descripcion']) {
-                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion']];
+                            if ($existing[$key]->descripcion != $d['descripcion'] || ($incomingUpdatedAt && $existing[$key]->updated_at != $incomingUpdatedAt)) {
+                                $toUpdate[] = [
+                                    'id' => $existing[$key]->id,
+                                    'descripcion' => $d['descripcion'],
+                                    'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
+                                ];
                             }
                         } else {
                             $toInsert[] = [
                                 'company_id' => $company_id, 'codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
-                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                                'descripcion' => $d['descripcion'],
+                                'created_at' => Carbon::now('America/La_Paz')->toDateTimeString(),
+                                'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
                             ];
                         }
                     }
@@ -703,7 +738,7 @@ class FelParametric
                     }
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelCaption::insert($chunk); } $stats['upserted'] += count($toInsert); }
-                foreach ($toUpdate as $up) { FelCaption::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+                foreach ($toUpdate as $up) { FelCaption::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'updated_at' => $up['updated_at']]); $stats['upserted']++; }
 
             } elseif ($type === TypeParametrics::ACTIVIDADES) {
                 $existing = FelActivity::where('company_id', $company_id)->get()->keyBy('codigo');
@@ -715,14 +750,22 @@ class FelParametric
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = $d['codigo'];
                     } else {
+                        $incomingUpdatedAt = isset($d['updated_at']) && !empty($d['updated_at']) ? Carbon::parse($d['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : null;
                         if ($existing->has($key)) {
-                            if ($existing[$key]->descripcion != $d['descripcion'] || $existing[$key]->tipoActividad != $d['tipoActividad']) {
-                                $toUpdate[] = ['id' => $existing[$key]->id, 'descripcion' => $d['descripcion'], 'tipoActividad' => $d['tipoActividad']];
+                            if ($existing[$key]->descripcion != $d['descripcion'] || $existing[$key]->tipoActividad != $d['tipoActividad'] || ($incomingUpdatedAt && $existing[$key]->updated_at != $incomingUpdatedAt)) {
+                                $toUpdate[] = [
+                                    'id' => $existing[$key]->id,
+                                    'descripcion' => $d['descripcion'],
+                                    'tipoActividad' => $d['tipoActividad'],
+                                    'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
+                                ];
                             }
                         } else {
                             $toInsert[] = [
                                 'company_id' => $company_id, 'codigo' => $d['codigo'], 'tipoActividad' => $d['tipoActividad'],
-                                'descripcion' => $d['descripcion'], 'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                                'descripcion' => $d['descripcion'],
+                                'created_at' => Carbon::now('America/La_Paz')->toDateTimeString(),
+                                'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
                             ];
                         }
                     }
@@ -743,7 +786,7 @@ class FelParametric
                     $stats['deleted'] += count($toDelete);
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivity::insert($chunk); } $stats['upserted'] += count($toInsert); }
-                foreach ($toUpdate as $up) { FelActivity::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'tipoActividad' => $up['tipoActividad'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+                foreach ($toUpdate as $up) { FelActivity::where('id', $up['id'])->update(['descripcion' => $up['descripcion'], 'tipoActividad' => $up['tipoActividad'], 'updated_at' => $up['updated_at']]); $stats['upserted']++; }
 
             } elseif ($type === TypeParametrics::ACTIVIDADES_DOCUMENTO_SECTOR) {
                 $existing = FelActivityDocumentSector::where('company_id', $company_id)->get()->keyBy(function($i) { return $i->codigoDocumentoSector . '_' . $i->codigoActividad; });
@@ -755,15 +798,23 @@ class FelParametric
                     if (isset($d['isActive']) && $d['isActive'] == false) {
                         $toDelete[] = ['codigo' => $d['codigo'], 'codigoActividad' => $d['codigoActividad']];
                     } else {
+                        $incomingUpdatedAt = isset($d['updated_at']) && !empty($d['updated_at']) ? Carbon::parse($d['updated_at'])->setTimezone('America/La_Paz')->toDateTimeString() : null;
                         if ($existing->has($key)) {
-                            if ($existing[$key]->actividad != $d['actividad'] || $existing[$key]->documentoSector != $d['descripcion']) {
-                                $toUpdate[] = ['id' => $existing[$key]->id, 'actividad' => $d['actividad'], 'documentoSector' => $d['descripcion'], 'tipoDocumentoSector' => $d['tipoDocumentoSector']];
+                            if ($existing[$key]->actividad != $d['actividad'] || $existing[$key]->documentoSector != $d['descripcion'] || $existing[$key]->tipoDocumentoSector != $d['tipoDocumentoSector'] || ($incomingUpdatedAt && $existing[$key]->updated_at != $incomingUpdatedAt)) {
+                                $toUpdate[] = [
+                                    'id' => $existing[$key]->id,
+                                    'actividad' => $d['actividad'],
+                                    'documentoSector' => $d['descripcion'],
+                                    'tipoDocumentoSector' => $d['tipoDocumentoSector'],
+                                    'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
+                                ];
                             }
                         } else {
                             $toInsert[] = [
                                 'company_id' => $company_id, 'codigoDocumentoSector' => $d['codigo'], 'codigoActividad' => $d['codigoActividad'],
                                 'actividad' => $d['actividad'], 'documentoSector' => $d['descripcion'], 'tipoDocumentoSector' => $d['tipoDocumentoSector'],
-                                'created_at' => Carbon::now()->toDateTimeString(), 'updated_at' => Carbon::now()->toDateTimeString()
+                                'created_at' => Carbon::now('America/La_Paz')->toDateTimeString(),
+                                'updated_at' => $incomingUpdatedAt ?: Carbon::now('America/La_Paz')->toDateTimeString()
                             ];
                         }
                     }
@@ -784,7 +835,8 @@ class FelParametric
                     }
                 }
                 if (!empty($toInsert)) { foreach (array_chunk($toInsert, 500) as $chunk) { FelActivityDocumentSector::insert($chunk); } $stats['upserted'] += count($toInsert); }
-                foreach ($toUpdate as $up) { FelActivityDocumentSector::where('id', $up['id'])->update(['actividad' => $up['actividad'], 'documentoSector' => $up['documentoSector'], 'tipoDocumentoSector' => $up['tipoDocumentoSector'], 'updated_at' => Carbon::now()->toDateTimeString()]); $stats['upserted']++; }
+                foreach ($toUpdate as $up) { FelActivityDocumentSector::where('id', $up['id'])->update(['actividad' => $up['actividad'], 'documentoSector' => $up['documentoSector'], 'tipoDocumentoSector' => $up['tipoDocumentoSector'], 'updated_at' => $up['updated_at']]); $stats['upserted']++; }
+
 
             } else {
                 // Fallback for smaller parametrics
