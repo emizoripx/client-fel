@@ -23,6 +23,8 @@ class ItemInvoiceBestSellerProductReport extends BaseReport implements ReportInt
     
     protected $paid_range_filter;
 
+    protected $number_top_productos = 10;
+
     public function __construct( $company_id, $request, $columns, $user )
     {
         $this->company_id = $company_id;
@@ -35,6 +37,8 @@ class ItemInvoiceBestSellerProductReport extends BaseReport implements ReportInt
         $this->columns = $columns;
 
         $this->user = $user;
+
+        $this->number_top_productos = $request->has('number_top_productos') ? $request->get('number_top_productos') : 10;
 
         parent::__construct($this->from, $this->to);
         
@@ -136,10 +140,10 @@ class ItemInvoiceBestSellerProductReport extends BaseReport implements ReportInt
             ];
         })->values();
 
-        $number_top_productos = 10;
+        $number_top_productos = $this->number_top_productos;
         $counter = 0;
-        // Obtén los 10 productos más vendidos y agrega un contador.
-        $top10 = $agrupado
+        // Obtén los N productos más vendidos y agrega un contador.
+        $top_items = $agrupado
             ->sortByDesc('cantidad_vendida')
             ->take($number_top_productos)
             ->map(function ($item, $index) use (&$counter) {
@@ -153,22 +157,23 @@ class ItemInvoiceBestSellerProductReport extends BaseReport implements ReportInt
             ->sortByDesc('cantidad_vendida')
             ->slice($number_top_productos)
             ->values();
-        $totalOtros = $otros->sum('cantidad_vendida');
 
-        // Agrega un elemento "OTROS" a la colección con la suma de cantidades.
-        $otros = collect([
-            [
-                'codigo_producto' => 'MENOS DE ' . $number_top_productos . " VENDIDOS",
-                'nombre_producto' => 'OTROS',
-                'cantidad_vendida' => $totalOtros,
-                'costo_vendido' => 0,
-                'subtotal' => $otros->sum('subtotal'),
-                'contador' => $counter + 1,
-            ]
-        ]);
-
-        // Combina los 10 productos más vendidos con "OTROS".
-        $agrupado = $top10->concat($otros)->values();
+        if ($otros->isNotEmpty()) {
+            $totalOtros = $otros->sum('cantidad_vendida');
+            $otros = collect([
+                [
+                    'codigo_producto' => 'MENOS DE ' . $number_top_productos . " VENDIDOS",
+                    'nombre_producto' => 'OTROS',
+                    'cantidad_vendida' => $totalOtros,
+                    'costo_vendido' => 0,
+                    'subtotal' => $otros->sum('subtotal'),
+                    'contador' => $counter + 1,
+                ]
+            ]);
+            $agrupado = $top_items->concat($otros)->values();
+        } else {
+            $agrupado = $top_items->values();
+        }
 
         return  [
             "header" => [

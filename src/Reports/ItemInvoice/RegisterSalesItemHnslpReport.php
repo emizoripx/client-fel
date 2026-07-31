@@ -76,7 +76,8 @@ class RegisterSalesItemHnslpReport extends BaseReport implements ReportInterface
             'fel_invoice_requests.codigoSucursal', 
             'fel_invoice_requests.numeroDocumento', 
             'fel_invoice_requests.extras',
-            'fel_invoice_requests.detalles'
+            'fel_invoice_requests.detalles',
+            'fel_invoice_requests.estado'
         );
 
         $header = [
@@ -84,6 +85,7 @@ class RegisterSalesItemHnslpReport extends BaseReport implements ReportInterface
             "Paciente",
             "Factura",
             "Fecha",
+            "Estado",
             "Producto",
             "Cantidad",
             "Descripción",

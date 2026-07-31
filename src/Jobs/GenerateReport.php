@@ -115,7 +115,8 @@ class GenerateReport implements ShouldQueue
                     'state' => $this->request->has('state') ? $this->request->get('state') : null,
                     'group' => $this->request->has('group') ? $this->request->get('group') : null,
                     'from_date' => $this->request->has('from_date') ? $this->request->get('from_date') : null,
-                    'to_date' => $this->request->has('to_date') ? $this->request->get('to_date') : null
+                    'to_date' => $this->request->has('to_date') ? $this->request->get('to_date') : null,
+                    'number_top_productos' => $this->request->has('number_top_productos') ? $this->request->get('number_top_productos') : null
                 ]),
             ]);
 
@@ -260,6 +261,7 @@ class GenerateReport implements ShouldQueue
                         "paciente" => $paciente,
                         "factura" => $record->numeroFactura,
                         "fecha" => Carbon::parse($record->fechaEmision)->format('Y-m-d'),
+                        "estado" => isset($record->estado) ? $record->estado : '',
                         "producto" => isset($item['codigoProducto']) ? $item['codigoProducto'] : '',
                         "cantidad" => isset($item['cantidad']) ? $item['cantidad'] : '',
                         "descripcion" => isset($item['descripcion']) ? $item['descripcion'] : '',
@@ -335,6 +337,7 @@ class GenerateReport implements ShouldQueue
                         "paciente" => $paciente,
                         "factura" => $record->numeroFactura,
                         "fecha" => Carbon::parse($record->fechaEmision)->format('Y-m-d'),
+                        "estado" => isset($record->estado) ? $record->estado : '',
                         "producto" => isset($item['codigoProducto']) ? $item['codigoProducto'] : '',
                         "cantidad" => isset($item['cantidad']) ? $item['cantidad'] : '',
                         "descripcion" => isset($item['descripcion']) ? $item['descripcion'] : '',

@@ -73,6 +73,7 @@ class FelReportController extends BaseController
             ]);
             $request_array = $request->all();
             $request_array['revocated_zero'] = isset($report_type->revocated_zero) ? $report_type->revocated_zero : false;
+            $request_array['number_top_productos'] = isset($report_type->number_top_productos) ? $report_type->number_top_productos : $request->get('number_top_productos', 10);
             $request_array['host'] = $request->getSchemeAndHttpHost();
             $request->replace($request_array);
 
