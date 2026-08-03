@@ -6,7 +6,6 @@ use EmizorIpx\ClientFel\Http\Resources\Sobodaycom\SobodaycomCategoryCustomCollec
 use EmizorIpx\ClientFel\Models\FelInvoiceRequest;
 use EmizorIpx\ClientFel\Utils\TemplatesUtils;
 use Illuminate\Support\Facades\Blade;
-use Beganovich\Snappdf\Snappdf;
 class Sobodaycom {
 
     public $request; 
@@ -120,9 +119,7 @@ class Sobodaycom {
 
         $html = Blade::render($content, ['fiscalDocument' => $data]);
 
-        $pdf = new Snappdf();
-
-        $generated = $pdf->setHtml(str_replace('%24', '$', $html))->generate();
+        $generated = (string) (new \App\Utils\HostedPDF\NinjaPdf())->build(str_replace('%24', '$', $html), "sobodaycom_auth", "autorizacion", true);
 
         return $generated;
     }

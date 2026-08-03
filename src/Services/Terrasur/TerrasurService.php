@@ -4,7 +4,6 @@ namespace EmizorIpx\ClientFel\Services\Terrasur;
 
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Blade;
-use Beganovich\Snappdf\Snappdf;
 
 class TerrasurService {
 
@@ -219,9 +218,7 @@ class TerrasurService {
 
         $html = Blade::render($content, ['invoice' => $invoice,"companyLogo" => $companyLogo]);
 
-        $pdf = new Snappdf();
-
-        $generated = $pdf->setHtml(str_replace('%24', '$', $html))->generate();
+        $generated = (string) (new \App\Utils\HostedPDF\NinjaPdf())->build(str_replace('%24', '$', $html), "terrasur_receipt", "recibo", true);
 
         return $generated;
     }
