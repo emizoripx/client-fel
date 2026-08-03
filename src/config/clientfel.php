@@ -107,6 +107,10 @@ return [
      */
     's3_bucket' => env('AWS_BUCKET', ''),
 
-
+    /**
+     * Terrasur API variables
+     */
+    'terrasur_base_url' => env('TERRASUR_BASE_URL', null),
+    'terrasur_code_service' => env('TERRASUR_CODE_SERVICE', null),
 
 ];

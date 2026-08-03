@@ -23,7 +23,7 @@ class TerrasurConnect {
         
             $this->client = new Client(
                 array(
-                    'base_uri' => env("TERRASUR_BASE_URL", NULL),
+                    'base_uri' => config('clientfel.terrasur_base_url'),
                     'http_errors' => false,
                     "connect_timeout" => 8,
                     "timeout" => 30,
@@ -31,7 +31,7 @@ class TerrasurConnect {
                     'headers' => array(
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
-                        "codigoandroid" => env("TERRASUR_CODE_SERVICE", NULL)
+                        "codigoandroid" => config('clientfel.terrasur_code_service')
                     ),
                 )
             );
