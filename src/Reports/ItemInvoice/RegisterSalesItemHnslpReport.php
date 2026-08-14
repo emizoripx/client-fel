@@ -67,8 +67,6 @@ class RegisterSalesItemHnslpReport extends BaseReport implements ReportInterface
         $query_items = $this->addDateFilter($query_items);
         $query_items = $this->addBranchFilter($query_items);
 
-        $detalles = $query_items->pluck('fel_invoice_requests.detalles', 'fel_invoice_requests.cuf');
-
         $query_items = $query_items->select(
             'fel_invoice_requests.cuf', 
             'fel_invoice_requests.fechaEmision', 
@@ -77,7 +75,8 @@ class RegisterSalesItemHnslpReport extends BaseReport implements ReportInterface
             'fel_invoice_requests.numeroDocumento', 
             'fel_invoice_requests.extras',
             'fel_invoice_requests.detalles',
-            'fel_invoice_requests.estado'
+            'fel_invoice_requests.estado',
+            'invoices.number'
         );
 
         $header = [

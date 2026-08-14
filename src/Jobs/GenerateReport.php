@@ -252,7 +252,7 @@ class GenerateReport implements ShouldQueue
                 $detalles = json_decode($record->detalles, true);
                 $extras = isset($record->extras) ? (is_string($record->extras) ? json_decode($record->extras, true) : (array) $record->extras) : [];
                 $paciente = isset($extras['paciente']) ? $extras['paciente'] : '';
-                $codigoPaciente = $record->numeroDocumento;
+                $codigoPaciente = $record->number ?? '';
 
                 foreach ($detalles as $item) {
                     $medico = isset($item['nombreApellidoMedico']) ? $item['nombreApellidoMedico'] : '';
@@ -328,7 +328,7 @@ class GenerateReport implements ShouldQueue
                 $detalles = json_decode($record->detalles, true);
                 $extras = isset($record->extras) ? (is_string($record->extras) ? json_decode($record->extras, true) : (array) $record->extras) : [];
                 $paciente = isset($extras['paciente']) ? $extras['paciente'] : '';
-                $codigoPaciente = $record->numeroDocumento;
+                $codigoPaciente = $record->number ?? '';
 
                 foreach ($detalles as $item) {
                     $medico = isset($item['nombreApellidoMedico']) ? $item['nombreApellidoMedico'] : '';

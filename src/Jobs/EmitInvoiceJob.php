@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Exception;
 
 class EmitInvoiceJob implements ShouldQueue
@@ -24,6 +25,11 @@ class EmitInvoiceJob implements ShouldQueue
     public function __construct($id)
     {
         $this->invoice_id = $id;
+    }
+
+    public function middleware()
+    {
+        return [(new WithoutOverlapping($this->invoice_id))->dontRelease()];
     }
 
     /**

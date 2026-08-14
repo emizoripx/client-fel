@@ -11,8 +11,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Carbon\Carbon;
-use EmizorIpx\ClientFel\Exceptions\ClientFelException;
 use EmizorIpx\ClientFel\Utils\TypeDocumentSector;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Exception;
 
 class EmitTerminalPreinvoices implements ShouldQueue
@@ -30,6 +30,11 @@ class EmitTerminalPreinvoices implements ShouldQueue
     public function __construct()
     {
         $this->onQueue('recurring');
+    }
+
+    public function middleware()
+    {
+        return [(new WithoutOverlapping())->dontRelease()];
     }
 
     /**
