@@ -24,6 +24,10 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
     
     protected $user_selected;
 
+    protected $from;
+
+    protected $to;
+
     public function __construct( $company_id, $request, $columns, $user )
     {
         $this->company_id = $company_id;
@@ -95,54 +99,93 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         $from = date('Y-m-d', $this->from_date) . " 00:00:00";
         $to = date("Y-m-d", $this->to_date) . " 23:59:59";
 
+        $selectRaw = 'fel_invoice_requests.id, fel_invoice_requests.codigoEstado, fel_invoice_requests.fechaEmision, fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado = 691 or fel_invoice_requests.codigoEstado = 905 or fel_invoice_requests.codigoEstado = 902, "ANULADO", if(paymentables.created_at is null, "Por cobrar", "PAGADO")) AS estado, fel_invoice_requests.codigoCliente, fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario, fel_invoice_requests.montoTotal, fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia';
+
         $emitted = \DB::table('fel_invoice_requests')
-        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
-        ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
-        ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
-        ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
-        ->where('fel_invoice_requests.company_id', $this->company_id)
-        ->whereNotNull('fel_invoice_requests.cuf')
-        ->whereNull('paymentables.deleted_at')
-        ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
-        ->whereNotBetween('paymentables.created_at', [$from, $to])
-        ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->whereNull('fel_invoice_requests.deleted_at')
+            ->leftJoin('invoices', function ($join) {
+                $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
+                    ->whereNull('invoices.deleted_at');
+            })
+            ->leftJoin('paymentables', function ($join) {
+                $join->on('paymentables.paymentable_id', '=', 'invoices.id')
+                    ->whereNull('paymentables.deleted_at');
+            })
+            ->leftJoin('payments', function ($join) {
+                $join->on('payments.id', '=', 'paymentables.payment_id')
+                    ->whereNull('payments.deleted_at');
+            })
+            ->leftJoin('payment_types', 'payments.type_id', '=', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->whereNotNull('fel_invoice_requests.cuf')
+            ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
+            ->whereNotNull('paymentables.created_at')
+            ->whereNotBetween('paymentables.created_at', [$from, $to])
+            ->selectRaw($selectRaw);
 
         $emittend_payed = \DB::table('fel_invoice_requests')
-        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
-        ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
-        ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
-        ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
-        ->where('fel_invoice_requests.company_id', $this->company_id)
-            ->whereNull('paymentables.deleted_at')
+            ->whereNull('fel_invoice_requests.deleted_at')
+            ->leftJoin('invoices', function ($join) {
+                $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
+                    ->whereNull('invoices.deleted_at');
+            })
+            ->leftJoin('paymentables', function ($join) {
+                $join->on('paymentables.paymentable_id', '=', 'invoices.id')
+                    ->whereNull('paymentables.deleted_at');
+            })
+            ->leftJoin('payments', function ($join) {
+                $join->on('payments.id', '=', 'paymentables.payment_id')
+                    ->whereNull('payments.deleted_at');
+            })
+            ->leftJoin('payment_types', 'payments.type_id', '=', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
             ->whereBetween('paymentables.created_at', [$from, $to])
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->selectRaw($selectRaw);
 
         $payed = \DB::table('fel_invoice_requests')
-        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
-        ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
-        ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
-        ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
-        ->where('fel_invoice_requests.company_id', $this->company_id)
-            ->whereNull('paymentables.deleted_at')
+            ->whereNull('fel_invoice_requests.deleted_at')
+            ->leftJoin('invoices', function ($join) {
+                $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
+                    ->whereNull('invoices.deleted_at');
+            })
+            ->leftJoin('paymentables', function ($join) {
+                $join->on('paymentables.paymentable_id', '=', 'invoices.id')
+                    ->whereNull('paymentables.deleted_at');
+            })
+            ->leftJoin('payments', function ($join) {
+                $join->on('payments.id', '=', 'paymentables.payment_id')
+                    ->whereNull('payments.deleted_at');
+            })
+            ->leftJoin('payment_types', 'payments.type_id', '=', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereNotBetween('fel_invoice_requests.fechaEmision', [$from, $to])
             ->whereBetween('paymentables.created_at', [$from, $to])
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->selectRaw($selectRaw);
 
         $debts = \DB::table('fel_invoice_requests')
-        ->leftJoin('invoices', 'invoices.id', 'fel_invoice_requests.id_origin')
-        ->leftJoin('paymentables', 'paymentables.paymentable_id', 'invoices.id')
-        ->leftJoin('payments', 'payments.id', 'paymentables.payment_id')
-        ->leftJoin('payment_types', 'payments.type_id', 'payment_types.id')
-        ->where('fel_invoice_requests.company_id', $this->company_id)
+            ->whereNull('fel_invoice_requests.deleted_at')
+            ->leftJoin('invoices', function ($join) {
+                $join->on('invoices.id', '=', 'fel_invoice_requests.id_origin')
+                    ->whereNull('invoices.deleted_at');
+            })
+            ->leftJoin('paymentables', function ($join) {
+                $join->on('paymentables.paymentable_id', '=', 'invoices.id')
+                    ->whereNull('paymentables.deleted_at');
+            })
+            ->leftJoin('payments', function ($join) {
+                $join->on('payments.id', '=', 'paymentables.payment_id')
+                    ->whereNull('payments.deleted_at');
+            })
+            ->leftJoin('payment_types', 'payments.type_id', '=', 'payment_types.id')
+            ->where('fel_invoice_requests.company_id', $this->company_id)
             ->whereNotNull('fel_invoice_requests.cuf')
             ->whereBetween('fel_invoice_requests.fechaEmision', [$from, $to])
-            ->where(function($query){
-                return $query->where('paymentables.deleted_at')->orWhere('paymentables.created_at',null);
-            } )
-            ->selectRaw(\DB::raw('fel_invoice_requests.id, codigoEstado, fel_invoice_requests.fechaEmision,fel_invoice_requests.numeroFactura, if(fel_invoice_requests.codigoEstado =691 or fel_invoice_requests.codigoEstado = 905, "ANULADO", if(paymentables.created_at is null,"Por cobrar","PAGADO") ) AS estado, fel_invoice_requests.codigoCliente,fel_invoice_requests.numeroDocumento, fel_invoice_requests.nombreRazonSocial, payment_types.name as tipoPago, paymentables.created_at as fechaPago, fel_invoice_requests.detalles, fel_invoice_requests.usuario,fel_invoice_requests.montoTotal,fel_invoice_requests.descuentoAdicional, JSON_EXTRACT(extras,"$.poliza") as poliza, JSON_EXTRACT(extras,"$.agencia") as agencia'));
+            ->whereNull('paymentables.created_at')
+            ->selectRaw($selectRaw);
+
         $emitted = $this->addBranchFilter($emitted);
         $emittend_payed = $this->addBranchFilter($emittend_payed);
         $payed = $this->addBranchFilter($payed);
@@ -182,7 +225,7 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
             
             $detail = json_decode($detail, true);
             
-            $invoice_data[0]['tipoPago'] = $dictionary_payment_types[$invoice_data[0]['tipoPago']];
+            $invoice_data[0]['tipoPago'] = $dictionary_payment_types[$invoice_data[0]['tipoPago'] ?? ''] ?? $invoice_data[0]['tipoPago'] ?? "";
             $joined = collect($invoice_data)->crossJoin($detail)->all();
 
             $detalle = collect($joined)->map( function ( $d ) {
@@ -248,8 +291,8 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         return [
             "header" => [
                 "nit" => \App\Models\Company::find($this->company_id)->settings->id_number,
-                "desde" => date('Y-m-d', $this->from) . " 00:00:00",
-                "hasta" => date('Y-m-d', $this->to) . " 23:59:59",
+                "desde" => date('Y-m-d', $this->from_date) . " 00:00:00",
+                "hasta" => date('Y-m-d', $this->to_date) . " 23:59:59",
                 "fechaReporte" => Carbon::now()->timezone('America/La_Paz')->format("Y-m-d"),
                 "usuario" => $this->user->name(),
                 "sucursal" => $this->branch_desc,
