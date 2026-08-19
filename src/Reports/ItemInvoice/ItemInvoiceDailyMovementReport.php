@@ -243,6 +243,10 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
 
         $items = ExportUtils::flatten_array($items);
 
+        $items = collect($items)->sortBy(function ($item) {
+            return $item['fechaEmision'] ?? '';
+        })->values()->all();
+
         $invoice_date = null;
         $invoice_number = null;
         $tipoPago = null;
