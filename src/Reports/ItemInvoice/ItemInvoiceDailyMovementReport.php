@@ -214,6 +214,10 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
             ->union($emittend_payed)
             ->union($payed)
             ->get();   
+        $query_items = $query_items->sortBy(function($item) use ($from, $to) {
+            $is_emitted_in_range = ($item->fechaEmision >= $from && $item->fechaEmision <= $to) ? 1 : 2;
+            return $is_emitted_in_range . '_' . $item->fechaEmision;
+        })->values();
 
         $detalles = $query_items->pluck('detalles', 'id');
 
@@ -242,10 +246,6 @@ class ItemInvoiceDailyMovementReport extends BaseReport implements ReportInterfa
         })->values();
 
         $items = ExportUtils::flatten_array($items);
-
-        $items = collect($items)->sortBy(function ($item) {
-            return $item['fechaEmision'] ?? '';
-        })->values()->all();
 
         $invoice_date = null;
         $invoice_number = null;
