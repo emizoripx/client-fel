@@ -32,9 +32,9 @@ class Invoices extends FelConnection
     protected $ack_ticket;
 
 
-    public function __construct($host, $access_token)
+    public function __construct($host, $access_token, $tenant_key = null)
     {
-        parent::__construct($host, $access_token);
+        parent::__construct($host, $access_token, $tenant_key);
     }
 
     public function setAccessToken($access_token)
@@ -109,7 +109,9 @@ class Invoices extends FelConnection
 
         try {
             \Log::debug("Send to : " ."/api/v1/facturas/$this->cuf" );
-            $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $headers = ["Authorization" => "Bearer " . $this->access_token];
+            if (!empty($this->tenant_key)) { $headers['tenant-key'] = $this->tenant_key; }
+            $response = $this->client->request('GET', "/api/v1/facturas/$this->cuf", ["headers" => $headers]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $parsed_response;
@@ -132,7 +134,9 @@ class Invoices extends FelConnection
         try {
             \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>####################################  2");
             \Log::debug("Send to : " . "/api/v1/facturas/$this->ack_ticket/status");
-            $response = $this->client->request('GET', "/api/v1/facturas/$this->ack_ticket/status", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $headers = ["Authorization" => "Bearer " . $this->access_token];
+            if (!empty($this->tenant_key)) { $headers['tenant-key'] = $this->tenant_key; }
+            $response = $this->client->request('GET', "/api/v1/facturas/$this->ack_ticket/status", ["headers" => $headers]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             \Log::debug("CHECKING STATUS OF INVOICE=..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  --------------------------");
@@ -153,7 +157,9 @@ class Invoices extends FelConnection
 
         try {
             \Log::debug("Send to : " ."/api/v2/facturas/$this->ack_ticket" );
-            $response = $this->client->request('GET', "/api/v2/facturas/$this->ack_ticket", ["headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $headers = ["Authorization" => "Bearer " . $this->access_token];
+            if (!empty($this->tenant_key)) { $headers['tenant-key'] = $this->tenant_key; }
+            $response = $this->client->request('GET', "/api/v2/facturas/$this->ack_ticket", ["headers" => $headers]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $parsed_response;
@@ -228,7 +234,9 @@ class Invoices extends FelConnection
     public function verifyStatus()
     {
         try {
-            $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => ["Authorization" => "Bearer " . $this->access_token]]);
+            $headers = ["Authorization" => "Bearer " . $this->access_token];
+            if (!empty($this->tenant_key)) { $headers['tenant-key'] = $this->tenant_key; }
+            $response = $this->client->request('GET', "/api/v1/sucursales/0/validate-nit/$nit", [ "headers" => $headers]);
             $parsed_response = $this->parse_response($response);
             $this->setResponse($parsed_response);
             return $this->parse_response($response);

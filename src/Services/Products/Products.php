@@ -15,10 +15,10 @@ class Products extends BaseConnection
 
     protected $response;
 
-    public function __construct($accessToken, $host)
+    public function __construct($accessToken, $host, $tenant_key = null)
     {
         $this->accessToken = $accessToken;
-        parent::__construct($host);
+        parent::__construct($host, $accessToken, $tenant_key);
     }
 
     public function setResponse($response) 
@@ -85,7 +85,7 @@ class Products extends BaseConnection
 
         try {
             
-            $response = $this->client->request('POST','/api/v1/productos',['json' => $this->data, "headers" => ["Authorization" => "Bearer " . $this->accessToken] ]);
+            $response = $this->client->request('POST','/api/v1/productos',['json' => $this->data]);
 
             $this->setResponse($this->parse_response($response));
             return $this->parse_response($response);

@@ -15,17 +15,17 @@ class Branches extends BaseConnection{
     
     protected $host;
 
-    public function __construct($accessToken, $host)
+    public function __construct($accessToken, $host, $tenant_key = null)
     {
         $this->accessToken = $accessToken;
 
-        parent::__construct($host);
+        parent::__construct($host, $accessToken, $tenant_key);
     }
 
 
     public function getBranches(){
         try{
-            $response = $this->client->request('GET', '/api/v1/sucursales', ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            $response = $this->client->request('GET', '/api/v1/sucursales');
 
             return $this->parse_response($response);
 

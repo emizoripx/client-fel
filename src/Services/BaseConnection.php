@@ -5,13 +5,20 @@ use GuzzleHttp\Client;
 
 class BaseConnection {
 
-    public function __construct($host)
+    public function __construct($host, $accessToken = null, $tenant_key = null)
     {
         \Log::debug("HOST: $host");
         $data['base_uri'] = $host;
         $data['headers']['Accept'] = 'application/json';
         $data['headers']['Content-Type'] = 'application/json';
         $data['headers']['emizor-header'] = 'true';
+
+        if (!empty($accessToken)) {
+            $data['headers']['Authorization'] = "Bearer " . $accessToken;
+        }
+        if (!empty($tenant_key)) {
+            $data['headers']['tenant-key'] = $tenant_key;
+        }
 
         $this->client = new Client($data);
     }

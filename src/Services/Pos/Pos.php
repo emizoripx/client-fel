@@ -14,11 +14,11 @@ class Pos extends BaseConnection{
 
     protected $branch_code;
 
-    public function __construct( $accessToken ,$host)
+    public function __construct( $accessToken ,$host, $tenant_key = null)
     {
         $this->accessToken = $accessToken;
 
-        parent::__construct($host);
+        parent::__construct($host, $accessToken, $tenant_key);
     }
 
 
@@ -30,7 +30,7 @@ class Pos extends BaseConnection{
     public function getPOS(){
         try{
             \Log::debug("get pos >> URI : ". '/api/v1/puntos-de-venta?branch_code=' . $this->branch_code);
-            $response = $this->client->request('GET', '/api/v1/puntos-de-venta?branch_code='.$this->branch_code, ["headers" => ["Authorization" => "Bearer " . $this->accessToken]]);
+            $response = $this->client->request('GET', '/api/v1/puntos-de-venta?branch_code='.$this->branch_code);
 
             return $this->parse_response($response);
 

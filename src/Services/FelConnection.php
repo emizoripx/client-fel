@@ -19,13 +19,26 @@ Class FelConnection
     protected $status_code;
 
     protected $access_token;
+
+    protected $tenant_key;
     /**
  * Input credentials for connection
      */
-    public function __construct($host, $token)
+    public function __construct($host, $token, $tenant_key = null)
     {         
         try {
             $this->ticket = "TICKET";
+            $headers = array(
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                "Authorization" => "Bearer " . $token,
+                "emizor-header" => 'true',
+            );
+
+            if (!empty($tenant_key)) {
+                $headers['tenant-key'] = $tenant_key;
+            }
+
             $this->client = new Client(
                 array(
                     'base_uri' => $host,
@@ -33,20 +46,26 @@ Class FelConnection
                     "connect_timeout" => 5,
                     "timeout" => 30,
                     'redirect.strict' => true,
-                    'headers' => array(
-                        'Accept' => 'application/json',
-                        'Content-Type' => 'application/json',
-                        "Authorization" => "Bearer " . $token,
-                        "emizor-header" => 'true',
-                    ),
+                    'headers' => $headers,
                 )
             );
           
             $this->access_token = $token;
+            $this->tenant_key = $tenant_key;
         } catch (\Exception $ex) {
             info("ERROR  >>  CONECTION  " . $ex->getMessage());
         }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
+    }
+
+    public function setTenantKey($tenant_key)
+    {
+        $this->tenant_key = $tenant_key;
+    }
+
+    public function getTenantKey()
+    {
+        return $this->tenant_key;
     }
 
     public function parse_response($response)

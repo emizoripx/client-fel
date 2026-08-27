@@ -51,6 +51,7 @@ class FelInvoiceRequest extends Model
 
     protected $access_token;
     protected $host;
+    protected $tenant_key;
 
 
     protected static function boot()
@@ -337,7 +338,7 @@ class FelInvoiceRequest extends Model
             $this->save();
         }
         try{
-            $invoice_service = new Invoices($this->host, $this->access_token);
+            $invoice_service = new Invoices($this->host, $this->access_token, $this->tenant_key);
             $invoice_service->buildData($this);
             $invoice_service->sendToFel();
 
@@ -406,7 +407,7 @@ class FelInvoiceRequest extends Model
     }
 
     public function sendRevocateInvoiceToFel($codigoMotivoAnulacion){
-        $invoice_service = new Invoices($this->host, $this->access_token);
+        $invoice_service = new Invoices($this->host, $this->access_token, $this->tenant_key);
 
         $invoice_service->setRevocationReasonCode($codigoMotivoAnulacion);
 
@@ -448,7 +449,7 @@ class FelInvoiceRequest extends Model
 
 
     public function sendRevocateReversionInvoiceToFel(){
-        $invoice_service = new Invoices($this->host, $this->access_token);
+        $invoice_service = new Invoices($this->host, $this->access_token, $this->tenant_key);
 
         $invoice_service->reversionRevocateInvoice($this->factura_ticket);
 
@@ -485,7 +486,7 @@ class FelInvoiceRequest extends Model
 
     public function sendUpdateInvoiceToFel(){
 
-        $invoice_service = new Invoices($this->host, $this->access_token);
+        $invoice_service = new Invoices($this->host, $this->access_token, $this->tenant_key);
         $invoice_service->setBranchNumber($this->codigoSucursal);
 
         \Log::debug("VERIFICANDO factura TIcket en update   ", [$this->getVariableExtra("facturaTicket")]);
@@ -564,7 +565,7 @@ class FelInvoiceRequest extends Model
         //     return true;
         // }
             
-        $invoice_service = new Invoices($this->host, $this->access_token);
+        $invoice_service = new Invoices($this->host, $this->access_token, $this->tenant_key);
         
         $invoice_service->getStatus($this->factura_ticket);
 
