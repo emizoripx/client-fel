@@ -8,7 +8,9 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Company;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
+use EmizorIpx\PrepagoBags\Models\PartnerConfiguration;
 use EmizorIpx\ClientFel\Models\FelParametric;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 
@@ -71,7 +73,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
             if (!empty($companyTesting)){
                 \Log::info("JOB PARAMETRICAS ------ Se encontraron " . count($companyTesting) . " empresas en Testing");
                 $company = collect($companyTesting)->first();
-                $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+                $parametricService = $this->getParametricService($company);
                 
                 foreach ($data['data'] as $parametric) {
                     \Log::info("JOB PARAMETRICAS ------ Testing: Solicitando parametrica " . $parametric . " para empresa token: " . $company->company_id);
@@ -94,7 +96,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
 
             if ($company) {
                 \Log::info("JOB PARAMETRICAS ------ Generales: Usando token de empresa " . $company->company_id);
-                $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+                $parametricService = $this->getParametricService($company);
 
                 foreach ($data['data'] as $parametric){
                     \Log::info("JOB PARAMETRICAS ------ Generales: Solicitando parametrica " . $parametric);
@@ -115,7 +117,7 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
     public function parametricSyncPhaseProduction($parametricUpdate, $company, $isFullSync = false)
     {
         \Log::info("JOB PARAMETRICAS ------ Producción: Iniciando request para empresa " . $company->company_id);
-        $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+        $parametricService = $this->getParametricService($company);
         
         foreach ($parametricUpdate as $parametric) {
             \Log::info("JOB PARAMETRICAS ------ Producción: Solicitando parametrica " . $parametric . " para empresa " . $company->company_id);
@@ -133,5 +135,38 @@ class SyncParametricsWebhookJob implements ShouldQueue, ShouldBeUnique
             \Log::info("JOB PARAMETRICAS ------ Testing: Guardando parametrica " . $type . " para empresa " . $company->company_id, ['data_count' => is_array($data) ? count($data) : 'No es array']);
             FelParametric::saveParametrics($type, $company->company_id, $data, $isFullSync);
         }
+    }
+
+    /**
+     * Resolver servicio Parametric soportando arquitectura Partner y Directa
+     *
+     * @param AccountPrepagoBags $company
+     * @return Parametric
+     * @throws \Exception
+     */
+    protected function getParametricService($company)
+    {
+        $companyModel = Company::find($company->company_id);
+        $isPartner = $companyModel && !empty($companyModel->settings->is_b2b2b_partner);
+
+        if ($isPartner) {
+            $phase = ($company->phase === 'Production') ? 'production' : 'testing';
+            $config = PartnerConfiguration::getConfig($phase);
+            $host = rtrim($config['api_url'] ?? '', '/');
+            $token = $config['partner_token'] ?? '';
+            $tenantKey = $companyModel->settings->tenant_id ?? ($companyModel->settings->id_number ?? $company->company_id);
+
+            if (empty($token)) {
+                throw new \Exception("Partner Token para fase '$phase' no está configurado.");
+            }
+
+            return new Parametric($token, $host, $tenantKey);
+        }
+
+        if (!$company->fel_company_token) {
+            throw new \Exception("La empresa #{$company->company_id} no cuenta con credenciales FEL locales (fel_company_token).");
+        }
+
+        return new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
     }
 }

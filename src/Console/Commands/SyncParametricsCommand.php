@@ -3,7 +3,9 @@
 namespace EmizorIpx\ClientFel\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Company;
 use EmizorIpx\PrepagoBags\Models\AccountPrepagoBags;
+use EmizorIpx\PrepagoBags\Models\PartnerConfiguration;
 use EmizorIpx\ClientFel\Models\FelParametric;
 use EmizorIpx\ClientFel\Services\Parametrics\Parametric;
 use EmizorIpx\ClientFel\Utils\TypeParametrics;
@@ -57,7 +59,7 @@ class SyncParametricsCommand extends Command
             $this->info("Sincronizando Empresa #{$company->company_id}");
             
             try {
-                $parametricService = new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
+                $parametricService = $this->getParametricService($company);
 
                 foreach ($parametrics as $parametric) {
                     $this->line("  -> Sincronizando: {$parametric} ...");
@@ -82,5 +84,38 @@ class SyncParametricsCommand extends Command
         }
         
         $this->info("Sincronización finalizada.");
+    }
+
+    /**
+     * Resolver servicio Parametric soportando arquitectura Partner y Directa
+     *
+     * @param AccountPrepagoBags $company
+     * @return Parametric
+     * @throws \Exception
+     */
+    protected function getParametricService($company)
+    {
+        $companyModel = Company::find($company->company_id);
+        $isPartner = $companyModel && !empty($companyModel->settings->is_b2b2b_partner);
+
+        if ($isPartner) {
+            $phase = ($company->phase === 'Production') ? 'production' : 'testing';
+            $config = PartnerConfiguration::getConfig($phase);
+            $host = rtrim($config['api_url'] ?? '', '/');
+            $token = $config['partner_token'] ?? '';
+            $tenantKey = $companyModel->settings->tenant_id ?? ($companyModel->settings->id_number ?? $company->company_id);
+
+            if (empty($token)) {
+                throw new \Exception("Partner Token para fase '$phase' no está configurado.");
+            }
+
+            return new Parametric($token, $host, $tenantKey);
+        }
+
+        if (!$company->fel_company_token) {
+            throw new \Exception("La empresa #{$company->company_id} no cuenta con credenciales FEL locales (fel_company_token).");
+        }
+
+        return new Parametric($company->fel_company_token->getAccessToken(), $company->fel_company_token->getHost());
     }
 }
