@@ -23,14 +23,11 @@ class WebhookBranch extends BaseController
 
         // $companies =  AccountPrepagoBags::where('fel_company_id', $data['company_id'])->get();
 
-        $companies = \DB::table('fel_company')
-                        ->join('fel_company_tokens', 'fel_company.company_id', 'fel_company_tokens.account_id')
-                        ->where('fel_company.fel_company_id', $data['company_id'])
-                        ->where('fel_company_tokens.host', $data['host'])
-                        ->select('fel_company.company_id', 'fel_company.is_postpago')
+        $companies = AccountPrepagoBags::where('fel_company_id', $data['company_id'])
+                        ->orWhere('company_id', $data['company_id'])
                         ->get();
 
-        if ($companies) {
+        if ($companies && $companies->count() > 0) {
             foreach ($companies as $company) {
                 
                 $branch = FelBranch::where('codigo', $data['code'])->where('company_id', $company->company_id)->first();
