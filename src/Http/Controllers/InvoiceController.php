@@ -213,7 +213,7 @@ class InvoiceController extends BaseController
 
         $success = false;
         try {
-            $invoice_service = new Invoices($request->host, $request->access_token);
+            $invoice_service = new Invoices($request->host, $request->access_token, $request->tenant_key);
             $invoice_service->validateNit($nit);
 
             if ($invoice_service->isSuccessful()) {

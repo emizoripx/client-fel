@@ -27,7 +27,7 @@ class ProductController extends Controller
 
         try {
             
-            $productService = new Products($request->access_token, $request->host);
+            $productService = new Products($request->access_token, $request->host, $request->tenant_key);
             
             $productService->setData($input);
             
