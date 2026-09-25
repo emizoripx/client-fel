@@ -25,4 +25,13 @@ class FelDoctorKardexMovement extends Model
         'especialidad_medico',
         'estado_factura',
     ];
+
+    protected $appends = ['hashed_invoice_id'];
+
+    public function getHashedInvoiceIdAttribute()
+    {
+        if (!$this->invoice_id) return null;
+        $hashid = new \Hashids\Hashids(config('ninja.hash_salt'), 10);
+        return $hashid->encode($this->invoice_id);
+    }
 }
