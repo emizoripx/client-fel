@@ -16,6 +16,7 @@ class Doctors
             Route::put('/{id}', 'DoctorController@update');
             Route::delete('/{id}', 'DoctorController@destroy');
             Route::patch('/{id}/toggle-status', 'DoctorController@toggleStatus');
+            Route::get('/{id}/kardex', 'DoctorController@getKardex');
         });
     }
 }
