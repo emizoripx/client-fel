@@ -5,6 +5,7 @@ namespace EmizorIpx\ClientFel\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Invoice;
 use EmizorIpx\ClientFel\Jobs\UpdateDoctorKardexJob;
+use Illuminate\Support\Facades\DB;
 
 class BackfillDoctorKardexCommand extends Command
 {
@@ -15,6 +16,10 @@ class BackfillDoctorKardexCommand extends Command
 
     public function handle()
     {
+        // Evitar agotamiento de memoria
+        ini_set('memory_limit', '2G');
+        DB::disableQueryLog();
+
         $companyId = $this->option('company_id');
 
         $this->info("=================================================");
@@ -40,7 +45,7 @@ class BackfillDoctorKardexCommand extends Command
         $bar->start();
 
         // Procesar en lotes (chunks) para no saturar memoria
-        $query->orderBy('id', 'asc')->chunk(200, function ($invoices) use ($bar) {
+        $query->orderBy('id', 'asc')->chunkById(200, function ($invoices) use ($bar) {
             foreach ($invoices as $invoice) {
                 // Reutilizamos toda la lógica que ya creamos en el Job
                 UpdateDoctorKardexJob::dispatchSync($invoice->id);
