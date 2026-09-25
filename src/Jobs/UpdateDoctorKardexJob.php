@@ -55,7 +55,14 @@ class UpdateDoctorKardexJob implements ShouldQueue
             foreach ($items as $item) {
                 if (!is_array($item)) continue;
                 
-                $nitMedico = trim($item['nitDocumentoMedico'] ?? '');
+                $nitMedico = trim($item['nitDocumentoMedico'] ?? $item['nit_documento_medico'] ?? $item['nitMedico'] ?? '');
+                $nombreMedico = trim($item['nombreApellidoMedico'] ?? $item['nombre_apellido_medico'] ?? $item['nombreMedico'] ?? '');
+                
+                // Si no hay NIT, intentar usar el key sintético generado en extract-doctors
+                if (empty($nitMedico) && !empty($nombreMedico)) {
+                    $nitMedico = 'SN-' . substr(md5(strtolower($nombreMedico)), 0, 8);
+                }
+
                 if (empty($nitMedico)) continue;
 
                 $doctor = FelDoctor::where('company_id', $invoice->company_id)
@@ -83,9 +90,9 @@ class UpdateDoctorKardexJob implements ShouldQueue
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'line_total' => $lineTotal,
-                    'nro_quirofano' => $item['nroQuirofanoSalaOperaciones'] ?? null,
-                    'nro_factura_medico' => $item['nroFacturaMedico'] ?? null,
-                    'especialidad_medico' => $item['especialidadMedico'] ?? null,
+                    'nro_quirofano' => $item['nroQuirofanoSalaOperaciones'] ?? $item['nro_quirofano_sala_operaciones'] ?? null,
+                    'nro_factura_medico' => $item['nroFacturaMedico'] ?? $item['nro_factura_medico'] ?? null,
+                    'especialidad_medico' => $item['especialidadMedico'] ?? $item['especialidad_medico'] ?? $item['especialidad'] ?? null,
                     'estado_factura' => $isAnulada ? 'ANULADA' : ($felInvoice->estado ?: 'VALIDA'),
                 ]);
             }
