@@ -4,6 +4,8 @@ namespace EmizorIpx\ClientFel\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 use EmizorIpx\ClientFel\Models\FelDoctor;
+use EmizorIpx\ClientFel\Models\FelDoctorKardexSummary;
+use EmizorIpx\ClientFel\Models\FelDoctorKardexMovement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -312,6 +314,52 @@ class DoctorController extends BaseController
             'imported' => $imported,
             'updated' => $updated,
             'errors' => $errors,
+        ]);
+    }
+
+    public function getKardex(Request $request, $id)
+    {
+        $companyId = $this->getCompanyId();
+        
+        $summary = FelDoctorKardexSummary::where('company_id', $companyId)
+                                         ->where('doctor_id', $id)
+                                         ->first();
+
+        $query = FelDoctorKardexMovement::where('company_id', $companyId)
+                                        ->where('doctor_id', $id)
+                                        ->orderBy('invoice_date', 'desc');
+
+        $search = $request->query('search', '');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('client_name', 'like', "%{$search}%")
+                  ->orWhere('invoice_number', 'like', "%{$search}%")
+                  ->orWhere('procedimiento', 'like', "%{$search}%")
+                  ->orWhere('nro_factura_medico', 'like', "%{$search}%");
+            });
+        }
+        
+        $nroQuirofano = $request->query('nro_quirofano', '');
+        if (!empty($nroQuirofano)) {
+            $query->where('nro_quirofano', 'like', "%{$nroQuirofano}%");
+        }
+
+        $perPage = $request->query('per_page', 15);
+        $movements = $query->paginate((int) $perPage);
+
+        return response()->json([
+            'summary' => $summary ?: [
+                'total_procedimientos' => 0,
+                'total_monto_generado' => 0,
+                'promedio_por_intervencion' => 0
+            ],
+            'movements' => $movements->items(),
+            'meta' => [
+                'current_page' => $movements->currentPage(),
+                'last_page' => $movements->lastPage(),
+                'per_page' => $movements->perPage(),
+                'total' => $movements->total(),
+            ]
         ]);
     }
 }
