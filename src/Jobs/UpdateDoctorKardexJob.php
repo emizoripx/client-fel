@@ -38,7 +38,7 @@ class UpdateDoctorKardexJob implements ShouldQueue
             return;
         }
 
-        $items = is_string($invoice->line_items) ? json_decode($invoice->line_items, true) : $invoice->line_items;
+        $items = is_string($invoice->line_items) ? json_decode($invoice->line_items, true) : json_decode(json_encode($invoice->line_items), true);
         if (!is_array($items)) return;
 
         $clientName = $invoice->client ? $invoice->client->name : 'Consumidor Final';
