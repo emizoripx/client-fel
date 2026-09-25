@@ -82,7 +82,7 @@ class UpdateDoctorKardexJob implements ShouldQueue
                     'company_id' => $invoice->company_id,
                     'doctor_id' => $doctor->id,
                     'invoice_id' => $invoice->id,
-                    'invoice_number' => $invoice->number,
+                    'invoice_number' => $felInvoice->numeroFactura,
                     'invoice_date' => $invoice->date,
                     'client_name' => $clientName,
                     'client_nit' => $clientNit,
