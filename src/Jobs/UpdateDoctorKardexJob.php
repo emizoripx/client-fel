@@ -30,13 +30,28 @@ class UpdateDoctorKardexJob implements ShouldQueue
         $invoice = Invoice::find($this->invoiceId);
         if (!$invoice || !$invoice->line_items) return;
 
+        $felInvoice = DB::table('fel_invoice_requests')->where('id_origin', $invoice->id)->first();
+        if (!$felInvoice) return;
+
+        // Si la factura nunca fue válida fiscalmente, la ignoramos completamente del Kardex
+        if (in_array($felInvoice->estado, ['RECHAZADA', 'INVALIDA']) || in_array($felInvoice->codigoEstado, [902, 904])) {
+            return;
+        }
+
         $items = is_string($invoice->line_items) ? json_decode($invoice->line_items, true) : $invoice->line_items;
         if (!is_array($items)) return;
 
         $clientName = $invoice->client ? $invoice->client->name : 'Consumidor Final';
         $clientNit = $invoice->client ? $invoice->client->id_number : '';
+        $isAnulada = ($felInvoice->estado === 'ANULADA' || $felInvoice->codigoEstado == 905);
 
-        DB::transaction(function () use ($invoice, $items, $clientName, $clientNit) {
+        DB::transaction(function () use ($invoice, $felInvoice, $items, $clientName, $clientNit, $isAnulada) {
+            
+            // 1. Limpiar movimientos previos de esta factura (Idempotencia)
+            FelDoctorKardexMovement::where('invoice_id', $invoice->id)->delete();
+            
+            $doctorsToUpdate = [];
+
             foreach ($items as $item) {
                 if (!is_array($item)) continue;
                 
@@ -49,10 +64,13 @@ class UpdateDoctorKardexJob implements ShouldQueue
 
                 if (!$doctor) continue;
 
+                $doctorsToUpdate[$doctor->id] = $doctor;
+
                 $quantity = (float) ($item['quantity'] ?? 1);
                 $unitPrice = (float) ($item['cost'] ?? 0);
                 $lineTotal = (float) ($item['line_total'] ?? ($quantity * $unitPrice));
 
+                // 2. Crear el Movimiento
                 FelDoctorKardexMovement::create([
                     'company_id' => $invoice->company_id,
                     'doctor_id' => $doctor->id,
@@ -68,26 +86,31 @@ class UpdateDoctorKardexJob implements ShouldQueue
                     'nro_quirofano' => $item['nroQuirofanoSalaOperaciones'] ?? null,
                     'nro_factura_medico' => $item['nroFacturaMedico'] ?? null,
                     'especialidad_medico' => $item['especialidadMedico'] ?? null,
-                    'estado_factura' => $invoice->status_id == 2 ? 'Emitida' : 'Activa',
+                    'estado_factura' => $isAnulada ? 'ANULADA' : ($felInvoice->estado ?: 'VALIDA'),
                 ]);
+            }
 
+            // 3. Recalcular el Summary (Cube) para los doctores afectados de forma real
+            foreach ($doctorsToUpdate as $doctor) {
                 $summary = FelDoctorKardexSummary::firstOrCreate(
                     ['company_id' => $invoice->company_id, 'doctor_id' => $doctor->id]
                 );
 
-                $summary->total_procedimientos += 1;
-                $summary->total_monto_generado += $lineTotal;
+                // Solo sumarizamos las NO ANULADAS
+                $resumen = FelDoctorKardexMovement::where('company_id', $invoice->company_id)
+                    ->where('doctor_id', $doctor->id)
+                    ->where('estado_factura', '!=', 'ANULADA')
+                    ->selectRaw('COUNT(*) as total_proc, SUM(line_total) as total_monto, MIN(invoice_date) as primer, MAX(invoice_date) as ultimo')
+                    ->first();
+
+                $summary->total_procedimientos = $resumen->total_proc ?? 0;
+                $summary->total_monto_generado = $resumen->total_monto ?? 0;
                 $summary->promedio_por_intervencion = $summary->total_procedimientos > 0 
                     ? ($summary->total_monto_generado / $summary->total_procedimientos) 
                     : 0;
 
-                $invoiceDate = Carbon::parse($invoice->date);
-                if (!$summary->primer_servicio || $invoiceDate->lt($summary->primer_servicio)) {
-                    $summary->primer_servicio = $invoiceDate;
-                }
-                if (!$summary->ultimo_servicio || $invoiceDate->gt($summary->ultimo_servicio)) {
-                    $summary->ultimo_servicio = $invoiceDate;
-                }
+                $summary->primer_servicio = $resumen->primer ?: null;
+                $summary->ultimo_servicio = $resumen->ultimo ?: null;
 
                 $summary->save();
             }

@@ -29,6 +29,7 @@ use EmizorIpx\ClientFel\Http\Middleware\ValidateSpecialCodes;
 use EmizorIpx\ClientFel\Providers\ClientFelEventServiceProvider;
 use EmizorIpx\ClientFel\Console\Commands\SyncParametricsCommand;
 use EmizorIpx\ClientFel\Console\Commands\ExtractHistoricalDoctorsCommand;
+use EmizorIpx\ClientFel\Console\Commands\BackfillDoctorKardexCommand;
 
 class ClientFelServiceProvider extends ServiceProvider
 {
@@ -97,6 +98,7 @@ class ClientFelServiceProvider extends ServiceProvider
                 CleanOrphanedHomologationsCommand::class,
                 SyncParametricsCommand::class,
                 ExtractHistoricalDoctorsCommand::class,
+                BackfillDoctorKardexCommand::class,
             ]);
         }
 
