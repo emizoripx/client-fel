@@ -95,7 +95,7 @@ class DoctorController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'nombre_apellido' => 'required|string|max:255',
-            'nit_documento' => 'required|string|max:50',
+            'nit_documento' => 'nullable|string|max:50',
             'nro_matricula' => 'nullable|string|max:50',
             'especialidad' => 'nullable|string|max:150',
             'especialidad_detalle' => 'nullable|string|max:255',
@@ -109,22 +109,33 @@ class DoctorController extends BaseController
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $nit = trim($request->input('nit_documento'));
+        $nombre = trim($request->input('nombre_apellido'));
+        $nit = trim($request->input('nit_documento', ''));
+        if (empty($nit)) {
+            $nit = 'SN-' . substr(md5(strtolower($nombre)), 0, 8);
+        }
 
-        // Verificar si ya existe un médico activo con este NIT en la misma empresa
+        // Verificar si ya existe un médico activo con este NIT o con este nombre en la misma empresa
         $existing = FelDoctor::byCompany($companyId)
             ->where('nit_documento', $nit)
             ->first();
 
+        if (!$existing && empty($request->input('nit_documento'))) {
+            $existing = FelDoctor::byCompany($companyId)
+                ->where('nombre_apellido', $nombre)
+                ->first();
+        }
+
         if ($existing) {
             return response()->json([
-                'error' => "Ya existe un médico registrado con el documento/NIT {$nit}."
-            ], 422);
+                'data' => $existing,
+                'message' => 'Médico ya registrado previamente'
+            ], 200);
         }
 
         $doctor = FelDoctor::create([
             'company_id' => $companyId,
-            'nombre_apellido' => trim($request->input('nombre_apellido')),
+            'nombre_apellido' => $nombre,
             'nit_documento' => $nit,
             'nro_matricula' => trim($request->input('nro_matricula', '')) ?: null,
             'especialidad' => trim($request->input('especialidad', '')) ?: 'Medicina General',

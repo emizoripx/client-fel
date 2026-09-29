@@ -69,6 +69,24 @@ class UpdateDoctorKardexJob implements ShouldQueue
                     ->where('nit_documento', $nitMedico)
                     ->first();
 
+                if (!$doctor && !empty($nombreMedico)) {
+                    $doctor = FelDoctor::where('company_id', $invoice->company_id)
+                        ->where('nombre_apellido', $nombreMedico)
+                        ->first();
+                }
+
+                if (!$doctor && !empty($nombreMedico)) {
+                    $doctor = FelDoctor::create([
+                        'company_id' => $invoice->company_id,
+                        'nombre_apellido' => $nombreMedico,
+                        'nit_documento' => $nitMedico,
+                        'nro_matricula' => trim($item['nroMatriculaMedico'] ?? '') ?: null,
+                        'especialidad' => trim($item['especialidadMedico'] ?? $item['especialidad'] ?? '') ?: 'Medicina General',
+                        'especialidad_detalle' => trim($item['especialidadDetalle'] ?? '') ?: null,
+                        'activo' => true,
+                    ]);
+                }
+
                 if (!$doctor) continue;
 
                 $doctorsToUpdate[$doctor->id] = $doctor;
