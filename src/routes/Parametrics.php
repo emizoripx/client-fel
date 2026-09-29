@@ -13,6 +13,9 @@ class Parametrics {
             Route::get('parametricas/{unidades}', 'ParametricController@index');
         });
 
+        Route::group([ 'namespace' => "\EmizorIpx\ClientFel\Http\Controllers" , "prefix" => "clientfel/"] , function() {
+            Route::get('exchange-rate-bo', 'BcbExchangeRateController@getExchangeRate');
+        });
     }
 
 }
