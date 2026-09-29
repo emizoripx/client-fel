@@ -42,6 +42,10 @@ class ClientFelServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . "/routes/Sobodaycom.php");
         $this->loadRoutesFrom(__DIR__ . "/routes/Cobrosqr.php");
 
+        \Illuminate\Support\Facades\Route::group(['middleware' => ['api_db', 'token_auth', 'locale'], 'prefix' => 'api/v1'], function () {
+            \EmizorIpx\ClientFeloutes\Doctors::routes();
+        });
+
         #FACTORIES
         $this->loadFactoriesFrom(__DIR__ . '/database/factories');
 
