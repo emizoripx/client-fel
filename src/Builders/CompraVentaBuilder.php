@@ -88,6 +88,15 @@ class CompraVentaBuilder extends BaseFelInvoiceBuilder implements FelInvoiceBuil
 
                 $new->unidadMedida = $product_sync->codigo_unidad;
 
+                $new->especialidad = data_get($detail, 'especialidad');
+                $new->especialidadDetalle = data_get($detail, 'especialidadDetalle');
+                $new->nroQuirofanoSalaOperaciones = data_get($detail, 'nroQuirofanoSalaOperaciones');
+                $new->especialidadMedico = data_get($detail, 'especialidadMedico');
+                $new->nombreApellidoMedico = data_get($detail, 'nombreApellidoMedico');
+                $new->nitDocumentoMedico = data_get($detail, 'nitDocumentoMedico');
+                $new->nroMatriculaMedico = data_get($detail, 'nroMatriculaMedico');
+                $new->nroFacturaMedico = data_get($detail, 'nroFacturaMedico');
+
                 $details[] = $new;
 
                 $total += $new->subTotal;

@@ -85,14 +85,29 @@ class LineItemResource extends JsonResource
 
         
         // Hospitales / Clínicas / Médicos
-        if (isset($this->nitDocumentoMedico) && $this->nitDocumentoMedico !== '') $item["nitDocumentoMedico"] = (string) $this->nitDocumentoMedico;
-        if (isset($this->nombreApellidoMedico) && $this->nombreApellidoMedico !== '') $item["nombreApellidoMedico"] = (string) $this->nombreApellidoMedico;
-        if (isset($this->nroMatriculaMedico) && $this->nroMatriculaMedico !== '') $item["nroMatriculaMedico"] = (string) $this->nroMatriculaMedico;
-        if (isset($this->nroFacturaMedico) && $this->nroFacturaMedico !== '') $item["nroFacturaMedico"] = (string) $this->nroFacturaMedico;
-        if (isset($this->nroQuirofanoSalaOperaciones) && $this->nroQuirofanoSalaOperaciones !== '') $item["nroQuirofanoSalaOperaciones"] = (string) $this->nroQuirofanoSalaOperaciones;
-        if (isset($this->especialidadMedico) && $this->especialidadMedico !== '') $item["especialidadMedico"] = (string) $this->especialidadMedico;
-        if (isset($this->especialidad) && $this->especialidad !== '') $item["especialidad"] = (string) $this->especialidad;
-        if (isset($this->especialidadDetalle) && $this->especialidadDetalle !== '') $item["especialidadDetalle"] = (string) $this->especialidadDetalle;
+        $nitDoc = data_get($this->resource, 'nitDocumentoMedico', $this->nitDocumentoMedico ?? null);
+        if (!is_null($nitDoc) && $nitDoc !== '') $item["nitDocumentoMedico"] = (string) $nitDoc;
+
+        $nomMed = data_get($this->resource, 'nombreApellidoMedico', $this->nombreApellidoMedico ?? null);
+        if (!is_null($nomMed) && $nomMed !== '') $item["nombreApellidoMedico"] = (string) $nomMed;
+
+        $matMed = data_get($this->resource, 'nroMatriculaMedico', $this->nroMatriculaMedico ?? null);
+        if (!is_null($matMed) && $matMed !== '') $item["nroMatriculaMedico"] = (string) $matMed;
+
+        $facMed = data_get($this->resource, 'nroFacturaMedico', $this->nroFacturaMedico ?? null);
+        if (!is_null($facMed) && $facMed !== '') $item["nroFacturaMedico"] = (string) $facMed;
+
+        $quiMed = data_get($this->resource, 'nroQuirofanoSalaOperaciones', $this->nroQuirofanoSalaOperaciones ?? null);
+        if (!is_null($quiMed) && $quiMed !== '') $item["nroQuirofanoSalaOperaciones"] = (string) $quiMed;
+
+        $espMed = data_get($this->resource, 'especialidadMedico', $this->especialidadMedico ?? null);
+        if (!is_null($espMed) && $espMed !== '') $item["especialidadMedico"] = (string) $espMed;
+
+        $esp = data_get($this->resource, 'especialidad', $this->especialidad ?? null);
+        if (!is_null($esp) && $esp !== '') $item["especialidad"] = (string) $esp;
+
+        $espDet = data_get($this->resource, 'especialidadDetalle', $this->especialidadDetalle ?? null);
+        if (!is_null($espDet) && $espDet !== '') $item["especialidadDetalle"] = (string) $espDet;
 
         return $item;
     }
